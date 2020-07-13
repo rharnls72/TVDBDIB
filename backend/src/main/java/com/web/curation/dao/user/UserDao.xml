@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.user.UserDao">
+
+	<select id="findUserByEmailAndPassword" resultType="java.util.Optional<User>">
+		select
+			uid             as uid
+            , email         as email
+            , create_date   as createDate
+		from
+			user
+        where
+            email = #{email}
+            , password = #{password}
+	</select>
+
+    <select id="getUserByEmail" resultType="User">
+        select
+			uid             as uid
+            , email         as email
+            , create_date   as createDate
+		from
+			user
+        where
+            email = #{value}
+    </select>
+
+    <insert id="addNewUser">
+        insert into
+            user(
+                uid
+                , email
+                , password
+            )
+        values(
+            #{nickname}
+            , #{email}
+            , #{password}
+        )
+    </insert>
+</mapper>
