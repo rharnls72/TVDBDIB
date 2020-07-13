@@ -73,7 +73,8 @@ public class AccountController {
         }
 
         // 이메일이 중복되지 않았다면 회원가입 진행
-        int n = userDao.addNewUser(request);
+        // int n = userDao.addNewUser(request);
+        int n = 0;
 
         final BasicResponse result = new BasicResponse();
 
