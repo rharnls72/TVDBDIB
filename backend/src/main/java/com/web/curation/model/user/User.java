@@ -23,9 +23,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
+    // uid 는 DBMS 가 자동으로 생성해주는 값이네요
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String uid;
+    private int uid;
 
     @JsonIgnore
     private String password;
@@ -34,4 +35,52 @@ public class User {
     @Column(insertable = false, updatable = false)
     private LocalDateTime createDate;
 
+    // Vue 에는 회원가입시 닉네임 입력하는 칸이 있는데
+    // 왜 DB 에는 닉네임 컬럼이 없나요?
+    @Column
+    private String nickname;
+
+    public User() {}
+
+    public User(int uid, String email, LocalDateTime createDate, String nickname) {
+        this.uid = uid;
+        this.email = email;
+        this.createDate = createDate;
+        this.nickname = nickname;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
+    public int getUid() {
+        return uid;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getPassword() {
+        return password;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+    public String getNickname() {
+        return nickname;
+    }
 }

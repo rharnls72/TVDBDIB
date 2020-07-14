@@ -16,6 +16,7 @@
           placeholder="닉네임을 입력하세요."
           type="text" />
         <label for="nickname">닉네임</label>
+        <div class="error-text" v-if="error.nickName">{{error.nickName}}</div>
       </div>
 
       <div class="input-with-label">
@@ -26,6 +27,7 @@
           placeholder="이메일을 입력하세요."
           type="text" />
         <label for="email">이메일</label>
+        <div class="error-text" v-if="error.email">{{error.email}}</div>
       </div>
 
       <div class="input-with-label">
@@ -36,6 +38,7 @@
           :type="passwordType"
           placeholder="비밀번호를 입력하세요." />
         <label for="password">비밀번호</label>
+        <div class="error-text" v-if="error.password">{{error.password}}</div>
       </div>
 
       <div class="input-with-label">
@@ -47,6 +50,7 @@
           placeholder="비밀번호를 다시한번 입력하세요."
         />
         <label for="password-confirm">비밀번호 확인</label>
+        <div class="error-text" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
       </div>
     </div>
 
@@ -57,7 +61,13 @@
 
     <span @click="termPopup=true">약관보기</span>
 
-    <button class="btn-bottom">가입하기</button>
+    <button
+      class="btn-bottom"
+      @click="onJoin"
+      :disabled="!isSubmit"
+      :class="{disabled : !isSubmit}">
+      가입하기
+    </button>
   </div>
 </template>
 
@@ -113,11 +123,18 @@ export default {
         this.error.passwordConfirm = "비밀번호가 일치하지 않습니다.";
       else this.error.passwordConfirm = false;
 
-      if(this.nickName.length > 8)
-        this.error.nickName = "닉네임은 8자를 넘지 않는 영문 및 숫자의 조합이어야 합니다."
+      // 빠르게 문자열의 바이트 수를 구하는 함수래요
+      function getByteLength(s){
+        let b, i, c;
+        for(b=i=0;(c=s.charCodeAt(i++)) > 0;b+=c>>11?3:c>>7?2:1);
+          return b;
+      }
+
+      if(getByteLength(this.nickName) > 20)
+        this.error.nickName = "닉네임은 20 Byte 를 넘지 않아야 합니다."
       else this.error.nickName = false;
 
-      this.error.term = this.isTerm;
+      this.error.term = !this.isTerm;
 
       let isSubmit = true;
       Object.values(this.error).map(v => {

@@ -144,7 +144,7 @@ export default {
           },
           error => {
             
-            alert('이메일 또는 비밀번호가 잘못되었습니다.');
+            alert(error.msg);
 
             //요청이 끝나면 버튼 활성화
             this.isSubmit = true;
