@@ -42,6 +42,16 @@
             and password = #{password}
     </select>
 
+    <select id="checkPassword" resultType="int">
+        select
+            count(*) as n
+        from
+            user
+        where
+            email = #{email}
+            and password = #{password}
+    </select>
+
     <insert id="addNewUser">
         insert into
             user(
@@ -55,4 +65,13 @@
             , #{nickname}
         )
     </insert>
+
+    <update id="modifyPassword">
+        update
+            user
+        set
+            password = #{password}
+        where
+            email = #{email}
+    </update>
 </mapper>

@@ -6,48 +6,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
-    // uid 는 DBMS 가 자동으로 생성해주는 값이네요
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int uid;
 
+    // password 는 json 응답 객체에 포함하지 않기?
     @JsonIgnore
     private String password;
+
     private String email;
 
-    @Column(insertable = false, updatable = false)
     private LocalDateTime createDate;
 
-    // Vue 에는 회원가입시 닉네임 입력하는 칸이 있는데
-    // 왜 DB 에는 닉네임 컬럼이 없나요?
-    @Column
     private String nickname;
-
-    public User() {}
-
-    public User(int uid, String email, LocalDateTime createDate, String nickname) {
-        this.uid = uid;
-        this.email = email;
-        this.createDate = createDate;
-        this.nickname = nickname;
-    }
 
     public void setUid(int uid) {
         this.uid = uid;

@@ -5,6 +5,7 @@
     @include wrap;
     min-height: 100%;
     box-sizing: border-box;
+    margin-top: 7%; // 내용이 너무 화면 상단에 붙어있는게 보기 안좋아서 좀 내림
     h1 {
         color:#000;
         font-weight: $f600;
@@ -98,11 +99,13 @@
             }
         }
         .go-term {
-            float:right;
-            color:#000;
+            // float:right;
+            margin-left: 10px; // 오른쪽 정렬로 가있는 것보다 그냥 약간 옆에 보여주는게 더 나을 듯 해서
+            color:royalblue;
             font-weight:$f600;
             margin-top: 5px;
-            font-size: $font-size__5;
+            font-size: $font-size__4;
+            text-decoration: underline;
         }
         input[type=password] {
             padding-right: 50px;

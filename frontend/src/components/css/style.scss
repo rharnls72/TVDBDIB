@@ -532,6 +532,11 @@ p {
     box-shadow: none;
     height: 50px;
     line-height: 50px;
+    /* .css가 아니라 .scss 파일에 직접 코딩을 해야 적용이 됨: App.vue에서 이 파일을 import하고 있다 */
+    &.disabled { /* btn--back에도 아래의 btn-bottom처럼 disabled시 바꿀 속성 추가. */
+        background: $grey;
+        cursor: default;
+    }
 }
 
 .btn-bottom {

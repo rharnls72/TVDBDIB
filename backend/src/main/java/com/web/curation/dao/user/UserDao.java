@@ -1,8 +1,6 @@
 
 package com.web.curation.dao.user;
 
-import java.util.Optional;
-
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
 
@@ -20,5 +18,9 @@ public interface UserDao {
 
     User findUserByEmailAndPassword(User user);
 
+    int checkPassword(User user);
+
     int addNewUser(SignupRequest request);
+
+    int modifyPassword(User user);
 }

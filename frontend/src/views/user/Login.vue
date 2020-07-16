@@ -16,6 +16,7 @@
           id="email"
           placeholder="이메일을 입력하세요."
           type="text"
+          autocapitalize="off"
         />
         <label for="email">이메일</label>
         <div class="error-text" v-if="error.email">{{error.email}}</div>
@@ -29,6 +30,7 @@
           id="password"
           @keyup.enter="Login"
           placeholder="비밀번호를 입력하세요."
+          autocapitalize="off"
         />
         <label for="password">비밀번호</label>
         <div class="error-text" v-if="error.password">{{error.password}}</div>
@@ -56,6 +58,7 @@
         </div>
         <div class="wrap">
           <p>비밀번호를 잊으셨나요?</p>
+          <router-link to="/user/findpwd" class="btn--text">비밀번호 찾기</router-link>
         </div>
         <div class="wrap">
           <p>아직 회원이 아니신가요?</p>
@@ -110,7 +113,7 @@ export default {
         this.password.length >= 0 &&
         !this.passwordSchema.validate(this.password)
       )
-        this.error.password = "영문,숫자 포함 8 자리이상이어야 합니다.";
+        this.error.password = "비밀번호는 영문, 숫자 포함 8자리 이상이어야 합니다.";
       else this.error.password = false;
 
       let isSubmit = true;
@@ -132,6 +135,7 @@ export default {
 
         UserApi.requestLogin(
           data,
+          // 로그인 성공 시 호출 될 함수
           res => {
             
             //통신을 통해 전달받은 값 콘솔에 출력
@@ -140,11 +144,17 @@ export default {
             //요청이 끝나면 버튼 활성화
             this.isSubmit = true;
 
+            // 로그인 정보를 vuex 에 저장
+            this.$store.commit('addUserInfo', res.userInfo);
+
+            // feed/main 페이지로 이동
             this.$router.push("/feed/main");
           },
+          // 로그인 실패 시 호출 될 함수
           error => {
             
-            alert(error.msg);
+            // console.log(this.$router)
+            this.$router.push({name:'Errors', query: {message: error.msg}})
 
             //요청이 끝나면 버튼 활성화
             this.isSubmit = true;

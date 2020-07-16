@@ -25,7 +25,9 @@
           v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
           id="email"
           placeholder="이메일을 입력하세요."
-          type="text" />
+          type="text" 
+          autocapitalize="off"
+          />
         <label for="email">이메일</label>
         <div class="error-text" v-if="error.email">{{error.email}}</div>
       </div>
@@ -59,7 +61,8 @@
       <span>약관을 동의합니다.</span>
     </label>
 
-    <span @click="termPopup=true">약관보기</span>
+    <!-- go-term CSS 적용 -->
+    <span class="go-term" @click="termPopup=true">약관보기</span>
 
     <button
       class="btn-bottom"
@@ -116,7 +119,7 @@ export default {
         this.password.length >= 0 &&
         !this.passwordSchema.validate(this.password)
       )
-        this.error.password = "영문,숫자 포함 8 자리이상이어야 합니다.";
+        this.error.password = "비밀번호는 영문, 숫자 포함 8자리 이상이어야 합니다.";
       else this.error.password = false;
 
       if(this.password != this.passwordConfirm)
@@ -131,7 +134,7 @@ export default {
       }
 
       if(getByteLength(this.nickName) > 20)
-        this.error.nickName = "닉네임은 20 Byte 를 넘지 않아야 합니다."
+        this.error.nickName = "닉네임은 20Byte를 넘지 않아야 합니다."
       else this.error.nickName = false;
 
       this.error.term = !this.isTerm;
@@ -159,13 +162,12 @@ export default {
           res => {
             //요청이 끝나면 버튼 활성화
             this.isSubmit = true;
-
-            // 가입 했으면 가입한 정보로 로그인 하라고 하기
-            this.$router.push("/");
+            // 가입 성공했으면 가입 완료 페이지로 이동
+            this.$router.push("/user/joincomplete");
           },
           error => {
-            
-            alert(error.msg);
+          
+            this.$router.push({name:'Errors', query: {message: error.msg}})
 
             //요청이 끝나면 버튼 활성화
             this.isSubmit = true;

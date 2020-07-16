@@ -28,11 +28,11 @@ const requestLogin = (data,callback,errorCallback) => {
 
                 // 로그인 성공
                 if(res.data.status) {
-                    callback();
+                    callback({userInfo: res.data.data});
                 }
                 // 로그인 실패시(닉네임 또는 이메일 중복)
                 else {
-                    let error = {msg : res.data.data};
+                    let error = {msg : res.data.msg};
                     errorCallback(error);
                 }
             }
@@ -63,7 +63,40 @@ const requestJoin = (data,callback,errorCallback) => {
                 console.log(res.data);
 
                 if(res.data.status == false) {
-                    let error = {msg : res.data.data};
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                } else {
+                    callback();
+                }
+            }
+        })
+        .catch(error => {
+            error.msg = '서버 요청에서 오류 발생';
+            errorCallback(error);
+        });
+
+}
+
+const requestModifyPw = (data,callback,errorCallback) => {
+    // ModifyPw.vue 에서 보낸 데이터 확인
+    console.log(data);
+
+    //백앤드와 비밀번호 변경하기 통신하는 부분
+    axios.put('http://localhost:9000/account/modifypw', {
+            password : data.password
+            , newPassword : data.newPassword
+            , email : data.email
+        })
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            } else {
+                // 서버에서 준 res 확인
+                console.log(res.data);
+
+                if(res.data.status == false) {
+                    let error = {msg : res.data.msg};
                     errorCallback(error);
                 } else {
                     callback();
@@ -80,6 +113,7 @@ const requestJoin = (data,callback,errorCallback) => {
 const UserApi = {
     requestLogin:(data,callback,errorCallback)=>requestLogin(data,callback,errorCallback)
     , requestJoin:(data,callback,errorCallback)=>requestJoin(data,callback,errorCallback)
+    , requestModifyPw:(data,callback,errorCallback)=>requestModifyPw(data,callback,errorCallback)
 }
 
 export default UserApi
