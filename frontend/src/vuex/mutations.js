@@ -4,5 +4,9 @@ export default {
     },
     removeUserInfo(state) {
         state.userInfo = {};
+    },
+
+    addLoginEmail(state, email) {
+        state.loginEmail = email;
     }
 }

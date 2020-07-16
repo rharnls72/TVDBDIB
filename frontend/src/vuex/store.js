@@ -8,7 +8,9 @@ Vue.use(Vuex)
 
 const state = {
     isUser: false,
-    userInfo: {}
+    userInfo: {},
+
+    loginEmail: ""
 }
 
 export default new Vuex.Store({

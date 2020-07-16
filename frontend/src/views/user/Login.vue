@@ -94,6 +94,8 @@ export default {
       .digits()
       .has()
       .letters();
+    
+    this.email = this.$store.state.loginEmail;
   },
   watch: {
     password: function(v) {
@@ -132,6 +134,10 @@ export default {
 
         //요청 후에는 버튼 비활성화
         this.isSubmit = false;
+
+        // 로그인 하려는 이메일을 vuex 에 저장
+        // 오류 난 후 다시 돌아왔을때 다시 채워놓기 위함
+        this.$store.commit('addLoginEmail', this.email);
 
         UserApi.requestLogin(
           data,
