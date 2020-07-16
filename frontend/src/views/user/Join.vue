@@ -163,7 +163,7 @@ export default {
             //요청이 끝나면 버튼 활성화
             this.isSubmit = true;
             // 가입 성공했으면 가입 완료 페이지로 이동
-            this.$router.push("/user/joincomplete");
+            this.$router.push({name: "JoinComplete", params: {nickName: nickName, email: email}});
           },
           error => {
           

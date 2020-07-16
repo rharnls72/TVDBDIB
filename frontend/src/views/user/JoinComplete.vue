@@ -5,11 +5,11 @@
     <div class="wrapC">
       <h1>
         <!-- 유저 닉네임, 이메일 받아서 들어가야 함 -->
-        XXX님, 반갑습니다!
+        {{nickName}}님, 반갑습니다!
       </h1>
       <h3>
         <!-- 이메일 주소 파란색으로 돋보이게 표시 -->
-        <p style="color:royalblue">example@gmail.com</p>으로 회원가입 인증 메일이 발송되었습니다. 
+        <p style="color:royalblue">{{email}}</p>으로 회원가입 인증 메일이 발송되었습니다. 
         <br />이메일을 확인해 주세요.
       </h3>
 
@@ -40,6 +40,12 @@
 import "../../components/css/user.scss";
 
 export default {
+  data() {
+    return {
+      nickName: this.$route.params.nickName,
+      email: this.$route.params.email,
+    }
+  },
   methods: {
     toMainPage() {
         this.$router.push("/");
