@@ -12,8 +12,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
 
 @Data
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
     private int uid;
