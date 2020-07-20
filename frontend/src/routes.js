@@ -9,6 +9,8 @@ import Components from './views/Components.vue'
 import Errors from './views/Errors.vue'
 import PageNotFound from './views/PageNotFound.vue'
 import ModifyPwComplete from './views/user/ModifyPwComplete.vue'
+import CreateArticle from '@/views/feed/CreateArticle.vue'
+import CreateVote from '@/views/feed/CreateVote.vue'
 
 export default [
 
@@ -56,5 +58,15 @@ export default [
         path: '/user/modifypwcomplete',
         name: 'ModifyPwComplete',
         component: ModifyPwComplete
-    }
+    },
+    {
+        path: '/feed/create/article',
+        name: 'CreateArticle',
+        component: CreateArticle
+    },
+    {
+        path: '/feed/create/vote',
+        name: 'CreateVote',
+        component: CreateVote
+    },
 ]
