@@ -6,49 +6,28 @@
 <mapper namespace="com.web.curation.dao.user.UserDao">
 
     <select id="getUserByEmail" resultType="User">
-        select
-            uid             as uid
-            , email         as email
-            , create_date   as createDate
-            , nick_name     as nickname
-        from
-            user
-        where
-            email = #{value}
+        select *
+        from user
+        where email = #{email}
     </select>
 
     <select id="getUserByNickName" resultType="User">
-        select
-            uid             as uid
-            , email         as email
-            , create_date   as createDate
-            , nick_name     as nickname
-        from
-            user
-        where
-            nick_name = #{value}
+        select *
+        from user
+        where nick_name = #{nick_name}
     </select>
 
     <select id="findUserByEmailAndPassword" resultType="User">
-        select
-            uid             as uid
-            , email         as email
-            , create_date   as createDate
-            , nick_name     as nickname
-        from
-            user
-        where
-            email = #{email}
+        select *
+        from user
+        where email = #{email}
             and password = #{password}
     </select>
 
     <select id="checkPassword" resultType="int">
-        select
-            count(*) as n
-        from
-            user
-        where
-            email = #{email}
+        select count(*)
+        from user
+        where email = #{email}
             and password = #{password}
     </select>
 
@@ -62,16 +41,13 @@
         values(
             #{email}
             , #{password}
-            , #{nickname}
+            , #{nick_name}
         )
     </insert>
 
     <update id="modifyPassword">
-        update
-            user
-        set
-            password = #{password}
-        where
-            email = #{email}
+        update user
+        set password = #{password}
+        where email = #{email}
     </update>
 </mapper>

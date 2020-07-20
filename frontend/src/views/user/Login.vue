@@ -35,6 +35,12 @@
         <label for="password">비밀번호</label>
         <div class="error-text" v-if="error.password">{{error.password}}</div>
       </div>
+
+      <label>
+        <input v-model="isSave" type="checkbox" id="save" />
+        <span>로그인 유지</span>
+      </label>
+
       <button
         class="btn btn--back btn--login"
         @click="onLogin"
@@ -58,7 +64,7 @@
         </div>
         <div class="wrap">
           <p>비밀번호를 잊으셨나요?</p>
-          <router-link to="/user/findpwd" class="btn--text">비밀번호 찾기</router-link>
+          <router-link to="/user/findPw" class="btn--text">비밀번호 찾기</router-link>
         </div>
         <div class="wrap">
           <p>아직 회원이 아니신가요?</p>
@@ -83,6 +89,9 @@ export default {
     GoogleLogin
   },
   created() {
+    var getValue = JSON.parse(localStorage.getItem('tvility'));
+    // if(getValue != null)  this.$router.push("/feed/main");
+
     this.component = this;
 
     this.passwordSchema
@@ -150,6 +159,9 @@ export default {
             //요청이 끝나면 버튼 활성화
             this.isSubmit = true;
 
+            if(this.isSave){
+              localStorage.setItem('tvility', JSON.stringify(res.userInfo));
+            }
             // 로그인 정보를 vuex 에 저장
             this.$store.commit('addUserInfo', res.userInfo);
 
@@ -174,6 +186,7 @@ export default {
       email: "",
       password: "",
       passwordSchema: new PV(),
+      isSave: false,
       error: {
         email: false,
         passowrd: false

@@ -2,7 +2,6 @@ package com.web.curation.controller.account;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.web.curation.dao.user.UserDao;
@@ -45,8 +44,7 @@ public class AccountController {
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
     public Object login(@RequestParam(required = true) final String email,
-            @RequestParam(required = true) final String password,
-            HttpSession session) {
+            @RequestParam(required = true) final String password) {
 
         // 이메일과 비밀번호로 유저 찾아보고 있으면 User 객체 반환
         // 없으면 Null 이 반환
@@ -59,10 +57,6 @@ public class AccountController {
 
         // 존재하는 유저면 로그인 성공
         if (user != null) {
-            // =============================================== 세션 문제 해결 필요
-            // 세션에 로그인 정보 넣기
-            // session.setAttribute("userInfo", user);
-            // ===============================================
 
             // 성공했다는 응답 객체 준비하기
             final BasicResponse result = new BasicResponse();
@@ -101,7 +95,7 @@ public class AccountController {
         }
 
         // 닉네임도 중복 확인 해보기
-        user = userDao.getUserByNickName(request.getNickname());
+        user = userDao.getUserByNickName(request.getNick_name());
         if(user != null) {
             final BasicResponse result = new BasicResponse();
             result.status = false;
@@ -130,28 +124,14 @@ public class AccountController {
 
     @PutMapping("/account/modifypw")
     @ApiOperation(value = "비밀번호 변경")
-    public Object modifyPassword(@RequestBody Map<String, Object> req, HttpSession session) {
+    public Object modifyPassword(@RequestBody Map<String, Object> req) {
         // 요청으로 받은 기존 비밀번호와 새 비밀번호 가져오기
         String currentPassword = (String) req.get("password");
         String newPassword = (String) req.get("newPassword");
         String email = (String) req.get("email");
 
-        // ======================================== 세션 문제 해결 필요
-        // 세션에서 유저 정보 가져오기
-        // User user = (User) session.getAttribute("userInfo");
-        // ========================================
-
         // 결과 반환에 쓰일 객체
         final BasicResponse result = new BasicResponse();
-
-        // ======================================== 세션 문제 해결 필요
-        // 세션에 유저 정보가 없으면 오류 발생
-        // if(user == null) {
-        //     result.status = false;
-        //     result.data = "세션에 유저 정보가 없습니다.";
-        //     return new ResponseEntity<>(result, HttpStatus.OK);
-        // }
-        // ========================================
 
         User user = new User();
         // 기존 비밀번호가 일치하는지 확인

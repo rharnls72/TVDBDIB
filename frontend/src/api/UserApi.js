@@ -50,7 +50,7 @@ const requestJoin = (data,callback,errorCallback) => {
 
     //백앤드와 가입하기 통신하는 부분
     axios.post('http://localhost:9000/account/signup', {
-            nickname: data.nickName
+        nick_name: data.nick_name
             , email: data.email
             , password: data.password
         })
