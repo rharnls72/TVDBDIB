@@ -9,7 +9,9 @@ import Components from './views/Components.vue'
 import Errors from './views/Errors.vue'
 import PageNotFound from './views/PageNotFound.vue'
 import ModifyPwComplete from './views/user/ModifyPwComplete.vue'
-
+import FindPw from './views/user/FindPw.vue'
+import FindPwComplete from './views/user/FindPwComplete.vue'
+import FindPwRe from './views/user/FindPwRe.vue'
 export default [
 
     {
@@ -56,5 +58,20 @@ export default [
         path: '/user/modifypwcomplete',
         name: 'ModifyPwComplete',
         component: ModifyPwComplete
+    },
+    {
+        path : '/user/findPw',
+        name : 'FindPw',
+        component : FindPw
+    },
+    {
+        path : '/user/findPwcomplete',
+        name : 'FindPwComplete',
+        component : FindPwComplete
+    },
+    {
+        path : '/user/findPwRe',
+        name : 'FindPwRe',
+        component : FindPwRe
     }
 ]
