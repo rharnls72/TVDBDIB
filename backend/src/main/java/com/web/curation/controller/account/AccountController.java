@@ -162,4 +162,35 @@ public class AccountController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @GetMapping("/account/findemail")
+    @ApiOperation(value = "이메일 찾기")
+    public Object findEmail(@RequestParam(required = true) final String email) {
+        // 결과 반환에 쓰일 객체
+        final BasicResponse result = new BasicResponse();
+
+        User user = userDao.getUserByEmail(email);
+        
+        // 반환 값이 1이 아니면 오류가 발생한거(비밀번호 불일치)
+        if(user == null) {
+            result.status = false;
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }else{
+            result.status = true;
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+    }
+
+    @GetMapping("/account/fnidpw")
+    @ApiOperation(value = "비밀번호 찾기")
+    public Object findPassword(@RequestParam(required = true) final String email) {
+        // 결과 반환에 쓰일 객체
+        final BasicResponse result = new BasicResponse();
+
+        //이메일 보내기
+        result.status = false;
+        result.status = true;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
