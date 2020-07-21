@@ -57,7 +57,10 @@ CREATE TABLE `program` (
 CREATE TABLE `user_follow` (
     `follower` INT,
     `following` INT,
+<<<<<<< HEAD
     PRIMARY KEY (`follower`, `following`),
+=======
+>>>>>>> old_feed
     CONSTRAINT FK_follower FOREIGN KEY (`follower`)
         REFERENCES `user` (`uno`)
         ON DELETE CASCADE,
@@ -69,7 +72,10 @@ CREATE TABLE `user_follow` (
 CREATE TABLE `program_follow` (
     `uno` INT,
     `pno` INT,
+<<<<<<< HEAD
     PRIMARY KEY (`uno`, `pno`),
+=======
+>>>>>>> old_feed
     CONSTRAINT FK_uno FOREIGN KEY (`uno`)
         REFERENCES `user` (`uno`)
         ON DELETE CASCADE,

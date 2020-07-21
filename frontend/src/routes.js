@@ -9,6 +9,8 @@ import Components from './views/Components.vue'
 import Errors from './views/Errors.vue'
 import PageNotFound from './views/PageNotFound.vue'
 import ModifyPwComplete from './views/user/ModifyPwComplete.vue'
+import CreateArticle from '@/views/feed/CreateArticle.vue'
+import CreateVote from '@/views/feed/CreateVote.vue'
 
 import FindPw from './views/user/FindPw.vue'
 import FindPwComplete from './views/user/FindPwComplete.vue'
@@ -82,5 +84,15 @@ export default [
         path : '/user/findPwRe',
         name : 'FindPwRe',
         component : FindPwRe
-    }
+    },
+    {
+        path: '/feed/create/article',
+        name: 'CreateArticle',
+        component: CreateArticle
+    },
+    {
+        path: '/feed/create/vote',
+        name: 'CreateVote',
+        component: CreateVote
+    },
 ]
