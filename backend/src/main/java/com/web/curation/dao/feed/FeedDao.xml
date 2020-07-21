@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.feed.FeedDao">
+    <!-- Create -->
+    <insert id="addNewFeed">
+        insert into
+            feed(
+                uno
+                <if test="pno > 0">
+                , pno
+                </if>
+                <if test="eno > 0">
+                , eno
+                </if>
+                , content
+                , ctype
+                , thumbnail
+                , tag
+            )
+        values(
+            #{uno}
+            <if test="pno > 0">
+            , #{pno}
+            </if>
+            <if test="eno > 0">
+            , #{eno}
+            </if>
+            , #{content}
+            , #{ctype}
+            , #{thumbnail}
+            , #{tag}
+        )
+    </insert>
+
+    <!-- Read -->
+    <select id="getFeedList" resultType="Feed">
+        select
+            *
+        from
+            feed
+        order by
+            fno desc
+    </select>
+
+    <select id="getFeedDetail" resultType="Feed">
+        select
+            *
+        from
+            feed
+        where
+            fno = #{value}
+    </select>
+
+    <!-- Update -->
+    <update id="modifyFeed">
+        update
+            feed
+        set
+            content = #{content}
+            , ctype = #{ctype}
+            , tag   = #{tag}
+        where
+            fno = #{fno}
+    </update>
+
+    <!-- Delete -->
+    <delete id="deleteFeed">
+        delete from
+            feed
+        where
+            fno = #{value}
+    </delete>
+</mapper>
