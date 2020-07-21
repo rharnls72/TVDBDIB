@@ -7,9 +7,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-
-
-
 @Valid
 @ToString
 public class SignupRequest {
@@ -22,7 +19,7 @@ public class SignupRequest {
     String password;
     @ApiModelProperty(required = true)
     @NotNull
-    String nickname;
+    String nick_name;
 
     public String getEmail() {
         return email;
@@ -42,11 +39,12 @@ public class SignupRequest {
         this.password = password;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getNick_name() {
+        return nick_name;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNick_name(String nick_name) {
+        this.nick_name = nick_name;
     }
+
 }

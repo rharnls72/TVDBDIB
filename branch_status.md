@@ -1,3 +1,4 @@
 # Branch Status
 
-* develop > curation
+
+* develop

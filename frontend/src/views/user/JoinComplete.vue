@@ -5,7 +5,7 @@
     <div class="wrapC">
       <h1>
         <!-- 유저 닉네임, 이메일 받아서 들어가야 함 -->
-        {{nickName}}님, 반갑습니다!
+        {{nick_name}}님, 반갑습니다!
       </h1>
       <h3>
         <!-- 이메일 주소 파란색으로 돋보이게 표시 -->
@@ -42,7 +42,7 @@ import "../../components/css/user.scss";
 export default {
   data() {
     return {
-      nickName: this.$route.params.nickName,
+      nick_name: this.$route.params.nick_name,
       email: this.$route.params.email,
     }
   },
