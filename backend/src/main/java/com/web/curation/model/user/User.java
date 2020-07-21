@@ -16,50 +16,84 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
-    private int uid;
+    private int uno;
 
+    private String email;
     // password 는 json 응답 객체에 포함하지 않기?
     @JsonIgnore
     private String password;
 
-    private String email;
+    private LocalDateTime create_date;
 
-    private LocalDateTime createDate;
+    private String nick_name;
 
-    private String nickname;
+    private String bio;
 
-    public void setUid(int uid) {
-        this.uid = uid;
+    private String profile_pic;
+
+    private boolean is_private;
+
+    public int getUno() {
+        return uno;
     }
-    public int getUid() {
-        return uid;
+
+    public void setUno(int uno) {
+        this.uno = uno;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getEmail() {
-        return email;
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getPassword() {
-        return password;
+
+    public LocalDateTime getCreate_date() {
+        return create_date;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-    public LocalDateTime getCreateDate() {
-        return createDate;
+    public void setCreate_date(LocalDateTime create_date) {
+        this.create_date = create_date;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public String getNick_name() {
+        return nick_name;
     }
-    public String getNickname() {
-        return nickname;
+
+    public void setNick_name(String nick_name) {
+        this.nick_name = nick_name;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getProfile_pic() {
+        return profile_pic;
+    }
+
+    public void setProfile_pic(String profile_pic) {
+        this.profile_pic = profile_pic;
+    }
+
+    public boolean isIs_private() {
+        return is_private;
+    }
+
+    public void setIs_private(boolean is_private) {
+        this.is_private = is_private;
     }
 }

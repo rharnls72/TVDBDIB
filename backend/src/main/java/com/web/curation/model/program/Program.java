@@ -1,6 +1,7 @@
 package com.web.curation.model.program;
 
 import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -102,3 +103,4 @@ public class Program {
         return thumbnail;
     }
 }
+
