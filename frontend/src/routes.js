@@ -12,6 +12,12 @@ import ModifyPwComplete from './views/user/ModifyPwComplete.vue'
 import CreateArticle from '@/views/feed/CreateArticle.vue'
 import CreateVote from '@/views/feed/CreateVote.vue'
 
+import FindPw from './views/user/FindPw.vue'
+import FindPwComplete from './views/user/FindPwComplete.vue'
+import FindPwRe from './views/user/FindPwRe.vue'
+
+import IndexCuration from './views/curation/IndexCuration.vue'
+
 export default [
 
     {
@@ -58,6 +64,26 @@ export default [
         path: '/user/modifypwcomplete',
         name: 'ModifyPwComplete',
         component: ModifyPwComplete
+    },
+    {
+        path: '/curation/main',
+        name: 'IndexCuration',
+        component: IndexCuration
+    },
+    {
+        path : '/user/findPw',
+        name : 'FindPw',
+        component : FindPw
+    },
+    {
+        path : '/user/findPwcomplete',
+        name : 'FindPwComplete',
+        component : FindPwComplete
+    },
+    {
+        path : '/user/findPwRe',
+        name : 'FindPwRe',
+        component : FindPwRe
     },
     {
         path: '/feed/create/article',
