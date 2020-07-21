@@ -36,22 +36,6 @@ CREATE TABLE `user` (
     UNIQUE KEY (`email`)
 );
 
-CREATE TABLE `feed` (
-    `fno` INT AUTO_INCREMENT,
-    `uno` INT NOT NULL,
-    `pno` INT,
-    `eno` INT,
-    `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `content` VARCHAR(10000),
-    `ctype` INT NOT NULL,
-    `thambnail` VARCHAR(200),
-    `tag` VARCHAR(500),
-    PRIMARY KEY (`fno`),
-    FOREIGN KEY (`uno`)
-        REFERENCES `user` (`uno`)
-        ON DELETE CASCADE
-);
-
 CREATE TABLE `program` (
     `pno` INT AUTO_INCREMENT,
     `name` VARCHAR(100) NOT NULL,
@@ -73,6 +57,7 @@ CREATE TABLE `program` (
 CREATE TABLE `user_follow` (
     `follower` INT,
     `following` INT,
+    PRIMARY KEY (`follower`, `following`),
     CONSTRAINT FK_follower FOREIGN KEY (`follower`)
         REFERENCES `user` (`uno`)
         ON DELETE CASCADE,
@@ -84,6 +69,7 @@ CREATE TABLE `user_follow` (
 CREATE TABLE `program_follow` (
     `uno` INT,
     `pno` INT,
+    PRIMARY KEY (`uno`, `pno`),
     CONSTRAINT FK_uno FOREIGN KEY (`uno`)
         REFERENCES `user` (`uno`)
         ON DELETE CASCADE,
@@ -103,6 +89,28 @@ CREATE TABLE `episode` (
     `replay_link` VARCHAR(2000),
     CONSTRAINT FK_pno2 FOREIGN KEY (`pno`)
         REFERENCES `program` (`pno`)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE `feed` (
+    `fno` INT AUTO_INCREMENT,
+    `uno` INT NOT NULL,
+    `pno` INT,
+    `eno` INT,
+    `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `content` VARCHAR(10000),
+    `ctype` INT NOT NULL,
+    `thumbnail` VARCHAR(200),
+    `tag` VARCHAR(500),
+    PRIMARY KEY (`fno`),
+    FOREIGN KEY (`uno`)
+        REFERENCES `user` (`uno`)
+        ON DELETE CASCADE,
+    FOREIGN KEY (`pno`)
+        REFERENCES `program` (`pno`)
+        ON DELETE CASCADE,
+    FOREIGN KEY (`eno`)
+        REFERENCES `episode` (`eno`)
         ON DELETE CASCADE
 );
 

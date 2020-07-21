@@ -10,13 +10,13 @@
     <div class="form-wrap">
       <div class="input-with-label">
         <input
-          v-model="nickName"
-          v-bind:class="{error : error.nickName, complete:!error.nickName&&nickName.length!==0}"
-          id="nickname"
+          v-model="nick_name"
+          v-bind:class="{error : error.nick_name, complete:!error.nick_name&&nick_name.length!==0}"
+          id="nick_name"
           placeholder="닉네임을 입력하세요."
           type="text" />
-        <label for="nickname">닉네임</label>
-        <div class="error-text" v-if="error.nickName">{{error.nickName}}</div>
+        <label for="nick_name">닉네임</label>
+        <div class="error-text" v-if="error.nick_name">{{error.nick_name}}</div>
       </div>
 
       <div class="input-with-label">
@@ -93,7 +93,7 @@ export default {
       .letters();
   },
   watch: {
-    nickName: function(v) {
+    nick_name: function(v) {
       this.checkForm();
     },
     password: function(v) {
@@ -133,9 +133,9 @@ export default {
           return b;
       }
 
-      if(getByteLength(this.nickName) > 20)
-        this.error.nickName = "닉네임은 20Byte를 넘지 않아야 합니다."
-      else this.error.nickName = false;
+      if(getByteLength(this.nick_name) > 20)
+        this.error.nick_name = "닉네임은 20Byte를 넘지 않아야 합니다."
+      else this.error.nick_name = false;
 
       this.error.term = !this.isTerm;
 
@@ -147,9 +147,9 @@ export default {
     },
     onJoin() {
       if (this.isSubmit) {
-        let { nickName, email, password } = this;
+        let { nick_name, email, password } = this;
         let data = {
-          nickName,
+          nick_name,
           email,
           password
         };
@@ -163,7 +163,7 @@ export default {
             //요청이 끝나면 버튼 활성화
             this.isSubmit = true;
             // 가입 성공했으면 가입 완료 페이지로 이동
-            this.$router.push({name: "JoinComplete", params: {nickName: nickName, email: email}});
+            this.$router.push({name: "JoinComplete", params: {nick_name: nick_name, email: email}});
           },
           error => {
           
@@ -181,7 +181,7 @@ export default {
       email: "",
       password: "",
       passwordConfirm: "",
-      nickName: "",
+      nick_name: "",
 
       isTerm: false,
 
@@ -193,7 +193,7 @@ export default {
         email: false,
         password: false,
         passwordConfirm: false,
-        nickName: false,
+        nick_name: false,
         term: false
       },
 

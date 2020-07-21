@@ -50,7 +50,7 @@ const requestJoin = (data,callback,errorCallback) => {
 
     //백앤드와 가입하기 통신하는 부분
     axios.post('http://localhost:9000/account/signup', {
-            nickname: data.nickName
+        nick_name: data.nick_name
             , email: data.email
             , password: data.password
         })
@@ -109,11 +109,66 @@ const requestModifyPw = (data,callback,errorCallback) => {
         });
 
 }
+const requestFindEmail = (data,callback,errorCallback) => {
+    // ModifyPw.vue 에서 보낸 데이터 확인
+    console.log(data);
 
+    //백앤드와 비밀번호 변경하기 통신하는 부분
+    axios.get('http://localhost:9000/account/findemail?email=' + data.email)
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            } else {
+                // 서버에서 준 res 확인
+                console.log(res.data);
+                callback({isEmail: res.data.status});
+            }
+        })
+        .catch(error => {
+            error.msg = '서버 요청에서 오류 발생';
+            errorCallback(error);
+        });
+
+}
+const requestFindPw = (data,callback,errorCallback) => {
+    // ModifyPw.vue 에서 보낸 데이터 확인
+    console.log(data);
+
+    //백앤드와 비밀번호 변경하기 통신하는 부분
+    axios.get('http://localhost:9000/account/fnidpw', {
+        params: {
+          email: data.email
+        }
+      })
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            } else {
+                // 서버에서 준 res 확인
+                console.log(res.data);
+
+                if(res.data.status == false) {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                } else {
+                    callback();
+                }
+            }
+        })
+        .catch(error => {
+            error.msg = '서버 요청에서 오류 발생';
+            errorCallback(error);
+        });
+
+}
 const UserApi = {
     requestLogin:(data,callback,errorCallback)=>requestLogin(data,callback,errorCallback)
     , requestJoin:(data,callback,errorCallback)=>requestJoin(data,callback,errorCallback)
     , requestModifyPw:(data,callback,errorCallback)=>requestModifyPw(data,callback,errorCallback)
+    , requestFindEmail:(data,callback,errorCallback)=>requestFindEmail(data,callback,errorCallback)
+    , requestFindPw:(data,callback,errorCallback)=>requestFindPw(data,callback,errorCallback)
 }
 
 export default UserApi
