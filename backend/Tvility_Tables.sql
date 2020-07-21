@@ -280,9 +280,10 @@ CREATE TABLE `message` (
 CREATE TABLE `alert` (
     `ano` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
-    `ctype` INT NOT NULL,
-    `cno` INT NOT NULL,
+    `ctype` INT,
+    `cno` INT,
     `atype` INT NOT NULL,
+    `read` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`ano`),
     FOREIGN KEY (`uno`)
         REFERENCES `user` (`uno`)
