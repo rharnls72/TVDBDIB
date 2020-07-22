@@ -107,15 +107,26 @@
     </div>
     <!---->
     <!---->
+    <div>
+      {{ curation.pno }}
+    </div>
   </div>
 </template>
 
 <script>
 import defaultImage from "../../assets/images/img-placeholder.png";
 import defaultProfile from "../../assets/images/profile_default.png";
+
 export default {
+  name: 'CurationItem',
   data: () => {
-    return { defaultImage, defaultProfile };
-  }
+    return {
+      defaultImage,
+      defaultProfile,
+      };
+  },
+  props: {
+    curation: Object,
+  },
 };
 </script>
