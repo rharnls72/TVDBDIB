@@ -24,6 +24,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
+import java.security.MessageDigest;
+
 @ApiResponses(
     value = {
         @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
@@ -41,16 +49,26 @@ public class AccountController {
     @Autowired
     UserDao userDao;
 
+    @Autowired
+    private JavaMailSender sender;
+
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
     public Object login(@RequestParam(required = true) final String email,
-            @RequestParam(required = true) final String password) {
+            @RequestParam(required = true) final String password){
 
         // 이메일과 비밀번호로 유저 찾아보고 있으면 User 객체 반환
         // 없으면 Null 이 반환
         User user = new User();
         user.setEmail(email);
-        user.setPassword(password);
+        try {
+            user.setPassword(SHA256(password));
+        } catch (Exception e) {
+            final BasicResponse result = new BasicResponse();
+            result.status = false;
+            result.msg = "비밀번호 암호화 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
         user = userDao.findUserByEmailAndPassword(user);
 
         ResponseEntity<BasicResponse> response = null;
@@ -102,6 +120,14 @@ public class AccountController {
             result.msg = "닉네임 중복";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
+        try {
+            request.setPassword(SHA256(request.getPassword()));
+        } catch (Exception e) {
+            final BasicResponse result = new BasicResponse();
+            result.status = false;
+            result.msg = "비밀번호 암호화 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
         // 이메일이 중복되지 않았다면 회원가입 진행
         int n = userDao.addNewUser(request);
@@ -112,6 +138,14 @@ public class AccountController {
         if(n == 1) {
             result.status = true;
             result.msg = "success";
+            try {
+                sendJoinMail(request.getEmail(), request.getNick_name());
+            } catch (Exception e) {
+                e.printStackTrace();
+                result.status = false;
+                result.msg = "메일 전송 실패";
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }
         }
         // 아니면 오류가 난거
         else {
@@ -136,7 +170,14 @@ public class AccountController {
         User user = new User();
         // 기존 비밀번호가 일치하는지 확인
         user.setEmail(email);
-        user.setPassword(currentPassword);
+        try {
+            user.setPassword(SHA256(currentPassword));
+        } catch (Exception e) {
+            result.status = false;
+            result.msg = "비밀번호 암호화 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        
         int n = userDao.checkPassword(user);
 
         // 반환 값이 1이 아니면 오류가 발생한거(비밀번호 불일치)
@@ -147,7 +188,13 @@ public class AccountController {
         }
 
         // 이제 비밀번호 바꾸기
-        user.setPassword(newPassword);
+        try {
+            user.setPassword(SHA256(newPassword));
+        } catch (Exception e) {
+            result.status = false;
+            result.msg = "비밀번호 암호화 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
         n = userDao.modifyPassword(user);
 
         // 반환 값이 1이 아니면 오류 발생(수정 실패)
@@ -168,7 +215,6 @@ public class AccountController {
     public Object findEmail(@RequestParam(required = true) final String email) {
         // 결과 반환에 쓰일 객체
         final BasicResponse result = new BasicResponse();
-
         User user = userDao.getUserByEmail(email);
         
         // 반환 값이 1이 아니면 오류가 발생한거(비밀번호 불일치)
@@ -185,12 +231,59 @@ public class AccountController {
     @GetMapping("/account/fnidpw")
     @ApiOperation(value = "비밀번호 찾기")
     public Object findPassword(@RequestParam(required = true) final String email) {
-        // 결과 반환에 쓰일 객체
         final BasicResponse result = new BasicResponse();
+        User user = userDao.getUserByEmail(email);
+        if(user == null) {
+            result.status = false;
+            result.msg = "이메일 찾기 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        try {
+            sendFindPwMail(email, user.getNick_name());
+            result.status = true;
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.status = false;
+            result.msg = "메일 전송 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+    }
+    public void sendJoinMail(String email, String nick_name) throws MessagingException{
+        MimeMessage message = sender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setTo(email);
+        helper.setSubject("[tvility] 이메일 인증");
+        helper.setText("<h3>안녕하세요 "+nick_name+"님! TVility 회원이 되신것을 진심으로 환영합니다. "+
+        "<br/>아래 버튼을 클릭하여 회원가입을 완료해주세요. </h3><br/><br/>"+
+        "<button  type='button' onclick='location.href=\"http://localhost:8080/#/user/emailconfirm\"' style='width: 150px;background: #000;"+
+        "color: #fff;height: 50px;text-align: center;line-height: 50px;font-weight: 600;"+
+        "border-radius: 5px;'>이메일 인증</button>", true);
+        sender.send(message);
+    }
+    public void sendFindPwMail(String email, String nick_name) throws MessagingException{
+        MimeMessage message = sender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setTo(email);
+        helper.setSubject("[tvility] 비밀번호 변경");
+        helper.setText("<h3>안녕하세요 "+nick_name+"님!"+
+        "<br/>아래 버튼을 클릭하여 비밀번호를 변경해주세요. </h3><br/><br/>"+
+        "<button  type='button' onclick='location.href=\"http://localhost:8080/#/user/editpw\"' style='width: 150px;background: #000;"+
+        "color: #fff;height: 50px;text-align: center;line-height: 50px;font-weight: 600;"+
+        "border-radius: 5px;'>비밀번호 변경</button>", true);
+        sender.send(message);
+    }
+    public String SHA256(String msg) throws Exception{
+        String base = "password123";
+		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+		byte[] hash = digest.digest(base.getBytes("UTF-8"));
+		StringBuffer hexString = new StringBuffer();
 
-        //이메일 보내기
-        result.status = false;
-        result.status = true;
-        return new ResponseEntity<>(result, HttpStatus.OK);
+		for (int i = 0; i < hash.length; i++) {
+			String hex = Integer.toHexString(0xff & hash[i]);
+			if(hex.length() == 1) hexString.append('0');
+			hexString.append(hex);
+		}
+        return hexString.toString();
     }
 }
