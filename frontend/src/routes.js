@@ -12,6 +12,7 @@ import ModifyPwComplete from './views/user/ModifyPwComplete.vue'
 import CreateArticle from '@/views/feed/CreateArticle.vue'
 import CreateVote from '@/views/feed/CreateVote.vue'
 
+import EmailConfirm from './views/user/EmailConfirm.vue'
 import ModifyPwEmail from './views/user/ModifyPwEmail.vue'
 import FindPw from './views/user/FindPw.vue'
 import FindPwComplete from './views/user/FindPwComplete.vue'
@@ -50,6 +51,11 @@ export default [
         path : '/user/editpw/:email',
         name : 'ModifyPwEmail',
         component : ModifyPwEmail
+    },
+    {
+        path : '/user/emailconfirm/:email',
+        name : 'EmailConfirm',
+        component : EmailConfirm
     },
     {
         path : '/feed/main',

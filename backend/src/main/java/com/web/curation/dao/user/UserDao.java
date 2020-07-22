@@ -23,4 +23,5 @@ public interface UserDao {
     int addNewUser(SignupRequest request);
 
     int modifyPassword(User user);
+    int emailConfirm(String email);
 }

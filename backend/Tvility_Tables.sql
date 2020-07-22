@@ -32,6 +32,7 @@ CREATE TABLE `user` (
     `bio` VARCHAR(200),
     `profile_pic` VARCHAR(100),
     `is_private` BOOLEAN,
+    `is_certification` BOOLEAN DEFAULT FALSE, 
     PRIMARY KEY (`uno`),
     UNIQUE KEY (`email`)
 );

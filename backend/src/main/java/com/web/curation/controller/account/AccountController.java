@@ -75,14 +75,21 @@ public class AccountController {
 
         // 존재하는 유저면 로그인 성공
         if (user != null) {
-
-            // 성공했다는 응답 객체 준비하기
             final BasicResponse result = new BasicResponse();
-            result.status = true;
-            result.msg = "success";
-            result.data = user;
-            response = new ResponseEntity<>(result, HttpStatus.OK);
-            System.out.println("Login 성공 !");
+            if(user.isIs_certification()){
+                // 성공했다는 응답 객체 준비하기
+                result.status = true;
+                result.msg = "success";
+                result.data = user;
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+                System.out.println("Login 성공 !");
+            }else{
+                result.status = false;
+                result.msg = "이메일 인증을 완료해주세요.";
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+                System.out.println("이메일 인증 안함!");
+            }
+            
         }
         // 존재하는 유저가 없으면 로그인 실패
         // 이 경우도 SQL 쿼리는 성공한거니까 result 줄게요
@@ -226,7 +233,7 @@ public class AccountController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     @PutMapping("/account/modifypwemail")
     @ApiOperation(value = "비밀번호 이메일 변경")
     public Object modifyPasswordEmail(@RequestBody Map<String, Object> req) {
@@ -260,7 +267,25 @@ public class AccountController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @GetMapping("/account/emailconfirm")
+    @ApiOperation(value = "이메일 인증")
+    public Object emailconfirm(@RequestParam(required = true) final String email) {
+        // 결과 반환에 쓰일 객체
+        final BasicResponse result = new BasicResponse();
+        int n = userDao.emailConfirm(email);
+        
+        if(n != 1) {
+            result.status = false;
+            result.msg = "이메일 인증 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
+        // 여기까지 왔으면 비밀번호 변경 성공
+        result.status = true;
+        result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
     @GetMapping("/account/findemail")
     @ApiOperation(value = "이메일 찾기")
     public Object findEmail(@RequestParam(required = true) final String email) {
@@ -307,7 +332,7 @@ public class AccountController {
         helper.setSubject("[tvility] 이메일 인증");
         helper.setText("<h3>안녕하세요 "+nick_name+"님! TVility 회원이 되신것을 진심으로 환영합니다. "+
         "<br/>아래 버튼을 클릭하여 회원가입을 완료해주세요. </h3><br/><br/>"+
-        "<button  type='button' onclick='location.href=\"http://localhost:8080/#/user/emailconfirm?email="+email+"\"' style='width: 150px;background: #000;"+
+        "<button  type='button' onclick='location.href=\"http://localhost:8080/#/user/emailconfirm/"+email+"\"' style='width: 150px;background: #000;"+
         "color: #fff;height: 50px;text-align: center;line-height: 50px;font-weight: 600;"+
         "border-radius: 5px;'>이메일 인증</button>", true);
         sender.send(message);
