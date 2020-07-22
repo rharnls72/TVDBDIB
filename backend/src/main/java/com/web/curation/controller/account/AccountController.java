@@ -226,6 +226,40 @@ public class AccountController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    @PutMapping("/account/modifypwemail")
+    @ApiOperation(value = "비밀번호 이메일 변경")
+    public Object modifyPasswordEmail(@RequestBody Map<String, Object> req) {
+        String newPassword = (String) req.get("newPassword");
+        String email = (String) req.get("email");
+
+        // 결과 반환에 쓰일 객체
+        final BasicResponse result = new BasicResponse();
+
+        User user = new User();
+        user.setEmail(email);
+        try {
+            user.setPassword(SHA256(newPassword));
+        } catch (Exception e) {
+            result.status = false;
+            result.msg = "비밀번호 암호화 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        
+        int n = userDao.modifyPassword(user);
+
+        // 반환 값이 1이 아니면 오류 발생(수정 실패)
+        if(n != 1) {
+            result.status = false;
+            result.msg = "비밀번호 변경 실패. (" + n + ")";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+        // 여기까지 왔으면 비밀번호 변경 성공
+        result.status = true;
+        result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     @GetMapping("/account/findemail")
     @ApiOperation(value = "이메일 찾기")
@@ -273,7 +307,7 @@ public class AccountController {
         helper.setSubject("[tvility] 이메일 인증");
         helper.setText("<h3>안녕하세요 "+nick_name+"님! TVility 회원이 되신것을 진심으로 환영합니다. "+
         "<br/>아래 버튼을 클릭하여 회원가입을 완료해주세요. </h3><br/><br/>"+
-        "<button  type='button' onclick='location.href=\"http://localhost:8080/#/user/emailconfirm\"' style='width: 150px;background: #000;"+
+        "<button  type='button' onclick='location.href=\"http://localhost:8080/#/user/emailconfirm?email="+email+"\"' style='width: 150px;background: #000;"+
         "color: #fff;height: 50px;text-align: center;line-height: 50px;font-weight: 600;"+
         "border-radius: 5px;'>이메일 인증</button>", true);
         sender.send(message);
@@ -285,7 +319,7 @@ public class AccountController {
         helper.setSubject("[tvility] 비밀번호 변경");
         helper.setText("<h3>안녕하세요 "+nick_name+"님!"+
         "<br/>아래 버튼을 클릭하여 비밀번호를 변경해주세요. </h3><br/><br/>"+
-        "<button  type='button' onclick='location.href=\"http://localhost:8080/#/user/editpw\"' style='width: 150px;background: #000;"+
+        "<button  type='button' onclick='location.href=\"http://localhost:8080/#/user/editpw/"+email+"\"' style='width: 150px;background: #000;"+
         "color: #fff;height: 50px;text-align: center;line-height: 50px;font-weight: 600;"+
         "border-radius: 5px;'>비밀번호 변경</button>", true);
         sender.send(message);

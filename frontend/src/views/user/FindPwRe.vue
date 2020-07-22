@@ -24,7 +24,7 @@
 
 <script>
 import "../../components/css/user.scss";
-
+import UserApi from "../../api/UserApi";
 export default {
   data() {
     return {
