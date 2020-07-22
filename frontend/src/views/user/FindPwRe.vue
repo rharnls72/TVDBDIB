@@ -24,7 +24,7 @@
 
 <script>
 import "../../components/css/user.scss";
-
+import UserApi from "../../api/UserApi";
 export default {
   data() {
     return {
@@ -36,7 +36,16 @@ export default {
         this.$router.push("/");
     },
     tofindPw() {
-        this.$router.push({name:'FindPwComplete', params: {email: this.email}});
+        UserApi.requestFindPw(
+          {email: this.email},
+          res => {
+            // 가입 했으면 가입한 정보로 로그인 하라고 하기
+            this.$router.push({name:'FindPwComplete', params: {email: this.email}});
+          },
+          error => {
+            this.$router.push({name:'Errors', query: {message: error.msg}})
+          }
+        );
     },
   },
 };

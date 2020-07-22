@@ -50,4 +50,10 @@
         set password = #{password}
         where email = #{email}
     </update>
+
+    <update id="emailConfirm">
+        update user
+        set is_certification = true
+        where email = #{email}
+    </update>
 </mapper>
