@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.reply.ProgramReplyDao">
+    <!-- Create -->
+    <insert id="createReply">
+        insert into
+            program_reply(
+                pno
+                , parent_reply
+                , uno
+                , content
+            )
+        values(
+            #{no}
+            , #{parent_reply}
+            , #{uno}
+            , #{content}
+        )
+    </insert>
+
+    <!-- Read -->
+    <select id="getReplyList" resultType="Reply">
+        select
+            prno    as no
+            , parent_reply
+            , content
+            , write_date
+            , writer_uno
+            , writer_nick_name
+            , writer_profile_pic
+            , liker_nick_name
+        from
+            program_reply_view
+        where
+            pno = #{value}
+    </select>
+
+    <!-- Update -->
+    <update id="modifyReply">
+        update
+            program_reply
+        set
+            content = #{content}
+        where
+            prno = #{no}
+    </update>
+
+    <!-- Delete -->
+    <delete id="deleteReply">
+        delete from
+            program_reply
+        where
+            prno = #{value}
+    </delete>
+</mapper>
