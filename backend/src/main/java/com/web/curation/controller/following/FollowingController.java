@@ -1,4 +1,4 @@
-package com.web.curation.controller.account;
+package com.web.curation.controller.following;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.List;
 
-import com.web.curation.dao.user.FollowingDao;
+import com.web.curation.dao.following.FollowingDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.program.Program;
-import com.web.curation.model.user.ProgramFollowing;
+import com.web.curation.model.following.ProgramFollowing;
 import com.web.curation.model.user.User;
-import com.web.curation.model.user.UserFollowing;
+import com.web.curation.model.following.UserFollowing;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;

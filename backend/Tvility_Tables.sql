@@ -22,6 +22,7 @@ DROP TABLE IF EXISTS `feed`;
 DROP TABLE IF EXISTS `episode`;
 DROP TABLE IF EXISTS `program`;
 DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `follow_request`;
 
 CREATE TABLE `user` (
     `uno` INT AUTO_INCREMENT,
@@ -286,6 +287,19 @@ CREATE TABLE `alert` (
     `read` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`ano`),
     FOREIGN KEY (`uno`)
+        REFERENCES `user` (`uno`)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE `follow_request` (
+    `fno` INT AUTO_INCREMENT,
+    `uno` INT,
+    `follower` INT,
+    PRIMARY KEY (`fno`),
+    FOREIGN KEY (`uno`)
+        REFERENCES `user` (`uno`)
+        ON DELETE CASCADE,
+    FOREIGN KEY (`follower`)
         REFERENCES `user` (`uno`)
         ON DELETE CASCADE
 );
