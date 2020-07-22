@@ -155,7 +155,24 @@ public class AccountController {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @PostMapping("/account/sendjoinEmail")
+    @ApiOperation(value = "가입메일 재전송하기")
+    public Object sendjoinEmail(@RequestParam(required = true) final String email, 
+                    @RequestParam(required = true) final String nick_name) {
 
+        final BasicResponse result = new BasicResponse();
+        try {
+            sendJoinMail(email, nick_name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.status = false;
+            result.msg = "메일 전송 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        result.status = true;
+        result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
     @PutMapping("/account/modifypw")
     @ApiOperation(value = "비밀번호 변경")
     public Object modifyPassword(@RequestBody Map<String, Object> req) {
