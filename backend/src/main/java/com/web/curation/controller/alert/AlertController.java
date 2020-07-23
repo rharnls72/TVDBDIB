@@ -1,4 +1,4 @@
-package com.web.curation.controller.episode;
+package com.web.curation.controller.alert;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -9,15 +9,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import com.web.curation.dao.episode.EpisodeDao;
-import com.web.curation.dao.following.FollowingDao;
+import com.web.curation.dao.alert.AlertDao;
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.episode.Episode;
-import com.web.curation.model.program.Program;
+import com.web.curation.model.alert.Alert;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -37,23 +33,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @CrossOrigin(origins = { "*" })
 @RestController
-public class EpisodeController {
+public class AlertController {
 
     @Autowired
-    EpisodeDao dao;
+    AlertDao dao;
     
-    @Autowired
-    FollowingDao followdao;
-
     // Create
-    @PostMapping("/episode/create")
-    @ApiOperation(value = "에피소드 정보 생성")
-    public Object createNewEpisode(@RequestBody Episode episode) {
+    @PostMapping("/alert/create")
+    @ApiOperation(value = "새 알림 생성")
+    public Object createNewAlert(@RequestBody Alert alert) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
 
-        // 에피소드 정보 추가
-        int n = dao.addNewEpisode(episode);
+        // 프로그램 정보 추가
+        int n = dao.addNewAlert(alert);
 
         // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
         if(n != 1) {
@@ -62,79 +55,53 @@ public class EpisodeController {
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
-        // 에피소드 정보 추가 완료
+        // 알림 추가 완료
         result.status = true;
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Read
-    @PostMapping("/episode/alllist")
-    @ApiOperation(value = "모든 에피소드 목록 조회 - 메인페이지")
-    public Object getAlltEpisodeList(@RequestBody Map<String, Object> req) {
-        int uno = (int) req.get("uno");
-        int num = (((int) req.get("num"))-1)*20;
-        
+    @GetMapping("/alert/list/{uno}")
+    @ApiOperation(value = "알림 목록 조회")
+    public Object getAlertList(@PathVariable int uno) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
 
-        // 에피소드 목록 조회
-        List<Episode> list = dao.getAllEpisodeList(uno, num);
+        // 알림 목록 조회
+        List<Alert> list = dao.getAlertList(uno);
 
-        // 에피소드 목록을 포함한 응답 객체 반환
+        // 알림 목록을 포함한 응답 객체 반환
         result.status = true;
         result.msg = "success";
         result.data = list;
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-    @GetMapping("/episode/list/{pno}")
-    @ApiOperation(value = "프로그램의 에피소드 목록 조회")
-    public Object getEpisodeList(@PathVariable("pno") int pno) {
-        // 반환할 응답 객체
-        final BasicResponse result = new BasicResponse();
-
-        // 에피소드 목록 조회
-        List<Episode> list = dao.getEpisodeList(pno);
-
-        // 에피소드 목록을 포함한 응답 객체 반환
-        result.status = true;
-        result.msg = "success";
-        result.data = list;
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @GetMapping("/episode/detail/{eno}")
-    @ApiOperation(value = "에피소드 상세 정보 조회")
-    public Object getEpisodeDetail(@PathVariable("eno") int eno) {
-        // 반환할 응답 객체
-        final BasicResponse result = new BasicResponse();
-
-        // 에피소드 상세 정보 조회
-        Episode episode = dao.getEpisodeDetail(eno);
-
-        // episode 이 null 이면 문제 발생
-        if(episode == null) {
-            result.status = false;
-            result.msg = "에피소드 상세 정보 조회에 실패했습니다.(" + eno + ")";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        // 에피소드 상세정보를 포함한 응답 객체 반환
-        result.status = true;
-        result.msg = "success";
-        result.data = episode;
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Update
-    @PutMapping("/episode/update")
-    @ApiOperation(value = "에피소드 정보 수정")
-    public Object modifyEpisode(@RequestBody Episode episode) {
+    @PutMapping("/alert/readall/{uno}")
+    @ApiOperation(value = "모든 알림 읽음 처리")
+    public Object setReadAllAlert(@PathVariable int uno) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
 
-        // 에피소드 정보 수정
-        int n = dao.modifyEpisode(episode);
+        // 알림 읽음 처리
+        int n = dao.setReadAllAlert(uno);
+
+        // 알림 읽음 처리 완료
+        result.status = true;
+        result.msg = "success (" + n + ")"; // 처리 된 알림 수 표시
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PutMapping("/alert/read/{ano}")
+    @ApiOperation(value = "알림 읽음 처리")
+    public Object setReadAlert(@PathVariable int ano) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        // 알림 읽음 처리
+        int n = dao.setReadAlert(ano);
 
         // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
         if(n != 1) {
@@ -143,21 +110,43 @@ public class EpisodeController {
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
-        // 에피소드 정보 수정 완료
+        // 알림 읽음 처리 완료
         result.status = true;
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // Delete
-    @DeleteMapping("/episode/delete/{eno}")
-    @ApiOperation(value = "에피소드 정보 삭제")
-    public Object deleteProgram(@PathVariable int eno) {
+    @DeleteMapping("/alert/deleteall/{uno}")
+    @ApiOperation(value = "유저의 모든 알림 삭제")
+    public Object deleteAllAlert(@PathVariable int uno) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
 
-        // 에피소드 정보 삭제
-        int n = dao.deleteEpisode(eno);
+        // 유저의 모든 알림 삭제
+        int n = dao.deleteAllAlert(uno);
+
+        // n 이 0 이면 쿼리 수행 결과에 이상이 있는 것
+        if(n == 0) {
+            result.status = false;
+            result.msg = "Delete 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+        // 모든 알림 삭제 완료
+        result.status = true;
+        result.msg = "success (" + n + ")"; // 삭제된 알림 수 표시
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/alert/delete/{ano}")
+    @ApiOperation(value = "특정 알림 삭제")
+    public Object deleteAlert(@PathVariable int ano) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        // 알림 삭제
+        int n = dao.deleteAlert(ano);
 
         // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
         if(n != 1) {
@@ -166,7 +155,7 @@ public class EpisodeController {
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
-        // 에피소드 정보 삭제 완료
+        // 알림 삭제 완료
         result.status = true;
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
