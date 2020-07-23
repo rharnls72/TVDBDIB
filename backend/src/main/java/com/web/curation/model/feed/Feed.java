@@ -21,14 +21,6 @@ public class Feed {
     private String thumbnail;
     private String tag;
 
-    // User Attribute
-    private String nick_name;
-    
-    // Program Attribute
-
-
-    // Episode Attribute
-
     public void setFno(int fno) {
         this.fno = fno;
     }
@@ -90,12 +82,5 @@ public class Feed {
     }
     public String getTag() {
         return tag;
-    }
-
-    public void setNick_name(String nick_name) {
-        this.nick_name = nick_name;
-    }
-    public String getNick_name() {
-        return nick_name;
     }
 }
