@@ -22,6 +22,11 @@ DROP TABLE IF EXISTS `feed`;
 DROP TABLE IF EXISTS `episode`;
 DROP TABLE IF EXISTS `program`;
 DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `follow_request`;
+
+DROP VIEW IF EXISTS `episode_reply_view`;
+DROP VIEW IF EXISTS `program_reply_view`;
+DROP VIEW IF EXISTS `feed_reply_view`;
 
 CREATE TABLE `user` (
     `uno` INT AUTO_INCREMENT,
@@ -86,7 +91,12 @@ CREATE TABLE `episode` (
     `broadcast_date` DATETIME,
     `guest` VARCHAR(10000),
     `thumbnail` VARCHAR(200),
+    `shares` INT DEFAULT 0,
+    `dibs` INT DEFAULT 0,
+    `likes` INT DEFAULT 0,
     `replay_link` VARCHAR(2000),
+    `reply_count` INT DEFAULT 0,
+    `reply` VARCHAR(200),
     CONSTRAINT FK_pno2 FOREIGN KEY (`pno`)
         REFERENCES `program` (`pno`)
         ON DELETE CASCADE
@@ -201,7 +211,6 @@ CREATE TABLE `program_reply` (
 CREATE TABLE `feed_like` (
     `lno` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
-    `type` INT NOT NULL,
     `fno` INT NOT NULL,
     PRIMARY KEY (`lno`),
     FOREIGN KEY (`fno`)
@@ -212,7 +221,6 @@ CREATE TABLE `feed_like` (
 CREATE TABLE `program_like` (
     `lno` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
-    `type` INT NOT NULL,
     `pno` INT NOT NULL,
     PRIMARY KEY (`lno`),
     FOREIGN KEY (`pno`)
@@ -223,7 +231,6 @@ CREATE TABLE `program_like` (
 CREATE TABLE `episode_like` (
     `lno` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
-    `type` INT NOT NULL,
     `eno` INT NOT NULL,
     PRIMARY KEY (`lno`),
     FOREIGN KEY (`eno`)
@@ -234,7 +241,6 @@ CREATE TABLE `episode_like` (
 CREATE TABLE `feed_reply_like` (
     `lno` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
-    `type` INT NOT NULL,
     `frno` INT NOT NULL,
     PRIMARY KEY (`lno`),
     FOREIGN KEY (`frno`)
@@ -245,7 +251,6 @@ CREATE TABLE `feed_reply_like` (
 CREATE TABLE `program_reply_like` (
     `lno` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
-    `type` INT NOT NULL,
     `prno` INT NOT NULL,
     PRIMARY KEY (`lno`),
     FOREIGN KEY (`prno`)
@@ -256,7 +261,6 @@ CREATE TABLE `program_reply_like` (
 CREATE TABLE `episode_reply_like` (
     `lno` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
-    `type` INT NOT NULL,
     `erno` INT NOT NULL,
     PRIMARY KEY (`lno`),
     FOREIGN KEY (`erno`)
@@ -280,11 +284,85 @@ CREATE TABLE `message` (
 CREATE TABLE `alert` (
     `ano` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
-    `ctype` INT NOT NULL,
-    `cno` INT NOT NULL,
+    `ctype` INT,
+    `cno` INT,
     `atype` INT NOT NULL,
+    `read` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`ano`),
     FOREIGN KEY (`uno`)
         REFERENCES `user` (`uno`)
         ON DELETE CASCADE
 );
+
+CREATE TABLE `follow_request` (
+    `fno` INT AUTO_INCREMENT,
+    `uno` INT,
+    `follower` INT,
+    PRIMARY KEY (`fno`),
+    FOREIGN KEY (`uno`)
+        REFERENCES `user` (`uno`)
+        ON DELETE CASCADE,
+    FOREIGN KEY (`follower`)
+        REFERENCES `user` (`uno`)
+        ON DELETE CASCADE
+);
+
+CREATE VIEW `episode_reply_view` AS
+    SELECT 
+        er.eno AS `eno`,
+        er.erno AS `erno`,
+        er.parent_reply AS `parent_reply`,
+        er.content AS `content`,
+        er.write_date AS `write_date`,
+        writer.uno AS `writer_uno`,
+        writer.nick_name AS `writer_nick_name`,
+        writer.profile_pic AS `writer_profile_pic`,
+        liker.nick_name AS `liker_nick_name`
+    FROM
+        `episode_reply` er
+            JOIN
+        `user` writer ON er.uno = writer.uno
+            JOIN
+        `episode_reply_like` l ON er.erno = l.erno
+            JOIN
+        `user` liker ON l.uno = liker.uno;
+
+CREATE VIEW `program_reply_view` AS
+    SELECT 
+        pr.pno AS `pno`,
+        pr.prno AS `prno`,
+        pr.parent_reply AS `parent_reply`,
+        pr.content AS `content`,
+        pr.write_date AS `write_date`,
+        writer.uno AS `writer_uno`,
+        writer.nick_name AS `writer_nick_name`,
+        writer.profile_pic AS `writer_profile_pic`,
+        liker.nick_name AS `liker_nick_name`
+    FROM
+        `program_reply` pr
+            JOIN
+        `user` writer ON pr.uno = writer.uno
+            JOIN
+        `program_reply_like` l ON pr.prno = l.prno
+            JOIN
+        `user` liker ON l.uno = liker.uno;
+
+CREATE VIEW `feed_reply_view` AS
+    SELECT 
+        fr.fno AS `fno`,
+        fr.frno AS `frno`,
+        fr.parent_reply AS `parent_reply`,
+        fr.content AS `content`,
+        fr.write_date AS `write_date`,
+        writer.uno AS `writer_uno`,
+        writer.nick_name AS `writer_nick_name`,
+        writer.profile_pic AS `writer_profile_pic`,
+        liker.nick_name AS `liker_nick_name`
+    FROM
+        `feed_reply` fr
+            JOIN
+        `user` writer ON fr.uno = writer.uno
+            JOIN
+        `feed_reply_like` l ON fr.frno = l.frno
+            JOIN
+        `user` liker ON l.uno = liker.uno;
