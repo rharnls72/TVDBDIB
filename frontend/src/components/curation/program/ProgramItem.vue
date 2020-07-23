@@ -1,34 +1,34 @@
 <template>
   <div class="feed-item">
     <div class="top">
+      <!-- 추후에 poster url 가져오면 img 태그로 바꿔줄 것 -->
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
-      <div class="user-info">
+      <div class="user-info mb-2">
         <div class="user-name">
-          <button>[놀면 뭐하니?] OO화</button>
+          <button>[{{ curation.name }}]</button>
         </div>
-        <p class="date">9시간 후</p>
+        <p class="date"><button class="btn btn-info btn-sm p-1 follow-button">팔로우</button></p>
       </div>
-
     </div>
     <div class="feed-card">
-      <div class="img" :style="{'background-image': 'url('+defaultImage+')'}"></div>
+      <!-- 추후에 thumbnail url 가져오면 img 태그로 바꿔줄 것 -->
+      <div v-if="curation.thumbnail" class="img thumbnail-color">{{ curation.thumbnail }}</div>
+      <div v-else class="img" :style="{'background-image': 'url('+defaultImage+')'}"></div>
       <div class="contentsWrap">
-        <h4 class="title">사용자경험(UX)을 이해하는 팀원이 되기 위하여 - 사용자에게 '기본적인' UX를 선사하기 위해 우리 모두 알아야할 사실들</h4>
-        <div class="wrap">
-          <div class="url">
+        <div class="d-flex justify-content-between">
+          <h4 class="title">[{{ curation.name }}]</h4>
+          <p class="date">{{ curation.genre }}</p>
+        </div>
+          <!-- <div class="url">
             <a href="https://brunch.co.kr/@@63JW/25">https://brunch.co.kr/@@63JW/25</a>
           </div>
-          <p class="date">2020.06.18</p>
-        </div>
+          <p class="date">2020.06.18</p> -->
       </div>
-    </div>
-    <div class="content">
-      <p>이 영상에 대한 정보입니다.</p>
     </div>
     <!---->
     <div class="btn-group wrap justify-content-between">
       <div>
-        <div class="like likeScrap">
+        <div class="like likeScrap mr-3">
           <svg
             class="svg-inline--fa fa-heart fa-w-16 icon full"
             aria-hidden="true"
@@ -63,7 +63,7 @@
           <!-- <i class="far fa-heart icon empty"></i> -->
           0
         </div>
-        <div class="comment">
+        <div class="comment mr-3">
           <svg
             class="svg-inline--fa fa-comment-alt fa-w-16 icon"
             aria-hidden="true"
@@ -83,6 +83,8 @@
           0
         </div>
         <!---->
+      </div>
+      <div class="mr-1">
         <div class="share">
           <svg
             class="svg-inline--fa fa-share-alt fa-w-14 icon"
@@ -101,32 +103,62 @@
           </svg>
         </div>
       </div>
-      <div class="mr-1">
-        <button>찜</button>
+    </div>
+    <!-- 내용 더 보기 (현재 페이지에서 펼치기) -->
+    <div v-if="!curation.description" class="content">
+      <p>{{ curation.description }}</p>
+    </div>
+    <div v-else-if="curation.description.length <= 18" class="content">
+      <p>{{ curation.description }}</p>
+    </div>
+    <div v-else class="content">
+      <div v-if="!isStretch" class="d-flex justify-content-between">
+        <p>{{ curation.description.slice(0, 18) }}</p>
+        <button @click="readMore" class="more">더 보기</button>
+      </div>
+      <div v-else>
+        <p>{{ curation.description }}</p>
       </div>
     </div>
     <!---->
     <!---->
-    <div>
-      {{ curation.pno }}
-    </div>
   </div>
 </template>
 
 <script>
-import defaultImage from "../../assets/images/img-placeholder.png";
-import defaultProfile from "../../assets/images/profile_default.png";
+import defaultImage from "../../../assets/images/img-placeholder.png";
+import defaultProfile from "../../../assets/images/profile_default.png";
 
 export default {
-  name: 'CurationItem',
+  name: 'ProgramItem',
   data: () => {
     return {
       defaultImage,
       defaultProfile,
-      };
+      isStretch: false,
+    };
   },
   props: {
     curation: Object,
   },
+  methods: {
+    readMore() {
+      this.isStretch = !this.isStretch
+    },
+  },
 };
 </script>
+
+<style scoped>
+  .more {
+    color: lightgray;
+  }
+  .thumbnail-color {
+    background-color: lightgray;
+  }
+  .follow-button {
+    height: auto;
+    line-height: 10px;
+    box-shadow: none;
+  }
+</style>
