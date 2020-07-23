@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.reply.FeedReplyDao">
+    <!-- Create -->
+    <insert id="createReply">
+        insert into
+            feed_reply(
+                fno
+                , parent_reply
+                , uno
+                , content
+            )
+        values(
+            #{no}
+            , #{parent_reply}
+            , #{uno}
+            , #{content}
+        )
+    </insert>
+
+    <!-- Read -->
+    <select id="getReplyList" resultType="Reply">
+        select
+            frno    as no
+            , parent_reply
+            , content
+            , write_date
+            , writer_uno
+            , writer_nick_name
+            , writer_profile_pic
+            , liker_nick_name
+        from
+            feed_reply_view
+        where
+            fno = #{value}
+    </select>
+
+    <!-- Update -->
+    <update id="modifyReply">
+        update
+            feed_reply
+        set
+            content = #{content}
+        where
+            frno = #{no}
+    </update>
+
+    <!-- Delete -->
+    <delete id="deleteReply">
+        delete from
+            feed_reply
+        where
+            frno = #{value}
+    </delete>
+</mapper>
