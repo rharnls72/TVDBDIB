@@ -10,7 +10,7 @@ const requestLogin = (data,callback,errorCallback) => {
     // 없으면 errorCallback 호출
 
     //백앤드와 로그인 통신하는 부분
-    axios.get('http://localhost:9000/account/login?email=' + data.email + '&password=' + data.password)
+    axios.get('http://i3a106.p.ssafy.io:9000/account/login?email=' + data.email + '&password=' + data.password)
         .then(res => {
             // 서버에서 정상적으로 처리되었으면 res 가 null 이 될 수 없음
             // 서버에서 db 쿼리 하다 오류난 경우일듯
@@ -49,7 +49,7 @@ const requestJoin = (data,callback,errorCallback) => {
     console.log(data);
 
     //백앤드와 가입하기 통신하는 부분
-    axios.post('http://localhost:9000/account/signup', {
+    axios.post('http://i3a106.p.ssafy.io:9000/account/signup', {
         nick_name: data.nick_name
             , email: data.email
             , password: data.password
@@ -82,7 +82,7 @@ const requestModifyPw = (data,callback,errorCallback) => {
     console.log(data);
 
     //백앤드와 비밀번호 변경하기 통신하는 부분
-    axios.put('http://localhost:9000/account/modifypw', {
+    axios.put('http://i3a106.p.ssafy.io:9000/account/modifypw', {
             password : data.password
             , newPassword : data.newPassword
             , email : data.email
@@ -114,7 +114,7 @@ const requestFindEmail = (data,callback,errorCallback) => {
     console.log(data);
 
     //백앤드와 비밀번호 변경하기 통신하는 부분
-    axios.get('http://localhost:9000/account/findemail?email=' + data.email)
+    axios.get('http://i3a106.p.ssafy.io:9000/account/findemail?email=' + data.email)
         .then(res => {
             if(res == null) {
                 let error = {msg : '알 수 없는 오류 발생'};
@@ -136,7 +136,7 @@ const requestFindPw = (data,callback,errorCallback) => {
     console.log(data);
 
     //백앤드와 비밀번호 변경하기 통신하는 부분
-    axios.get('http://localhost:9000/account/fnidpw', {
+    axios.get('http://i3a106.p.ssafy.io:9000/account/fnidpw', {
         params: {
           email: data.email
         }
