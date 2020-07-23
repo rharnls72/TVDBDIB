@@ -306,7 +306,6 @@ CREATE TABLE `follow_request` (
     FOREIGN KEY (`follower`)
         REFERENCES `user` (`uno`)
         ON DELETE CASCADE
-);
 
 CREATE VIEW `episode_reply_view` AS
     SELECT 
@@ -367,3 +366,6 @@ CREATE VIEW `feed_reply_view` AS
         `feed_reply_like` l ON fr.frno = l.frno
             JOIN
         `user` liker ON l.uno = liker.uno;
+
+);
+
