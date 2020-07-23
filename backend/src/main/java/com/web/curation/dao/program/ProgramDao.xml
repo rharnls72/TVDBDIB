@@ -44,6 +44,8 @@
             *
         from
             program
+        order by
+            pno desc;
     </select>
     <select id="getProgramDetail" resultType="Program">
         select
