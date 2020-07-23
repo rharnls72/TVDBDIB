@@ -76,7 +76,37 @@ const requestJoin = (data,callback,errorCallback) => {
         });
 
 }
+const requestJoinEmail = (data,callback,errorCallback) => {
+    // Join.vue 에서 보낸 데이터 확인
+    console.log(data);
 
+    //백앤드와 가입하기 통신하는 부분
+    axios.post('http://localhost:9000/account/sendjoinEmail', {
+        nick_name: data.nick_name
+            , email: data.email
+        })
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            } else {
+                // 서버에서 준 res 확인
+                console.log(res.data);
+
+                if(res.data.status == false) {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                } else {
+                    callback();
+                }
+            }
+        })
+        .catch(error => {
+            error.msg = '서버 요청에서 오류 발생';
+            errorCallback(error);
+        });
+
+}
 const requestModifyPw = (data,callback,errorCallback) => {
     // ModifyPw.vue 에서 보낸 데이터 확인
     console.log(data);
@@ -87,6 +117,65 @@ const requestModifyPw = (data,callback,errorCallback) => {
             , newPassword : data.newPassword
             , email : data.email
         })
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            } else {
+                // 서버에서 준 res 확인
+                console.log(res.data);
+
+                if(res.data.status == false) {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                } else {
+                    callback();
+                }
+            }
+        })
+        .catch(error => {
+            error.msg = '서버 요청에서 오류 발생';
+            errorCallback(error);
+        });
+
+}
+const requestModifyPwEmail = (data,callback,errorCallback) => {
+    // ModifyPw.vue 에서 보낸 데이터 확인
+    console.log(data);
+
+    //백앤드와 비밀번호 변경하기 통신하는 부분
+    axios.put('http://localhost:9000/account/modifypwemail', {
+            newPassword : data.newPassword
+            , email : data.email
+        })
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            } else {
+                // 서버에서 준 res 확인
+                console.log(res.data);
+
+                if(res.data.status == false) {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                } else {
+                    callback();
+                }
+            }
+        })
+        .catch(error => {
+            error.msg = '서버 요청에서 오류 발생';
+            errorCallback(error);
+        });
+
+}
+const requestEmailConfirm = (data,callback,errorCallback) => {
+    // ModifyPw.vue 에서 보낸 데이터 확인
+    console.log(data);
+
+    //백앤드와 비밀번호 변경하기 통신하는 부분
+    axios.get('http://localhost:9000/account/emailconfirm?email='+ data.email)
         .then(res => {
             if(res == null) {
                 let error = {msg : '알 수 없는 오류 발생'};
@@ -169,6 +258,10 @@ const UserApi = {
     , requestModifyPw:(data,callback,errorCallback)=>requestModifyPw(data,callback,errorCallback)
     , requestFindEmail:(data,callback,errorCallback)=>requestFindEmail(data,callback,errorCallback)
     , requestFindPw:(data,callback,errorCallback)=>requestFindPw(data,callback,errorCallback)
+    , requestJoinEmail:(data,callback,errorCallback)=>requestJoinEmail(data,callback,errorCallback)
+    , requestModifyPwEmail:(data,callback,errorCallback)=>requestModifyPwEmail(data,callback,errorCallback)
+    , requestEmailConfirm:(data,callback,errorCallback)=>requestEmailConfirm(data,callback,errorCallback)
+    
 }
 
 export default UserApi
