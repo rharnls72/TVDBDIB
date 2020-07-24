@@ -1,15 +1,21 @@
 package com.web.curation.controller.episode;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +50,10 @@ public class EpisodeController {
     
     @Autowired
     FollowingDao followdao;
+
+    static String BASE_URL = "https://api.themoviedb.org/3/";
+    static String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+    static String API_KEY = "1436d388221956af7b6cd27a6a7ec9d8";
 
     // Create
     @PostMapping("/episode/create")
@@ -171,4 +181,113 @@ public class EpisodeController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    /* 이 아래로 TMDB API 이용하는 파트 */
+    @GetMapping("/episode/following/{uno}")
+    @ApiOperation(value = "팔로우중인 프로그램의 에피소드 목록을 최신순으로 조회")
+    public Object getEpisodeListFromAPI(@PathVariable("uno") int uno) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 팔로우중인 프로그램 리스트 조회
+        //List<Program> programList = followdao.getProgramFollowings(uno);
+
+        // 일단 임시로 프로그램 리스트도 TMDB에서 추천해주는거 들고오는 걸로
+        ResponseEntity<String> re = 
+        restTemplate.getForEntity(BASE_URL + "discover/tv?first_air_date_year=2020&language=kr&sort_by=popularity.desc&api_key=" + API_KEY, 
+        String.class);
+        JSONObject recommended_program = new JSONObject(re.getBody());
+        JSONArray programs = recommended_program.optJSONArray("results");
+        List<Program> programList = new ArrayList<Program>();
+
+        for (int i=1; i<=programs.length(); i++){
+            Program p = new Program();
+            JSONObject programJson = programs.optJSONObject(i-1);
+            int pno = programJson.optInt("id");
+            int season = 1;
+            p.setPno(pno);
+            p.setSeason(season);
+            programList.add(p);
+        }
+
+        List<Episode> episodeList = new ArrayList<Episode>();
+
+        // 팔로우중인 프로그램 각각에 대하여 에피소드 목록 조회 (TMDB API)
+        
+        for (Program program: programList){
+            int pno = program.getPno();
+            int season = program.getSeason();
+
+            // 프로그램 ID와 시즌 번호로 API 요청
+            re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY, String.class);
+            JSONObject programInfo = new JSONObject(re.getBody());
+            JSONArray episodes = programInfo.optJSONArray("episodes");
+
+            // 결과 데이터 중 episodes Array의 각 요소에 접근하여 episode 정보 추출
+            for (int i=1; i<=episodes.length(); i++){
+                JSONObject detail = episodes.optJSONObject(i-1);
+                Episode e = episodeSetter(pno, i, detail);
+                episodeList.add(e);
+            }
+        }
+
+        // 추출한 episode들을 최신순 정렬
+        Collections.sort(episodeList, new Comparator<Episode>() {
+			public int compare(Episode o1, Episode o2) {
+                LocalDateTime t2 = o1.getBroadcast_date();
+                LocalDateTime t1 = o2.getBroadcast_date();
+                if (t1 != null && t2 != null)
+                    return t1.compareTo(t2);
+                else
+                    return 0;
+			}
+        });
+        
+        // 에피소드 목록을 포함한 응답 객체 반환
+        result.status = true;
+        result.msg = "success";
+        result.data = episodeList;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    private Episode episodeSetter(int pno, int epno, JSONObject detail){
+        String summary = detail.optString("overview");
+        JSONArray guests = detail.optJSONArray("guest_stars");
+        StringBuilder guest_str = new StringBuilder();
+        if (guests != null && guests.length() >= 1){
+            for (int i=0; i<guests.length(); i++){
+                String guest = guests.optJSONObject(i).optString("name");
+                guest_str.append(guest);
+                guest_str.append(",");
+            }
+        }
+
+        String thumbnail = detail.optString("still_path");
+        String episode_air_date = detail.optString("air_date");
+
+        Episode e = new Episode();
+
+        if (episode_air_date != null) {
+            String[] episode_start_date = episode_air_date.split("-");
+            if (episode_start_date.length >= 3){
+                LocalDateTime start_date = LocalDateTime.of(Integer.parseInt(episode_start_date[0]), 
+                                                                    Integer.parseInt(episode_start_date[1]), 
+                                                                    Integer.parseInt(episode_start_date[2]), 9, 0, 0);
+                e.setBroadcast_date(start_date);
+            }
+        }
+        
+        e.setPno(pno);
+        e.setEpisode(epno);
+        e.setSummary(summary);
+        e.setGuest(guest_str.toString());
+        if (thumbnail != null) e.setThumbnail(IMAGE_BASE_URL + thumbnail);
+        e.setReplay_link("");
+
+        return e;
+    }
+    
+
 }
