@@ -5,7 +5,7 @@
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info mb-2">
         <div class="user-name">
-          <button>[{{ curation.name }}]</button>
+          <button>[{{ curation.name }}] OO화</button>
         </div>
         <p class="date">{{ curation.broadcast_time }} 방송 예정</p>
       </div>
@@ -29,67 +29,36 @@
     <div class="btn-group wrap justify-content-between">
       <div>
         <div class="like mr-3">
-          <button @click="touchLikeIcon">
-            <p v-if="!likeIcon">빈</p>
-            <p v-else>찬</p>
+          <button class="h6" @click="touchLikeIcon">
+            <b-icon-emoji-smile v-if="!likeIcon"></b-icon-emoji-smile>
+            <b-icon-emoji-smile v-else class="bg-warning" variant="light"></b-icon-emoji-smile>
           </button>
-          <!-- <button v-if="likeIcon" @click="touchLikeIcon">
-            <i class="fas fa-heart icon" style="color: red;"></i>
-          </button>
-          <button v-else @click="touchLikeIcon">
-            <i class="fas fa-heart icon"></i>
+          <!-- <button class="h6" @click="touchLikeIcon">
+            <b-icon-heart v-if="!likeIcon" variant="danger"></b-icon-heart>
+            <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
           </button> -->
           0
         </div>
         <div class="comment mr-3">
-          <svg
-            class="svg-inline--fa fa-comment-alt fa-w-16 icon"
-            aria-hidden="true"
-            data-prefix="far"
-            data-icon="comment-alt"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 512 512"
-            data-fa-i2svg
-          >
-            <path
-              fill="currentColor"
-              d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm16 352c0 8.8-7.2 16-16 16H288l-12.8 9.6L208 428v-60H64c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h384c8.8 0 16 7.2 16 16v288z"
-            />
-          </svg>
-          <!-- <i class="far fa-comment-alt icon"></i> -->
+          <button class="h6">
+            <b-icon-chat></b-icon-chat>
+          </button>
           0
         </div>
         <div class="comment mr-3">
-          <button @click="touchScrapIcon">
-            <p v-if="!scrapIcon">빈</p>
-            <p v-else>찬</p>
+          <button class="h6" @click="touchScrapIcon">
+            <b-icon-bookmark v-if="!scrapIcon"></b-icon-bookmark>
+            <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
-          <!-- 스크랩(찜)을 누르지 않으면 -->
-          <!-- <i v-if="!scrapIcon" class="far fa-bookmark icon empty"></i> -->
-          <!-- 스크랩(찜)을 누르면 -->
-          <!-- <i v-else class="fas fa-bookmark icon full"></i> -->
           0
         </div>
         <!---->
       </div>
       <div class="mr-1">
         <div class="share">
-          <svg
-            class="svg-inline--fa fa-share-alt fa-w-14 icon"
-            aria-hidden="true"
-            data-prefix="fas"
-            data-icon="share-alt"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 448 512"
-            data-fa-i2svg
-          >
-            <path
-              fill="currentColor"
-              d="M352 320c-22.608 0-43.387 7.819-59.79 20.895l-102.486-64.054a96.551 96.551 0 0 0 0-41.683l102.486-64.054C308.613 184.181 329.392 192 352 192c53.019 0 96-42.981 96-96S405.019 0 352 0s-96 42.981-96 96c0 7.158.79 14.13 2.276 20.841L155.79 180.895C139.387 167.819 118.608 160 96 160c-53.019 0-96 42.981-96 96s42.981 96 96 96c22.608 0 43.387-7.819 59.79-20.895l102.486 64.054A96.301 96.301 0 0 0 256 416c0 53.019 42.981 96 96 96s96-42.981 96-96-42.981-96-96-96z"
-            />
-          </svg>
+          <button class="h6">
+            <b-icon-reply></b-icon-reply>
+          </button>
         </div>
       </div>
     </div>
