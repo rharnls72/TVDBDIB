@@ -7,6 +7,7 @@
         <infinite-loading @infinite="infiniteHandler"></infinite-loading>
       </div>
     </div>
+    <Footer />
   </div>
 </template>
 
@@ -17,6 +18,7 @@ import "../../components/css/feed/newsfeed.scss";
 import EpisodeItem from "../../components/curation/episode/EpisodeItem.vue";
 import InfiniteLoading from 'vue-infinite-loading';
 import axios from 'axios';
+import Footer from '../../components/common/custom/Footer.vue';
 
 export default {
   name: 'IndexCuration',
@@ -30,7 +32,8 @@ export default {
   components: {
     EpisodeItem,
     InfiniteLoading,
-    },
+    Footer,
+  },
   methods: {
     // 무한 스크롤 기능 구현 -> 더미 데이터 들어오면 주석 처리해 둔 axios 로직으로 바꿀 예정
     infiniteHandler($state) {
