@@ -106,7 +106,7 @@ public class LikeController {
         // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
         if(n != 1) {
             result.status = false;
-            result.msg = "Insert 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
+            result.msg = "Delete 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
