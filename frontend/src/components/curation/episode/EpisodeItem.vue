@@ -28,13 +28,17 @@
     <!---->
     <div class="btn-group wrap justify-content-between">
       <div>
-        <div class="like likeScrap mr-3">
-          <button v-if="likeIcon" @click="touchLikeIcon">
+        <div class="like mr-3">
+          <button @click="touchLikeIcon">
+            <p v-if="!likeIcon">빈</p>
+            <p v-else>찬</p>
+          </button>
+          <!-- <button v-if="likeIcon" @click="touchLikeIcon">
             <i class="fas fa-heart icon" style="color: red;"></i>
           </button>
           <button v-else @click="touchLikeIcon">
             <i class="fas fa-heart icon"></i>
-          </button>
+          </button> -->
           0
         </div>
         <div class="comment mr-3">
@@ -57,10 +61,14 @@
           0
         </div>
         <div class="comment mr-3">
+          <button @click="touchScrapIcon">
+            <p v-if="!scrapIcon">빈</p>
+            <p v-else>찬</p>
+          </button>
           <!-- 스크랩(찜)을 누르지 않으면 -->
-          <i v-if="!scrapIcon" @click="touchScrapIcon" class="far fa-bookmark icon empty"></i>
+          <!-- <i v-if="!scrapIcon" class="far fa-bookmark icon empty"></i> -->
           <!-- 스크랩(찜)을 누르면 -->
-          <i v-else @click="touchScrapIcon" class="fas fa-bookmark icon full"></i>
+          <!-- <i v-else class="fas fa-bookmark icon full"></i> -->
           0
         </div>
         <!---->
@@ -117,7 +125,7 @@ export default {
       defaultImage,
       defaultProfile,
       isStretch: false,
-      likeIcon: true,
+      likeIcon: false,
       scrapIcon: false,
     };
   },
@@ -134,6 +142,7 @@ export default {
     },
     touchScrapIcon() {
       this.scrapIcon = !this.scrapIcon
+      console.log(this.scrapIcon)
     },
   },
 };
