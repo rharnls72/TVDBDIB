@@ -9,7 +9,8 @@
     <insert id="addNewProgram">
         insert into
             program(
-                name
+                pno
+                , name
                 , broadcaster
                 , genre
                 , season
@@ -23,7 +24,8 @@
                 , thumbnail
             )
         values(
-            #{name}
+            #{pno}
+            , #{name}
             , #{broadcaster}
             , #{genre}
             , #{season}

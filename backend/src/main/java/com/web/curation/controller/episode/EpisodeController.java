@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.web.curation.dao.episode.EpisodeDao;
-import com.web.curation.dao.user.FollowingDao;
+import com.web.curation.dao.following.FollowingDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.episode.Episode;
 import com.web.curation.model.program.Program;
