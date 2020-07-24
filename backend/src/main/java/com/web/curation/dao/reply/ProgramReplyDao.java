@@ -1,6 +1,7 @@
 package com.web.curation.dao.reply;
 
 import java.util.List;
+import java.util.Map;
 
 import com.web.curation.model.reply.Reply;
 
@@ -9,12 +10,12 @@ import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
-public interface ProgramReplyDao {
+public interface ProgramReplyDao extends ReplyDao {
     // Create
     int createReply(Reply reply);
 
     // Read
-    List<Reply> getReplyList(int eno);
+    List<Reply> getReplyList(Map<String, Object> param);
 
     // Update
     int modifyReply(Reply reply);
