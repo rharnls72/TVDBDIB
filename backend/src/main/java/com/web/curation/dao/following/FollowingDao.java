@@ -1,11 +1,11 @@
-package com.web.curation.dao.user;
+package com.web.curation.dao.following;
 
 import java.util.List;
 
 import com.web.curation.model.program.Program;
-import com.web.curation.model.user.ProgramFollowing;
+import com.web.curation.model.following.ProgramFollowing;
 import com.web.curation.model.user.User;
-import com.web.curation.model.user.UserFollowing;
+import com.web.curation.model.following.UserFollowing;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.alert.AlertDao">
+
+    <!-- Create -->
+    <insert id="addNewAlert">
+        insert into
+            alert(
+                uno
+                , ctype
+                , cno
+                , atype
+            )
+        values(
+            #{uno}
+            , #{ctype}
+            , #{cno}
+            , #{atype}
+        )
+    </insert>
+
+    <!-- Read -->
+    <select id="getAlertList" resultType="Alert">
+        select
+            *
+        from
+            alert
+        where
+            uno = #{value}
+        order by
+            `read` asc, ano desc
+    </select>
+
+    <!-- Update -->
+    <update id="setReadAllAlert">
+        update
+            alert
+        set
+            `read` = true
+        where
+            `read` = false
+            and
+            uno = #{value}
+    </update>
+    <update id="setReadAlert">
+        update
+            alert
+        set
+            `read` = true
+        where
+            ano = #{value}
+    </update>
+
+    <!-- Delete -->
+    <delete id="deleteAllAlert">
+        delete from
+            alert
+        where
+            uno = #{value}
+    </delete>
+    <delete id="deleteAlert">
+        delete from
+            alert
+        where
+            ano = #{value}
+    </delete>
+
+</mapper>

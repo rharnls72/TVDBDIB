@@ -2,7 +2,9 @@ package com.web.curation;
 
 import java.time.LocalDateTime;
 
+import com.web.curation.dao.episode.EpisodeDao;
 import com.web.curation.dao.program.ProgramDao;
+import com.web.curation.model.episode.Episode;
 import com.web.curation.model.program.Program;
 
 import org.json.JSONArray;
@@ -18,10 +20,16 @@ import org.springframework.web.client.RestTemplate;
 @Service
 class ProgramSaveTest3 {
     @Autowired
-    ProgramDao dao;
+    ProgramDao pdao;
+    @Autowired
+    EpisodeDao eDao;
 
     public void saveProgram(Program p) {
-        dao.addNewProgram(p);
+        pdao.addNewProgram(p);
+    }
+
+    public void saveEpisode(Episode e){
+        eDao.addNewEpisode(e);
     }
 }
 
@@ -29,6 +37,7 @@ class ProgramSaveTest3 {
 public class TMDBApiTest {
 
     static String BASE_URL = "https://api.themoviedb.org/3/";
+    static String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
     static String API_KEY = "1436d388221956af7b6cd27a6a7ec9d8";
     static ProgramSaveTest3 tester;
 
@@ -62,6 +71,21 @@ public class TMDBApiTest {
         restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(id) + "?api_key=" + API_KEY, String.class);
         JSONObject detail = new JSONObject(re.getBody());
 
+        // cast 정보 가져옴
+        re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(id) + "/credits?api_key=" + API_KEY, String.class);
+        JSONObject cast_persons = new JSONObject(re.getBody());
+        JSONArray cast_persons_arr = cast_persons.optJSONArray("cast");
+        StringBuilder cast = new StringBuilder();
+        if (cast_persons_arr != null && cast_persons_arr.length() >= 1){
+            for (int i=0; i<cast_persons_arr.length(); i++){
+                JSONObject person = cast_persons_arr.optJSONObject(i);
+                String name = person.optString("name");
+                if (name != null){
+                    cast.append(name);
+                    cast.append(",");
+                }
+            }
+        }
         
         String name = detail.optString("name");
         String broadcaster = detail.optJSONArray("networks").optJSONObject(0).optString("name");
@@ -77,8 +101,7 @@ public class TMDBApiTest {
         JSONArray director_arr = detail.optJSONArray("created_by");
         String director = "";
         if (director_arr != null && director_arr.length() >= 1) director = director_arr.optJSONObject(0).optString("name");
-        
-        String cast = "";
+
         String overview = detail.optString("overview");
 
         Object runtime_obj = detail.optJSONArray("episode_run_time").opt(0);
@@ -110,20 +133,105 @@ public class TMDBApiTest {
         p.setBroadcaster(broadcaster);
         p.setGenre(genre);
         p.setSeason(season);
-        p.setAlias("");
+        if (name.length() < 20) p.setAlias(name);
         p.setStart_date(start_date);
         p.setEnd_date(end_date);
         p.setDirector(director);
-        p.setCast(cast);
+        p.setCast(cast.toString());
         p.setDescription(overview);
         p.setBroadcast_time(Integer.toString(runtime));
-        p.setThumbnail(backdrop_path);
+        if (backdrop_path != null) p.setThumbnail(IMAGE_BASE_URL + backdrop_path);
 
-        tester.saveProgram(p);
+        //tester.saveProgram(p);
+        for (int i=1; i<=season; i++){
+            season_detail(id, i, p);
+        }
 
     }
 
-    public static void episode_detail(int season, int epno){
+    public static void season_detail(int pid, int season, Program program){
+        RestTemplate restTemplate = new RestTemplate();
+        // 각 시즌의 상세정보를 가져옴
+        ResponseEntity<String> re = 
+        restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pid) + "/season/" + season + "?api_key=" + API_KEY, String.class);
+        JSONObject detail = new JSONObject(re.getBody());
+
+        // 추가로 가져올만한 정보: 시즌 name, air_date, poster_path
+        // 없으면 그냥 기존에 program에서 세팅했던 대로...
+
+        String season_name = detail.optString("name");
+        String season_air_date = detail.optString("air_date");
+        String season_poster = detail.optString("poster_path");
+
+        // 이러면 'name' 은 프로그램명에 시즌명이 붙은 형태가 되고 alias는 프로그램명만 들어가게 됨
+        if (season_name != null) program.setName(program.getName() + " - " + season_name);
+        if (season_air_date != null) {
+            String[] season_start_date = season_air_date.split("-");
+            LocalDateTime start_date = LocalDateTime.of(Integer.parseInt(season_start_date[0]), 
+                                                                Integer.parseInt(season_start_date[1]), 
+                                                                Integer.parseInt(season_start_date[2]), 9, 0, 0);
+            program.setStart_date(start_date);
+        }
+        if (season_poster != null) program.setThumbnail(IMAGE_BASE_URL + season_poster);
+
+        // pno를 auto_increment 대신 임의로 정해주자 일단... DB에 저장하는 시점에서 episode에 붙여줘야 할 pno를 바로 알 수 없다
+        // ex: id가 8080인 프로그램의 시즌 12면 8080012
+        int pno = pid * 1000 + season;
+        program.setPno(pno);
+
+        tester.saveProgram(program);
+
+        int episodes = detail.optJSONArray("episodes").length();
+        for (int i=1; i<=episodes; i++){
+            episode_detail(pid, pno, season, i);
+        }
+
+    }
+
+    public static void episode_detail(int pid, int pno, int season, int epno){
+        RestTemplate restTemplate = new RestTemplate();
+        // 각 시즌의 상세정보를 가져옴
+        ResponseEntity<String> re = 
+        restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pid) + "/season/" + season + "/episode/" + epno + "?api_key=" + API_KEY, String.class);
+        JSONObject detail = new JSONObject(re.getBody());
+
+        //String epname = detail.optString("name");
+        String summary = detail.optString("overview");
+        //String date_str = detail.optString("broadcast_date");
+        
+        JSONArray guests = detail.optJSONArray("guest_stars");
+        StringBuilder guest_str = new StringBuilder();
+        if (guests != null && guests.length() >= 1){
+            for (int i=0; i<guests.length(); i++){
+                String guest = guests.optJSONObject(i).optString("name");
+                guest_str.append(guest);
+                guest_str.append(",");
+            }
+        }
+
+        String thumbnail = detail.optString("still_path");
+        String episode_air_date = detail.optString("air_date");
+
+        Episode e = new Episode();
+
+        if (episode_air_date != null) {
+            String[] episode_start_date = episode_air_date.split("-");
+            if (episode_start_date.length >= 3){
+                LocalDateTime start_date = LocalDateTime.of(Integer.parseInt(episode_start_date[0]), 
+                                                                    Integer.parseInt(episode_start_date[1]), 
+                                                                    Integer.parseInt(episode_start_date[2]), 9, 0, 0);
+                e.setBroadcast_date(start_date);
+            }
+        }
+        
+        e.setPno(pno);
+        e.setEpisode(epno);
+        e.setSummary(summary);
+        e.setGuest(guest_str.toString());
+        if (thumbnail != null) e.setThumbnail(IMAGE_BASE_URL + thumbnail);
+        e.setReplay_link("");
+
+        tester.saveEpisode(e);
 
     }
 
