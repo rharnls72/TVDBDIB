@@ -5,12 +5,7 @@ import java.util.Map;
 
 import com.web.curation.model.reply.Reply;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
-
-@Mapper
-@Repository
-public interface FeedReplyDao extends ReplyDao {
+public interface ReplyDao {
     // Create
     int createReply(Reply reply);
 

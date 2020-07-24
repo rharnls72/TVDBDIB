@@ -17,6 +17,9 @@ public class Reply {
     private int writer_uno;
     private String writer_nick_name;
     private String writer_profile_pic;
+    private int like_num;
+    private int reply_num;
+    private int liker_uno;
     private String liker_nick_name;
 
     // Getter Setter
@@ -61,6 +64,24 @@ public class Reply {
     }
     public String getWriter_profile_pic() {
         return writer_profile_pic;
+    }
+    public void setLike_num(int like_num) {
+        this.like_num = like_num;
+    }
+    public int getLike_num() {
+        return like_num;
+    }
+    public void setReply_num(int reply_num) {
+        this.reply_num = reply_num;
+    }
+    public int getReply_num() {
+        return reply_num;
+    }
+    public void setLiker_uno(int liker_uno) {
+        this.liker_uno = liker_uno;
+    }
+    public int getLiker_uno() {
+        return liker_uno;
     }
     public void setLiker_nick_name(String liker_nick_name) {
         this.liker_nick_name = liker_nick_name;
