@@ -7,7 +7,6 @@
         <infinite-loading @infinite="infiniteHandler"></infinite-loading>
       </div>
     </div>
-    <div id="bottomSensor"></div>
   </div>
 </template>
 
@@ -17,7 +16,7 @@ import "../../components/css/feed/feed-item.scss";
 import "../../components/css/feed/newsfeed.scss";
 import EpisodeItem from "../../components/curation/episode/EpisodeItem.vue";
 import InfiniteLoading from 'vue-infinite-loading';
-import axios from 'axios'
+import axios from 'axios';
 
 export default {
   name: 'IndexCuration',
