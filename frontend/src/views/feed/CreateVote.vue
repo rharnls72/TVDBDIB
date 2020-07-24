@@ -8,29 +8,29 @@
             <input type="text" v-model="title" placeholder="Title">
           </div>
         </div>
-        <div class="row">
-          <div class="col-75">
-            <textarea @change="pushItem" placeholder="Insert Item" v-model="content[0]" style="height:100px;"></textarea>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-75">
-            <textarea @change="pushItem" placeholder="Insert Item" v-model="content[1]" style="height:100px;"></textarea>
-          </div>
-        </div>
-        <div id="add-items">
-
+        <div v-for="content in contents" :key="content.id" class="row">
+          <b-form-textarea
+            id="textarea"
+            v-model="content.text"
+            placeholder="Enter something..."
+            rows="3"
+            max-rows="6"
+          ></b-form-textarea>
         </div>
         <div class="row">
           <div @click="addItem" class="add-item mb-3">+</div>
         </div>
-        <div>
-          <h6><span v-for="t in tags" @click="delTag(t)" :key="t.content" class="badge badge-success">{{t.content}}</span></h6>
-        </div>
         <div class="row">
-          <div class="col-75">
-            <input @keypress.enter="pushTag" v-model="tag" type="text" placeholder="Tags">
-          </div>
+          <b-form-tags
+            input-id="tags-remove-on-delete"
+            :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
+            v-model="value"
+            separator=" "
+            placeholder="Enter new tags separated by space"
+            remove-on-delete
+            no-add-on-enter
+            class="mb-2"
+          ></b-form-tags>
         </div>
         <div class="row">
           <div class="col-75 disable-button" v-if="!title || !content || !tags.length">submit</div>
@@ -48,9 +48,11 @@ export default {
   data() {
     return {
       title: null,
-      content: [null, null],
-      tags: [],
-      tag: null,
+      contents: [
+        {id: 0, text: null},
+        {id: 1, text: null},
+      ],
+      value: [],
       length: 2,
     }
   },

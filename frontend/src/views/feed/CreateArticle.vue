@@ -9,17 +9,27 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-75">
-            <textarea placeholder="Write Content" v-model="content" style="height:200px;"></textarea>
-          </div>
-        </div>
-        <div>
-          <h6><span v-for="t in tags" @click="delTag(t)" :key="t.content" class="badge badge-success">{{t.content}}</span></h6>
+          <b-form-textarea
+            id="textarea"
+            v-model="content"
+            placeholder="Enter something..."
+            rows="3"
+            max-rows="6"
+          ></b-form-textarea>
+
+          <pre class="mt-3 mb-0">{{ text }}</pre>
         </div>
         <div class="row">
-          <div class="col-75">
-            <input @keypress.enter="pushTag" v-model="tag" type="text" placeholder="Tags">
-          </div>
+          <b-form-tags
+            input-id="tags-remove-on-delete"
+            :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
+            v-model="value"
+            separator=" "
+            placeholder="Enter new tags separated by space"
+            remove-on-delete
+            no-add-on-enter
+            class="mb-2"
+          ></b-form-tags>
         </div>
         <div class="row">
           <div class="disable-button" v-if="!title || !content || !tags.length">submit</div>
@@ -38,35 +48,11 @@ export default {
     return {
       title: null,
       content: null,
-      tags: [],
-      tag: null,
+      value: [],
     }
   },
   methods: {
-    pushTag() {
-      if (!this.tag) { 
-        alert('빈 값은 허용되지 않습니다.')
-        return 
-      }
-      if (!this.tags) { return }
-      else {
-        if (this.tags.filter(res => res.content === this.tag).length) {
-          alert('존재하는 태그입니다.')
-        } else {
-          this.tags.push({
-            content: this.tag,
-            isdelete: false,
-          })
-          this.tag = null
-        }
-      }
-    },
-    delTag(tag) {
-      tag.isdelete = true
-      this.tags = this.tags.filter(res => {
-        return !res.isdelete
-      })
-    }
+    
   }
 }
 </script>

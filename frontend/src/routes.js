@@ -11,6 +11,7 @@ import PageNotFound from './views/PageNotFound.vue'
 import ModifyPwComplete from './views/user/ModifyPwComplete.vue'
 import CreateArticle from '@/views/feed/CreateArticle.vue'
 import CreateVote from '@/views/feed/CreateVote.vue'
+import CreateCountdown from '@/views/feed/CreateCountdown.vue'
 
 import FindPw from './views/user/FindPw.vue'
 import FindPwComplete from './views/user/FindPwComplete.vue'
@@ -94,5 +95,10 @@ export default [
         path: '/feed/create/vote',
         name: 'CreateVote',
         component: CreateVote
+    },
+    {
+        path: '/feed/create/countdown',
+        name: 'CreateCountdown',
+        component: CreateCountdown
     },
 ]
