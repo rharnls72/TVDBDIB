@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ReplyResponse {
     private int no;
     private int parent_reply;
-    private String content;
+    private String content = "";
     private LocalDateTime write_date;
     private int writer_uno;
     private String writer_nick_name;
@@ -24,6 +24,9 @@ public class ReplyResponse {
     private boolean press_like;
     // 좋아요 누른사람 닉네임 둘
     private String liker_nick_name;
+
+    // 하위 댓글 수
+    private int reply_num;
 
     // Getter Setter
     public void setNo(int no) {
@@ -86,5 +89,32 @@ public class ReplyResponse {
     }
     public String getLiker_nick_name() {
         return liker_nick_name;
+    }
+    public void setReply_num(int reply_num) {
+        this.reply_num = reply_num;
+    }
+    public int getReply_num() {
+        return reply_num;
+    }
+
+    // 좋아요 누른 사람 닉네임을 설정하는 함수
+    public void appendNickName(String str) {
+        if(liker_nick_name == null)
+            liker_nick_name = "";
+        liker_nick_name += str;
+        liker_nick_name += ",";
+    }
+
+    // DB 에서 가져온 댓글 정보를 설정하는 함수
+    public void setReply(Reply reply) {
+        no = reply.getNo();
+        parent_reply = reply.getParent_reply();
+        content = reply.getContent();
+        write_date = reply.getWrite_date();
+        writer_uno = reply.getWriter_uno();
+        writer_nick_name = reply.getWriter_nick_name();
+        writer_profile_pic = reply.getWriter_profile_pic();
+        like_num = reply.getLike_num();
+        reply_num = reply.getReply_num();
     }
 }
