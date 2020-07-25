@@ -1,5 +1,6 @@
 <template>
   <div class="feed newsfeed">
+    <IndexCurationHeader />
     <div class="wrapB">
       <h1>큐레이션</h1>
       <div>
@@ -19,6 +20,7 @@ import EpisodeItem from "../../components/curation/episode/EpisodeItem.vue";
 import InfiniteLoading from 'vue-infinite-loading';
 import axios from 'axios';
 import Footer from '../../components/common/custom/Footer.vue';
+import IndexCurationHeader from '../../components/curation/IndexCurationHeader.vue'
 
 export default {
   name: 'IndexCuration',
@@ -33,6 +35,7 @@ export default {
     EpisodeItem,
     InfiniteLoading,
     Footer,
+    IndexCurationHeader,
   },
   methods: {
     // 무한 스크롤 기능 구현 -> 더미 데이터 들어오면 주석 처리해 둔 axios 로직으로 바꿀 예정
