@@ -28,18 +28,22 @@
     <!---->
     <div class="btn-group wrap justify-content-between">
       <div>
-        <div class="like mr-3">
+        <!-- 좋아요 -->
+        <div class="mr-3">
+          <!-- 1. 스마일 -->
           <button class="h6" @click="touchLikeIcon">
             <b-icon-emoji-smile v-if="!likeIcon"></b-icon-emoji-smile>
-            <b-icon-emoji-smile v-else class="bg-warning" variant="light"></b-icon-emoji-smile>
+            <b-icon-emoji-smile v-else class="rounded-circle bg-warning" variant="light"></b-icon-emoji-smile>
           </button>
+          <!-- 2. 하트 -->
           <!-- <button class="h6" @click="touchLikeIcon">
             <b-icon-heart v-if="!likeIcon" variant="danger"></b-icon-heart>
             <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
           </button> -->
           0
         </div>
-        <div class="comment mr-3">
+        <!-- 댓글 -->
+        <div class="mr-3">
           <button class="h6">
             <b-icon-chat></b-icon-chat>
           </button>
@@ -47,9 +51,16 @@
         </div>
         <!---->
       </div>
-            <div class="mr-1">
-        <div class="share">
-          <button class="h6">
+      <div class="mr-1">
+        <!-- 우리가 생각한 공유 (해당 게시물에 대한 글 바로 작성) -->
+        <div class="mr-2">
+          <button class="h5">
+            <b-icon-pencil></b-icon-pencil>
+          </button>
+        </div>
+        <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
+        <div>
+          <button class="h5">
             <b-icon-reply></b-icon-reply>
           </button>
         </div>
@@ -87,6 +98,7 @@ export default {
       defaultImage,
       defaultProfile,
       isStretch: false,
+      likeIcon: false,
     };
   },
   props: {
@@ -95,6 +107,10 @@ export default {
   methods: {
     readMore() {
       this.isStretch = !this.isStretch
+    },
+    touchLikeIcon() {
+      this.likeIcon = !this.likeIcon
+      console.log(this.likeIcon)
     },
   },
 };

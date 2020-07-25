@@ -16,7 +16,7 @@
       <div v-else class="img" :style="{'background-image': 'url('+defaultImage+')'}"></div>
       <div class="contentsWrap">
         <div class="d-flex justify-content-between">
-          <h4 class="title">[{{ curation.name }}]</h4>
+          <h4 class="title">[{{ curation.name }}] OO화</h4>
           <p class="date">{{ curation.genre }}</p>
         </div>
           <!-- <div class="url">
@@ -28,25 +28,30 @@
     <!---->
     <div class="btn-group wrap justify-content-between">
       <div>
-        <div class="like mr-3">
-          <button class="h6" @click="touchLikeIcon">
+        <!-- 좋아요 -->
+        <div class="mr-3">
+          <!-- 1. 스마일 -->
+          <button class="h6 mr-1" @click="touchLikeIcon">
             <b-icon-emoji-smile v-if="!likeIcon"></b-icon-emoji-smile>
-            <b-icon-emoji-smile v-else class="bg-warning" variant="light"></b-icon-emoji-smile>
+            <b-icon-emoji-smile v-else class="rounded-circle bg-warning" variant="light"></b-icon-emoji-smile>
           </button>
+          <!-- 2. 하트 -->
           <!-- <button class="h6" @click="touchLikeIcon">
             <b-icon-heart v-if="!likeIcon" variant="danger"></b-icon-heart>
             <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
           </button> -->
           0
         </div>
-        <div class="comment mr-3">
-          <button class="h6">
+        <!-- 댓글 -->
+        <div class="mr-3">
+          <button class="h6 mr-1">
             <b-icon-chat></b-icon-chat>
           </button>
           0
         </div>
-        <div class="comment mr-3">
-          <button class="h6" @click="touchScrapIcon">
+        <!-- 스크랩 -->
+        <div class="mr-3">
+          <button class="h6 mr-1" @click="touchScrapIcon">
             <b-icon-bookmark v-if="!scrapIcon"></b-icon-bookmark>
             <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
@@ -55,8 +60,15 @@
         <!---->
       </div>
       <div class="mr-1">
-        <div class="share">
-          <button class="h6">
+        <!-- 우리가 생각한 공유 (해당 게시물에 대한 글 바로 작성) -->
+        <div class="mr-2">
+          <button class="h5">
+            <b-icon-pencil></b-icon-pencil>
+          </button>
+        </div>
+        <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
+        <div>
+          <button class="h5">
             <b-icon-reply></b-icon-reply>
           </button>
         </div>
@@ -123,10 +135,5 @@ export default {
   }
   .thumbnail-color {
     background-color: lightgray;
-  }
-  .follow-button {
-    height: auto;
-    line-height: 10px;
-    box-shadow: none;
   }
 </style>
