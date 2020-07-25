@@ -12,10 +12,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +25,9 @@ import com.web.curation.dao.episode.EpisodeDao;
 import com.web.curation.dao.following.FollowingDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.episode.Episode;
+import com.web.curation.model.episode.Episode2;
 import com.web.curation.model.program.Program;
+import com.web.curation.model.program.Program2;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -200,44 +204,48 @@ public class EpisodeController {
         String.class);
         JSONObject recommended_program = new JSONObject(re.getBody());
         JSONArray programs = recommended_program.optJSONArray("results");
-        List<Program> programList = new ArrayList<Program>();
+        List<Program2> programList = new ArrayList<Program2>();
 
         for (int i=1; i<=programs.length(); i++){
-            Program p = new Program();
+            Program2 p = new Program2();
             JSONObject programJson = programs.optJSONObject(i-1);
-            int pno = programJson.optInt("id");
+            int id = programJson.optInt("id");
+            String name = programJson.optString("name");
             int season = 1;
-            p.setPno(pno);
-            p.setSeason(season);
+            p.setId(id);
+            p.setName(name);
+            p.setSeason_num(season);
             programList.add(p);
         }
 
-        List<Episode> episodeList = new ArrayList<Episode>();
+        List<Episode2> episodeList = new ArrayList<Episode2>();
 
         // 팔로우중인 프로그램 각각에 대하여 에피소드 목록 조회 (TMDB API)
         
-        for (Program program: programList){
-            int pno = program.getPno();
-            int season = program.getSeason();
+        for (Program2 program: programList){
+            int pno = program.getId();
+            int season = program.getSeason_num();
 
             // 프로그램 ID와 시즌 번호로 API 요청
             re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY, String.class);
             JSONObject programInfo = new JSONObject(re.getBody());
             JSONArray episodes = programInfo.optJSONArray("episodes");
 
+            program.setSeason_name(programInfo.optString("name"));
+
             // 결과 데이터 중 episodes Array의 각 요소에 접근하여 episode 정보 추출
             for (int i=1; i<=episodes.length(); i++){
                 JSONObject detail = episodes.optJSONObject(i-1);
-                Episode e = episodeSetter(pno, i, detail);
+                Episode2 e = episodeSetter(program, i, detail);
                 episodeList.add(e);
             }
         }
 
         // 추출한 episode들을 최신순 정렬
-        Collections.sort(episodeList, new Comparator<Episode>() {
-			public int compare(Episode o1, Episode o2) {
-                LocalDateTime t2 = o1.getBroadcast_date();
-                LocalDateTime t1 = o2.getBroadcast_date();
+        Collections.sort(episodeList, new Comparator<Episode2>() {
+			public int compare(Episode2 o1, Episode2 o2) {
+                LocalDate t2 = o1.getAir_date();
+                LocalDate t1 = o2.getAir_date();
                 if (t1 != null && t2 != null)
                     return t1.compareTo(t2);
                 else
@@ -252,39 +260,52 @@ public class EpisodeController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    private Episode episodeSetter(int pno, int epno, JSONObject detail){
+    private Episode2 episodeSetter(Program2 program, int epno, JSONObject detail){
         String summary = detail.optString("overview");
+
+        JSONArray crews = detail.optJSONArray("crew");
+        ArrayList<String> crew_arr = new ArrayList<String>();
+        if (crews != null && crews.length() >= 1){
+            for (int i=0; i<crews.length(); i++){
+                String crew = crews.optJSONObject(i).optString("name");
+                crew_arr.add(crew);
+            }
+        }
+
         JSONArray guests = detail.optJSONArray("guest_stars");
-        StringBuilder guest_str = new StringBuilder();
+        ArrayList<String> guest_arr = new ArrayList<String>();
         if (guests != null && guests.length() >= 1){
             for (int i=0; i<guests.length(); i++){
                 String guest = guests.optJSONObject(i).optString("name");
-                guest_str.append(guest);
-                guest_str.append(",");
+                guest_arr.add(guest);
             }
         }
 
         String thumbnail = detail.optString("still_path");
         String episode_air_date = detail.optString("air_date");
 
-        Episode e = new Episode();
+        Episode2 e = new Episode2();
 
         if (episode_air_date != null) {
             String[] episode_start_date = episode_air_date.split("-");
             if (episode_start_date.length >= 3){
-                LocalDateTime start_date = LocalDateTime.of(Integer.parseInt(episode_start_date[0]), 
+                LocalDate start_date = LocalDate.of(Integer.parseInt(episode_start_date[0]), 
                                                                     Integer.parseInt(episode_start_date[1]), 
-                                                                    Integer.parseInt(episode_start_date[2]), 9, 0, 0);
-                e.setBroadcast_date(start_date);
+                                                                    Integer.parseInt(episode_start_date[2]));
+                e.setAir_date(start_date);
             }
         }
         
-        e.setPno(pno);
-        e.setEpisode(epno);
-        e.setSummary(summary);
-        e.setGuest(guest_str.toString());
-        if (thumbnail != null) e.setThumbnail(IMAGE_BASE_URL + thumbnail);
-        e.setReplay_link("");
+        e.setProgram_id(program.getId());
+        e.setProgram_name(program.getName());
+        e.setSeason_num(program.getSeason_num());
+        e.setSeason_name(program.getSeason_name());
+
+        e.setNum(epno);
+        e.setOverview(summary);
+        e.setCrews(crew_arr);
+        e.setGuest_stars(guest_arr);
+        if (thumbnail != null) e.setImage_path(IMAGE_BASE_URL + thumbnail);
 
         return e;
     }
