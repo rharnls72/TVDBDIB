@@ -8,6 +8,7 @@ import com.web.curation.dao.user.UserDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
+import com.web.curation.service.JWTService;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,9 @@ public class AccountController {
     UserDao userDao;
 
     @Autowired
+    JWTService jwtService;
+
+    @Autowired
     private JavaMailSender sender;
 
     @GetMapping("/account/login")
@@ -75,11 +79,14 @@ public class AccountController {
         // 존재하는 유저면 로그인 성공
         if (user != null) {
             final BasicResponse result = new BasicResponse();
+            
             if(user.isIs_certification()){
                 // 성공했다는 응답 객체 준비하기
+                // 응답 객체는 토큰
                 result.status = true;
                 result.msg = "success";
-                result.data = user;
+                //result.data = user;
+                result.data = jwtService.makeToken(user);
                 response = new ResponseEntity<>(result, HttpStatus.OK);
                 System.out.println("Login 성공 !");
             }else{
@@ -88,7 +95,6 @@ public class AccountController {
                 response = new ResponseEntity<>(result, HttpStatus.OK);
                 System.out.println("이메일 인증 안함!");
             }
-            
         }
         // 존재하는 유저가 없으면 로그인 실패
         // 이 경우도 SQL 쿼리는 성공한거니까 result 줄게요
