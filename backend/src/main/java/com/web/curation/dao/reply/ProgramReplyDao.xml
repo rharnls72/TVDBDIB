@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.reply.ProgramReplyDao">
+    <!-- Create -->
+    <insert id="createReply">
+        insert into
+            program_reply(
+                pno
+                , parent_reply
+                , uno
+                , content
+            )
+        values(
+            #{no}
+            , #{parent_reply}
+            , #{writer_uno}
+            , #{content}
+        )
+    </insert>
+
+    <!-- Read -->
+    <select id="getReplyList" resultType="Reply">
+        SELECT 
+            sub.prno                AS `no`,
+            sub.parent_reply        AS `parent_reply`,
+            sub.content             AS `content`,
+            sub.write_date          AS `write_date`,
+            sub.writer_uno          AS `writer_uno`,
+            sub.writer_nick_name    AS `writer_nick_name`,
+            sub.writer_profile_pic  AS `writer_profile_pic`,
+            sub.like_num            AS `like_num`,
+            sub.reply_num           AS `reply_num`,
+            liker.uno               AS `liker_uno`,
+            liker.nick_name         AS `liker_nick_name`
+        FROM
+            (
+            SELECT 
+                *
+            FROM
+                `program_reply_view`
+            WHERE
+                `pno` = #{no}
+                AND
+                `parent_reply` IS NULL
+            ORDER BY `like_num` DESC
+            LIMIT ${start} , 20
+            ) sub
+                LEFT OUTER JOIN
+            `program_reply_like` l ON sub.prno = l.prno
+                LEFT OUTER JOIN
+            `user` liker ON l.uno = liker.uno
+        ORDER BY `no` , `like_num` DESC;
+    </select>
+
+    <!-- Update -->
+    <update id="modifyReply">
+        update
+            program_reply
+        set
+            content = #{content}
+        where
+            prno = #{no}
+    </update>
+
+    <!-- Delete -->
+    <delete id="deleteReply">
+        delete from
+            program_reply
+        where
+            prno = #{value}
+    </delete>
+</mapper>
