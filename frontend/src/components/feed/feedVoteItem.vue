@@ -106,8 +106,8 @@
 </template>
 
 <script>
-import defaultImage from "../../assets/images/img-placeholder.png";
-import defaultProfile from "../../assets/images/profile_default.png";
+import defaultImage from "@/assets/images/img-placeholder.png";
+import defaultProfile from "@/assets/images/profile_default.png";
 export default {
   data: () => {
     return { 
