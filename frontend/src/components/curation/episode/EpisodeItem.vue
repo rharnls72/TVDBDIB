@@ -112,6 +112,7 @@ export default {
   },
   props: {
     curation: Object,
+    id: Number,
   },
   methods: {
     readMore() {
