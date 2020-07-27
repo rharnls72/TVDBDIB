@@ -27,8 +27,9 @@ public class JWTInterceptor implements HandlerInterceptor {
             // 이때 유효하지 않은 토큰이면 예외가 발생한다
             // 예외 발생 시 Vue 에 데이터 전달할 방법 생각!
             try {
+                // 토큰에서 유저 정보를 추출해 request 에 넣기
                 User user = (User) jwtService.getInfo(token).get("User");
-                System.out.println(user);
+                request.setAttribute("User", user);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -36,6 +37,7 @@ public class JWTInterceptor implements HandlerInterceptor {
         // 받은 토큰이 없을 때
         else {
             System.out.println("받은 토큰이 없습니다.");
+            System.out.println("Request URL: " + request.getRequestURL());
         }
 
         return true;

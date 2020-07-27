@@ -1,5 +1,5 @@
 <template>
-    <b-nav justified class="fixed-bottom myfooter py-1">
+    <b-nav justified class="myfooter py-1">
       <!-- 피드 -->
       <b-nav-item>
         <b-icon-people class="text-secondary"></b-icon-people>
@@ -45,5 +45,7 @@ export default {
   .myfooter {
     background-color: #eee;
     position: fixed;
+    bottom: -5px;
+    width: 100%;
   }
 </style>
