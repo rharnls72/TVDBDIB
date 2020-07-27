@@ -46,7 +46,10 @@ public class ReplyController {
     @Autowired
     private ProgramReplyDao programReplyDao;
 
-    // Create
+    ////////////////////////////////////////////////////////////////////
+    ///////////////////////////// Create ///////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+
     // 댓글 추가에 대해 모든 요청이 공통적으로 수행할 일
     private Object createReply(Reply reply, ReplyDao dao, ReplyCreateFunc createFunc) {
         // 반환할 응답 객체
@@ -90,7 +93,9 @@ public class ReplyController {
         return createReply(reply, feedReplyDao, (param_reply, dao) -> dao.createReply(param_reply));
     }
 
-    // Read
+    ////////////////////////////////////////////////////////////////////
+    ///////////////////////////// Read /////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     private Object readReply(ReplyRequest req, ReplyDao dao, ReplyReadFunc readFunc) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
@@ -199,7 +204,29 @@ public class ReplyController {
         return readReply(req, feedReplyDao, (param, dao) -> dao.getReplyList(param));
     }
 
-    // Update
+    ////////////////////// 위는 댓글 조회, 아래는 대댓글 조회 ///////////////////////////
+
+    @PostMapping("/rereply/program/read")
+    @ApiOperation(value = "프로그램 대댓글 조회")
+    public Object readProgramReReply(@RequestBody ReplyRequest req) {
+        return readReply(req, programReplyDao, (param, dao) -> dao.getReReplyList(param));
+    }
+
+    @PostMapping("/rereply/episode/read")
+    @ApiOperation(value = "에피소드 대댓글 조회")
+    public Object readEpisodeReReply(@RequestBody ReplyRequest req) {
+        return readReply(req, episodeReplyDao, (param, dao) -> dao.getReReplyList(param));
+    }
+
+    @PostMapping("/rereply/feed/read")
+    @ApiOperation(value = "피드 대댓글 조회")
+    public Object readFeedReReply(@RequestBody ReplyRequest req) {
+        return readReply(req, feedReplyDao, (param, dao) -> dao.getReReplyList(param));
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    ///////////////////////////// Update ///////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     private Object updateReply(Reply reply, ReplyDao dao, ReplyUpdateFunc updateFunc) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
@@ -242,7 +269,9 @@ public class ReplyController {
         return updateReply(reply, feedReplyDao, (param_reply, dao) -> dao.modifyReply(param_reply));
     }
 
-    // Delete
+    ////////////////////////////////////////////////////////////////////
+    ///////////////////////////// Delete ///////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     private Object deleteReply(int no, ReplyDao dao, ReplyDeleteFunc deleteFunc) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
