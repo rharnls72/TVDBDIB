@@ -1,5 +1,6 @@
 package com.web.curation.controller.account;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -8,6 +9,7 @@ import com.web.curation.dao.user.UserDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
+import com.web.curation.service.JWTService;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -49,7 +52,13 @@ public class AccountController {
     UserDao userDao;
 
     @Autowired
+    JWTService jwtService;
+
+    @Autowired
     private JavaMailSender sender;
+
+    @Value("${myvue.url}")
+    private String vueUrl;
 
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
@@ -75,11 +84,17 @@ public class AccountController {
         // 존재하는 유저면 로그인 성공
         if (user != null) {
             final BasicResponse result = new BasicResponse();
+            
             if(user.isIs_certification()){
                 // 성공했다는 응답 객체 준비하기
+                // 응답 으로 유저 객체와 토큰 둘 다 제공
+                HashMap<String, Object> responseData = new HashMap<>();
+                responseData.put("user", user);
+                responseData.put("token", jwtService.makeToken(user));
+
                 result.status = true;
                 result.msg = "success";
-                result.data = user;
+                result.data = responseData;
                 response = new ResponseEntity<>(result, HttpStatus.OK);
                 System.out.println("Login 성공 !");
             }else{
@@ -88,7 +103,6 @@ public class AccountController {
                 response = new ResponseEntity<>(result, HttpStatus.OK);
                 System.out.println("이메일 인증 안함!");
             }
-            
         }
         // 존재하는 유저가 없으면 로그인 실패
         // 이 경우도 SQL 쿼리는 성공한거니까 result 줄게요
@@ -427,7 +441,7 @@ public class AccountController {
         helper.setSubject("[tvility] 이메일 인증");
         String str = "<h3>안녕하세요 "+nick_name+"님! TVility 회원이 되신것을 진심으로 환영합니다. "+
         "<br/>아래 버튼을 클릭하여 회원가입을 완료해주세요. </h3><br/><br/>"+
-        "<a href='http://localhost:8080/#/user/emailconfirm/"+email+"'>"+
+        "<a href='" + vueUrl + "/#/user/emailconfirm/"+email+"'>"+
         "<button type='button' style='width: 150px;background: #000;color: "+
         "#fff;height: 50px;text-align: center;line-height: 50px;font-weight: 600;"+
         "border-radius: 5px;'>이메일 인증</button></a>";
@@ -441,7 +455,7 @@ public class AccountController {
         helper.setSubject("[tvility] 비밀번호 변경");
         String str = "<h3>안녕하세요 "+nick_name+"님!"+
         "<br/>아래 버튼을 클릭하여 비밀번호를 변경해주세요. </h3><br/><br/>"+
-        "<a href='http://localhost:8080/#/user/editpw/"+email+"'>"+
+        "<a href='" + vueUrl + "/#/user/editpw/"+email+"'>"+
         "<button type='button' style='width: 150px;background: #000;color: "+
         "#fff;height: 50px;text-align: center;line-height: 50px;font-weight: 600;"+
         "border-radius: 5px;'>비밀번호 변경</button></a>";

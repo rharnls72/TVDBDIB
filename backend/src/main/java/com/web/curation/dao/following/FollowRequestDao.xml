@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.following.FollowRequestDao">
+
+    <!-- Create -->
+    <insert id="addFollowRequest">
+        insert into
+            follow_request(
+                uno
+                , follower
+            )
+        values(
+            #{uno}
+            , #{follower}
+        )
+    </insert>
+
+    <!-- Read -->
+    <resultMap type="User" id="userMap">
+        <result column="email" property="email"/>
+        <result column="create_date" property="create_date"/>
+        <result column="nick_name" property="nick_name"/>
+        <result column="bio" property="bio"/>
+        <result column="profile_pic" property="profile_pic"/>
+        <result column="is_private" property="is_private"/>
+    </resultMap>
+    <resultMap type="FollowRequest" id="FollowRequestMap">
+        <result column="fno" property="fno"/>
+        <result column="uno" property="uno"/>
+        <result column="follower" property="follower"/>
+        <collection resultMap="userMap" property="user"/>
+    </resultMap>
+
+    <select id="getFollowRequestList" resultMap="FollowRequestMap">
+        select
+            f.fno           as fno
+            , f.uno         as uno
+            , f.follower    as follower
+            
+            , u.email       as email
+            , u.create_date as create_date
+            , u.nick_name   as nick_name
+            , u.bio         as bio
+            , u.profile_pic as profile_pic
+            , u.is_private  as is_private
+        from
+            follow_request f
+            join
+            user u
+            on
+            f.follower = u.uno
+        where
+            f.uno = #{value}
+        order by
+            fno desc
+    </select>
+
+    <!-- Delete -->
+    <delete id="deleteFollowRequest">
+        delete from
+            follow_request
+        where
+            fno = #{value}
+    </delete>
+
+</mapper>
