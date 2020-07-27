@@ -11,6 +11,11 @@ import PageNotFound from './views/PageNotFound.vue'
 import ModifyPwComplete from './views/user/ModifyPwComplete.vue'
 
 import CreateFeed from '@/views/feed/CreateFeed.vue'
+import FeedItem from '@/components/feed/FeedItem.vue'
+import feedDetail from '@/components/feed/feedDetail.vue'
+import feedArticleItem from '@/components/feed/feedArticleItem.vue'
+import feedCountdownItem from '@/components/feed/feedCountdownItem.vue'
+import feedVoteItem from '@/components/feed/feedVoteItem.vue'
 
 
 import EmailConfirm from './views/user/EmailConfirm.vue'
@@ -101,5 +106,30 @@ export default [
         path: '/feed/create',
         name: 'CreateFeed',
         component: CreateFeed
+    },
+    {
+        path: '/feed/feedItem',
+        name: 'FeedItem',
+        component: FeedItem
+    },
+    {
+        path: '/feed/feedDetail',
+        name: 'FeedDetail',
+        component: feedDetail
+    },
+    {
+        path: '/feed/feedArticleItem',
+        name: 'FeedArticleItem',
+        component: feedArticleItem
+    },
+    {
+        path: '/feed/feedCountdownItem',
+        name: 'FeedCountdownItem',
+        component: feedCountdownItem
+    },
+    {
+        path: '/feed/feedVoteItem',
+        name: 'FeedVoteItem',
+        component: feedVoteItem
     },
 ]
