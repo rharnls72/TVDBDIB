@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.episode.EpisodeDao">
+   
+    <!-- Create -->
+    <insert id="addNewEpisode">
+        insert into
+            episode(
+                pno
+                , episode
+                , summary
+                , broadcast_date
+                , guest
+                , thumbnail
+                , replay_link
+            )
+        values(
+            #{pno}
+            , #{episode}
+            , #{summary}
+            , #{broadcast_date}
+            , #{guest}
+            , #{thumbnail}
+            , #{replay_link}
+        )
+    </insert>
+
+    <!-- Read -->
+    <select id="getAllEpisodeList" resultType="Episode">
+        select
+            *
+        from
+            episode join program_follow on episode.pno = program_follow.pno 
+        where
+            uno = #{uno}
+        limit #{num}, 20
+    </select>
+    <select id="getEpisodeList" resultType="Episode">
+        select
+            *
+        from
+            episode
+        where
+            pno = #{value}
+    </select>
+    <select id="getEpisodeDetail" resultType="Episode">
+        select
+            *
+        from
+            episode
+        where
+            eno = #{value}
+    </select>
+                
+    <!-- Update -->
+    <update id="modifyEpisode">
+        update
+            episode
+        set
+            <!-- pno                = #{pno} -->
+            <!-- , episode       = #{episode} -->
+            summary             = #{summary}
+            <!-- , broadcast_date            = #{broadcast_date} -->
+            <!-- , guest             = #{guest} -->
+            , thumbnail          = #{thumbnail}
+            , replay_link              = #{replay_link}
+        where
+            eno = #{eno}
+    </update>
+
+    <!-- Delete -->
+    <delete id="deleteEpisode">
+        delete from
+            episode
+        where
+            eno = #{value}
+    </delete>
+
+</mapper>

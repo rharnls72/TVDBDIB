@@ -10,6 +10,16 @@ import Errors from './views/Errors.vue'
 import PageNotFound from './views/PageNotFound.vue'
 import ModifyPwComplete from './views/user/ModifyPwComplete.vue'
 
+import CreateFeed from '@/views/feed/CreateFeed.vue'
+
+
+import EmailConfirm from './views/user/EmailConfirm.vue'
+import ModifyPwEmail from './views/user/ModifyPwEmail.vue'
+import FindPw from './views/user/FindPw.vue'
+import FindPwComplete from './views/user/FindPwComplete.vue'
+import FindPwRe from './views/user/FindPwRe.vue'
+import IndexCuration from './views/curation/IndexCuration.vue'
+
 export default [
 
     {
@@ -38,6 +48,16 @@ export default [
         component : ModifyPw
     },
     {
+        path : '/user/editpw/:email',
+        name : 'ModifyPwEmail',
+        component : ModifyPwEmail
+    },
+    {
+        path : '/user/emailconfirm/:email',
+        name : 'EmailConfirm',
+        component : EmailConfirm
+    },
+    {
         path : '/feed/main',
         name : 'FeedMain',
         component : FeedMain
@@ -56,5 +76,30 @@ export default [
         path: '/user/modifypwcomplete',
         name: 'ModifyPwComplete',
         component: ModifyPwComplete
-    }
+    },
+    {
+        path: '/curation/main',
+        name: 'IndexCuration',
+        component: IndexCuration
+    },
+    {
+        path : '/user/findPw',
+        name : 'FindPw',
+        component : FindPw
+    },
+    {
+        path : '/user/findPwcomplete',
+        name : 'FindPwComplete',
+        component : FindPwComplete
+    },
+    {
+        path : '/user/findPwRe',
+        name : 'FindPwRe',
+        component : FindPwRe
+    },
+    {
+        path: '/feed/create',
+        name: 'CreateFeed',
+        component: CreateFeed
+    },
 ]

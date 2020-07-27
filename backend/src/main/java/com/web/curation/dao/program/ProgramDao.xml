@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.program.ProgramDao">
+
+    <!-- Create -->
+    <insert id="addNewProgram">
+        insert into
+            program(
+                pno
+                , name
+                , broadcaster
+                , genre
+                , season
+                , alias
+                , start_date
+                , end_date
+                , director
+                , cast
+                , description
+                , broadcast_time
+                , thumbnail
+            )
+        values(
+            #{pno}
+            , #{name}
+            , #{broadcaster}
+            , #{genre}
+            , #{season}
+            , #{alias}
+            , #{start_date}
+            , #{end_date}
+            , #{director}
+            , #{cast}
+            , #{description}
+            , #{broadcast_time}
+            , #{thumbnail}
+        )
+    </insert>
+
+    <!-- Read -->
+    <select id="getProgramList" resultType="Program">
+        select
+            *
+        from
+            program
+        order by
+            pno desc;
+    </select>
+    <select id="getProgramDetail" resultType="Program">
+        select
+            *
+        from
+            program
+        where
+            pno = #{value}
+    </select>
+
+    <!-- Update -->
+    <update id="modifyProgram">
+        update
+            program
+        set
+            name                = #{name}
+            , broadcaster       = #{broadcaster}
+            , genre             = #{genre}
+            , season            = #{season}
+            , alias             = #{alias}
+            <!-- , start_date        = #{start_date} -->
+            <!-- , end_date          = #{end_date} -->
+            , director          = #{director}
+            , cast              = #{cast}
+            , description       = #{description}
+            <!-- , broadcast_time    = #{broadcast_time} -->
+            , thumbnail         = #{thumbnail}
+        where
+            pno = #{pno}
+    </update>
+
+    <!-- Delete -->
+    <delete id="deleteProgram">
+        delete from
+            program
+        where
+            pno = #{value}
+    </delete>
+
+</mapper>
