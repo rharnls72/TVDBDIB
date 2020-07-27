@@ -35,12 +35,14 @@ public class WebCurationApplication implements WebMvcConfigurer{
 	}
 
 	// 전역의 CORS 처리
+	/*
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 			.allowedOrigins("*")
 			.allowedMethods("*")
-			.allowedHeaders("*")
-			.exposedHeaders("jwt-token");
+			.allowedHeaders("*");
+			// .exposedHeaders("jwt-token");
 	}
+	*/
 }
