@@ -104,4 +104,15 @@ public class User {
     public void setIs_certification(boolean is_certification) {
         this.is_certification = is_certification;
     }
+
+    @Override
+    public String toString() {
+        String str =
+        "Info: "
+        + uno + ", "
+        + email + ", "
+        + nick_name + ", "
+        + create_date;
+        return str;
+    }
 }
