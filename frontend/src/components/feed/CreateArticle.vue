@@ -30,8 +30,7 @@
 <script>
 import axios from 'axios'
 import {mapState} from 'vuex'
-
-const SERVER = 'http://localhost:9000/'
+import FeedApi from '../../api/FeedApi'
 
 export default {
   name: 'CreateArticle',
@@ -56,19 +55,29 @@ export default {
       return JSON.stringify(jsonObj)
     },
     submitArticle() {
-      let sendData = this.makeData()
-      console.log(sendData)
-      axios.post(SERVER+'feed/create', {
-        uno: this.userInfo.uno,
+      let sendData = this.makeData();
+
+      // createFeed 요청에 줄 데이터 목록
+      // uno 는 토큰을 통해 사용하기위해 제거
+      let data = {
         ctype: 1,
         content: sendData,
-        tag: JSON.stringify(this.value),
-      })
-        .then(res => {
-          console.log(res)
-        })
-        .catch(err => console.log(err))
-      console.log(JSON.parse(sendData))
+        tag: JSON.stringify(this.value)
+      };
+
+      // Axios 요청
+      FeedApi.createFeed(
+        // 요청에 쓸 데이터 전달
+        data
+        // 성공시 수행할 콜백 메서드
+        , res => {
+          console.log(res);
+        }
+        // 실패시 수행할 콜백 메서드
+        , err => {
+          console.log(err);
+        } 
+      );
     }
   }
 }

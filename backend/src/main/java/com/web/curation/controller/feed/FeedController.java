@@ -3,10 +3,13 @@ package com.web.curation.controller.feed;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.web.curation.dao.feed.FeedDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.feed.Feed;
 import com.web.curation.model.feed.FeedRequest;
+import com.web.curation.model.user.User;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -43,9 +46,19 @@ public class FeedController {
     // Create
     @PostMapping("/feed/create")
     @ApiOperation(value = "피드 생성")
-    public Object createFeed(@RequestBody Feed feed) {
+    public Object createFeed(@RequestBody Feed feed, HttpServletRequest request) {
+        
+        System.out.println("피드 생성 백엔드 코드 들어옴!");
+
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
+
+        // 유저 정보 조회
+        User user = (User) request.getAttribute("User");
+        System.out.println(user);
+
+        // 생성할 피드 정보 중 유저 번호는 토큰을 통해 알아낸 값으로 넣기
+        feed.setUno(user.getUno());
 
         // 피드 생성
         int n = dao.addNewFeed(feed);

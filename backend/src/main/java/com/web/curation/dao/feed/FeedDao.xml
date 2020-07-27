@@ -17,7 +17,9 @@
                 </if>
                 , content
                 , ctype
+                <if test="pno > 0 || eno > 0">
                 , thumbnail
+                </if>
                 , tag
             )
         (select

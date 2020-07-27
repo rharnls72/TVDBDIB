@@ -21,7 +21,6 @@ DROP TABLE IF EXISTS `feed_dibs`;
 DROP TABLE IF EXISTS `feed`;
 DROP TABLE IF EXISTS `episode`;
 DROP TABLE IF EXISTS `program`;
-DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `follow_request`;
 
 DROP VIEW IF EXISTS `episode_reply_view`;
@@ -29,6 +28,8 @@ DROP VIEW IF EXISTS `program_reply_view`;
 DROP VIEW IF EXISTS `feed_reply_view`;
 
 DROP VIEW IF EXISTS `feed_view`;
+
+DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
     `uno` INT AUTO_INCREMENT,
