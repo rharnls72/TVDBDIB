@@ -1,3 +1,4 @@
+/*
 package com.web.curation;
 
 import java.io.IOException;
@@ -137,3 +138,4 @@ public class NetflixCrawlingAndSaveTest {
 
     }
 }
+*/
