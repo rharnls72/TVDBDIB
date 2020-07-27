@@ -1,6 +1,6 @@
 <template>
   <div>
-    <EpisodeItem :episodeId="episodeId"/>
+    <EpisodeItem :episodeId="id"/>
   </div>
 </template>
 
