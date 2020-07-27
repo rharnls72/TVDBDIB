@@ -13,11 +13,9 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +24,6 @@ import com.web.curation.dao.following.FollowingDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.episode.Episode;
 import com.web.curation.model.episode.Episode2;
-import com.web.curation.model.program.Program;
 import com.web.curation.model.program.Program2;
 
 import io.swagger.annotations.ApiResponse;
