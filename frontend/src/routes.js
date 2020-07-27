@@ -20,6 +20,7 @@ import FindPwComplete from './views/user/FindPwComplete.vue'
 import FindPwRe from './views/user/FindPwRe.vue'
 import IndexCuration from './views/curation/IndexCuration.vue'
 import Alert from './views/alert/Alert.vue'
+import EpisodeDetail from './views/curation/episode/EpisodeDetail.vue'
 
 export default [
 
@@ -107,5 +108,10 @@ export default [
         path: '/alert/test',
         name: 'Alert',
         component: Alert
+    },
+    {
+        path: '/episode/:id',
+        name: 'EpisodeDetail',
+        component: EpisodeDetail
     },
 ]
