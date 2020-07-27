@@ -2,7 +2,7 @@
   <b-nav justified class="myheader py-1">
     <b-nav-item>
       <!-- 새 글 작성 -->
-      <button>
+      <button @click="createFeed">
         <b-icon-plus-circle class="text-dark"></b-icon-plus-circle>
       </button>
       <b-icon-blank></b-icon-blank>
@@ -27,7 +27,12 @@
 <script>
 export default {
   name: 'IndexCuarationHeader',
-
+  methods: {
+    // 피드 작성 페이지로 이동
+    createFeed() {
+      this.$router.push({name: 'CreateFeed'})
+    },
+  },
 }
 </script>
 
