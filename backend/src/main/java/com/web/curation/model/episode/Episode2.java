@@ -13,17 +13,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Episode2 {
-    private int program_id;
-    private String program_name;
-    private int season_num;
-    private String season_name;
-    private int num;
-
-    private String image_path;
-    private LocalDate air_date;
-    private String overview;
-    private ArrayList<String> crews;
-    private ArrayList<String> guest_stars;
+    private int program_id; // 프로그램 고유번호
+    private String program_name; // 프로그램 이름
+    private int season_num; // 시즌 번호
+    private String season_name; // 시즌 이름 (보통 Season 1 이런 식이긴 함)
+    
+    private int episode_id; // 에피소드 고유번호 (TMDB가 갖고있는 ID)
+    private int num; // 에피소드 번호 (1화, 2화...)
+    private String image_path; // 에피소드별 스틸컷 이미지
+    private LocalDate air_date; // 방송날짜
+    private String overview; // 내용요약
+    private ArrayList<String> crews; // 제작진 (리스트)
+    private ArrayList<String> guest_stars; // 게스트 (리스트)
 
 
     public int getNum() {
