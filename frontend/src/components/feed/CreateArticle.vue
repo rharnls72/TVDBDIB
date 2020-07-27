@@ -57,6 +57,7 @@ export default {
     },
     submitArticle() {
       let sendData = this.makeData()
+      console.log(sendData)
       axios.post(SERVER+'feed/create', {
         uno: this.userInfo.uno,
         ctype: 1,
@@ -67,6 +68,7 @@ export default {
           console.log(res)
         })
         .catch(err => console.log(err))
+      console.log(JSON.parse(sendData))
     }
   }
 }
