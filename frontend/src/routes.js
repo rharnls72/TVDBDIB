@@ -17,6 +17,7 @@ import FindPwComplete from './views/user/FindPwComplete.vue'
 import FindPwRe from './views/user/FindPwRe.vue'
 
 import IndexCuration from './views/curation/IndexCuration.vue'
+import Alert from './views/alert/Alert.vue'
 
 export default [
 
@@ -94,5 +95,10 @@ export default [
         path: '/feed/create/vote',
         name: 'CreateVote',
         component: CreateVote
+    },
+    {
+        path: '/alert/test',
+        name: 'Alert',
+        component: Alert
     },
 ]
