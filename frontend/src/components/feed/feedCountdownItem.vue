@@ -12,7 +12,7 @@
         <p>{{feedTitle}}</p>
       </div>
     </div>
-    <div class="feed-card">
+    <div class="wrap">
       <div class="p-2 pt-3 d-flex flex-column justify-content-center align-items-center">
         <div class="d-flex justify-content-center py-3">
             <div>
@@ -29,90 +29,39 @@
             </div>
           </div>
       </div>
-      <div class="contentsWrap">
-        <div class="wrap">
-          <p class="date">2020.06.18</p>
-        </div>
-      </div>
     </div>
     <!---->
-    <div class="btn-group wrap">
-      <div class="like likeScrap">
-        <svg
-          class="svg-inline--fa fa-heart fa-w-16 icon full"
-          aria-hidden="true"
-          data-prefix="fas"
-          data-icon="heart"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-          data-fa-i2svg
-        >
-          <path
-            fill="currentColor"
-            d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"
-          />
-        </svg>
-        <!-- <i class="fas fa-heart icon full"></i> -->
-        <svg
-          class="svg-inline--fa fa-heart fa-w-16 icon empty"
-          aria-hidden="true"
-          data-prefix="far"
-          data-icon="heart"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-          data-fa-i2svg
-        >
-          <path
-            fill="currentColor"
-            d="M458.4 64.3C400.6 15.7 311.3 23 256 79.3 200.7 23 111.4 15.6 53.6 64.3-21.6 127.6-10.6 230.8 43 285.5l175.4 178.7c10 10.2 23.4 15.9 37.6 15.9 14.3 0 27.6-5.6 37.6-15.8L469 285.6c53.5-54.7 64.7-157.9-10.6-221.3zm-23.6 187.5L259.4 430.5c-2.4 2.4-4.4 2.4-6.8 0L77.2 251.8c-36.5-37.2-43.9-107.6 7.3-150.7 38.9-32.7 98.9-27.8 136.5 10.5l35 35.7 35-35.7c37.8-38.5 97.8-43.2 136.5-10.6 51.1 43.1 43.5 113.9 7.3 150.8z"
-          />
-        </svg>
-        <!-- <i class="far fa-heart icon empty"></i> -->
-        0
+    <div class="wrap d-flex justify-content-between">
+      <div class="text-align-left">
+        <b-icon class="mr-2" icon="heart" font-scale="1.5"></b-icon>
+        <b-icon class="mr-2" icon="chat-square" font-scale="1.5"></b-icon>
+        <b-icon icon="cursor" font-scale="1.5"></b-icon>
       </div>
-      <div class="comment">
-        <svg
-          class="svg-inline--fa fa-comment-alt fa-w-16 icon"
-          aria-hidden="true"
-          data-prefix="far"
-          data-icon="comment-alt"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-          data-fa-i2svg
-        >
-          <path
-            fill="currentColor"
-            d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm16 352c0 8.8-7.2 16-16 16H288l-12.8 9.6L208 428v-60H64c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h384c8.8 0 16 7.2 16 16v288z"
-          />
-        </svg>
-        <!-- <i class="far fa-comment-alt icon"></i> -->
-        0
-      </div>
-      <!---->
-      <div class="share">
-        <svg
-          class="svg-inline--fa fa-share-alt fa-w-14 icon"
-          aria-hidden="true"
-          data-prefix="fas"
-          data-icon="share-alt"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512"
-          data-fa-i2svg
-        >
-          <path
-            fill="currentColor"
-            d="M352 320c-22.608 0-43.387 7.819-59.79 20.895l-102.486-64.054a96.551 96.551 0 0 0 0-41.683l102.486-64.054C308.613 184.181 329.392 192 352 192c53.019 0 96-42.981 96-96S405.019 0 352 0s-96 42.981-96 96c0 7.158.79 14.13 2.276 20.841L155.79 180.895C139.387 167.819 118.608 160 96 160c-53.019 0-96 42.981-96 96s42.981 96 96 96c22.608 0 43.387-7.819 59.79-20.895l102.486 64.054A96.301 96.301 0 0 0 256 416c0 53.019 42.981 96 96 96s96-42.981 96-96-42.981-96-96-96z"
-          />
-        </svg>
+      <div>
+        <b-icon class="text-align-right" icon="bookmark" font-scale="1.5"></b-icon>
       </div>
     </div>
-    <!---->
-    <!---->
+    <div class="wrap mt-2">
+      <span class="font-weight-bold">좋아요 {{like_num}}명</span>
+    </div>
+    <div class="wrap mt-2">
+      <span class="font-weight-bold">유저이름 </span>
+      <span v-if="isLong">... <span class="moreView" @click="changeIsLong">더 보기</span></span>
+      <span v-else>
+        <span>{{content}}</span><br>
+        <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span>
+      </span>
+    </div>
+    <div v-if="!isLong" class="wrap mt-2">
+      <div class="row d-flex align-items-center px-3">
+        <b-form-input style="border:none;" type="text" class="m-0 col rounded-pill" v-model="comment" placeholder="댓글 입력!!!">
+        </b-form-input>
+        <b-icon icon="plus-circle" class="ml-1 text-right" font-scale="1.4"></b-icon>
+      </div>
+    </div>
   </div>
+    <!---->
+    <!---->
 </template>
 
 <script>
@@ -122,6 +71,7 @@ export default {
     name: 'feedCountdown',
     data() {
       return {
+        defaultImage, defaultProfile,
         feedTitle: "카운트다운!!",
         Value: {
           date: "00",
@@ -131,6 +81,11 @@ export default {
         },
         date: "2020-08-31",
         Time: "21:35:30",
+        comment: null,
+        tags: ['소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ'],
+        reply: ['wow', '너무 좋아용 ㅎㅎ'],
+        like_num: 12,
+        isLong: true,
       }
     },
     methods: {
@@ -158,6 +113,9 @@ export default {
         this.timer()
         setInterval(this.timer, 1000)
       },
+      changeIsLong() {
+        this.isLong=false
+      }
     },
     created() {
       this.submitDateTime()
@@ -177,5 +135,11 @@ export default {
   border-bottom: 1px solid black;
   text-align: center;
   font-weight: 700;
+}
+.moreView {
+  color: darkgray; 
+}
+.tag {
+  color:deepskyblue;
 }
 </style>

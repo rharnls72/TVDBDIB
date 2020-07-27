@@ -1,6 +1,16 @@
 <template>
   <div class="feed-item">
-    <feedArticleItem/>
+    <div class="top">
+      <!-- 추후에 poster url 가져오면 img 태그로 바꿔줄 것 -->
+      <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
+      <div class="user-info mb-2">
+        <div class="user-name">
+          <button>[{{ curation.name }}]</button>
+        </div>
+        <p class="date">{{ curation.broadcast_time }} 방송 예정</p>
+      </div>
+    </div>
+    <FeedItem/>
     <!---->
     <div class="btn-group wrap justify-content-between">
       <div>
@@ -85,7 +95,7 @@
 <script>
 import defaultImage from "@/assets/images/img-placeholder.png"
 import defaultProfile from "@/assets/images/profile_default.png"
-import feedArticleItem from "@/components/feed/feedArticleItem.vue"
+import FeedItem from "@/components/feed/FeedItem.vue"
 
 export default {
   name: 'feedDetail',
@@ -103,7 +113,7 @@ export default {
     };
   },
   components: {
-    feedArticleItem
+    FeedItem
   },
   methods: {
     readMore() {
