@@ -159,9 +159,14 @@ export default {
             //요청이 끝나면 버튼 활성화
             this.isSubmit = true;
 
+            // 로그인 완료 시 세션 저장소에 받은 토큰 정보 저장
+            sessionStorage.setItem('jwt-token', res.jwtToken);
+
+            // 유저 정보 저장 선택 시 로컬 저장소에 유저 정보 저장
             if(this.isSave){
               localStorage.setItem('tvility', JSON.stringify(res.userInfo));
             }
+
             // 로그인 정보를 vuex 에 저장
             this.$store.commit('addUserInfo', res.userInfo);
 
