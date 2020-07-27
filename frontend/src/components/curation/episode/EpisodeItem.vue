@@ -2,28 +2,24 @@
   <div class="feed-item">
     <div class="top">
       <!-- 추후에 poster url 가져오면 img 태그로 바꿔줄 것 -->
+      <!-- 에피소드에는 포스터가 없다,, -->
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info mb-2">
         <div class="user-name">
           <button>[{{ curation.pname }}] {{ curation.episode }}화</button>
         </div>
-        <p class="date">{{ curation.broadcast_date }} 방송 예정</p>
+        <p class="date">{{ curation.broadcast_date }} 방송</p>
       </div>
     </div>
     <div class="feed-card">
-      <!-- 추후에 thumbnail url 가져오면 img 태그로 바꿔줄 것 -->
       <div v-if="curation.thumbnail != 'https://image.tmdb.org/t/p/w500'"><img class="mythumbnail" :src="curation.thumbnail" alt="thumbnail-image"></div>
       <div v-else><img class="mythumbnail" :src="defaultImage" alt="default-image"></div>
-      <!-- <div v-else :style="{'background-image': 'url('+defaultImage+')'}"><div class="mythumbnail"></div></div> -->
       <div class="contentsWrap">
         <div class="d-flex justify-content-between">
           <h4 class="title">[{{ curation.pname }}] {{ curation.episode }}화</h4>
+          <!-- 에피소드에는 장르가 없다,, -->
           <!-- <p class="date">{{ curation.genre }}</p> -->
         </div>
-          <!-- <div class="url">
-            <a href="https://brunch.co.kr/@@63JW/25">https://brunch.co.kr/@@63JW/25</a>
-          </div>
-          <p class="date">2020.06.18</p> -->
       </div>
     </div>
     <!---->
@@ -41,7 +37,7 @@
             <b-icon-heart v-if="!likeIcon" variant="danger"></b-icon-heart>
             <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
           </button> -->
-          0
+          {{ likeCount }}
         </div>
         <!-- 댓글 -->
         <div class="mr-3">
@@ -56,7 +52,7 @@
             <b-icon-bookmark v-if="!scrapIcon"></b-icon-bookmark>
             <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
-          0
+          {{ scrapCount }}
         </div>
         <!---->
       </div>
@@ -84,12 +80,17 @@
     </div>
     <div v-else class="content">
       <div v-if="!isStretch" class="d-flex justify-content-between">
-        <p>{{ curation.summary.slice(0, 18) }}</p>
+        <p>{{ curation.summary.slice(0, 40) }}</p>
         <button @click="readMore" class="more">더 보기</button>
       </div>
       <div v-else>
         <p>{{ curation.summary }}</p>
       </div>
+    </div>
+    <!-- 추후에 댓글 연결!~ -->
+    <div class="content">
+      <p>댓글이야 댓글 댓글!~</p>
+      <p class="more">댓글 1개</p>
     </div>
     <!---->
     <!---->
@@ -109,6 +110,8 @@ export default {
       isStretch: false,
       likeIcon: false,
       scrapIcon: false,
+      likeCount: 0,
+      scrapCount: 0,
     };
   },
   props: {
@@ -121,11 +124,23 @@ export default {
     },
     touchLikeIcon() {
       this.likeIcon = !this.likeIcon
-      console.log(this.likeIcon)
+      if (this.likeIcon) {
+        this.likeCount ++
+      }
+      else {
+        this.likeCount --
+      }
+      // console.log(this.likeIcon)
     },
     touchScrapIcon() {
       this.scrapIcon = !this.scrapIcon
-      console.log(this.scrapIcon)
+      if (this.scrapIcon) {
+        this.scrapCount ++
+      }
+      else {
+        this.scrapCount --
+      }
+      // console.log(this.scrapIcon)
     },
   },
 };
