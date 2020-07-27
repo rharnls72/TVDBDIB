@@ -5,19 +5,20 @@
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info mb-2">
         <div class="user-name">
-          <button>[{{ curation.name }}] OO화</button>
+          <button>[{{ curation.pname }}] {{ curation.episode }}화</button>
         </div>
-        <p class="date">{{ curation.broadcast_time }} 방송 예정</p>
+        <p class="date">{{ curation.broadcast_date }} 방송 예정</p>
       </div>
     </div>
     <div class="feed-card">
       <!-- 추후에 thumbnail url 가져오면 img 태그로 바꿔줄 것 -->
-      <div v-if="curation.thumbnail" class="img thumbnail-color">{{ curation.thumbnail }}</div>
-      <div v-else class="img" :style="{'background-image': 'url('+defaultImage+')'}"></div>
+      <div v-if="curation.thumbnail != 'https://image.tmdb.org/t/p/w500'"><img class="mythumbnail" :src="curation.thumbnail" alt="thumbnail-image"></div>
+      <div v-else><img class="mythumbnail" :src="defaultImage" alt="default-image"></div>
+      <!-- <div v-else :style="{'background-image': 'url('+defaultImage+')'}"><div class="mythumbnail"></div></div> -->
       <div class="contentsWrap">
         <div class="d-flex justify-content-between">
-          <h4 class="title">[{{ curation.name }}] OO화</h4>
-          <p class="date">{{ curation.genre }}</p>
+          <h4 class="title">[{{ curation.pname }}] {{ curation.episode }}화</h4>
+          <!-- <p class="date">{{ curation.genre }}</p> -->
         </div>
           <!-- <div class="url">
             <a href="https://brunch.co.kr/@@63JW/25">https://brunch.co.kr/@@63JW/25</a>
@@ -75,19 +76,19 @@
       </div>
     </div>
     <!-- 내용 더 보기 (현재 페이지에서 펼치기) -->
-    <div v-if="!curation.description" class="content">
-      <p>{{ curation.description }}</p>
+    <div v-if="!curation.summary" class="content">
+      <p>{{ curation.summary }}</p>
     </div>
-    <div v-else-if="curation.description.length <= 18" class="content">
-      <p>{{ curation.description }}</p>
+    <div v-else-if="curation.summary.length <= 18" class="content">
+      <p>{{ curation.summary }}</p>
     </div>
     <div v-else class="content">
       <div v-if="!isStretch" class="d-flex justify-content-between">
-        <p>{{ curation.description.slice(0, 18) }}</p>
+        <p>{{ curation.summary.slice(0, 18) }}</p>
         <button @click="readMore" class="more">더 보기</button>
       </div>
       <div v-else>
-        <p>{{ curation.description }}</p>
+        <p>{{ curation.summary }}</p>
       </div>
     </div>
     <!---->
@@ -134,7 +135,8 @@ export default {
   .more {
     color: lightgray;
   }
-  .thumbnail-color {
-    background-color: lightgray;
+  .mythumbnail {
+    width: 100%;
+    height: auto;
   }
 </style>
