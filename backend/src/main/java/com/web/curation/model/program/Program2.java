@@ -13,16 +13,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Program2 {
-    private int id;
-    private String name;
-    private int season_num;
-    private String season_name;
-    private ArrayList<String> genres;
-    private ArrayList<String> networks;
-    private String homepage;
-    private String poster_path;
-    private LocalDate first_air_date;
-    private float rating;
+    private int id; // 프로그램 고유번호
+    private String name; // 프로그램 이름
+    private int season_num; // 시즌 번호
+    private String season_name; // 시즌 이름
+    private ArrayList<String> genres; // 장르 (리스트)
+    private ArrayList<String> networks; // 방송사 (리스트)
+    private String homepage; // 홈페이지 URL
+    private String poster_path; // (그 시즌의) 포스터
+    private LocalDate first_air_date; // (그 시즌의) 첫 방송일
+    private float rating; // (그 시즌에 대한) 평점
 
     public int getId() {
         return this.id;
