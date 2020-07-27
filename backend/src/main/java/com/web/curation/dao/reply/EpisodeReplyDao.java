@@ -16,6 +16,7 @@ public interface EpisodeReplyDao extends ReplyDao {
 
     // Read
     List<Reply> getReplyList(Map<String, Object> param);
+    List<Reply> getReReplyList(Map<String, Object> param);
 
     // Update
     int modifyReply(Reply reply);
