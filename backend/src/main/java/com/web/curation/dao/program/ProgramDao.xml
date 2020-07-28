@@ -9,7 +9,8 @@
     <insert id="addNewProgram">
         insert into
             program(
-                name
+                pno
+                , name
                 , broadcaster
                 , genre
                 , season
@@ -23,7 +24,8 @@
                 , thumbnail
             )
         values(
-            #{name}
+            #{pno}
+            , #{name}
             , #{broadcaster}
             , #{genre}
             , #{season}
@@ -44,6 +46,8 @@
             *
         from
             program
+        order by
+            pno desc;
     </select>
     <select id="getProgramDetail" resultType="Program">
         select

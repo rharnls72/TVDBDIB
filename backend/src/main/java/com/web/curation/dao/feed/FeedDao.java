@@ -14,7 +14,7 @@ public interface FeedDao {
     int addNewFeed(Feed feed);
     
     // Read
-    List<Feed> getFeedList();
+    List<Feed> getFeedList(int start);
     Feed getFeedDetail(int fno);
 
     // Update

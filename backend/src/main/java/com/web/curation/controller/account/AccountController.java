@@ -1,5 +1,6 @@
 package com.web.curation.controller.account;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -8,6 +9,7 @@ import com.web.curation.dao.user.UserDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
+import com.web.curation.service.JWTService;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -48,10 +51,16 @@ public class AccountController {
     UserDao userDao;
 
     @Autowired
+    JWTService jwtService;
+
+    @Autowired
     private JavaMailSender sender;
 
     @Autowired
     private MailConfig mailConfig;
+
+    @Value("${myvue.url}")
+    private String vueUrl;
 
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
@@ -77,11 +86,17 @@ public class AccountController {
         // 존재하는 유저면 로그인 성공
         if (user != null) {
             final BasicResponse result = new BasicResponse();
+            
             if(user.isIs_certification()){
                 // 성공했다는 응답 객체 준비하기
+                // 응답 으로 유저 객체와 토큰 둘 다 제공
+                HashMap<String, Object> responseData = new HashMap<>();
+                responseData.put("user", user);
+                responseData.put("token", jwtService.makeToken(user));
+
                 result.status = true;
                 result.msg = "success";
-                result.data = user;
+                result.data = responseData;
                 response = new ResponseEntity<>(result, HttpStatus.OK);
                 System.out.println("Login 성공 !");
             }else{
@@ -90,7 +105,6 @@ public class AccountController {
                 response = new ResponseEntity<>(result, HttpStatus.OK);
                 System.out.println("이메일 인증 안함!");
             }
-            
         }
         // 존재하는 유저가 없으면 로그인 실패
         // 이 경우도 SQL 쿼리는 성공한거니까 result 줄게요
@@ -401,11 +415,10 @@ public class AccountController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
     public String SHA256(String msg) throws Exception{
-        String base = "password123";
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		byte[] hash = digest.digest(base.getBytes("UTF-8"));
+		byte[] hash = digest.digest(msg.getBytes("UTF-8"));
 		StringBuffer hexString = new StringBuffer();
 
 		for (int i = 0; i < hash.length; i++) {
