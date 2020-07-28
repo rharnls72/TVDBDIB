@@ -1,6 +1,5 @@
 package com.web.curation.interceptor;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +19,7 @@ public class JWTInterceptor implements HandlerInterceptor {
     private JWTService jwtService;
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         
@@ -42,7 +42,7 @@ public class JWTInterceptor implements HandlerInterceptor {
                 try {
                     // 토큰에서 유저 정보를 추출해 request 에 넣기
                     User user = new User();
-                    user.setUserWithToken((Map) jwtService.getInfo(token).get("User"));
+                    user.setUserWithToken((Map<String, Object>) jwtService.getInfo(token).get("User"));
                     System.out.println(user);
                     request.setAttribute("User", user);
                 } catch (Exception e) {

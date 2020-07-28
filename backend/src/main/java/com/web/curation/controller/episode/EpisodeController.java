@@ -310,7 +310,10 @@ public class EpisodeController {
     @ApiOperation(value = "에피소드 상세정보 조회")
     public Object getEpisodeDetailFromAPI(@PathVariable("pno") int pno, @PathVariable("season") int season,
                                                                         @PathVariable("epno") int epno) {
-        final BasicResponse result = new BasicResponse();
+
+        // 여기선 응답 상태코드 없이 결과만 반환?
+        // final BasicResponse result = new BasicResponse();
+        
         RestTemplate restTemplate = new RestTemplate();
                                                                             
         // 일단 프로그램 (시즌 말고 그보다 더 상위인 프로그램) 정보가 필요하다. 프로그램 이름은 띄워줘야 하잖아...
