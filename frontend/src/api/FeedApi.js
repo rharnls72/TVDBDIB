@@ -1,5 +1,6 @@
 
 import http from "./http-common.js";
+import header from "./header.js"
 
 const createFeed = (data,callback,errorCallback) => {
     // 피드 생성
@@ -7,7 +8,7 @@ const createFeed = (data,callback,errorCallback) => {
     // 실패 :  errorCallback 호출
 
     //백앤드와 로그인 통신하는 부분
-    http.post('/feed/create', data)
+    http.post('/feed/create', data, header())
         .then(res => {
             // 서버에서 정상적으로 처리되었으면 res 가 null 이 될 수 없음
             // 서버에서 db 쿼리 하다 오류난 경우일듯
