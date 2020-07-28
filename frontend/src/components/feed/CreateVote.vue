@@ -56,6 +56,9 @@ export default {
       length: 2,
     }
   },
+  props: {
+    fno: Number,
+  },
   methods: {
     moveMain() {
       console.log(1)

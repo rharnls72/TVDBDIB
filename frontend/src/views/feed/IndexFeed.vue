@@ -4,9 +4,9 @@
       <h1>뉴스피드</h1>
       <router-link to="/user/modifyPw" class="btn--text">비밀번호변경</router-link>
       <div v-for="d in feeds" :key="d.fno">
-        <feedArticleItem v-if="d.ctype===1" />
-        <feedCountdownItem v-else-if="d.ctype===2"/>
-        <feedVoteItem v-else/>
+        <feedArticleItem v-if="d.ctype===1" :article="d.fno"/>
+        <feedCountdownItem v-else-if="d.ctype===2" :countdown="d.fno"/>
+        <feedVoteItem v-else :vote="d.fno"/>
       </div>
     </div>
   </div>

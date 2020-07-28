@@ -41,6 +41,9 @@ export default {
       value: [],
     }
   },
+  props: {
+    fno: Number,
+  },
   computed: {
     ...mapState([
       'userInfo',
