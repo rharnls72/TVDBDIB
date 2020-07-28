@@ -6,7 +6,7 @@
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info mb-2">
         <div class="user-name">
-          <button>[{{ curation.pname }}] {{ curation.episode }}화</button>
+          <button>[{{ curation.pname }}]</button>
         </div>
         <p class="date">{{ curation.broadcast_date }} 방송</p>
       </div>
@@ -27,16 +27,10 @@
       <div>
         <!-- 좋아요 -->
         <div class="mr-3">
-          <!-- 1. 스마일 -->
           <button class="h6 mr-1" @click="touchLikeIcon">
-            <b-icon-emoji-smile v-if="!likeIcon"></b-icon-emoji-smile>
-            <b-icon-emoji-smile v-else class="rounded-circle bg-warning" variant="light"></b-icon-emoji-smile>
-          </button>
-          <!-- 2. 하트 -->
-          <!-- <button class="h6" @click="touchLikeIcon">
-            <b-icon-heart v-if="!likeIcon" variant="danger"></b-icon-heart>
+            <b-icon-heart v-if="!likeIcon"></b-icon-heart>
             <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
-          </button> -->
+          </button>
           {{ likeCount }}
         </div>
         <!-- 댓글 -->
@@ -75,12 +69,12 @@
     <div v-if="!curation.summary" class="content">
       <p>{{ curation.summary }}</p>
     </div>
-    <div v-else-if="curation.summary.length <= 18" class="content">
+    <div v-else-if="curation.summary.length <= 30" class="content">
       <p>{{ curation.summary }}</p>
     </div>
     <div v-else class="content">
       <div v-if="!isStretch" class="d-flex justify-content-between">
-        <p>{{ curation.summary.slice(0, 40) }}</p>
+        <p>{{ curation.summary.slice(0, 30) }}</p>
         <button @click="readMore" class="more">더 보기</button>
       </div>
       <div v-else>
