@@ -350,7 +350,21 @@ public class AccountController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
+    @GetMapping("/account/profileinfo")
+    @ApiOperation(value = "프로필 정보")
+    public Object getProfileInfo(@RequestParam(required = true) final String email){
+        User user = userDao.getUserByEmail(email);
+        final BasicResponse result = new BasicResponse();
+        if(user !=null){
+            result.status = true;
+            result.msg = "success";
+            result.data = user;
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        result.status = false;
+        result.msg = "프로필 조회 실패";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
     public String SHA256(String msg) throws Exception{
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		byte[] hash = digest.digest(msg.getBytes("UTF-8"));
