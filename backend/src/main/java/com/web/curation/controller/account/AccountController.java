@@ -316,14 +316,10 @@ public class AccountController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PutMapping("/account/modifynick")
-    @ApiOperation(value = "닉네임 변경")
-    public Object modifyNickName(@RequestBody Map<String, Object> req) {
-        String nick_name = (String) req.get("nick_name");
-        String email = (String) req.get("email");
-
+    @GetMapping("/account/checkNick")
+    @ApiOperation(value = "닉네임 확인")
+    public Object checkNick(@RequestParam(required = true) final String nick_name) {
         final BasicResponse result = new BasicResponse();
-
         User user = new User();
         user.setNick_name(nick_name);
         
@@ -333,77 +329,20 @@ public class AccountController {
             result.msg = "이미 존재하는 닉네임입니다.";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
-        user.setEmail(email);
-        n = userDao.modifyNickName(user);
-        if(n != 1) {
-            result.status = false;
-            result.msg = "닉네임 변경 실패";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
         result.status = true;
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @PutMapping("/account/modifybio")
-    @ApiOperation(value = "소개 변경")
-    public Object modifyBio(@RequestBody Map<String, Object> req) {
-        String bio = (String) req.get("bio");
-        String email = (String) req.get("email");
 
+    @PutMapping("/account/modifyprofile")
+    @ApiOperation(value = "프로필 변경")
+    public Object modifyProfile(@RequestBody User user) {
         final BasicResponse result = new BasicResponse();
 
-        User user = new User();
-        user.setBio(bio);
-        user.setEmail(email);
-        int n = userDao.modifyBio(user);
+        int n = userDao.modifyProfile(user);
         if(n != 1) {
             result.status = false;
-            result.msg = "소개 변경 실패";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        result.status = true;
-        result.msg = "success";
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-    @PutMapping("/account/modifypic")
-    @ApiOperation(value = "사진 변경")
-    public Object modifyPic(@RequestBody Map<String, Object> req) {
-        String profile_pic = (String) req.get("profile_pic");
-        String email = (String) req.get("email");
-
-        final BasicResponse result = new BasicResponse();
-
-        User user = new User();
-        user.setProfile_pic(profile_pic);
-        user.setEmail(email);
-        int n = userDao.modifyPic(user);
-        if(n != 1) {
-            result.status = false;
-            result.msg = "사진 변경 실패";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        result.status = true;
-        result.msg = "success";
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-    @PutMapping("/account/modifyprivate")
-    @ApiOperation(value = "공개여부 변경")
-    public Object modifyPrivate(@RequestBody Map<String, Object> req) {
-        boolean is_private = (boolean) req.get("is_private");
-        String email = (String) req.get("email");
-
-        final BasicResponse result = new BasicResponse();
-
-        User user = new User();
-        user.setIs_private(is_private);
-        user.setEmail(email);
-        int n = userDao.modifyPrivate(user);
-        if(n != 1) {
-            result.status = false;
-            result.msg = "공개여부 변경 실패";
+            result.msg = "프로필 변경 실패";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
