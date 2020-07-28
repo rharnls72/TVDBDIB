@@ -27,6 +27,7 @@ import IndexCuration from './views/curation/IndexCuration.vue'
 import IndexSearch from './views/search/IndexSearch.vue'
 import Alert from './views/alert/Alert.vue'
 import EpisodeDetail from './views/curation/episode/EpisodeDetail.vue'
+import MyPage from './views/account/mine/MyPage.vue'
 
 export default [
 
@@ -149,5 +150,10 @@ export default [
         path: '/episode/:id',
         name: 'EpisodeDetail',
         component: EpisodeDetail
+    },
+    {
+        path: '/:nick_name',
+        name: 'MyPage',
+        component: MyPage        
     },
 ]
