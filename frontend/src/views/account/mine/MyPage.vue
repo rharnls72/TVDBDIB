@@ -1,7 +1,7 @@
 <template>
   <div>
     <MyPageHeader :nickname="nickname"/>
-    <h1>유저 정보</h1>
+    <h1>내 프로필</h1>
     <MyPageInformation />
     <Footer />
   </div>
