@@ -1,5 +1,5 @@
 <template>
-  <b-nav justified class="myheader py-1">
+  <b-nav justified class="myheader">
     <b-nav-item>
       <b-icon-blank></b-icon-blank>
     </b-nav-item>
