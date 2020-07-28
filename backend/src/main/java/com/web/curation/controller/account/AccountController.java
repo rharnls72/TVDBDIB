@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -28,9 +27,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.mail.javamail.JavaMailSender;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.security.MessageDigest;
 
@@ -46,6 +43,7 @@ import java.security.MessageDigest;
 // http://localhost:3000
 @CrossOrigin(origins = { "*" })
 @RestController
+@EnableAsync
 public class AccountController {
 
     @Autowired
@@ -57,8 +55,8 @@ public class AccountController {
     @Autowired
     private JavaMailSender sender;
 
-    @Value("${myvue.url}")
-    private String vueUrl;
+    @Autowired
+    private MailConfig mailConfig;
 
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
@@ -168,6 +166,7 @@ public class AccountController {
                 return new ResponseEntity<>(result, HttpStatus.OK);
             }
             */
+            mailConfig.sendJoinMail(sender, request.getEmail(), request.getNick_name());
         }
         // 아니면 오류가 난거
         else {
@@ -183,14 +182,7 @@ public class AccountController {
                     @RequestParam(required = true) final String nick_name) {
 
         final BasicResponse result = new BasicResponse();
-        try {
-            sendJoinMail(email, nick_name);
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.status = false;
-            result.msg = "메일 전송 실패";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
+        mailConfig.sendJoinMail(sender, email, nick_name);
         result.status = true;
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -329,26 +321,15 @@ public class AccountController {
             result.msg = "이메일 찾기 실패";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
-        try {
-            sendFindPwMail(email, user.getNick_name());
-            result.status = true;
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.status = false;
-            result.msg = "메일 전송 실패";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
+        mailConfig.sendFindPwMail(sender, email, user.getNick_name());
+        result.status = true;
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PutMapping("/account/modifynick")
-    @ApiOperation(value = "닉네임 변경")
-    public Object modifyNickName(@RequestBody Map<String, Object> req) {
-        String nick_name = (String) req.get("nick_name");
-        String email = (String) req.get("email");
-
+    @GetMapping("/account/checkNick")
+    @ApiOperation(value = "닉네임 확인")
+    public Object checkNick(@RequestParam(required = true) final String nick_name) {
         final BasicResponse result = new BasicResponse();
-
         User user = new User();
         user.setNick_name(nick_name);
         
@@ -358,33 +339,20 @@ public class AccountController {
             result.msg = "이미 존재하는 닉네임입니다.";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
-        user.setEmail(email);
-        n = userDao.modifyNickName(user);
-        if(n != 1) {
-            result.status = false;
-            result.msg = "닉네임 변경 실패";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
         result.status = true;
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @PutMapping("/account/modifybio")
-    @ApiOperation(value = "소개 변경")
-    public Object modifyBio(@RequestBody Map<String, Object> req) {
-        String bio = (String) req.get("bio");
-        String email = (String) req.get("email");
 
+    @PutMapping("/account/modifyprofile")
+    @ApiOperation(value = "프로필 변경")
+    public Object modifyProfile(@RequestBody User user) {
         final BasicResponse result = new BasicResponse();
 
-        User user = new User();
-        user.setBio(bio);
-        user.setEmail(email);
-        int n = userDao.modifyBio(user);
+        int n = userDao.modifyProfile(user);
         if(n != 1) {
             result.status = false;
-            result.msg = "소개 변경 실패";
+            result.msg = "프로필 변경 실패";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
@@ -392,77 +360,20 @@ public class AccountController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @PutMapping("/account/modifypic")
-    @ApiOperation(value = "사진 변경")
-    public Object modifyPic(@RequestBody Map<String, Object> req) {
-        String profile_pic = (String) req.get("profile_pic");
-        String email = (String) req.get("email");
-
+    @GetMapping("/account/profileinfo")
+    @ApiOperation(value = "프로필 정보")
+    public Object getProfileInfo(@RequestParam(required = true) final String email){
+        User user = userDao.getUserByEmail(email);
         final BasicResponse result = new BasicResponse();
-
-        User user = new User();
-        user.setProfile_pic(profile_pic);
-        user.setEmail(email);
-        int n = userDao.modifyPic(user);
-        if(n != 1) {
-            result.status = false;
-            result.msg = "사진 변경 실패";
+        if(user !=null){
+            result.status = true;
+            result.msg = "success";
+            result.data = user;
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
-
-        result.status = true;
-        result.msg = "success";
+        result.status = false;
+        result.msg = "프로필 조회 실패";
         return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-    @PutMapping("/account/modifyprivate")
-    @ApiOperation(value = "공개여부 변경")
-    public Object modifyPrivate(@RequestBody Map<String, Object> req) {
-        boolean is_private = (boolean) req.get("is_private");
-        String email = (String) req.get("email");
-
-        final BasicResponse result = new BasicResponse();
-
-        User user = new User();
-        user.setIs_private(is_private);
-        user.setEmail(email);
-        int n = userDao.modifyPrivate(user);
-        if(n != 1) {
-            result.status = false;
-            result.msg = "공개여부 변경 실패";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        result.status = true;
-        result.msg = "success";
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-    public void sendJoinMail(String email, String nick_name) throws MessagingException{
-        MimeMessage message = sender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setTo(email);
-        helper.setSubject("[tvility] 이메일 인증");
-        String str = "<h3>안녕하세요 "+nick_name+"님! TVility 회원이 되신것을 진심으로 환영합니다. "+
-        "<br/>아래 버튼을 클릭하여 회원가입을 완료해주세요. </h3><br/><br/>"+
-        "<a href='" + vueUrl + "/#/user/emailconfirm/"+email+"'>"+
-        "<button type='button' style='width: 150px;background: #000;color: "+
-        "#fff;height: 50px;text-align: center;line-height: 50px;font-weight: 600;"+
-        "border-radius: 5px;'>이메일 인증</button></a>";
-        helper.setText(str, true);
-        sender.send(message);
-    }
-    public void sendFindPwMail(String email, String nick_name) throws MessagingException{
-        MimeMessage message = sender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setTo(email);
-        helper.setSubject("[tvility] 비밀번호 변경");
-        String str = "<h3>안녕하세요 "+nick_name+"님!"+
-        "<br/>아래 버튼을 클릭하여 비밀번호를 변경해주세요. </h3><br/><br/>"+
-        "<a href='" + vueUrl + "/#/user/editpw/"+email+"'>"+
-        "<button type='button' style='width: 150px;background: #000;color: "+
-        "#fff;height: 50px;text-align: center;line-height: 50px;font-weight: 600;"+
-        "border-radius: 5px;'>비밀번호 변경</button></a>";
-        helper.setText(str, true);
-        sender.send(message);
     }
     public String SHA256(String msg) throws Exception{
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
