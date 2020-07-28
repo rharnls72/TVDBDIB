@@ -13,7 +13,7 @@ import { mapState } from "vuex";
 import "../../components/css/feed/feed-item.scss";
 import "../../components/css/feed/newsfeed.scss";
 import Footer from '../../components/common/custom/Footer.vue';
-import IndexSearchHeader from '../../components/curation/IndexSearchHeader.vue'
+import IndexSearchHeader from '../../components/search/IndexSearchHeader.vue'
 
 export default {
   name: 'IndexSearch',
