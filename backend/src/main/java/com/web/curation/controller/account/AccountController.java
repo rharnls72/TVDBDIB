@@ -463,9 +463,8 @@ public class AccountController {
         sender.send(message);
     }
     public String SHA256(String msg) throws Exception{
-        String base = "password123";
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		byte[] hash = digest.digest(base.getBytes("UTF-8"));
+		byte[] hash = digest.digest(msg.getBytes("UTF-8"));
 		StringBuffer hexString = new StringBuffer();
 
 		for (int i = 0; i < hash.length; i++) {
