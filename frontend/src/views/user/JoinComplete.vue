@@ -5,7 +5,7 @@
     <div class="wrapC">
       <h1>
         <!-- 유저 닉네임, 이메일 받아서 들어가야 함 -->
-        {{nickName}}님, 반갑습니다!
+        {{nick_name}}님, 반갑습니다!
       </h1>
       <h3>
         <!-- 이메일 주소 파란색으로 돋보이게 표시 -->
@@ -23,7 +23,7 @@
         </div>
         <div class="wrap">
           <p>이메일이 발송되지 않았나요?</p>
-          <router-link to="#" class="btn--text">인증 메일 재발송</router-link>
+          <router-link to="#" @click="onJoinEmail" class="btn--text">인증 메일 재발송</router-link>
         </div>
       </div>
 
@@ -38,17 +38,36 @@
 
 <script>
 import "../../components/css/user.scss";
-
+import UserApi from "../../api/UserApi";
 export default {
   data() {
     return {
-      nickName: this.$route.params.nickName,
+      nick_name: this.$route.params.nick_name,
       email: this.$route.params.email,
     }
   },
   methods: {
     toMainPage() {
         this.$router.push("/");
+    },
+    onJoinEmail() {
+      if (this.isSubmit) {
+        let { nick_name, email} = this;
+        let data = {
+          nick_name,
+          email
+        };
+
+        UserApi.requestJoinEmail(
+          data,
+          res => {
+            // 재전송 완료
+          },
+          error => {
+            this.$router.push({name:'Errors', query: {message: error.msg}})
+          }
+        );
+      }
     }
   },
 };

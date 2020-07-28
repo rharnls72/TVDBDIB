@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.feed.FeedDao">
+    <!-- Create -->
+    <insert id="addNewFeed">
+        insert into
+            feed(
+                uno
+                <if test="pno > 0">
+                , pno
+                </if>
+                <if test="eno > 0">
+                , eno
+                </if>
+                , content
+                , ctype
+                <if test="pno > 0 || eno > 0">
+                , thumbnail
+                </if>
+                , tag
+            )
+        (select
+            #{uno}
+            <if test="pno > 0">
+            , #{pno}
+            </if>
+            <if test="eno > 0">
+            , #{eno}
+            </if>
+            , #{content}
+            , #{ctype}
+            <if test="pno > 0">
+            , (select thumbnail from program where pno = #{pno})
+            </if>
+            <if test="eno > 0">
+            , (select thumbnail from episode where eno = #{eno})
+            </if>
+            , #{tag}
+        from
+            dual)
+    </insert>
+    
+    <!-- Read -->
+    <select id="getFeedList" resultType="Feed">
+        SELECT 
+            sub.fno             AS `fno`,
+            sub.uno             AS `uno`,
+            sub.pno             AS `pno`,
+            sub.eno             AS `eno`,
+            sub.create_date     AS `create_date`,
+            sub.content         AS `content`,
+            sub.ctype           AS `ctype`,
+            sub.thumbnail       AS `thumbnail`,
+            sub.tag             AS `tag`,
+            sub.nick_name       AS `nick_name`,
+            sub.profile_pic     AS `profile_pic`,
+            sub.reply_num       AS `reply_num`,
+            sub.like_num        AS `like_num`,
+            liker.uno           AS `liker_uno`,
+            liker.nick_name     AS `liker_nick_name`
+        FROM
+            (
+            SELECT 
+                *
+            FROM
+                `feed_view`
+            ORDER BY `fno` DESC
+            LIMIT ${value} , 20
+            ) sub
+                LEFT OUTER JOIN
+            `feed_like` l ON sub.fno = l.fno
+                LEFT OUTER JOIN
+            `user` liker ON l.uno = liker.uno
+        ORDER BY `fno` DESC;
+    </select>
+
+    <select id="getFeedDetail" resultType="Feed">
+        select
+            *
+        from
+            feed
+        where
+            fno = #{value}
+    </select>
+
+    <!-- Update -->
+    <update id="modifyFeed">
+        update
+            feed
+        set
+            content = #{content}
+            , ctype = #{ctype}
+            , tag   = #{tag}
+        where
+            fno = #{fno}
+    </update>
+
+    <!-- Delete -->
+    <delete id="deleteFeed">
+        delete from
+            feed
+        where
+            fno = #{value}
+    </delete>
+</mapper>
