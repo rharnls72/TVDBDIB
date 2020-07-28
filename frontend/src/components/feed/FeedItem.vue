@@ -13,7 +13,12 @@
       </div>
     </div>
     <div class="feed-card">
-      <div class="img" :style="{'background-image': 'url('+defaultImage+')'}"></div>
+      <div class="d-flex justify-content-center align-items-center">
+        <p class="p-4">
+          아무것도 하기 싫다...
+          더더욱 아무것도 하기 싫다.ㅎㅎㅎ
+        </p>
+      </div>
       <div class="contentsWrap">
         <h4 class="title">사용자경험(UX)을 이해하는 팀원이 되기 위하여 - 사용자에게 '기본적인' UX를 선사하기 위해 우리 모두 알아야할 사실들</h4>
         <div class="wrap">
@@ -113,3 +118,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+/* .content {
+ border-bottom: 1px solid gray;
+} */
+</style>

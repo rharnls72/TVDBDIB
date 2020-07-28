@@ -195,36 +195,35 @@ public class EpisodeController {
         // 팔로우중인 프로그램 리스트 조회
         //List<Program> programList = followdao.getProgramFollowings(uno);
 
-        // 일단 임시로 프로그램 리스트도 TMDB에서 추천해주는거 들고오는 걸로
+        // 아직 팔로우 데이터가 없으므로 일단 임시로 프로그램 리스트도 TMDB에서 추천해주는거 들고오는 걸로
         ResponseEntity<String> re = 
-        restTemplate.getForEntity(BASE_URL + "discover/tv?first_air_date_year=2020&language=kr&sort_by=popularity.desc&api_key=" + API_KEY, 
+        restTemplate.getForEntity(BASE_URL + "discover/tv?first_air_date_year=2020&sort_by=popularity.desc&api_key=" + API_KEY + "&language=ko",
         String.class);
         JSONObject recommended_program = new JSONObject(re.getBody());
         JSONArray programs = recommended_program.optJSONArray("results");
         List<Program2> programList = new ArrayList<Program2>();
 
+        // 각 프로그램에 대한 객체 만들어서 기본 정보 몇 개만 세팅한 다음 programList에 삽입
         for (int i=1; i<=programs.length(); i++){
             Program2 p = new Program2();
             JSONObject programJson = programs.optJSONObject(i-1);
             int id = programJson.optInt("id");
             String name = programJson.optString("name");
             int season = 1;
-            p.setId(id);
-            p.setName(name);
-            p.setSeason_num(season);
+            p.setPno(id);
+            p.setPname(name);
+            p.setSeason(season);
             programList.add(p);
         }
 
         List<Episode2> episodeList = new ArrayList<Episode2>();
-
         // 팔로우중인 프로그램 각각에 대하여 에피소드 목록 조회 (TMDB API)
-        
         for (Program2 program: programList){
-            int pno = program.getId();
-            int season = program.getSeason_num();
+            int pno = program.getPno();
+            int season = program.getSeason();
 
             // 프로그램 ID와 시즌 번호로 API 요청
-            re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY, String.class);
+            re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY + "&language=ko", String.class);
             JSONObject programInfo = new JSONObject(re.getBody());
             JSONArray episodes = programInfo.optJSONArray("episodes");
 
@@ -233,7 +232,7 @@ public class EpisodeController {
             // 결과 데이터 중 episodes Array의 각 요소에 접근하여 episode 정보 추출
             for (int i=1; i<=episodes.length(); i++){
                 JSONObject detail = episodes.optJSONObject(i-1);
-                Episode2 e = episodeSetter(program, i, detail);
+                Episode2 e = episodeSetter(program, i, detail); // 'detail' 을 파싱하여 Episode 객체 세팅해서 리턴해주는 메서드
                 episodeList.add(e);
             }
         }
@@ -241,8 +240,8 @@ public class EpisodeController {
         // 추출한 episode들을 최신순 정렬
         Collections.sort(episodeList, new Comparator<Episode2>() {
 			public int compare(Episode2 o1, Episode2 o2) {
-                LocalDate t2 = o1.getAir_date();
-                LocalDate t1 = o2.getAir_date();
+                LocalDate t2 = o1.getBroadcast_date();
+                LocalDate t1 = o2.getBroadcast_date();
                 if (t1 != null && t2 != null)
                     return t1.compareTo(t2);
                 else
@@ -257,9 +256,9 @@ public class EpisodeController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // Episode JSON 파싱
     private Episode2 episodeSetter(Program2 program, int epno, JSONObject detail){
         String summary = detail.optString("overview");
-
         JSONArray crews = detail.optJSONArray("crew");
         ArrayList<String> crew_arr = new ArrayList<String>();
         if (crews != null && crews.length() >= 1){
@@ -289,20 +288,53 @@ public class EpisodeController {
                 LocalDate start_date = LocalDate.of(Integer.parseInt(episode_start_date[0]), 
                                                                     Integer.parseInt(episode_start_date[1]), 
                                                                     Integer.parseInt(episode_start_date[2]));
-                e.setAir_date(start_date);
+                e.setBroadcast_date(start_date);
             }
         }
         
-        e.setProgram_id(program.getId());
-        e.setProgram_name(program.getName());
-        e.setSeason_num(program.getSeason_num());
+        e.setPno(program.getPno());
+        e.setPname(program.getPname());
+        e.setSeason(program.getSeason());
         e.setSeason_name(program.getSeason_name());
 
-        e.setNum(epno);
-        e.setOverview(summary);
-        e.setCrews(crew_arr);
-        e.setGuest_stars(guest_arr);
-        if (thumbnail != null) e.setImage_path(IMAGE_BASE_URL + thumbnail);
+        e.setEpisode(epno);
+        e.setSummary(summary);
+        e.setCrew(crew_arr);
+        e.setGuest(guest_arr);
+        if (thumbnail != null) e.setThumbnail(IMAGE_BASE_URL + thumbnail);
+
+        return e;
+    }
+
+    @GetMapping("/episode/{pno}/{season}/{epno}")
+    @ApiOperation(value = "에피소드 상세정보 조회")
+    public Object getEpisodeDetailFromAPI(@PathVariable("pno") int pno, @PathVariable("season") int season,
+                                                                        @PathVariable("epno") int epno) {
+        final BasicResponse result = new BasicResponse();
+        RestTemplate restTemplate = new RestTemplate();
+                                                                            
+        // 일단 프로그램 (시즌 말고 그보다 더 상위인 프로그램) 정보가 필요하다. 프로그램 이름은 띄워줘야 하잖아...
+        ResponseEntity<String> re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "?api_key=" + API_KEY + "&language=ko", String.class);
+        JSONObject programInfo = new JSONObject(re.getBody());
+        int program_id = programInfo.optInt("id");
+        String program_name = programInfo.optString("name");
+
+        // 시즌 정보 요청. 시즌 정보에 에피소드 정보들도 들어있다
+        re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY + "&language=ko", String.class);
+        JSONObject seasonInfo = new JSONObject(re.getBody());
+        JSONArray episodes = seasonInfo.optJSONArray("episodes");
+        
+        int season_num = seasonInfo.optInt("season_number");
+        String season_name = seasonInfo.optString("name");
+
+        Program2 program = new Program2();
+        program.setPno(program_id);
+        program.setPname(program_name);
+        program.setSeason(season_num);
+        program.setSeason_name(season_name);
+
+        JSONObject detail = episodes.optJSONObject(epno-1); // episodes 배열 중에서 찾는 에피소드 번호에 해당하는 부분만 있음 된다.
+        Episode2 e = episodeSetter(program, epno, detail); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
 
         return e;
     }
