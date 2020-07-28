@@ -2,7 +2,6 @@
  User API 예시
  */
 
-import axios from "axios";
 import http from "./http-common.js";
 
 const requestLogin = (data,callback,errorCallback) => {
