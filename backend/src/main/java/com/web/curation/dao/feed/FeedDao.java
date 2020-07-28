@@ -3,6 +3,7 @@ package com.web.curation.dao.feed;
 import java.util.List;
 
 import com.web.curation.model.feed.Feed;
+import com.web.curation.model.feed.FeedRequest;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ public interface FeedDao {
     int addNewFeed(Feed feed);
     
     // Read
-    List<Feed> getFeedList(int start);
+    List<Feed> getFeedList(FeedRequest feedRequest);
     Feed getFeedDetail(int fno);
 
     // Update

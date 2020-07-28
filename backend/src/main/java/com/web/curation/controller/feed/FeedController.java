@@ -79,13 +79,18 @@ public class FeedController {
     // Read
     @PostMapping("/feed/list")
     @ApiOperation(value = "피드 목록 조회")
-    public Object getFeedList(@RequestBody FeedRequest req) {
+    public Object getFeedList(@RequestBody FeedRequest feedRequest, HttpServletRequest request) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
 
+        // 유저 정보 가져와서 그 번호를 feedRequest 에 넣기
+        feedRequest.setUno(((User)request.getAttribute("User")).getUno());
+
+        // 피드 리스트 조회를 시작할 위치 설정
+        feedRequest.setNum((feedRequest.getNum() - 1) * 20);
+
         // 피드 리스트 조회
-        int start = (req.getNum() - 1) * 20;
-        List<Feed> list = dao.getFeedList(start);
+        List<Feed> list = dao.getFeedList(feedRequest);
 
         // 조회한 데이터의 크기
         int listSize = list.size();
@@ -104,7 +109,7 @@ public class FeedController {
                 if(row.getFno() == feed.getFno()) {
                     // 현재 로그인 한 유저가 좋아요를 누른 글인지 확인
                     if(!row.getPress_like() && row.getLike_num() > 0) {
-                        if(feed.getLiker_uno() == req.getUno()) {
+                        if(feed.getLiker_uno() == feedRequest.getUno()) {
                             row.setPress_like(true);
                         }
                     }
@@ -131,7 +136,7 @@ public class FeedController {
 
                     // 현재 로그인 한 유저가 좋아요를 누른 댓글인지 확인
                     if(!row.getPress_like() && row.getLike_num() > 0) {
-                        if(feed.getLiker_uno() == req.getUno()) {
+                        if(feed.getLiker_uno() == feedRequest.getUno()) {
                             row.setPress_like(true);
                         }
                     }
