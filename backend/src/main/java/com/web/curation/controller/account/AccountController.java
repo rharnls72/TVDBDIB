@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -58,9 +57,6 @@ public class AccountController {
 
     @Autowired
     private MailConfig mailConfig;
-
-    @Value("${myvue.url}")
-    private String vueUrl;
 
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
