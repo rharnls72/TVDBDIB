@@ -26,6 +26,7 @@ import FindPwRe from './views/user/FindPwRe.vue'
 import IndexCuration from './views/curation/IndexCuration.vue'
 import Alert from './views/alert/Alert.vue'
 import EpisodeDetail from './views/curation/episode/EpisodeDetail.vue'
+import MyPage from './views/account/mine/MyPage.vue'
 
 export default [
 
@@ -120,7 +121,7 @@ export default [
         component: FeedItem
     },
     {
-        path: '/feed/feedDetail',
+        path: '/feed/feedDetail/:id',
         name: 'FeedDetail',
         component: feedDetail
     },
@@ -143,5 +144,10 @@ export default [
         path: '/episode/:id',
         name: 'EpisodeDetail',
         component: EpisodeDetail
+    },
+    {
+        path: '/:nick_name',
+        name: 'MyPage',
+        component: MyPage        
     },
 ]

@@ -197,7 +197,7 @@ public class EpisodeController {
 
         // 아직 팔로우 데이터가 없으므로 일단 임시로 프로그램 리스트도 TMDB에서 추천해주는거 들고오는 걸로
         ResponseEntity<String> re = 
-        restTemplate.getForEntity(BASE_URL + "discover/tv?first_air_date_year=2020&language=kr&sort_by=popularity.desc&api_key=" + API_KEY, 
+        restTemplate.getForEntity(BASE_URL + "discover/tv?first_air_date_year=2020&sort_by=popularity.desc&api_key=" + API_KEY + "&language=ko",
         String.class);
         JSONObject recommended_program = new JSONObject(re.getBody());
         JSONArray programs = recommended_program.optJSONArray("results");
@@ -223,7 +223,7 @@ public class EpisodeController {
             int season = program.getSeason();
 
             // 프로그램 ID와 시즌 번호로 API 요청
-            re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY, String.class);
+            re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY + "&language=ko", String.class);
             JSONObject programInfo = new JSONObject(re.getBody());
             JSONArray episodes = programInfo.optJSONArray("episodes");
 
@@ -238,16 +238,16 @@ public class EpisodeController {
         }
 
         // 추출한 episode들을 최신순 정렬
-        Collections.sort(episodeList, new Comparator<Episode2>() {
-			public int compare(Episode2 o1, Episode2 o2) {
-                LocalDate t2 = o1.getBroadcast_date();
-                LocalDate t1 = o2.getBroadcast_date();
-                if (t1 != null && t2 != null)
-                    return t1.compareTo(t2);
-                else
-                    return 0;
-			}
-        });
+        // Collections.sort(episodeList, new Comparator<Episode2>() {
+		// 	public int compare(Episode2 o1, Episode2 o2) {
+        //         LocalDate t2 = o1.getBroadcast_date();
+        //         LocalDate t1 = o2.getBroadcast_date();
+        //         if (t1 != null && t2 != null)
+        //             return t1.compareTo(t2);
+        //         else
+        //             return 0;
+		// 	}
+        // });
         
         // 에피소드 목록을 포함한 응답 객체 반환
         result.status = true;
@@ -317,13 +317,13 @@ public class EpisodeController {
         RestTemplate restTemplate = new RestTemplate();
                                                                             
         // 일단 프로그램 (시즌 말고 그보다 더 상위인 프로그램) 정보가 필요하다. 프로그램 이름은 띄워줘야 하잖아...
-        ResponseEntity<String> re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "?api_key=" + API_KEY, String.class);
+        ResponseEntity<String> re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "?api_key=" + API_KEY + "&language=ko", String.class);
         JSONObject programInfo = new JSONObject(re.getBody());
         int program_id = programInfo.optInt("id");
         String program_name = programInfo.optString("name");
 
         // 시즌 정보 요청. 시즌 정보에 에피소드 정보들도 들어있다
-        re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY, String.class);
+        re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY + "&language=ko", String.class);
         JSONObject seasonInfo = new JSONObject(re.getBody());
         JSONArray episodes = seasonInfo.optJSONArray("episodes");
         

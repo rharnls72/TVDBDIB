@@ -9,13 +9,11 @@
         insert into
             feed_reply(
                 fno
-                , parent_reply
                 , uno
                 , content
             )
         values(
             #{no}
-            , #{parent_reply}
             , #{writer_uno}
             , #{content}
         )

@@ -18,7 +18,9 @@ public class Episode2 {
     private String season_name;
     private int episode;
     private String episode_name; 
-    private String thumbnail;
+    private String thumbnail; // 그 에피소드의 스틸컷 이미지.
+    private ArrayList<String> genre;
+    private String poster; // 프로필사진으로 쓰일 프로그램 포스터.
     private LocalDate broadcast_date;
     private String summary;
     private ArrayList<String> crew;
