@@ -43,10 +43,10 @@ export default {
     nickname: String,
   },
   methods: {
-    // 피드 작성 페이지로 이동
-    createFeed() {
-      this.$router.push({name: 'CreateFeed'})
-    },
+    // 계정 설정 페이지로 이동
+    // editAccount() {
+
+    // },
   },
 }
 </script>
