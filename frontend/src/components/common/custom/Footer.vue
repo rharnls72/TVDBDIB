@@ -7,7 +7,7 @@
       </b-nav-item>
       <!-- 검색 -> 아이콘을 굵게 만드는 법을 못 찾아서 전체적으로 색깔 차이 줌 -->
       <!-- 추후에 라우팅 -->
-      <b-nav-item @click="changeState(2)">
+      <b-nav-item @click="changeState(2), moveTab('IndexSearch')">
         <b-icon-search v-if="tabState == 2" class="text-dark"></b-icon-search>
         <b-icon-search v-else class="text-secondary"></b-icon-search>
       </b-nav-item>
