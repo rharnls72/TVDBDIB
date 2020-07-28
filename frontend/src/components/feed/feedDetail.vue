@@ -5,9 +5,9 @@
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info mb-2">
         <div class="user-name">
-          <button>[{{ curation.name }}]</button>
+          <button>[{{ feeds.name }}]</button>
         </div>
-        <p class="date">{{ curation.broadcast_time }} 방송 예정</p>
+        <p @click="delDetail" class="date">삭제</p>
       </div>
     </div>
     <FeedItem/>
@@ -39,7 +39,7 @@
               d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm16 352c0 8.8-7.2 16-16 16H288l-12.8 9.6L208 428v-60H64c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h384c8.8 0 16 7.2 16 16v288z"
             />
           </svg>
-          <!-- <i class="far fa-comment-alt icon"></i> -->
+          <i class="far fa-comment-alt icon"></i>
           0
         </div>
         <div class="comment mr-3">
@@ -72,19 +72,19 @@
       </div>
     </div>
     <!-- 내용 더 보기 (현재 페이지에서 펼치기) -->
-    <div v-if="!curation.description" class="content">
-      <p>{{ curation.description }}</p>
+    <div v-if="!feeds.description" class="content">
+      <p>{{ feeds.description }}</p>
     </div>
-    <div v-else-if="curation.description.length <= 18" class="content">
-      <p>{{ curation.description }}</p>
+    <div v-else-if="feeds.description.length <= 18" class="content">
+      <p>{{ feeds.description }}</p>
     </div>
     <div v-else class="content">
       <div v-if="!isStretch" class="d-flex justify-content-between">
-        <p>{{ curation.description.slice(0, 18) }}</p>
+        <p>{{ feeds.description.slice(0, 18) }}</p>
         <button @click="readMore" class="more">더 보기</button>
       </div>
       <div v-else>
-        <p>{{ curation.description }}</p>
+        <p>{{ feeds.description }}</p>
       </div>
     </div>
     <!---->
@@ -96,21 +96,22 @@
 import defaultImage from "@/assets/images/img-placeholder.png"
 import defaultProfile from "@/assets/images/profile_default.png"
 import FeedItem from "@/components/feed/FeedItem.vue"
+import axios from "axios"
+
+import header from "@/api/header.js"
 
 export default {
   name: 'feedDetail',
-  data: () => {
+  data() {
     return {
       defaultImage,
       defaultProfile,
       isStretch: false,
       likeIcon: true,
       scrapIcon: false,
-      curation: {
-        name: "놀면뭐하니",
-        boradcast_time: "2020-03-22"
-      }
-    };
+      feeds: [],
+      id: null,
+    }
   },
   components: {
     FeedItem
@@ -126,20 +127,35 @@ export default {
     touchScrapIcon() {
       this.scrapIcon = !this.scrapIcon
     },
+    delDetail() {
+      axios.delete(`http://localhost:9000/feed/delete/${this.id}`, header())
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+    },
   },
-};
+  created() {
+    this.id = this.$route.params.id
+    console.log(this.id)
+    axios.get(`http://localhost:9000/feed/detail/${this.id}`, header())
+      .then(res => {
+        this.feeds = res.data.data
+        console.log(this.feeds)
+      })
+      .catch(err => console.error(err))
+  }
+}
 </script>
 
 <style scoped>
-  .more {
-    color: lightgray;
-  }
-  .thumbnail-color {
-    background-color: lightgray;
-  }
-  .follow-button {
-    height: auto;
-    line-height: 10px;
-    box-shadow: none;
-  }
+.more {
+  color: lightgray;
+}
+.thumbnail-color {
+  background-color: lightgray;
+}
+.follow-button {
+  height: auto;
+  line-height: 10px;
+  box-shadow: none;
+}
 </style>

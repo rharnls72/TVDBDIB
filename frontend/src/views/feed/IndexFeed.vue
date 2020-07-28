@@ -4,9 +4,9 @@
       <h1>뉴스피드</h1>
       <router-link to="/user/modifyPw" class="btn--text">비밀번호변경</router-link>
       <div v-for="d in feeds" :key="d.fno">
-        <feedArticleItem v-if="d.ctype===1" :article="d.fno"/>
-        <feedCountdownItem v-else-if="d.ctype===2" :countdown="d.fno"/>
-        <feedVoteItem v-else :vote="d.fno"/>
+        <feedArticleItem v-if="d.ctype===1" :article="d"/>
+        <feedCountdownItem v-else-if="d.ctype===2" :countdown="d"/>
+        <feedVoteItem v-else :vote="d"/>
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@ import axios from "axios"
 export default {
   data() {
     return {
-      feeds: null,
+      feeds: [],
       requestCount: 1,
     }
   },
@@ -36,16 +36,18 @@ export default {
 
   methods: {
     takeFeed() {
-      axios.post('http://localhost:9000/feed/list',{num: this.requestCount}, header())
+      axios.post('http://localhost:9000/feed/list' ,{num: this.requestCount}, header())
         .then(res => {
           console.log(res.data)
-          this.feeds = res.data.data
+          this.feeds = this.feeds.concat(res.data.data)
           this.requestCount++
         })
         .catch(err => console.log(err))
     }
   },
   created() {
+    this.takeFeed()
+    this.takeFeed()
     this.takeFeed()
   }
 };

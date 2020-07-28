@@ -88,6 +88,9 @@ export default {
         isLong: true,
       }
     },
+    props: {
+      countdown: Object,
+    },
     methods: {
       changeString(str) {
         str = String(str)
@@ -119,6 +122,7 @@ export default {
     },
     created() {
       this.submitDateTime()
+      console.log(this.countdown)
     }
   }
 </script>

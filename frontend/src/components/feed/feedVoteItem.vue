@@ -4,7 +4,7 @@
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info">
         <div class="user-name">
-          <button>SSAFY</button>
+          <button>{{vote.nick_name}}</button>
         </div>
         <p class="date">9시간 후</p>
       </div>
@@ -73,6 +73,9 @@ export default {
       isLong: true,
     }
   },
+  props: {
+    vote: Object,
+  },
   methods: {
     totalNumber() {
       let t = 0
@@ -87,6 +90,9 @@ export default {
   },
   updated() {
     this.totalNumber()
+  },
+  created() {
+    console.log(this.vote)
   }
 };
 </script>

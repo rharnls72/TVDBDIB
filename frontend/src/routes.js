@@ -120,7 +120,7 @@ export default [
         component: FeedItem
     },
     {
-        path: '/feed/feedDetail',
+        path: '/feed/feedDetail/:id',
         name: 'FeedDetail',
         component: feedDetail
     },

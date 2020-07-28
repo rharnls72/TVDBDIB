@@ -4,7 +4,7 @@
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info">
         <div class="user-name">
-          <button>SSAFY</button>
+          <button>{{article.nick_name}}</button>
         </div>
         <p class="date">9시간 후</p>
       </div>
@@ -15,8 +15,7 @@
     <div class="wrap">
       <div class="d-flex justify-content-center align-items-center">
         <p class="p-4">
-          아무것도 하기 싫다...
-          더더욱 아무것도 하기 싫다.ㅎㅎㅎ
+          #{{tags[0]}}
         </p>
       </div>
     </div>
@@ -36,17 +35,17 @@
     </div>
     <div class="wrap mt-2">
       <span class="font-weight-bold">유저이름 </span>
-      <span v-if="isLong">{{content.slice(0, 10)}}... <span class="moreView" @click="changeIsLong">더 보기</span></span>
+      <span v-if="isLong">{{cc.content.slice(0, 10)}}... <span class="moreView" @click="changeIsLong">더 보기</span></span>
       <span v-else>
-        <span>{{content}}</span><br>
+        <span>{{cc.content}}</span><br>
         <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span>
       </span>
     </div>
     <div v-if="!isLong" class="wrap mt-2">
       <div class="row d-flex align-items-center px-3">
-        <b-form-input style="border:none;" type="text" class="m-0 col rounded-pill" v-model="content.text" placeholder="댓글 입력!!!">
+        <b-form-input style="border:none;" type="text" class="m-0 col rounded-pill" v-model="additionReply" placeholder="댓글 입력!!!">
         </b-form-input>
-        <b-icon icon="plus-circle" class="ml-1 text-right" font-scale="1.4"></b-icon>
+        <b-icon @click="pushReply" icon="plus-circle" class="ml-1 text-right" font-scale="1.4"></b-icon>
       </div>
     </div>
   </div>
@@ -55,6 +54,9 @@
 <script>
 import defaultImage from "../../assets/images/img-placeholder.png";
 import defaultProfile from "../../assets/images/profile_default.png";
+import {mapState} from "vuex"
+import header from "@/api/header.js"
+import axios from "axios"
 export default {
   data: () => {
     return { 
@@ -63,17 +65,38 @@ export default {
       comment: null,
       tags: ['소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ'],
       reply: ['wow', '너무 좋아용 ㅎㅎ'],
+      additionReply: "",
       like_num: 12,
       isLong: false,
+      cc: null,
     };
+  },
+  computed: {
+    ...mapState([
+      'userInfo',
+    ])
+  },
+  props:{
+    article: Object,
   },
   methods: {
     changeIsLong() {
       this.isLong=false
+    },
+    pushReply() {
+      axios.post('http://localhost:9000/reply/feed/create',
+      {
+        no: this.article.fno,
+        content: this.additionReply,
+        writer_uno: 1,
+      }, header())
     }
   },
   created() {
-    if (this.content.length > 10) {this.isLong=true}
+    console.log(this.article.content)
+    this.cc = JSON.parse(this.article.content)
+    console.log(this.cc)
+    if (this.cc.content.length > 10) {this.isLong=true}
   }
 };
 </script>
