@@ -1,14 +1,19 @@
 <template>
   <div class="feed newsfeed">
+    <IndexCurationHeader />
     <div class="wrapB">
       <h1>뉴스피드</h1>
-      <router-link to="/user/modifyPw" class="btn--text">비밀번호변경</router-link>
       <div v-for="d in feeds" :key="d.fno">
         <feedArticleItem v-if="d.ctype===1" :article="d"/>
-        <feedCountdownItem v-else-if="d.ctype===2" :countdown="d"/>
-        <feedVoteItem v-else :vote="d"/>
+      </div>
+      <div>
+        <feedCountdownItem />
+      </div>
+      <div>
+        <feedVoteItem />
       </div>
     </div>
+    <Footer/>
   </div>
 </template>
 
@@ -21,6 +26,8 @@ import feedCountdownItem from "@/components/feed/feedCountdownItem.vue";
 import feedVoteItem from "@/components/feed/feedVoteItem.vue";
 import header from "@/api/header.js"
 import axios from "axios"
+import IndexCurationHeader from "@/components/curation/IndexCurationHeader.vue"
+import Footer from '@/components/common/custom/Footer.vue';
 
 export default {
   data() {
@@ -32,7 +39,13 @@ export default {
   
   props: ["keyword"],
 
-  components: { feedArticleItem, feedCountdownItem, feedVoteItem },
+  components: { 
+    feedArticleItem, 
+    feedCountdownItem, 
+    feedVoteItem,
+    IndexCurationHeader,
+    Footer,
+  },
 
   methods: {
     takeFeed() {
@@ -46,8 +59,6 @@ export default {
     }
   },
   created() {
-    this.takeFeed()
-    this.takeFeed()
     this.takeFeed()
   }
 };

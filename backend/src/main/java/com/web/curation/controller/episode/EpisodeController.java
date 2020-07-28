@@ -238,16 +238,16 @@ public class EpisodeController {
         }
 
         // 추출한 episode들을 최신순 정렬
-        Collections.sort(episodeList, new Comparator<Episode2>() {
-			public int compare(Episode2 o1, Episode2 o2) {
-                LocalDate t2 = o1.getBroadcast_date();
-                LocalDate t1 = o2.getBroadcast_date();
-                if (t1 != null && t2 != null)
-                    return t1.compareTo(t2);
-                else
-                    return 0;
-			}
-        });
+        // Collections.sort(episodeList, new Comparator<Episode2>() {
+		// 	public int compare(Episode2 o1, Episode2 o2) {
+        //         LocalDate t2 = o1.getBroadcast_date();
+        //         LocalDate t1 = o2.getBroadcast_date();
+        //         if (t1 != null && t2 != null)
+        //             return t1.compareTo(t2);
+        //         else
+        //             return 0;
+		// 	}
+        // });
         
         // 에피소드 목록을 포함한 응답 객체 반환
         result.status = true;

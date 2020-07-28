@@ -12,52 +12,70 @@
         <p>{{feedTitle}}</p>
       </div>
     </div>
-    <div class="wrap">
-      <div class="p-2 pt-3 d-flex flex-column justify-content-center align-items-center">
-        <div class="d-flex justify-content-center py-3">
-            <div>
-              <div class="time">{{Value.date}}</div>
-            </div>
-            <div>
-              <div class="time">{{Value.hour}}</div>
-            </div>
-            <div>
-              <div class="time">{{Value.min}}</div>
-            </div>
-            <div>
-              <div class="time">{{Value.sec}}</div>
-            </div>
+    <div class="feed-card">
+      <div class="mythumbnail d-flex flex-column justify-content-center align-items-center">
+        <div class="py-5 d-flex justify-content-center py-3">
+          <div>
+            <div class="time">{{Value.date}}</div>
+            <p class="text-center">일</p>
           </div>
+          <div>
+            <div class="time">{{Value.hour}}</div>
+            <p class="text-center">시간</p>
+          </div>
+          <div>
+            <div class="time">{{Value.min}}</div>
+            <p class="text-center">분</p>
+          </div>
+          <div>
+            <div class="time">{{Value.sec}}</div>
+            <p class="text-center">초</p>
+          </div>
+        </div>  
       </div>
     </div>
     <!---->
-    <div class="wrap d-flex justify-content-between">
-      <div class="text-align-left">
-        <b-icon class="mr-2" icon="heart" font-scale="1.5"></b-icon>
-        <b-icon class="mr-2" icon="chat-square" font-scale="1.5"></b-icon>
-        <b-icon icon="cursor" font-scale="1.5"></b-icon>
-      </div>
+    <div class="btn-group wrap justify-content-between" style="margin: 15px 0 0 0;">
       <div>
-        <b-icon class="text-align-right" icon="bookmark" font-scale="1.5"></b-icon>
+        <!-- 좋아요 -->
+        <div class="mr-3">
+          <button class="h6 mr-1" @click="touchLikeIcon">
+            <b-icon-heart v-if="!likeIcon"></b-icon-heart>
+            <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
+          </button>
+        </div>
+        <!-- 댓글 -->
+        <div class="mr-3">
+          <button class="h6 mr-1">
+            <b-icon-chat></b-icon-chat>
+          </button>
+        </div>
+        <!-- 스크랩 -->
+        <div class="mr-3">
+          <button class="h6 mr-1" @click="touchScrapIcon">
+            <b-icon-bookmark v-if="!scrapIcon"></b-icon-bookmark>
+            <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
+          </button>
+          0 
+          <!-- 스크랩 카운트 -->
+        </div>
+        <!---->
+      </div>
+      <div class="mr-1">
+        <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
+        <div>
+          <button class="h5">
+            <b-icon-reply></b-icon-reply>
+          </button>
+        </div>
       </div>
     </div>
-    <div class="wrap mt-2">
+    <div>
       <span class="font-weight-bold">좋아요 {{like_num}}명</span>
     </div>
     <div class="wrap mt-2">
-      <span class="font-weight-bold">유저이름 </span>
-      <span v-if="isLong">... <span class="moreView" @click="changeIsLong">더 보기</span></span>
-      <span v-else>
-        <span>{{content}}</span><br>
-        <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span>
-      </span>
-    </div>
-    <div v-if="!isLong" class="wrap mt-2">
-      <div class="row d-flex align-items-center px-3">
-        <b-form-input style="border:none;" type="text" class="m-0 col rounded-pill" v-model="comment" placeholder="댓글 입력!!!">
-        </b-form-input>
-        <b-icon icon="plus-circle" class="ml-1 text-right" font-scale="1.4"></b-icon>
-      </div>
+      <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
+      <span class="moreView">댓글 {{reply_num}}개</span>
     </div>
   </div>
     <!---->
@@ -67,8 +85,11 @@
 <script>
 import defaultImage from "../../assets/images/img-placeholder.png";
 import defaultProfile from "../../assets/images/profile_default.png";
+import axios from "axios"
+import header from "@/api/header.js"
+
 export default {
-    name: 'feedCountdown',
+    name: 'feedCountdownItem',
     data() {
       return {
         defaultImage, defaultProfile,
@@ -85,7 +106,9 @@ export default {
         tags: ['소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ'],
         reply: ['wow', '너무 좋아용 ㅎㅎ'],
         like_num: 12,
-        isLong: true,
+        reply_num: 11,
+        likeIcon: false,
+        scrapIcon: false,
       }
     },
     props: {
@@ -116,13 +139,37 @@ export default {
         this.timer()
         setInterval(this.timer, 1000)
       },
-      changeIsLong() {
-        this.isLong=false
-      }
+      pushReply() {
+        axios.post('http://localhost:9000/reply/feed/create',
+        {
+          no: this.article.fno,
+          content: this.additionReply,
+          writer_uno: 1,
+        }, header())
+      },
+      touchLikeIcon() {
+        this.likeIcon = !this.likeIcon
+        if (this.likeIcon) {
+          this.likeCount ++
+        }
+        else {
+          this.likeCount --
+        }
+        // console.log(this.likeIcon)
+      },
+      touchScrapIcon() {
+        this.scrapIcon = !this.scrapIcon
+        if (this.scrapIcon) {
+          this.scrapCount ++
+        }
+        else {
+          this.scrapCount --
+        }
+        // console.log(this.scrapIcon)
+      },
     },
     created() {
       this.submitDateTime()
-      console.log(this.countdown)
     }
   }
 </script>
@@ -145,5 +192,10 @@ export default {
 }
 .tag {
   color:deepskyblue;
+}
+.mythumbnail {
+  background-color: beige;
+  width: 100v;
+  height: 55v;
 }
 </style>
