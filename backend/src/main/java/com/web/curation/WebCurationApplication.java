@@ -20,7 +20,8 @@ public class WebCurationApplication implements WebMvcConfigurer{
 
 	// 인터셉터를 거치지 않고 요청을 보낼 수 있는 경로 설정
 	private static final String[] EXCLUDE_PATHS = {
-		"/account/**"
+		"/account/**",
+		"/test/**"
 	};
 
 	// Interceptor 설치

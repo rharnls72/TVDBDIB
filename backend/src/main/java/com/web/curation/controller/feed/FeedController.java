@@ -121,6 +121,22 @@ public class FeedController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/test/feedcnt/{uno}")
+    @ApiOperation(value = "작성한 피드 수 조회(API 로 호출 안하는 메서드)")
+    public Object getFeedCount(@PathVariable("uno") int uno) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        // 조회
+        int cnt = dao.getFeedCount(uno);
+
+        // 완
+        result.status = true;
+        result.msg = "success";
+        result.data = cnt;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     // Update
     @PutMapping("/feed/update")
     @ApiOperation(value = "피드 수정")

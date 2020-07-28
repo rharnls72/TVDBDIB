@@ -117,6 +117,15 @@
             fno = #{value}
     </select>
 
+    <select id="getFeedCount" resultType="int">
+        select
+            count(`fno`)
+        from
+            feed
+        where
+            uno = #{value}
+    </select>
+
     <!-- Update -->
     <update id="modifyFeed">
         update
