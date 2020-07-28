@@ -18,9 +18,9 @@ import "../../components/css/feed/feed-item.scss";
 import "../../components/css/feed/newsfeed.scss";
 import EpisodeItem from "../../components/curation/episode/EpisodeItem.vue";
 import InfiniteLoading from 'vue-infinite-loading';
-import axios from 'axios';
 import Footer from '../../components/common/custom/Footer.vue';
 import IndexCurationHeader from '../../components/curation/IndexCurationHeader.vue'
+import http from "../../api/http-common.js";
 
 export default {
   name: 'IndexCuration',
@@ -61,7 +61,7 @@ export default {
   },
   // 1. 데이터 모두 다 받아오기
   created() {
-    axios.get('http://localhost:9000/episode/following/1')
+    http.get('/episode/following/1')
       .then(res => {
         this.curations = res.data.data
         console.log(this.curations)
