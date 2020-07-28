@@ -1,10 +1,10 @@
 <template>
   <div class="user join wrapC">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <b-icon icon="chevron-left" font-scale="1.5"></b-icon>
-      <b-icon icon="check-square" font-scale="1.4"></b-icon>
+      <b-icon @click="moveMain" icon="chevron-left" font-scale="1.5"></b-icon>
+      <b-icon icon="check-square" @click="submitArticle" font-scale="1.4"></b-icon>
     </div>
-    <div class="container">
+    <div class="wrapB">
       <b-list-group class="pt-5" style="border-radius: 20px;">
         
         <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import FeedApi from '../../api/FeedApi'
 
 export default {
   name: 'CreateVote',
@@ -55,7 +56,14 @@ export default {
       length: 2,
     }
   },
+  props: {
+    fno: Number,
+  },
   methods: {
+    moveMain() {
+      console.log(1)
+      this.$router.push('/feed/main')
+    },
     delItem(delId) {
       this.contents = this.contents.filter(res => {
         return res.id !== delId
@@ -68,6 +76,37 @@ export default {
       })
       this.length++
     },
+    makeData() {
+      var jsonObj = {
+        content: this.contents,
+      }
+      return JSON.stringify(jsonObj)
+    },
+    submitArticle() {
+      let sendData = this.makeData();
+
+      // createFeed 요청에 줄 데이터 목록
+      // uno 는 토큰을 통해 사용하기위해 제거
+      let data = {
+        ctype: 3,
+        content: sendData,
+        tag: JSON.stringify(this.value)
+      };
+
+      // Axios 요청
+      FeedApi.createFeed(
+        // 요청에 쓸 데이터 전달
+        data
+        // 성공시 수행할 콜백 메서드
+        , res => {
+          console.log(res);
+        }
+        // 실패시 수행할 콜백 메서드
+        , err => {
+          console.log(err);
+        } 
+      );
+    }
   }
 }
 </script>

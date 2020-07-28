@@ -23,7 +23,8 @@ public class WebCurationApplication implements WebMvcConfigurer{
 	private static final String[] EXCLUDE_PATHS = {
 		"/account/**",
 		"/swagger-resources",
-		"/swagger-resources/**"
+		"/swagger-resources/**",
+		"/swagger-ui.html"
 	};
 
 	// Interceptor 설치

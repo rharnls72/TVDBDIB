@@ -1,10 +1,10 @@
 <template>
   <div class="user join wrapC">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <b-icon icon="chevron-left" font-scale="1.5"></b-icon>
+      <b-icon @click="moveMain" icon="chevron-left" font-scale="1.5"></b-icon>
       <b-icon @click="submitArticle" icon="check-square" font-scale="1.4"></b-icon>
     </div>
-    <div class="container">
+    <div class="wrapB container">
       <b-list-group style="border-radius: 20px;">
         
         <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
@@ -41,6 +41,9 @@ export default {
       value: [],
     }
   },
+  props: {
+    fno: Number,
+  },
   computed: {
     ...mapState([
       'userInfo',
@@ -48,6 +51,10 @@ export default {
     ])
   },
   methods: {
+    moveMain() {
+      console.log(1)
+      this.$router.push('/feed/main')
+    },
     makeData() {
       var jsonObj = {
         content: this.content,
