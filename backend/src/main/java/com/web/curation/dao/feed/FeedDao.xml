@@ -67,8 +67,17 @@
                 *
             FROM
                 `feed_view`
+            WHERE
+                `uno` IN (
+                    SELECT
+                        `following`
+                    FROM
+                        `user_follow`
+                    WHERE
+                        `follower` = #{uno}
+                )
             ORDER BY `fno` DESC
-            LIMIT ${value} , 20
+            LIMIT ${num} , 20
             ) sub
                 LEFT OUTER JOIN
             `feed_like` l ON sub.fno = l.fno
