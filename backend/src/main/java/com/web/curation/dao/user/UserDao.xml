@@ -30,6 +30,11 @@
         where email = #{email}
             and password = #{password}
     </select>
+    <select id="checkNickName" resultType="int">
+        select count(*)
+        from user
+        where nick_name = #{nick_name}
+    </select>
 
     <insert id="addNewUser">
         insert into
@@ -48,6 +53,20 @@
     <update id="modifyPassword">
         update user
         set password = #{password}
+        where email = #{email}
+    </update>
+    <update id="modifyProfile">
+        update user
+        set nick_name = #{nick_name}
+        set bio = #{bio}
+        set profile_pic = #{profile_pic}
+        set is_private = #{is_private}
+        where email = #{email}
+    </update>
+    
+    <update id="emailConfirm">
+        update user
+        set is_certification = true
         where email = #{email}
     </update>
 </mapper>

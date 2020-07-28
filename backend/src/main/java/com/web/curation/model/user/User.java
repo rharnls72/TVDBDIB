@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -32,6 +33,7 @@ public class User {
     private String profile_pic;
 
     private boolean is_private;
+    private boolean is_certification;
 
     public int getUno() {
         return uno;
@@ -95,5 +97,35 @@ public class User {
 
     public void setIs_private(boolean is_private) {
         this.is_private = is_private;
+    }
+
+    public boolean isIs_certification() {
+        return is_certification;
+    }
+
+    public void setIs_certification(boolean is_certification) {
+        this.is_certification = is_certification;
+    }
+
+    public void setUserWithToken(Map<String, Object> map) {
+        // uno, email, nick_name, profile_pic, is_private 정보만 가져옴
+        uno = (Integer) map.get("uno");
+        email = (String) map.get("email");
+        nick_name = (String) map.get("nick_name");
+        profile_pic = (String) map.get("profile_pic");
+        is_private = (Boolean) map.get("is_private");
+    }
+
+    @Override
+    public String toString() {
+        String str =
+        "Info: "
+        + uno + ", "
+        + email + ", "
+        + nick_name + ", "
+        + create_date + ", "
+        + profile_pic + ", "
+        + is_private;
+        return str;
     }
 }

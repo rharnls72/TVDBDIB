@@ -19,8 +19,11 @@ public interface UserDao {
     User findUserByEmailAndPassword(User user);
 
     int checkPassword(User user);
+    int checkNickName(String nick_name);
 
     int addNewUser(SignupRequest request);
 
     int modifyPassword(User user);
+    int modifyProfile(User user);
+    int emailConfirm(String email);
 }

@@ -10,8 +10,8 @@
     overflow: hidden;
     .img {
         @include background-img;
-        width: $c100;
-        height: 190px;
+        // width: $c100;
+        // height: 190px;
     }
     .contentsWrap {
         @include wrap;
@@ -60,7 +60,7 @@
     .profile-image {
         float: left;
     }
-    .user-info, .content {
+    .user-info {
         width: calc(100% - 50px);
         float: right; 
     }
@@ -83,6 +83,8 @@
         }
     }
     .content {
+        width: 100%;
+        float: left;
         p {
             display: -webkit-box;
             word-wrap:break-word; 
@@ -96,14 +98,14 @@
         }
     }
     .feed-card {
-        width:calc(100% - 50px);
-        float:right;
+        width: 100%;
+        // float:right;
         //max-width: $c100;
     }
     .btn-group {
         margin: 15px 0;
-        width: calc(100% - 50px);
-        float:right;
+        width: 100%;
+        // float:right;
         div {
             float: left;
             margin-right: 30px;

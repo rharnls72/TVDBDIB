@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.like.LikeDao">
+    <!-- Create -->
+    <insert id="addProgramLike">
+        insert into
+            program_like(
+                uno
+                , pno
+            )
+        values(
+            #{uno}
+            , #{tno}
+        )
+    </insert>
+    <insert id="addProgramReplyLike">
+        insert into
+            program_reply_like(
+                uno
+                , prno
+            )
+        values(
+            #{uno}
+            , #{tno}
+        )
+    </insert>
+    <insert id="addEpisodeLike">
+        insert into
+            episode_like(
+                uno
+                , eno
+            )
+        values(
+            #{uno}
+            , #{tno}
+        )
+    </insert>
+    <insert id="addEpisodeReplyLike">
+        insert into
+            episode_reply_like(
+                uno
+                , erno
+            )
+        values(
+            #{uno}
+            , #{tno}
+        )
+    </insert>
+    <insert id="addFeedLike">
+        insert into
+            feed_like(
+                uno
+                , fno
+            )
+        values(
+            #{uno}
+            , #{tno}
+        )
+    </insert>
+    <insert id="addFeedReplyLike">
+        insert into
+            feed_reply_like(
+                uno
+                , frno
+            )
+        values(
+            #{uno}
+            , #{tno}
+        )
+    </insert>
+    
+    
+
+    <!-- Delete -->
+    <delete id="deleteProgramLike">
+        delete from
+            program_like
+        where
+            pno = #{tno}
+            and
+            uno = #{uno}
+    </delete>
+    <delete id="deleteProgramReplyLike">
+        delete from
+            program_reply_like
+        where
+            prno = #{tno}
+            and
+            uno = #{uno}
+    </delete>
+    <delete id="deleteEpisodeLike">
+        delete from
+            episode_like
+        where
+            eno = #{tno}
+            and
+            uno = #{uno}
+    </delete>
+    <delete id="deleteEpisodeReplyLike">
+        delete from
+            episode_reply_like
+        where
+            erno = #{tno}
+            and
+            uno = #{uno}
+    </delete>
+    <delete id="deleteFeedLike">
+        delete from
+            feed_like
+        where
+            fno = #{tno}
+            and
+            uno = #{uno}
+    </delete>
+    <delete id="deleteFeedReplyLike">
+        delete from
+            feed_reply_like
+        where
+            frno = #{tno}
+            and
+            uno = #{uno}
+    </delete>
+</mapper>
