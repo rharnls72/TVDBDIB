@@ -5,105 +5,116 @@ import java.util.ArrayList;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Episode2 {
-    private int program_id;
-    private String program_name;
-    private int season_num;
+
+    private int pno;
+    private String pname; 
+    private int season; 
     private String season_name;
-    private int num;
+    private int episode;
+    private String episode_name; 
+    private String thumbnail; // 그 에피소드의 스틸컷 이미지.
+    private ArrayList<String> genre;
+    private String poster; // 프로필사진으로 쓰일 프로그램 포스터.
+    private LocalDate broadcast_date;
+    private String summary;
+    private ArrayList<String> crew;
+    private ArrayList<String> guest;
 
-    private String image_path;
-    private LocalDate air_date;
-    private String overview;
-    private ArrayList<String> crews;
-    private ArrayList<String> guest_stars;
+	public int getPno() {
+		return this.pno;
+	}
+
+	public void setPno(int pno) {
+		this.pno = pno;
+	}
+
+	public String getPname() {
+		return this.pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
+
+	public int getSeason() {
+		return this.season;
+	}
+
+	public void setSeason(int season) {
+		this.season = season;
+	}
+
+	public String getSeason_name() {
+		return this.season_name;
+	}
+
+	public void setSeason_name(String season_name) {
+		this.season_name = season_name;
+	}
+
+	public int getEpisode() {
+		return this.episode;
+	}
+
+	public void setEpisode(int episode) {
+		this.episode = episode;
+	}
+
+	public String getEpisode_name() {
+		return this.episode_name;
+	}
+
+	public void setEpisode_name(String episode_name) {
+		this.episode_name = episode_name;
+	}
+
+	public String getThumbnail() {
+		return this.thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	public LocalDate getBroadcast_date() {
+		return this.broadcast_date;
+	}
+
+	public void setBroadcast_date(LocalDate broadcast_date) {
+		this.broadcast_date = broadcast_date;
+	}
+
+	public String getSummary() {
+		return this.summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public ArrayList<String> getCrew() {
+		return this.crew;
+	}
+
+	public void setCrew(ArrayList<String> crew) {
+		this.crew = crew;
+	}
+
+	public ArrayList<String> getGuest() {
+		return this.guest;
+	}
+
+	public void setGuest(ArrayList<String> guest) {
+		this.guest = guest;
+	}
 
 
-    public int getNum() {
-        return this.num;
-    }
 
-    public void setNum(int num) {
-        this.num = num;
-    }
-
-    public int getProgram_id() {
-        return this.program_id;
-    }
-
-    public void setProgram_id(int program_id) {
-        this.program_id = program_id;
-    }
-
-    public String getProgram_name() {
-        return this.program_name;
-    }
-
-    public void setProgram_name(String program_name) {
-        this.program_name = program_name;
-    }
-
-    public int getSeason_num() {
-        return this.season_num;
-    }
-
-    public void setSeason_num(int season_num) {
-        this.season_num = season_num;
-    }
-
-    public String getSeason_name() {
-        return this.season_name;
-    }
-
-    public void setSeason_name(String season_name) {
-        this.season_name = season_name;
-    }
-
-    public String getImage_path() {
-        return this.image_path;
-    }
-
-    public void setImage_path(String image_path) {
-        this.image_path = image_path;
-    }
-
-    public LocalDate getAir_date() {
-        return this.air_date;
-    }
-
-    public void setAir_date(LocalDate air_date) {
-        this.air_date = air_date;
-    }
-
-    public String getOverview() {
-        return this.overview;
-    }
-
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
-    public ArrayList<String> getCrews() {
-        return this.crews;
-    }
-
-    public void setCrews(ArrayList<String> crews) {
-        this.crews = crews;
-    }
-
-    public ArrayList<String> getGuest_stars() {
-        return this.guest_stars;
-    }
-
-    public void setGuest_stars(ArrayList<String> guest_stars) {
-        this.guest_stars = guest_stars;
-    }
 
 }
