@@ -43,19 +43,20 @@ export default {
   methods: {
     // 2. 5개씩 끊어서 보여주기
     makeCurations() {
+      console.log(this.startPoint);
       let temp = []
       for (let i = this.startPoint; i < this.startPoint + this.interval; i++) {
         temp.push(this.curations[i])
       }
       this.partCurations = this.partCurations.concat(temp)
-      console.log(this.partCurations)
+      //console.log(this.partCurations)
     },
     // 무한 스크롤 기능 구현
     infiniteHandler($state) {
       setTimeout(() => {
         this.makeCurations()
         $state.loaded();
-      }, 500);
+      }, 1500);
       this.startPoint += this.interval
     },
   },
@@ -63,8 +64,10 @@ export default {
   created() {
     http.get('/episode/following/1')
       .then(res => {
+        console.log(res);
         this.curations = res.data.data
         console.log(this.curations)
+        this.makeCurations()
       })
       .catch(err => console.error(err))
   },
