@@ -5,7 +5,6 @@ import com.web.curation.interceptor.JWTInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -22,9 +21,7 @@ public class WebCurationApplication implements WebMvcConfigurer{
 	// 인터셉터를 거치지 않고 요청을 보낼 수 있는 경로 설정
 	private static final String[] EXCLUDE_PATHS = {
 		"/account/**",
-		"/swagger-resources",
-		"/swagger-resources/**",
-		"/swagger-ui.html"
+		"/test/**"
 	};
 
 	// Interceptor 설치
