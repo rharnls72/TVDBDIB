@@ -1,5 +1,6 @@
 <template>
-  <b-nav justified class="myheader py-1 d-flex justify-content-between">
+  <div>
+   <b-nav justified class="myheader py-1 d-flex justify-content-between">
     <b-nav-item>
       <!-- 메시지 -->
       <button>
@@ -15,6 +16,13 @@
       </button>
     </b-nav-item>
   </b-nav>
+    <b-tabs class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
+      <b-tab title="인기" title-link-class="text-secondary" active></b-tab>
+      <b-tab title="계정" title-link-class="text-secondary"></b-tab>
+    </b-tabs>
+
+  </div>
+
 </template>
 
 <script>

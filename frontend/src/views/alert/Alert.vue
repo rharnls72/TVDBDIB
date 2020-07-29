@@ -1,6 +1,12 @@
 <template>
   <div id="app" class="columns">
     <AlertHeader />
+    <div>
+    <b-tabs class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
+      <b-tab title="글 알림" title-link-class="text-secondary" active></b-tab>
+      <b-tab title="팔로우 요청 알림" title-link-class="text-secondary"></b-tab>
+    </b-tabs>
+    </div>
       <div class="wrapB">
         <AlertItem :alerts="alerts"/>
       </div>

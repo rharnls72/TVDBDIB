@@ -1,16 +1,22 @@
 <template>
-  <div class="feed-item" style="margin-top: 15%;">
+  <div class="feed-item">
       <ul> <!-- 받아온 데이터로 반복 돌리자 -->
             <!-- done == 'Y' 일때만 done 이라는 클래스를 지정 -->
           <li v-for="(alert) in alerts" v-bind:key="alert.ano" 
-          class="shadow" v-bind:class="{done: !alert.read}">
+          class="shadow" v-bind:class="{done: !alert.read}" type="button" @click="checkAlert(alert.ano)">
 
         <div class="form-group row">
-            <img class="my-auto col-3 col-sm-3" src="@/assets/images/profile_default.png">
-            <span class="my-auto col-8 col-sm-8">{{alert.atype}}</span>
-            <span class="my-auto col-1 col-sm-1 removeBtn" type="button" @click="deleteTodo(alert.ano)">
-                <b-icon-box-arrow-in-up-right v-if="alert.atype == 1"></b-icon-box-arrow-in-up-right>
-                <b-icon-person-plus-fill v-if="alert.atype >= 2" class="removeBtn"></b-icon-person-plus-fill>
+            <img class="my-auto col-3 col-sm-3" :src='alert.picture'>
+            <span class="alert-content my-auto col-6 col-sm-6">
+              <p v-if='alert.atype == 1'>{{alert.subject_name}}님이 나를 팔로우했습니다.</p>
+              <p v-if='alert.atype == 2'>{{alert.subject_name}}님이 내 글에 좋아요를 표시했습니다.</p>
+              <p v-if='alert.atype == 3'>{{alert.subject_name}}님이 내 글에 댓글을 달았습니다.</p>
+              <p v-if='alert.atype == 4'>{{alert.subject_name}}님이 글에서 나를 언급했습니다.</p>
+            </span>
+            <span class="float-right my-auto col-3 col-sm-3 removeBtn" type="button" @click="deleteTodo(alert.ano)">
+                <b-icon-box-arrow-in-up-right font-scale="1.5" class="float-right" v-if="alert.atype >= 2"></b-icon-box-arrow-in-up-right>
+                <button class="col-6 col-sm-6 btn btn-danger btn-sm" v-if="alert.atype == 1">거절</button>
+                <button class="float-right col-6 col-sm-6 btn btn-primary btn-sm" v-if="alert.atype == 1">승인</button>
             </span>
         </div>
 <!--
@@ -58,9 +64,9 @@ li {
   height: 70px;
   line-height: 20px;
   margin: 0.5rem 0;
-  padding: 0 0.9rem;
+  padding: 0 0.5rem;
   background: white;
-  border-radius: 5px;
+  border-radius: 3px;
 }
 .checkBtn {
   line-height: 45px;
@@ -69,6 +75,7 @@ li {
 }
 .removeBtn {
   color: blue;
+  padding: 0;
 }
 
 .list-item {
@@ -95,4 +102,17 @@ img{
     margin-right: -5%;
     vertical-align: middle;
 }
+.btn{
+  height: 5%;
+  width: 70%;
+}
+
+.alert-content{
+  padding: 0;
+}
+
+p{
+  margin: 5%;
+}
+
 </style>
