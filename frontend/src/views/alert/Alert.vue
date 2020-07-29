@@ -34,6 +34,7 @@ export default {
         .then(res => {
           console.log(res);
           this.alerts = res.data.data;
+          console.log(this.alerts);
         })
         .catch(err => console.error(err))
   },

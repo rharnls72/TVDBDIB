@@ -23,4 +23,9 @@ public interface AlertDao {
     // Delete
     int deleteAllAlert(int uno);
     int deleteAlert(int ano);
+
+	Alert getInfoByUser(int cno);
+	Alert getInfoByFeedLike(int cno);
+	Alert getInfoByFeedReply(int cno);
+	Alert getInfoByFeed(int cno);
 }
