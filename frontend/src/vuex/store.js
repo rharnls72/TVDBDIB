@@ -12,7 +12,7 @@ const state = {
 
     loginEmail: "",
     updateFeed: null,
-}
+}   
 
 export default new Vuex.Store({
     state,

@@ -2,9 +2,9 @@
   <div class="feed-item">
     <div class="top">
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
-      <div class="user-info mb-2">
+      <div class="user-info">
         <div class="user-name">
-          <button>유저이름</button>
+          <button>SSAFY</button>
         </div>
         <p class="date">{{createAfter}} 시간 전</p>
       </div>
@@ -20,14 +20,12 @@
       </div>
     </div>
     <div class="feed-card">
-      <div class="mythumbnail d-flex justify-content-center align-items-center">
-        <!-- <p v-for="tag in article.tag" :key="tag" class="py-5">
-          #{{tag}}
-        </p> -->
-        <div class="px-3 py-5">
-          <span v-for="tag in tags" :key="tag">
-            #{{tag}}
-          </span>
+      <div class="mythumbnail d-flex flex-column justify-content-center align-items-center">
+        <div v-for="content in vote" :key="content.id" style="width: 80%;">
+          <div class="my-2">
+            <label class="d-flex justify-content-between"><span>{{content.text}}</span><span @click="voteOption(content)" class="moreView">투표하기</span></label>
+            <b-progress :value="content.count" :max="totalNum" show-progress></b-progress>
+          </div>
         </div>
       </div>
     </div>
@@ -71,11 +69,7 @@
       <span class="font-weight-bold">좋아요 {{like_num}}명</span>
     </div>
     <div class="wrap mt-2">
-      <span class="font-weight-bold">유저이름 </span>
-      <span>
-        <span>{{content}}</span><br>
-        <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
-      </span>
+      <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
     </div>
     <ReplyItem :fno="fno"/>
   </div>
@@ -83,16 +77,23 @@
 
 <script>
 import ReplyItem from "@/components/ReplyItem.vue"
-import defaultImage from "../../assets/images/img-placeholder.png";
-import defaultProfile from "../../assets/images/profile_default.png";
-import {mapState} from "vuex"
-import header from "@/api/header.js"
-import axios from "axios"
+import defaultImage from "@/assets/images/img-placeholder.png";
+import defaultProfile from "@/assets/images/profile_default.png";
+import {mapState} from 'vuex'
+import axios from 'axios'
+import header from '@/api/header.js'
+
 export default {
   data: () => {
     return { 
       defaultImage, defaultProfile,
-      content: 'ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ',
+      feedTitle: '투표투표',
+      vote: [
+        {id: 0, content:"항목 1", count:10},
+        {id: 1, content:"항목 2", count:40},
+        {id: 2, content:"항목 3", count:8},
+      ],
+      totalNum: null,
       comment: null,
       tags: ['소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ','소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ'],
       reply: ['wow', '너무 좋아용 ㅎㅎ'],
@@ -101,15 +102,15 @@ export default {
       scrapIcon: false,
       like_num: 12,
       reply_num: 11,
-      feedTitle: '제목제목',
       thumbnail: 'asdfasdf',
       writer_uno: 1,
       scrapNum: 12,
       create_date: 'ddddd0',
-    };
+    }
   },
-  components: {
-    ReplyItem,
+  props: {
+    article: Object,
+    fno: Number,
   },
   computed: {
     ...mapState([
@@ -120,18 +121,16 @@ export default {
       return parseInt((today-new Date(this.create_date)) / (1000*60*60))
     }
   },
-  props:{
-    article: Object,
-    fno: Number,
+  components: {
+    ReplyItem,
   },
   methods: {
-    pushReply() {
-      axios.post('http://localhost:9000/reply/feed/create',
-      {
-        no: this.article.fno,
-        content: this.additionReply,
-        writer_uno: 1,
-      }, header())
+    totalNumber() {
+      let t = 0
+      this.vote.foreach(res => {
+        t += Number(res.count)
+      })
+      this.totalNum = t
     },
     touchLikeIcon() {
       this.likeIcon = !this.likeIcon
@@ -153,6 +152,26 @@ export default {
       }
       // console.log(this.scrapIcon)
     },
+    makeData() {
+      var jsonObj = {
+        title: this.feedTitle,
+        content: this.vote,
+      }
+      return JSON.stringify(jsonObj)
+    },
+    voteOption(opt) {
+      opt.count++
+      let sendData = this.makeData()
+      let data = {
+        ctype: 3,
+        content: sendData,
+        tag: JSON.stringify(this.tags),
+        fno: this.fno
+      };
+      axios.put('http://localhost:9000/feed/update', data, header())
+          .then(res => console.log(res))
+          .catch(err => console.log(err))
+    },
     delFeed() {
       axios.delete('http://localhost:9000/feed/delete/'+this.fno, header())
         .then(res => {
@@ -162,24 +181,30 @@ export default {
         .catch(err => console.log(err))
     },
     updateFeed() {
-      this.$router.push({ path:'/feed/create/1/'+this.fno })
+      this.$router.push({ path:'/feed/create/3/'+this.fno })
     }
   },
-  mounted() {
-    this.feedTitle = this.article.content.title
-    this.content = this.article.content.content
-    this.tags = this.article.tag
-    this.reply = this.article.reply_content
-    this.reply_num = this.article.reply_num
-    this.thumbnail = this.article.thumbnail
-    this.writer_uno = this.article.uno
-    this.likeIcon = this.article.prees_like
-    this.scrapIcon = this.article.press_dibs
-    if (!this.article.dibsNum) {this.scrapNum = 0}
-    else {this.scrapNum = this.article.dibsNum}
-    this.create_date = this.article.create_date
-    if (!this.article.like_num) {this.like_num = 0}
-    else {this.like_num = this.article.like_num}
+  updated() {
+    this.totalNumber()
+  },
+  created() {
+    if (this.article !== null) {
+      this.feedTitle = this.article.content.title
+      this.vote = this.article.content.content
+      this.tags = this.article.tag
+      this.reply = this.article.reply_content
+      this.reply_num = this.article.reply_num
+      this.thumbnail = this.article.thumbnail
+      this.writer_uno = this.article.uno
+      this.likeIcon = this.article.prees_like
+      this.scrapIcon = this.article.press_dibs
+      if (!this.article.dibsNum) {this.scrapNum = 0}
+      else {this.scrapNum = this.article.dibsNum}
+      this.create_date = this.article.create_date
+      if (!this.article.like_num) {this.like_num = 0}
+      else {this.like_num = this.article.like_num}
+      console.log(this.vote)
+    }
   }
 };
 </script>

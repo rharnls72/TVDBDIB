@@ -44,6 +44,7 @@ export default {
   },
   props: {
     article: Object,
+    fno: Number,
   },
   computed: {
     ...mapState([
@@ -75,33 +76,50 @@ export default {
         tag: JSON.stringify(this.value)
       };
 
-      // // Axios 요청
-      // FeedApi.createFeed(
-      //   // 요청에 쓸 데이터 전달
-      //   data
-      //   // 성공시 수행할 콜백 메서드
-      //   , res => {
-      //     console.log(res);
-      //     this.$router.push({path: '/feed/main'})
-      //   }
-      //   // 실패시 수행할 콜백 메서드
-      //   , err => {
-      //     console.log(err);
-      //   } 
-      // );
+      // Axios 요청
+      if (this.fno === null) {
+        FeedApi.createFeed(
+          // 요청에 쓸 데이터 전달
+          Data
+          // 성공시 수행할 콜백 메서드
+          , res => {
+            console.log(res);
+            this.$router.push({path: '/feed/main'})
+          }
+          // 실패시 수행할 콜백 메서드
+          , err => {
+            console.log(err);
+          } 
+        )
+      } else {
+        Data.fno = this.fno
+        axios.put("http://localhost:9000/feed/update", Data, header())
+          .then(res => {
+            console.log(res)
+            this.$router.push({path:'/feed/feedDetail/'+this.fno})
+          })
+          .catch(err => console.log(err))
+      }
 
-      axios.post('http://localhost:9000/feed/create', Data, header())
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+      // axios.post('http://localhost:9000/feed/create', Data, header())
+      //   .then(res => console.log(res))
+      //   .catch(err => console.log(err))
     }
   },
   mounted() {
+    console.log(this.fno)
     if (this.article !== null) {
       console.log(this.article.content)
-      const data = JSON.parse(this.article.content)
-      this.title = data.title
-      this.content = data.content
+      const data = this.article
+      console.log(data)
+      this.title = data.content.title
+      this.content = data.content.content
       this.value = this.article.tag
+      console.log(this.title, this.content, this.value)
+    } else {
+      this.title = null
+      this.content = null
+      this.value = []
     }
   }
 }
