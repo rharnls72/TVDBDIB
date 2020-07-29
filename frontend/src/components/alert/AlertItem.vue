@@ -70,18 +70,13 @@ export default {
               this.$props.alerts[delete_index].read = 1;
               //this.$router.go(this.$route.path); -- 새로고침 아닌줄 알았지만 vuex 데이터 날아감
           })
-          .catch(err => console.error(err))
+          .catch(err => this.makeToast(err, "danger"))
       }
     },
     // 팔로우 거절 = follow_request에서만 삭제.
     followRequestDelete(alert){
-        http.delete('/followrequest/delete/' + alert.cno)
-          .then(res => {
-              let delete_index = this.$props.alerts.findIndex(x => x.ano == alert.ano);
-              this.$props.alerts.splice(delete_index, 1);
-              // 토스트 같은걸로 삭제했다고 띄워주면 좋겠다 //
-          })
-          .catch(err => console.error(err))
+      this.sendDelete(alert);
+      this.makeToast("팔로우 신청을 거절했습니다.", "warning");
      },
     // 팔로우 수락 = user_follow 테이블에 팔로우 데이터 추가, follow_request에서는 삭제.
      followAccept(alert){
@@ -92,9 +87,29 @@ export default {
             following: this.$store.state.userInfo.uno
         })
         .then(res => {
-          this.followRequestDelete(alert);
+          this.sendDelete(alert);
+          this.makeToast("팔로우 신청을 승인했습니다.", "primary");
         })
-        .catch(err => console.error(err))
+        .catch(err => this.makeToast(err, "danger"))
+     },
+
+     sendDelete(alert){
+          http.delete('/followrequest/delete/' + alert.cno)
+          .then(res => {
+              let delete_index = this.$props.alerts.findIndex(x => x.ano == alert.ano);
+              this.$props.alerts.splice(delete_index, 1);
+          })
+          .catch(err => this.makeToast(err, "danger"))
+     },
+
+     makeToast(message, variant){
+        this.$bvToast.toast(message, {
+          title: '알림',
+          toaster: "b-toaster-bottom-right",
+          variant: variant,
+          autoHideDelay: 3000,
+          appendToast: false
+        })
      }
     }
   }
