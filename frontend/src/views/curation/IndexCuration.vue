@@ -55,7 +55,7 @@ export default {
       setTimeout(() => {
         this.makeCurations()
         $state.loaded();
-      }, 500);
+      }, 1500);
       this.startPoint += this.interval
     },
   },
