@@ -84,4 +84,5 @@ public class SearchController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
 }

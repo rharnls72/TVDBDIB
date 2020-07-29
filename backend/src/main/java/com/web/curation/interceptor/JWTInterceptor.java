@@ -1,6 +1,5 @@
 package com.web.curation.interceptor;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +18,18 @@ public class JWTInterceptor implements HandlerInterceptor {
     @Autowired
     private JWTService jwtService;
 
+    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         
+        // swagger 요청은 보내주기(swagger 켜서 확인 할 수 있어야함)
+        if(request.getRequestURI().contains("swagger")) {
+            return true;
+        }
+
+        // Option 메서드는 보내주기, 이거 해줘야 제대로 동작됨 왜죠?
         if(request.getMethod().equals("OPTIONS")) {
             return true;
         } else {
@@ -36,10 +43,11 @@ public class JWTInterceptor implements HandlerInterceptor {
                 try {
                     // 토큰에서 유저 정보를 추출해 request 에 넣기
                     User user = new User();
-                    user.setUserWithToken((Map) jwtService.getInfo(token).get("User"));
+                    user.setUserWithToken((Map<String, Object>) jwtService.getInfo(token).get("User"));
                     System.out.println(user);
                     request.setAttribute("User", user);
                 } catch (Exception e) {
+                    System.out.println(request.getRequestURI());
                     System.out.println(e.getMessage());
                     return false;
                 }

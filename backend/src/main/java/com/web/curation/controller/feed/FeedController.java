@@ -1,6 +1,5 @@
 package com.web.curation.controller.feed;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -79,79 +78,23 @@ public class FeedController {
     // Read
     @PostMapping("/feed/list")
     @ApiOperation(value = "피드 목록 조회")
-    public Object getFeedList(@RequestBody FeedRequest req) {
+    public Object getFeedList(@RequestBody FeedRequest feedRequest, HttpServletRequest request) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
 
+        // 유저 정보 가져와서 그 번호를 feedRequest 에 넣기
+        feedRequest.setUno(((User)request.getAttribute("User")).getUno());
+
+        // 피드 리스트 조회를 시작할 위치 설정
+        feedRequest.setNum((feedRequest.getNum() - 1) * 20);
+
         // 피드 리스트 조회
-        int start = (req.getNum() - 1) * 20;
-        List<Feed> list = dao.getFeedList(start);
-
-        // 조회한 데이터의 크기
-        int listSize = list.size();
-
-        // 조회한 데이터가 있다면
-        ArrayList<Feed> response = new ArrayList<>();
-        if(listSize > 0) {
-            // 피드 하나의 정보를 담을 객체
-            Feed row = new Feed();
-            // 최대 2명의 좋아요 한 사람만 표시
-            int like_cnt = 0;
-            
-            // 모든 데이터에 대해 반복
-            for(Feed feed : list) {
-                // 현재 작업 중인 피드와 동일한 글이라면
-                if(row.getFno() == feed.getFno()) {
-                    // 현재 로그인 한 유저가 좋아요를 누른 글인지 확인
-                    if(!row.getPress_like() && row.getLike_num() > 0) {
-                        if(feed.getLiker_uno() == req.getUno()) {
-                            row.setPress_like(true);
-                        }
-                    }
-
-                    // 좋아요 누른 사람 최대 2명의 닉네임 반환해야함
-                    if(row.getLike_num() > 0 && like_cnt < 2) {
-                        row.appendNickName(feed.getLiker_nick_name());
-                        like_cnt++;
-                    }
-                }
-                // 다른 피드라면
-                else {
-                    // 작업 중이던 이전 피드가 있다면
-                    if(row.getFno() != 0) {
-                        // 응답 리스트에 작업중이던 피드 정보 넣기
-                        response.add(row);
-                    }
-
-                    // like_cnt 초기화
-                    like_cnt = 0;
-
-                    // 작업할 피드를 현재 피드로 가리키기
-                    row = feed;
-
-                    // 현재 로그인 한 유저가 좋아요를 누른 댓글인지 확인
-                    if(!row.getPress_like() && row.getLike_num() > 0) {
-                        if(feed.getLiker_uno() == req.getUno()) {
-                            row.setPress_like(true);
-                        }
-                    }
-
-                    // 좋아요 누른 사람 최대 2명의 닉네임 반환해야함
-                    if(row.getLike_num() > 0 && like_cnt < 2) {
-                        like_cnt++;
-                    }
-                }
-            }
-            // 만약 리스트에 안넣은 row 가 남았으면 그거도 넣기
-            if(row.getFno() > 0) {
-                response.add(row);
-            }
-        }
+        List<Feed> list = dao.getFeedList(feedRequest);
 
         // 조회된 피드 목록 반환
         result.status = true;
         result.msg = "success";
-        result.data = response;
+        result.data = list;
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -175,6 +118,22 @@ public class FeedController {
         result.status = true;
         result.msg = "success";
         result.data = feed;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/test/feedcnt/{uno}")
+    @ApiOperation(value = "작성한 피드 수 조회(API 로 호출 안하는 메서드)")
+    public Object getFeedCount(@PathVariable("uno") int uno) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        // 조회
+        int cnt = dao.getFeedCount(uno);
+
+        // 완
+        result.status = true;
+        result.msg = "success";
+        result.data = cnt;
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
