@@ -2,104 +2,95 @@
   <div class="feed-item">
     <div class="top">
       <!-- 추후에 poster url 가져오면 img 태그로 바꿔줄 것 -->
+      <!-- 에피소드에는 포스터가 없다,, -->
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info mb-2">
         <div class="user-name">
-          <button>[{{ curation.name }}]</button>
+          <button>[{{ curation.pname }}] {{ curation.episode }}화</button>
         </div>
-        <p class="date">{{ curation.broadcast_time }} 방송 예정</p>
+        <p class="date">{{ curation.broadcast_date }} 방송</p>
       </div>
     </div>
     <div class="feed-card">
-      <!-- 추후에 thumbnail url 가져오면 img 태그로 바꿔줄 것 -->
-      <div v-if="curation.thumbnail" class="img thumbnail-color">{{ curation.thumbnail }}</div>
-      <div v-else class="img" :style="{'background-image': 'url('+defaultImage+')'}"></div>
+      <div v-if="curation.thumbnail != 'https://image.tmdb.org/t/p/w500'"><img class="mythumbnail" :src="curation.thumbnail" alt="thumbnail-image"></div>
+      <div v-else><img class="mythumbnail" :src="defaultImage" alt="default-image"></div>
       <div class="contentsWrap">
         <div class="d-flex justify-content-between">
-          <h4 class="title">[{{ curation.name }}]</h4>
-          <p class="date">{{ curation.genre }}</p>
+          <h4 class="title">[{{ curation.pname }}] {{ curation.episode }}화</h4>
+          <!-- 에피소드에는 장르가 없다,, -->
+          <!-- <p class="date">{{ curation.genre }}</p> -->
         </div>
-          <!-- <div class="url">
-            <a href="https://brunch.co.kr/@@63JW/25">https://brunch.co.kr/@@63JW/25</a>
-          </div>
-          <p class="date">2020.06.18</p> -->
       </div>
     </div>
     <!---->
     <div class="btn-group wrap justify-content-between">
       <div>
-        <div class="like likeScrap mr-3">
-          <button v-if="likeIcon" @click="touchLikeIcon">
-            <i class="fas fa-heart icon" style="color: red;"></i>
+        <!-- 좋아요 -->
+        <div class="mr-3">
+          <!-- 1. 스마일 -->
+          <button class="h6 mr-1" @click="touchLikeIcon">
+            <b-icon-emoji-smile v-if="!likeIcon"></b-icon-emoji-smile>
+            <b-icon-emoji-smile v-else class="rounded-circle bg-warning" variant="light"></b-icon-emoji-smile>
           </button>
-          <button v-else @click="touchLikeIcon">
-            <i class="fas fa-heart icon"></i>
+          <!-- 2. 하트 -->
+          <!-- <button class="h6" @click="touchLikeIcon">
+            <b-icon-heart v-if="!likeIcon" variant="danger"></b-icon-heart>
+            <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
+          </button> -->
+          {{ likeCount }}
+        </div>
+        <!-- 댓글 -->
+        <div class="mr-3">
+          <button class="h6 mr-1">
+            <b-icon-chat></b-icon-chat>
           </button>
           0
         </div>
-        <div class="comment mr-3">
-          <svg
-            class="svg-inline--fa fa-comment-alt fa-w-16 icon"
-            aria-hidden="true"
-            data-prefix="far"
-            data-icon="comment-alt"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 512 512"
-            data-fa-i2svg
-          >
-            <path
-              fill="currentColor"
-              d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm16 352c0 8.8-7.2 16-16 16H288l-12.8 9.6L208 428v-60H64c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h384c8.8 0 16 7.2 16 16v288z"
-            />
-          </svg>
-          <!-- <i class="far fa-comment-alt icon"></i> -->
-          0
-        </div>
-        <div class="comment mr-3">
-          <!-- 스크랩(찜)을 누르지 않으면 -->
-          <i v-if="!scrapIcon" @click="touchScrapIcon" class="far fa-bookmark icon empty"></i>
-          <!-- 스크랩(찜)을 누르면 -->
-          <i v-else @click="touchScrapIcon" class="fas fa-bookmark icon full"></i>
-          0
+        <!-- 스크랩 -->
+        <div class="mr-3">
+          <button class="h6 mr-1" @click="touchScrapIcon">
+            <b-icon-bookmark v-if="!scrapIcon"></b-icon-bookmark>
+            <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
+          </button>
+          {{ scrapCount }}
         </div>
         <!---->
       </div>
       <div class="mr-1">
-        <div class="share">
-          <svg
-            class="svg-inline--fa fa-share-alt fa-w-14 icon"
-            aria-hidden="true"
-            data-prefix="fas"
-            data-icon="share-alt"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 448 512"
-            data-fa-i2svg
-          >
-            <path
-              fill="currentColor"
-              d="M352 320c-22.608 0-43.387 7.819-59.79 20.895l-102.486-64.054a96.551 96.551 0 0 0 0-41.683l102.486-64.054C308.613 184.181 329.392 192 352 192c53.019 0 96-42.981 96-96S405.019 0 352 0s-96 42.981-96 96c0 7.158.79 14.13 2.276 20.841L155.79 180.895C139.387 167.819 118.608 160 96 160c-53.019 0-96 42.981-96 96s42.981 96 96 96c22.608 0 43.387-7.819 59.79-20.895l102.486 64.054A96.301 96.301 0 0 0 256 416c0 53.019 42.981 96 96 96s96-42.981 96-96-42.981-96-96-96z"
-            />
-          </svg>
+        <!-- 우리가 생각한 공유 (해당 게시물에 대한 글 바로 작성) -->
+        <div class="mr-2">
+          <button class="h5">
+            <b-icon-pencil></b-icon-pencil>
+          </button>
+        </div>
+        <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
+        <div>
+          <button class="h5">
+            <b-icon-reply></b-icon-reply>
+          </button>
         </div>
       </div>
     </div>
     <!-- 내용 더 보기 (현재 페이지에서 펼치기) -->
-    <div v-if="!curation.description" class="content">
-      <p>{{ curation.description }}</p>
+    <div v-if="!curation.summary" class="content">
+      <p>{{ curation.summary }}</p>
     </div>
-    <div v-else-if="curation.description.length <= 18" class="content">
-      <p>{{ curation.description }}</p>
+    <div v-else-if="curation.summary.length <= 18" class="content">
+      <p>{{ curation.summary }}</p>
     </div>
     <div v-else class="content">
       <div v-if="!isStretch" class="d-flex justify-content-between">
-        <p>{{ curation.description.slice(0, 18) }}</p>
+        <p>{{ curation.summary.slice(0, 40) }}</p>
         <button @click="readMore" class="more">더 보기</button>
       </div>
       <div v-else>
-        <p>{{ curation.description }}</p>
+        <p>{{ curation.summary }}</p>
       </div>
+    </div>
+    <!-- 추후에 댓글 연결!~ -->
+    <div class="content">
+      <p>댓글이야 댓글 댓글!~</p>
+      <p class="more">댓글 1개</p>
     </div>
     <!---->
     <!---->
@@ -117,12 +108,15 @@ export default {
       defaultImage,
       defaultProfile,
       isStretch: false,
-      likeIcon: true,
+      likeIcon: false,
       scrapIcon: false,
+      likeCount: 0,
+      scrapCount: 0,
     };
   },
   props: {
     curation: Object,
+    id: Number,
   },
   methods: {
     readMore() {
@@ -130,10 +124,23 @@ export default {
     },
     touchLikeIcon() {
       this.likeIcon = !this.likeIcon
-      console.log(this.likeIcon)
+      if (this.likeIcon) {
+        this.likeCount ++
+      }
+      else {
+        this.likeCount --
+      }
+      // console.log(this.likeIcon)
     },
     touchScrapIcon() {
       this.scrapIcon = !this.scrapIcon
+      if (this.scrapIcon) {
+        this.scrapCount ++
+      }
+      else {
+        this.scrapCount --
+      }
+      // console.log(this.scrapIcon)
     },
   },
 };
@@ -143,12 +150,8 @@ export default {
   .more {
     color: lightgray;
   }
-  .thumbnail-color {
-    background-color: lightgray;
-  }
-  .follow-button {
+  .mythumbnail {
+    width: 100%;
     height: auto;
-    line-height: 10px;
-    box-shadow: none;
   }
 </style>

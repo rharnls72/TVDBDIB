@@ -24,9 +24,6 @@ public interface UserDao {
     int addNewUser(SignupRequest request);
 
     int modifyPassword(User user);
-    int modifyNickName(User user);
-    int modifyBio(User user);
-    int modifyPic(User user);
-    int modifyPrivate(User user);
+    int modifyProfile(User user);
     int emailConfirm(String email);
 }

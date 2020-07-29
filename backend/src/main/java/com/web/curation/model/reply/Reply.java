@@ -19,8 +19,8 @@ public class Reply {
     private String writer_profile_pic;
     private int like_num;
     private int reply_num;
-    private int liker_uno;
-    private String liker_nick_name;
+    private boolean press_like;
+    private String re_content;
 
     // Getter Setter
     public void setNo(int no) {
@@ -77,16 +77,19 @@ public class Reply {
     public int getReply_num() {
         return reply_num;
     }
-    public void setLiker_uno(int liker_uno) {
-        this.liker_uno = liker_uno;
+    public boolean isPress_like() {
+        return this.press_like;
     }
-    public int getLiker_uno() {
-        return liker_uno;
+
+    public void setPress_like(boolean press_like) {
+        this.press_like = press_like;
     }
-    public void setLiker_nick_name(String liker_nick_name) {
-        this.liker_nick_name = liker_nick_name;
+
+    public String getRe_content() {
+        return this.re_content;
     }
-    public String getLiker_nick_name() {
-        return liker_nick_name;
+
+    public void setRe_content(String re_content) {
+        this.re_content = re_content;
     }
 }
