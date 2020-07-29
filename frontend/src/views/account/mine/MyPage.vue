@@ -1,7 +1,6 @@
 <template>
   <div>
     <MyPageHeader :info="info"/>
-    <h1>내 프로필</h1>
     <MyPageInformation :info="info" :followcnt="followcnt"/>
     <Footer />
   </div>
