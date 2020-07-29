@@ -156,6 +156,16 @@ public class AccountController {
         if(n == 1) {
             result.status = true;
             result.msg = "success";
+            /* ===========================================================================================
+            try {
+                sendJoinMail(request.getEmail(), request.getNick_name());
+            } catch (Exception e) {
+                e.printStackTrace();
+                result.status = false;
+                result.msg = "메일 전송 실패";
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }
+            */
             mailConfig.sendJoinMail(sender, request.getEmail(), request.getNick_name());
         }
         // 아니면 오류가 난거

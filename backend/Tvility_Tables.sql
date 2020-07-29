@@ -200,9 +200,6 @@ CREATE TABLE `program_reply` (
     `content` VARCHAR(200) NOT NULL,
     `write_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
     PRIMARY KEY (`prno`),
-    FOREIGN KEY (`pno`)
-        REFERENCES `program` (`pno`)
-        ON DELETE CASCADE,
     FOREIGN KEY (`parent_reply`)
         REFERENCES `program_reply` (`prno`)
         ON DELETE CASCADE,
@@ -226,10 +223,7 @@ CREATE TABLE `program_like` (
     `lno` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
     `pno` INT NOT NULL,
-    PRIMARY KEY (`lno`),
-    FOREIGN KEY (`pno`)
-        REFERENCES `program` (`pno`)
-        ON DELETE CASCADE
+    PRIMARY KEY (`lno`)
 );
 
 CREATE TABLE `episode_like` (
