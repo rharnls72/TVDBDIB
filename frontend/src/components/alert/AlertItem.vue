@@ -3,20 +3,22 @@
       <ul> <!-- 받아온 데이터로 반복 돌리자 -->
             <!-- done == 'Y' 일때만 done 이라는 클래스를 지정 -->
           <li v-for="(alert) in alerts" v-bind:key="alert.ano" 
-          class="shadow" v-bind:class="{done: !alert.read}" type="button" @click="checkAlert(alert.ano)">
+          class="shadow" v-bind:class="{done: !alert.read}" type="button" @click="checkAlert(alert)">
 
         <div class="form-group row">
-            <img class="my-auto col-3 col-sm-3" :src='alert.picture'>
+          <!-- 이미지 바인딩 어떻게...? 잘 안된다 -->
+            <img class="my-auto col-3 col-sm-3" src="@/assets/images/profile_default.png" @click="movePage(alert)">
             <span class="alert-content my-auto col-6 col-sm-6">
-              <p v-if='alert.atype == 1'>{{alert.subject_name}}님이 나를 팔로우했습니다.</p>
+              <p v-if='alert.atype == 1'>{{alert.subject_name}}님이 팔로우 요청을 보냈습니다.</p>
               <p v-if='alert.atype == 2'>{{alert.subject_name}}님이 내 글에 좋아요를 표시했습니다.</p>
               <p v-if='alert.atype == 3'>{{alert.subject_name}}님이 내 글에 댓글을 달았습니다.</p>
               <p v-if='alert.atype == 4'>{{alert.subject_name}}님이 글에서 나를 언급했습니다.</p>
+              <p v-if='alert.atype == 5'>{{alert.subject_name}}님의 팔로우 요청</p>
             </span>
-            <span class="float-right my-auto col-3 col-sm-3 removeBtn" type="button" @click="deleteTodo(alert.ano)">
-                <b-icon-box-arrow-in-up-right font-scale="1.5" class="float-right" v-if="alert.atype >= 2"></b-icon-box-arrow-in-up-right>
-                <button class="col-6 col-sm-6 btn btn-danger btn-sm" v-if="alert.atype == 1">거절</button>
-                <button class="float-right col-6 col-sm-6 btn btn-primary btn-sm" v-if="alert.atype == 1">승인</button>
+            <span class="float-right my-auto col-3 col-sm-3 removeBtn" type="button">
+                <b-icon-box-arrow-in-up-right  @click="movePage(alert)" font-scale="1.5" class="float-right" v-if="alert.atype < 5"></b-icon-box-arrow-in-up-right>
+                <button @click="followRequestDelete(alert)" class="col-6 col-sm-6 btn btn-danger btn-sm" v-if="alert.atype == 5">거절</button>
+                <button @click="followAccept(alert)" class="float-right col-6 col-sm-6 btn btn-primary btn-sm" v-if="alert.atype == 5">승인</button>
             </span>
         </div>
 <!--
@@ -36,6 +38,7 @@
 </template>
 <script>
 import defaultProfile from "@/assets/images/profile_default.png";
+import http from '@/api/http-common.js';
 //import commentcss from "@/components/css/feed/comment-list.scss";
 
 export default {
@@ -47,8 +50,55 @@ export default {
   },
   props: {
     alerts: Array
+  },
+  methods:{
+    movePage(alert){
+      if (alert.atype == 1){ // 팔로우 요청일 경우 바로 오른쪽의 팔로우 요청 탭으로 이동
+        this.$parent.tabClick(2);
+      }
+      else { // 그 외의 경우 상대방 유저의 프로필페이지로 이동
+        this.$router.push('/profile/' + alert.subject_name);
+      }
+    },
+    // 클릭한 알림의 상태를 '읽음' 으로 바꾼다
+    checkAlert(alert){
+      if (alert.read == 0){
+        http.put('/alert/read/' + alert.ano)
+          .then(res => {
+            // 페이지 리로드하지 않고 누른 아이템의 상태만 바꾸자.
+              let delete_index = this.$props.alerts.findIndex(x => x.ano == alert.ano);
+              this.$props.alerts[delete_index].read = 1;
+              //this.$router.go(this.$route.path); -- 새로고침 아닌줄 알았지만 vuex 데이터 날아감
+          })
+          .catch(err => console.error(err))
+      }
+    },
+    // 팔로우 거절 = follow_request에서만 삭제.
+    followRequestDelete(alert){
+        http.delete('/followrequest/delete/' + alert.cno)
+          .then(res => {
+              let delete_index = this.$props.alerts.findIndex(x => x.ano == alert.ano);
+              this.$props.alerts.splice(delete_index, 1);
+              // 토스트 같은걸로 삭제했다고 띄워주면 좋겠다 //
+          })
+          .catch(err => console.error(err))
+     },
+    // 팔로우 수락 = user_follow 테이블에 팔로우 데이터 추가, follow_request에서는 삭제.
+     followAccept(alert){
+       console.log(alert.subject_no);
+       console.log(this.$store.state.userInfo.uno);
+        http.post('/following/user/add', {
+            follower: alert.subject_no,
+            following: this.$store.state.userInfo.uno
+        })
+        .then(res => {
+          this.followRequestDelete(alert);
+        })
+        .catch(err => console.error(err))
+     }
+    }
   }
-}
+
 </script>
 
 <style scoped>

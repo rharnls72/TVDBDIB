@@ -12,7 +12,7 @@
     <b-nav-item>
       <!-- 메시지 -->
       <button>
-        <b-icon-info-circle class="text-dark"></b-icon-info-circle> 3
+        
       </button>
     </b-nav-item>
   </b-nav>

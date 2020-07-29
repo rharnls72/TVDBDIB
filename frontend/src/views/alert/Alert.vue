@@ -2,9 +2,10 @@
   <div id="app" class="columns">
     <AlertHeader />
     <div>
-    <b-tabs class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
-      <b-tab title="글 알림" title-link-class="text-secondary" active></b-tab>
-      <b-tab title="팔로우 요청 알림" title-link-class="text-secondary"></b-tab>
+      <!-- tabIndex라는 값을 v-model 이용해서 제어해서 탭 이동을 구현. 하위 b-tab에서 class만 바꾸는 걸로는 안 됐다 -->
+    <b-tabs v-model="tabIndex" class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
+      <b-tab @click="tabClick(1)" :title="'알림 (' + generals_size + ')'" title-link-class="text-secondary" active></b-tab>
+      <b-tab @click="tabClick(2)" :title="'팔로우 요청 (' + requests_size + ')'" title-link-class="text-secondary"></b-tab>
     </b-tabs>
     </div>
       <div class="wrapB">
@@ -31,19 +32,73 @@ export default {
 
   data() {
     return {
-      alerts:[]
+      tabIndex: 0,
+      alerts: [],
+      generals: [],
+      follow_requests: []
   }
   },
 
+  computed: {
+    generals_size: function (){
+      let new_num = 0;
+      for (let i=0; i<this.$data.generals.length; i++){
+        if (this.$data.generals[i].read == 0){
+          new_num++; //
+        }
+      }
+      return new_num;
+    },
+    requests_size: function(){
+      return this.$data.follow_requests.length;
+    }
+  },
+
   created(){
-      http.get('/alert/list/2')
+    let uno = this.$store.state.userInfo.uno;
+    console.log(this.$store.state.userInfo);
+    // 알림 가져오기.
+      http.get('/alert/list/' + uno)
         .then(res => {
           console.log(res);
-          this.alerts = res.data.data;
-          console.log(this.alerts);
+          this.generals = res.data.data;
+          this.alerts = this.generals;
+        })
+        .catch(err => console.error(err))
+
+      // 팔로우 요청 가져오기.
+      http.get('/followrequest/list/' + uno)
+        .then(res => {
+          console.log(res);
+          let requests = res.data.data;
+          for (let i=0; i<requests.length; i++){
+            let request = {};
+            request.atype = 5;
+            request.cno = requests[i].fno;
+            request.picture = requests[i].user.profile_pic;
+            request.read = 1;
+            request.subject_name = requests[i].user.nick_name;
+            request.subject_no = requests[i].follower;
+            this.follow_requests.push(request);
+          }
         })
         .catch(err => console.error(err))
   },
+
+  methods: {
+    tabClick(option){
+      if (option == 1){
+        console.log("click " + option);
+        this.tabIndex = 0;
+        this.alerts = this.generals;
+      }
+      else{
+        console.log("click " + option);
+        this.tabIndex = 1; // AlertItem에서 이 함수 호출됐을 때 이 코드로 인해 탭 전환이 됨.
+        this.alerts = this.follow_requests;
+      }
+    }
+  }
 
 /*
   mounted() {
