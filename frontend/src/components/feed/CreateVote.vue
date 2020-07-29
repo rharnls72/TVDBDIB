@@ -42,6 +42,8 @@
 
 <script>
 import FeedApi from '../../api/FeedApi'
+import axios from 'axios'
+import header from '@/api/header.js'
 
 export default {
   name: 'CreateVote',
@@ -49,12 +51,16 @@ export default {
     return {
       title: null,
       contents: [
-        {id: 0, text: null},
-        {id: 1, text: null},
+        {id: 0, text: null, count: 0},
+        {id: 1, text: null, count: 0},
       ],
       value: [],
       length: 2,
     }
+  },
+  props: {
+    article: Object,
+    fno: Number,
   },
   methods: {
     moveMain() {
@@ -70,11 +76,13 @@ export default {
       this.contents.push({
         id: this.length,
         text: null,
+        count: 0,
       })
       this.length++
     },
     makeData() {
       var jsonObj = {
+        title: this.title,
         content: this.contents,
       }
       return JSON.stringify(jsonObj)
@@ -90,21 +98,36 @@ export default {
         tag: JSON.stringify(this.value)
       };
 
-      // Axios 요청
-      FeedApi.createFeed(
-        // 요청에 쓸 데이터 전달
-        data
-        // 성공시 수행할 콜백 메서드
-        , res => {
-          console.log(res);
-          this.$router.push('/feed/main')
-        }
-        // 실패시 수행할 콜백 메서드
-        , err => {
-          console.log(err);
-        } 
-      );
+      if (this.fno === null) {
+        // Axios 요청
+        FeedApi.createFeed(
+          // 요청에 쓸 데이터 전달
+          data
+          // 성공시 수행할 콜백 메서드
+          , res => {
+            console.log(res);
+            this.$router.push('/feed/main')
+          }
+          // 실패시 수행할 콜백 메서드
+          , err => {
+            console.log(err);
+          } 
+        );
+      } else {
+        data.fno = this.fno
+        axios.put('http://localhost:9000/feed/update', data, header())
+          .then(res => {
+            console.log(res)
+            this.$router.push({path:'/feed/feedDetail/'+this.fno})
+          })
+          .catch(err => console.log(err))
+      }
     }
+  },
+  mounted() {
+    this.contains = this.article.content.content
+    this.title = this.article.content.title
+    this.value = this.article.tag
   }
 }
 </script>
