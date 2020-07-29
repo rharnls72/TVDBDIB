@@ -26,6 +26,7 @@ public class WebCurationApplication implements WebMvcConfigurer{
 		"/swagger-resources/**"
 	};
 
+	/*
 	// Interceptor 설치
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
@@ -33,6 +34,7 @@ public class WebCurationApplication implements WebMvcConfigurer{
 			.addPathPatterns("/**") // 모든 요청 인터셉트
 			.excludePathPatterns(EXCLUDE_PATHS); // 인터셉트 하지 않을 경로 설정
 	}
+	*/
 
 	// 전역의 CORS 처리
 	/*
