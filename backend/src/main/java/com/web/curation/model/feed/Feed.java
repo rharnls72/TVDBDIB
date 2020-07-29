@@ -26,9 +26,8 @@ public class Feed {
     private String profile_pic;
     private int reply_num;
     private int like_num;
-    private int liker_uno;
-    private String liker_nick_name;
     private boolean press_like;
+    private String reply_content;
 
     public void setFno(int fno) {
         this.fno = fno;
@@ -117,18 +116,6 @@ public class Feed {
     public int getLike_num() {
         return like_num;
     }
-    public void setLiker_uno(int liker_uno) {
-        this.liker_uno = liker_uno;
-    }
-    public int getLiker_uno() {
-        return liker_uno;
-    }
-    public void setLiker_nick_name(String liker_nick_name) {
-        this.liker_nick_name = liker_nick_name;
-    }
-    public String getLiker_nick_name() {
-        return liker_nick_name;
-    }
     public void setPress_like(boolean press_like) {
         this.press_like = press_like;
     }
@@ -136,11 +123,11 @@ public class Feed {
         return press_like;
     }
 
-    // 좋아요 누른 사람 닉네임을 설정하는 함수
-    public void appendNickName(String str) {
-        if(liker_nick_name == null)
-            liker_nick_name = "";
-        liker_nick_name += str;
-        liker_nick_name += ",";
+    public String getReply_content() {
+        return this.reply_content;
+    }
+
+    public void setReply_content(String reply_content) {
+        this.reply_content = reply_content;
     }
 }

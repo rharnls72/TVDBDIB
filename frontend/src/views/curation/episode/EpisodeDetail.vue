@@ -7,6 +7,7 @@
 <script>
 import EpisodeItem from '@/components/curation/episode/EpisodeItem.vue'
 import axios from 'axios'
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   name: 'EpisodeDetail',
@@ -20,6 +21,9 @@ export default {
     EpisodeItem,
   },
   created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
     axios.get(`http://localhost:9000/episode/${this.id}`)
       .then(res => {
         this.curations = res.data.data

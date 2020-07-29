@@ -1,6 +1,7 @@
 
 package com.web.curation.dao.user;
 
+import com.web.curation.model.following.FollowCnt;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
 
@@ -17,7 +18,7 @@ public interface UserDao {
     User getUserByNickName(String nick_name);
 
     User findUserByEmailAndPassword(User user);
-
+    FollowCnt getFollowCnt(int other_uno, int my_uno);
     int checkPassword(User user);
     int checkNickName(String nick_name);
 

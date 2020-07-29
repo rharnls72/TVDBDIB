@@ -24,9 +24,11 @@ import FindPw from './views/user/FindPw.vue'
 import FindPwComplete from './views/user/FindPwComplete.vue'
 import FindPwRe from './views/user/FindPwRe.vue'
 import IndexCuration from './views/curation/IndexCuration.vue'
+import IndexSearch from './views/search/IndexSearch.vue'
 import Alert from './views/alert/Alert.vue'
 import EpisodeDetail from './views/curation/episode/EpisodeDetail.vue'
-
+import MyPage from './views/account/mine/MyPage.vue'
+import OtherPage from './views/account/your/OtherPage.vue'
 export default [
 
     {
@@ -90,6 +92,11 @@ export default [
         component: IndexCuration
     },
     {
+        path: '/search/main',
+        name: 'IndexSearch',
+        component: IndexSearch
+    },
+    {
         path : '/user/findPw',
         name : 'FindPw',
         component : FindPw
@@ -120,7 +127,7 @@ export default [
         component: FeedItem
     },
     {
-        path: '/feed/feedDetail',
+        path: '/feed/feedDetail/:id',
         name: 'FeedDetail',
         component: feedDetail
     },
@@ -143,5 +150,15 @@ export default [
         path: '/episode/:id',
         name: 'EpisodeDetail',
         component: EpisodeDetail
+    },
+    {
+        path: '/mypage/main',
+        name: 'MyPage',
+        component: MyPage        
+    },
+    {
+        path: '/profile/:nick_name',
+        name: 'OtherPage',
+        component: OtherPage        
     },
 ]

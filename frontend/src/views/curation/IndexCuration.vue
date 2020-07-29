@@ -4,7 +4,7 @@
     <div class="wrapB">
       <h1>큐레이션</h1>
       <div>
-        <EpisodeItem v-for="curation in partCurations" :key="curation.pno" :curation="curation"/>
+        <EpisodeItem v-for="curation in partCurations" :key="curation.key" :curation="curation"/>
         <infinite-loading @infinite="infiniteHandler"></infinite-loading>
       </div>
     </div>
@@ -20,7 +20,9 @@ import EpisodeItem from "../../components/curation/episode/EpisodeItem.vue";
 import InfiniteLoading from 'vue-infinite-loading';
 import Footer from '../../components/common/custom/Footer.vue';
 import IndexCurationHeader from '../../components/curation/IndexCurationHeader.vue'
-import http from "../../api/http-common.js";
+import header from "@/api/header.js"
+import axios from "axios"
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   name: 'IndexCuration',
@@ -31,6 +33,7 @@ export default {
       startPoint: 0,
       interval: 5,
       partCurations: [],
+      loading_complete: false
     }
   },
   props: ["keyword"],
@@ -43,30 +46,54 @@ export default {
   methods: {
     // 2. 5개씩 끊어서 보여주기
     makeCurations() {
+      console.log(this.startPoint);
       let temp = []
       for (let i = this.startPoint; i < this.startPoint + this.interval; i++) {
+        this.curations[i].key = this.curations[i].pno * 10000 + this.curations[i].episode;
         temp.push(this.curations[i])
       }
-      this.partCurations = this.partCurations.concat(temp)
-      console.log(this.partCurations)
+      this.partCurations = this.partCurations.concat(temp);
+      this.startPoint += this.interval;
+      this.loading_complete = true;
+    },
+    makeTotalCuations() {
+      axios.get('http://localhost:9000/episode/following/1', header())
+      .then(res => {
+        console.log(res);
+        this.curations = res.data.data
+        console.log(this.curations)
+        this.makeCurations()
+      })
+      .catch(err => console.error(err))
     },
     // 무한 스크롤 기능 구현
     infiniteHandler($state) {
       setTimeout(() => {
-        this.makeCurations()
+        if (this.loading_complete){
+          this.makeCurations()
+        }
         $state.loaded();
-      }, 500);
-      this.startPoint += this.interval
+      }, 300);
     },
   },
   // 1. 데이터 모두 다 받아오기
   created() {
-    http.get('/episode/following/1')
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+    axios.get('http://localhost:9000/episode/following/1', header())
       .then(res => {
+        console.log(res);
         this.curations = res.data.data
         console.log(this.curations)
+        this.makeCurations()
       })
       .catch(err => console.error(err))
   },
+/*
+  mounted(){
+    this.loading_complete = true;
+  }
+*/
 };
 </script>

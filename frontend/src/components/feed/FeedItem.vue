@@ -115,7 +115,7 @@ import defaultProfile from "../../assets/images/profile_default.png";
 export default {
   data: () => {
     return { defaultImage, defaultProfile };
-  }
+  },
 };
 </script>
 

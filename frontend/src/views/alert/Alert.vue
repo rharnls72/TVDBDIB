@@ -1,14 +1,49 @@
 <template>
-  <div class="user">
-    <div class="wrapC">
-      <button class="btn-bottom" @click="calculate">calculate</button>
-    </div>
+  <div id="app" class="columns">
+    <AlertHeader />
+      <div class="wrapB">
+        <AlertItem :alerts="alerts"/>
+      </div>
+    <Footer />
   </div>
 </template>
 
 <script>
-import "../../components/css/user.scss";
+import "@/components/css/user.scss";
+import http from '@/api/http-common.js';
+import Footer from '@/components/common/custom/Footer.vue';
+import AlertHeader from '@/components/alert/AlertHeader.vue';
+import AlertItem from '@/components/alert/AlertItem.vue';
+import GetUserApi from "@/api/GetUserApi"
+
 export default {
+  name: 'AlertTest',
+   components: {
+    AlertItem,
+    Footer,
+    AlertHeader,
+  },
+
+  data() {
+    return {
+      alerts:[]
+  }
+  },
+
+  created(){
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+      http.get('/alert/list/2')
+        .then(res => {
+          console.log(res);
+          this.alerts = res.data.data;
+          console.log(this.alerts);
+        })
+        .catch(err => console.error(err))
+  },
+
+/*
   mounted() {
     Notification.requestPermission().then(function(result) {
       Notification.permission = result;
@@ -34,6 +69,6 @@ export default {
         };
       }
     },
-  }
+  }*/
 };
 </script>
