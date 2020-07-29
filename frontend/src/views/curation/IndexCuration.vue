@@ -4,6 +4,7 @@
     <div class="wrapB">
       <h1>큐레이션</h1>
       <div>
+        <button @click="makeTotalCuations" >make</button>
         <EpisodeItem v-for="curation in partCurations" :key="curation.pno" :curation="curation"/>
         <infinite-loading @infinite="infiniteHandler"></infinite-loading>
       </div>
@@ -20,7 +21,8 @@ import EpisodeItem from "../../components/curation/episode/EpisodeItem.vue";
 import InfiniteLoading from 'vue-infinite-loading';
 import Footer from '../../components/common/custom/Footer.vue';
 import IndexCurationHeader from '../../components/curation/IndexCurationHeader.vue'
-import http from "../../api/http-common.js";
+import header from "@/api/header.js"
+import axios from "axios"
 
 export default {
   name: 'IndexCuration',
@@ -51,18 +53,28 @@ export default {
       this.partCurations = this.partCurations.concat(temp)
       //console.log(this.partCurations)
     },
+    makeTotalCuations() {
+      axios.get('http://localhost:9000/episode/following/1', header())
+      .then(res => {
+        console.log(res);
+        this.curations = res.data.data
+        console.log(this.curations)
+        this.makeCurations()
+      })
+      .catch(err => console.error(err))
+    },
     // 무한 스크롤 기능 구현
     infiniteHandler($state) {
       setTimeout(() => {
         this.makeCurations()
         $state.loaded();
-      }, 1500);
+      }, 2000);
       this.startPoint += this.interval
     },
   },
   // 1. 데이터 모두 다 받아오기
   created() {
-    http.get('/episode/following/1')
+    axios.get('http://localhost:9000/episode/following/1', header())
       .then(res => {
         console.log(res);
         this.curations = res.data.data
