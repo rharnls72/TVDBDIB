@@ -71,7 +71,7 @@ public class SearchController {
         final BasicResponse result = new BasicResponse();
         result.status = true;
         result.msg = "success";
-        result.data = list;
+        // result.data = list;
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -84,4 +84,5 @@ public class SearchController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
 }

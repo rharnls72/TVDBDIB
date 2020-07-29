@@ -44,6 +44,7 @@ export default {
   methods: {
     // 2. 5개씩 끊어서 보여주기
     makeCurations() {
+      console.log(this.startPoint);
       let temp = []
       for (let i = this.startPoint; i < this.startPoint + this.interval; i++) {
         this.curations[i].key = this.curations[i].pno * 10000 + this.curations[i].episode;
@@ -61,16 +62,16 @@ export default {
         }
         $state.loaded();
       }, 300);
-      
     },
   },
   // 1. 데이터 모두 다 받아오기
   created() {
     http.get('/episode/following/1')
       .then(res => {
+        console.log(res);
         this.curations = res.data.data
         console.log(this.curations)
-        this.makeCurations();
+        this.makeCurations()
       })
       .catch(err => console.error(err))
   },

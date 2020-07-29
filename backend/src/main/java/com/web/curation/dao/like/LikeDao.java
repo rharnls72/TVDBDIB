@@ -29,4 +29,7 @@ public interface LikeDao {
 
     int deleteFeedLike(Like like);
     int deleteFeedReplyLike(Like like);
+
+    // Read(for Program)
+    Like getProgramLikeInfo(Like like);
 }

@@ -123,4 +123,24 @@
             and
             uno = #{uno}
     </delete>
+
+    <!-- Read(for Program) -->
+    <select id="getProgramLikeInfo" resultType="Like">
+        select
+            count(`lno`) as `like_num`
+            , IF((
+                select
+                    count(`lno`)
+                from
+                    program_like
+                where
+                    pno = #{tno}
+                    and
+                    uno = #{uno}
+            ), true, false) as `press_like`
+        from
+            program_like
+        where
+            pno = #{tno}
+    </select>
 </mapper>
