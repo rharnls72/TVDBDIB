@@ -28,7 +28,7 @@ import IndexSearch from './views/search/IndexSearch.vue'
 import Alert from './views/alert/Alert.vue'
 import EpisodeDetail from './views/curation/episode/EpisodeDetail.vue'
 import MyPage from './views/account/mine/MyPage.vue'
-
+import OtherPage from './views/account/your/OtherPage.vue'
 export default [
 
     {
@@ -155,5 +155,10 @@ export default [
         path: '/mypage/main',
         name: 'MyPage',
         component: MyPage        
+    },
+    {
+        path: '/profile/:nick_name',
+        name: 'OtherPage',
+        component: OtherPage        
     },
 ]

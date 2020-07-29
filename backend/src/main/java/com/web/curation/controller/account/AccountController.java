@@ -353,15 +353,18 @@ public class AccountController {
     }
     @GetMapping("/account/followcnt")
     @ApiOperation(value = "팔로우 수")
-    public Object getFollowCount(@RequestParam(required = true) final String nick_name){
-        User user = userDao.getUserByNickName(nick_name);
-        FollowCnt cnt = userDao.getFollowCnt(user.getUno());
+    public Object getFollowCount(@RequestParam(required = true) final String my_nick_name,
+                @RequestParam(required = true) final String other_nick_name){
+        User profile = userDao.getUserByNickName(other_nick_name);
+        User mine = userDao.getUserByNickName(my_nick_name);
+
+        FollowCnt cnt = userDao.getFollowCnt(profile.getUno(), mine.getUno());
         
         final BasicResponse result = new BasicResponse();
         
         if(cnt != null){
             HashMap<String, Object> responseData = new HashMap<>();
-            responseData.put("userInfo", user);
+            responseData.put("userInfo", profile);
             responseData.put("followCnt", cnt);
             result.status = true;
             result.msg = "success";

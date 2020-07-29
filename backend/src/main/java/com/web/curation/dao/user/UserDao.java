@@ -20,7 +20,7 @@ public interface UserDao {
     User getUserByNickName(String nick_name);
 
     User findUserByEmailAndPassword(User user);
-    FollowCnt getFollowCnt(int uno);
+    FollowCnt getFollowCnt(int other_uno, int my_uno);
     int checkPassword(User user);
     int checkNickName(String nick_name);
 
