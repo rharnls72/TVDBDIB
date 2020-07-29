@@ -282,9 +282,12 @@ CREATE TABLE `message` (
 CREATE TABLE `alert` (
     `ano` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
-    `ctype` INT,
+    -- `ctype` INT,
     `cno` INT,
     `atype` INT NOT NULL,
+    `picture` VARCHAR(200),
+    `subject_name` VARCHAR(100),
+    `subject_no` INT,
     `read` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`ano`),
     FOREIGN KEY (`uno`)
