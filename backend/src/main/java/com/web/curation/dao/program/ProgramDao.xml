@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.program.ProgramDao">
+
+    <!-- Read -->
+    <select id="getLikeReplyInfo" resultType="Program">
+        select
+            (
+                SELECT
+                    COUNT(pl.lno)
+                FROM
+                    `program_like` pl
+                WHERE
+                    pl.pno = #{pno}
+            ) AS `like_num`
+            , IF((
+                SELECT
+                    COUNT(pl.lno)
+                FROM
+                    `program_like` pl
+                WHERE
+                    pl.pno = #{pno}
+                    AND
+                    pl.uno = #{uno}
+            ) > 0, true, false) AS `press_like`
+            , IFNULL((
+                SELECT
+                    COUNT(pr.prno)
+                FROM
+                    `program_reply` pr
+                WHERE
+                    pr.pno = #{pno}
+            ), 0) AS `reply_num`
+            , (
+                SELECT
+                    `content`
+                FROM
+                    `program_reply_view` prv
+                WHERE
+                    prv.pno = #{pno}
+                ORDER BY prv.like_num DESC
+                LIMIT 1
+            ) AS `reply_content`
+        from
+            dual
+    </select>
+</mapper>

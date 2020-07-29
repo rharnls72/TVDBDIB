@@ -10,11 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.web.curation.dao.like.LikeDao;
-import com.web.curation.dao.reply.ReplyDao;
+import com.web.curation.dao.program.ProgramDao;
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.like.Like;
 import com.web.curation.model.program.Program;
+import com.web.curation.model.program.ProgramRequest;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -34,10 +33,7 @@ import io.swagger.annotations.ApiOperation;
 public class ProgramController {
 
     @Autowired
-    LikeDao likeDao;
-
-    @Autowired
-    ReplyDao replyDao;
+    private ProgramDao dao;
 
     @GetMapping("/program/detail/{pno}")
     @ApiOperation(value = "프로그램 상세 정보 조회")
@@ -58,16 +54,16 @@ public class ProgramController {
         Program programInfo = new Program();
         ////////////////////////////////////////////////////////////////////////////////////////
 
-        // 좋아요 수, 좋아요 여부
-        Like like = new Like();
-        like.setUno(uno);
-        like.setTno(pno);
-        like = likeDao.getProgramLikeInfo(like);
-        programInfo.setLike_num(like.getLike_num());
-        programInfo.setPress_like(like.isPress_like());
-        // 댓글 수
+        // DB 조회 전 ProgramRequest 설정하기
+        ProgramRequest programReq = new ProgramRequest();
+        programReq.setPno(pno);
+        programReq.setUno(uno);
 
-        // 댓글 1개
+        // 좋아요 수, 좋아요 여부, 댓글 수, 댓글 1개 가져오기
+        Program res = dao.getLikeReplyInfo(programReq);
+
+        // 프로그램 상세정보에 좋아요 수, 좋아요 여부, 댓글 수, 댓글 1개 정보 붙이기
+        programInfo.setLikeReplyInfo(res);
 
         // 프로그램 상세정보를 포함한 응답 객체 반환
         result.status = true;

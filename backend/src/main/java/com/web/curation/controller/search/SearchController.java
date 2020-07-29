@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.web.curation.dao.search.SearchDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.feed.Feed;
 import com.web.curation.model.user.User;
@@ -61,13 +62,13 @@ public class SearchController {
 
     @GetMapping("/search/feed")
     @ApiOperation(value = "피드 태그 검색")
-    public Object searchByFeedTag(@RequestParam(required = true) final String str){
+    public Object searchByFeedTag1(@RequestParam(required = true) final String str){
         ResponseEntity<BasicResponse> response = null;
-        List<Feed> list = searchDao;
+        // List<Feed> list = searchDao;
         final BasicResponse result = new BasicResponse();
         result.status = true;
         result.msg = "success";
-        result.data = list;
+        // result.data = list;
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

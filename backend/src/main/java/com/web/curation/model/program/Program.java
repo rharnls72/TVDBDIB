@@ -22,7 +22,7 @@ public class Program {
     private int like_num;
     private int reply_num;
     private boolean press_like;
-    private Reply reply;
+    private String reply_content;
 
     public int getPno() {
         return this.pno;
@@ -56,12 +56,19 @@ public class Program {
         this.press_like = press_like;
     }
 
-    public Reply getReply() {
-        return this.reply;
+    public String getReply_content() {
+        return this.reply_content;
     }
 
-    public void setReply(Reply reply) {
-        this.reply = reply;
+    public void setReply_content(String reply_content) {
+        this.reply_content = reply_content;
+    }
+
+    public void setLikeReplyInfo(Program res) {
+        like_num = res.like_num;
+        press_like = res.press_like;
+        reply_num = res.reply_num;
+        reply_content = res.reply_content;
     }
 
 }
