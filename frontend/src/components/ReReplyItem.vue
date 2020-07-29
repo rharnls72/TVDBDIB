@@ -11,15 +11,25 @@
 </template>
 
 <script>
+import axios from 'axios'
+import header from '@/api/header.js'
+import {mapState} from 'vuex'
+
 export default {
   name: "ReReplyItem",
   props: {
     replies: Array,
+    fno: Number,
   },
   data() {
     return {
       content: null,
     }
+  },
+  computed: {
+    ...mapState(['userInfo'])
+  },
+  methods: {
   }
 }
 </script>

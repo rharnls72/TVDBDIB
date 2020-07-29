@@ -4,7 +4,7 @@
     <IndexCurationHeader/>
     <div class="wrapB">
       <h1>DETAIL</h1>
-      <feedArticleItem style="border-bottom: none;" v-if="isTakeFeed" :article="feeds"/>
+      <FeedArticleDetail style="border-bottom: none;" v-if="isTakeFeed" :fno="id" :article="feeds"/>
     </div>
     <Footer/>
     <!---->
@@ -20,7 +20,7 @@ import Footer from '@/components/common/custom/Footer.vue';
 
 import defaultImage from "@/assets/images/img-placeholder.png"
 import defaultProfile from "@/assets/images/profile_default.png"
-import feedArticleItem from "@/components/feed/feedArticleItem.vue"
+import FeedArticleDetail from "@/components/feed/FeedArticleDetail.vue"
 
 import axios from "axios"
 
@@ -41,7 +41,7 @@ export default {
     }
   },
   components: {
-    feedArticleItem,
+    FeedArticleDetail,
     IndexCurationHeader,
     Footer,
   },

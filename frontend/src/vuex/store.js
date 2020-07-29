@@ -10,7 +10,8 @@ const state = {
     isUser: false,
     userInfo: {},
 
-    loginEmail: ""
+    loginEmail: "",
+    updateFeed: null,
 }
 
 export default new Vuex.Store({

@@ -85,6 +85,9 @@ export default {
       isCalendar: true,
     }
   },
+  props: {
+    article: Object,
+  },
   methods: {
     moveMain() {
       console.log(1)
