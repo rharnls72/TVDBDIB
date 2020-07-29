@@ -11,6 +11,7 @@ public class FollowCnt {
     private int feed_cnt;
     private int follower_cnt;
     private int following_cnt;
+    private int is_follow;
 
     public int getFeed_cnt() {
         return feed_cnt;
@@ -34,6 +35,14 @@ public class FollowCnt {
 
     public void setFollowing_cnt(int following_cnt) {
         this.following_cnt = following_cnt;
+    }
+
+    public int getIs_follow() {
+        return is_follow;
+    }
+
+    public void setIs_follow(int is_follow) {
+        this.is_follow = is_follow;
     }
 
 }
