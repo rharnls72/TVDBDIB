@@ -97,6 +97,7 @@ export default {
         // 성공시 수행할 콜백 메서드
         , res => {
           console.log(res);
+          this.$router.push('/feed/main')
         }
         // 실패시 수행할 콜백 메서드
         , err => {
