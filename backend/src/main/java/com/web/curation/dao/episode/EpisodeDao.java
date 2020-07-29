@@ -1,8 +1,7 @@
 package com.web.curation.dao.episode;
 
-import java.util.List;
-
-import com.web.curation.model.episode.Episode;
+import com.web.curation.model.episode.EpisodeDB;
+import com.web.curation.model.episode.EpisodeResponse;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -11,15 +10,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EpisodeDao {
     // Create
-    int addNewEpisode(Episode episode);
+    int addNewEpisode(EpisodeResponse episode);
 
     // Read
-    List<Episode> getAllEpisodeList(int uno, int num);
-    List<Episode> getEpisodeList(int pno);
-    Episode getEpisodeDetail(int eno);
+    int checkDataExist(EpisodeResponse episode);
+    EpisodeDB getLikeReplyInfo(EpisodeResponse episode);
 
     // Update
-    int modifyEpisode(Episode episode);
+    int increaseShare(int eno);
 
     // Delete
     int deleteEpisode(int eno);

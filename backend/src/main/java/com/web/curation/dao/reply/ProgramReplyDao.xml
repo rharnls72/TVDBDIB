@@ -9,13 +9,17 @@
         insert into
             program_reply(
                 pno
+                <if test="parent_reply > 0">
                 , parent_reply
+                </if>
                 , uno
                 , content
             )
         values(
             #{no}
+            <if test="parent_reply > 0">
             , #{parent_reply}
+            </if>
             , #{writer_uno}
             , #{content}
         )
@@ -24,17 +28,42 @@
     <!-- Read -->
     <select id="getReplyList" resultType="Reply">
         SELECT 
-            sub.prno                AS `no`,
-            sub.parent_reply        AS `parent_reply`,
-            sub.content             AS `content`,
-            sub.write_date          AS `write_date`,
-            sub.writer_uno          AS `writer_uno`,
-            sub.writer_nick_name    AS `writer_nick_name`,
-            sub.writer_profile_pic  AS `writer_profile_pic`,
-            sub.like_num            AS `like_num`,
-            sub.reply_num           AS `reply_num`,
-            liker.uno               AS `liker_uno`,
-            liker.nick_name         AS `liker_nick_name`
+            sub.prno                  AS `no`
+            , sub.parent_reply        AS `parent_reply`
+            , sub.content             AS `content`
+            , sub.write_date          AS `write_date`
+            , sub.writer_uno          AS `writer_uno`
+            , sub.writer_nick_name    AS `writer_nick_name`
+            , sub.writer_profile_pic  AS `writer_profile_pic`
+            , sub.like_num            AS `like_num`
+            , IF((
+                SELECT
+                    COUNT(prl.lno)
+                FROM
+                    `program_reply_like` prl
+                WHERE
+                    prl.prno = sub.prno
+                    AND
+                    prl.uno = #{uno}
+            ) > 0, true, false) AS `press_like`
+            , IFNULL((
+                SELECT
+                    COUNT(pr.prno)
+                FROM
+                    `program_reply` pr
+                WHERE
+                    pr.parent_reply = sub.prno
+            ), 0) AS `reply_num`
+            , (
+                SELECT
+                    `content`
+                FROM
+                    `program_reply_view` prv
+                WHERE
+                    prv.parent_reply = sub.prno
+                ORDER BY prv.like_num DESC
+                LIMIT 1
+            ) AS `re_content`
         FROM
             (
             SELECT 
@@ -46,13 +75,9 @@
                 AND
                 `parent_reply` IS NULL
             ORDER BY `like_num` DESC
-            LIMIT ${start} , 20
+            LIMIT ${num} , 20
             ) sub
-                LEFT OUTER JOIN
-            `program_reply_like` l ON sub.prno = l.prno
-                LEFT OUTER JOIN
-            `user` liker ON l.uno = liker.uno
-        ORDER BY `no` , `like_num` DESC;
+        ORDER BY `like_num` DESC, `no`
     </select>
 
     <select id="getReReplyList" resultType="Reply">
@@ -64,9 +89,17 @@
             sub.writer_uno          AS `writer_uno`,
             sub.writer_nick_name    AS `writer_nick_name`,
             sub.writer_profile_pic  AS `writer_profile_pic`,
-            sub.like_num            AS `like_num`,
-            liker.uno               AS `liker_uno`,
-            liker.nick_name         AS `liker_nick_name`
+            sub.like_num            AS `like_num`
+            , IF((
+                SELECT
+                    COUNT(prl.lno)
+                FROM
+                    `program_reply_like` prl
+                WHERE
+                    prl.prno = sub.prno
+                    AND
+                    prl.uno = #{uno}
+            ) > 0, true, false) AS `press_like`
         FROM
             (
             SELECT 
@@ -76,13 +109,9 @@
             WHERE
                 `parent_reply` = #{no}
             ORDER BY `like_num` DESC
-            LIMIT ${start} , 20
+            LIMIT ${num} , 20
             ) sub
-                LEFT OUTER JOIN
-            `program_reply_like` l ON sub.prno = l.prno
-                LEFT OUTER JOIN
-            `user` liker ON l.uno = liker.uno
-        ORDER BY `no` , `like_num` DESC;
+        ORDER BY `like_num` DESC, `no`
     </select>
 
     <!-- Update -->

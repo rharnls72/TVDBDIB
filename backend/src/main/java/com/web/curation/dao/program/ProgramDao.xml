@@ -5,86 +5,46 @@
     
 <mapper namespace="com.web.curation.dao.program.ProgramDao">
 
-    <!-- Create -->
-    <insert id="addNewProgram">
-        insert into
-            program(
-                pno
-                , name
-                , broadcaster
-                , genre
-                , season
-                , alias
-                , start_date
-                , end_date
-                , director
-                , cast
-                , description
-                , broadcast_time
-                , thumbnail
-            )
-        values(
-            #{pno}
-            , #{name}
-            , #{broadcaster}
-            , #{genre}
-            , #{season}
-            , #{alias}
-            , #{start_date}
-            , #{end_date}
-            , #{director}
-            , #{cast}
-            , #{description}
-            , #{broadcast_time}
-            , #{thumbnail}
-        )
-    </insert>
-
     <!-- Read -->
-    <select id="getProgramList" resultType="Program">
+    <select id="getLikeReplyInfo" resultType="Program">
         select
-            *
+            (
+                SELECT
+                    COUNT(pl.lno)
+                FROM
+                    `program_like` pl
+                WHERE
+                    pl.pno = #{pno}
+            ) AS `like_num`
+            , IF((
+                SELECT
+                    COUNT(pl.lno)
+                FROM
+                    `program_like` pl
+                WHERE
+                    pl.pno = #{pno}
+                    AND
+                    pl.uno = #{uno}
+            ) > 0, true, false) AS `press_like`
+            , IFNULL((
+                SELECT
+                    COUNT(pr.prno)
+                FROM
+                    `program_reply` pr
+                WHERE
+                    pr.pno = #{pno}
+            ), 0) AS `reply_num`
+            , (
+                SELECT
+                    `content`
+                FROM
+                    `program_reply_view` prv
+                WHERE
+                    prv.pno = #{pno}
+                ORDER BY prv.like_num DESC
+                LIMIT 1
+            ) AS `reply_content`
         from
-            program
-        order by
-            pno desc;
+            dual
     </select>
-    <select id="getProgramDetail" resultType="Program">
-        select
-            *
-        from
-            program
-        where
-            pno = #{value}
-    </select>
-
-    <!-- Update -->
-    <update id="modifyProgram">
-        update
-            program
-        set
-            name                = #{name}
-            , broadcaster       = #{broadcaster}
-            , genre             = #{genre}
-            , season            = #{season}
-            , alias             = #{alias}
-            <!-- , start_date        = #{start_date} -->
-            <!-- , end_date          = #{end_date} -->
-            , director          = #{director}
-            , cast              = #{cast}
-            , description       = #{description}
-            <!-- , broadcast_time    = #{broadcast_time} -->
-            , thumbnail         = #{thumbnail}
-        where
-            pno = #{pno}
-    </update>
-
-    <!-- Delete -->
-    <delete id="deleteProgram">
-        delete from
-            program
-        where
-            pno = #{value}
-    </delete>
-
 </mapper>
