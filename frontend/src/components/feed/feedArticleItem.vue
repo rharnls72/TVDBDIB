@@ -8,8 +8,18 @@
         </div>
         <p class="date">9시간 후</p>
       </div>
-      <div class="content">
-        <p>{{feedTitle}}</p>
+      <div v-if="!option" class="content d-flex flex-comlumn justify-content-between align-items-center my-2">
+        <div>{{feedTitle}}</div>
+        <b-icon v-b-toggle.sidebar-1 icon="three-dots-vertical" font-scale="1.3"></b-icon>
+        <b-sidebar id="sidebar-1" shadow>
+          <div class="ml-3">
+            <div>수정</div>
+            <div>삭제</div>
+          </div>
+        </b-sidebar>
+      </div>
+      <div v-else class="content my-2">
+        <div>{{feedTitle}}</div>
       </div>
     </div>
     <div class="feed-card">
@@ -69,13 +79,15 @@
       <span v-else>
         <span>{{cc.content}}</span><br>
         <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
-        <span class="moreView">댓글 {{reply_num}}개</span>
+        <span v-if="!!option" class="moreView">댓글 {{reply_num}}개</span>
       </span>
     </div>
+    <ReplyItem v-if="!option"/>
   </div>
 </template>
 
 <script>
+import ReplyItem from "@/components/ReplyItem.vue"
 import defaultImage from "../../assets/images/img-placeholder.png";
 import defaultProfile from "../../assets/images/profile_default.png";
 import {mapState} from "vuex"
@@ -99,6 +111,9 @@ export default {
       feedTitle: '제목제목',
     };
   },
+  components: {
+    ReplyItem,
+  },
   computed: {
     ...mapState([
       'userInfo',
@@ -106,6 +121,7 @@ export default {
   },
   props:{
     article: Object,
+    option: Number,
   },
   methods: {
     changeIsLong() {
@@ -144,7 +160,7 @@ export default {
     console.log(this.article.content)
     this.cc = JSON.parse(this.article.content)
     console.log(this.cc)
-    if (this.cc.content.length > 10) {this.isLong=true}
+    if (this.cc.content.length > 10 && !!this.option) {this.isLong=true}
   }
 };
 </script>
