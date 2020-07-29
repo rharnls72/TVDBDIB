@@ -7,7 +7,14 @@
             <b-icon-search></b-icon-search>
           </div>
         </div>
-        <b-form-input type="search" placeholder="검색" ref="searchInput" v-model="word" class="p-0" style="height: auto; border: 0px; background-color: #eee;"></b-form-input>
+        <b-form-input
+          type="search"
+          placeholder="검색"
+          ref="searchInput"
+          v-model="word"
+          class="p-0"
+          style="height: auto; border: 0px; background-color: #eee;">
+        </b-form-input>
       </b-input-group>
     </b-nav>
     <b-tabs class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
@@ -20,12 +27,20 @@
 </template>
 
 <script>
+import SearchApi from '@/api/SearchApi.js';
+
 export default {
   name: 'IndexSearchHeader',
   data() {
     return {
       tabState: 3,
       word: "",
+      users: []
+    }
+  },
+  watch: {
+    word(newWord) {
+      this.getUserList(newWord);
     }
   },
   methods: {
@@ -39,6 +54,18 @@ export default {
     moveTab(name) {
       this.$router.push({name: name})
     },
+    getUserList(newWord) {
+      SearchApi.getUserList(
+        newWord,
+        res => {
+          console.log(res.data.data);
+          this.users = res.data.data;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
   },
 }
 </script>
