@@ -2,8 +2,7 @@
   <div>
     <MyPageHeader :info="info"/>
     <h1>내 프로필</h1>
-    <h1>{{ email }}</h1>
-    <MyPageInformation />
+    <MyPageInformation :info="info" :followcnt="followcnt"/>
     <Footer />
   </div>
 </template>
@@ -18,8 +17,8 @@ export default {
   name: 'MyPage',
   data() {
     return {
-      email: "",
       info: {},
+      followcnt: {},
     }
   },
   components: {
@@ -30,21 +29,12 @@ export default {
   methods: {
 
   },
-  // created() {
-  //   this.email = this.$store.state.userInfo.email;
-  //   console.log(this.email);
-  //   http.get('/account/profileinfo?email=' + this.email)
-  //     .then(res => {
-  //       console.log(res)
-  //     })
-  //     .catch(err => console.error(err))
-  // },
   mounted() {
-    this.email = this.$store.state.userInfo.email;
-    console.log(this.email);
-    http.get('/account/profileinfo?email=' + this.email)
+    this.info = this.$store.state.userInfo;
+    http.get('/account/followcnt?uno=' + this.info.uno)
       .then(res => {
-        console.log(res)
+        this.followcnt = res.data.data;
+        console.log(this.followcnt);
       })
       .catch(err => console.error(err))
   }
