@@ -31,10 +31,9 @@ export default {
   },
   mounted() {
     this.info = this.$store.state.userInfo;
-    http.get('/account/followcnt?uno=' + this.info.uno)
+    http.get('/account/followcnt?nick_name=' + this.info.nick_name)
       .then(res => {
-        this.followcnt = res.data.data;
-        console.log(this.followcnt);
+        this.followcnt = res.data.data.followCnt;
       })
       .catch(err => console.error(err))
   }

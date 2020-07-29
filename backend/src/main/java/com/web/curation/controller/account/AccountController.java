@@ -157,16 +157,6 @@ public class AccountController {
         if(n == 1) {
             result.status = true;
             result.msg = "success";
-            /* ===========================================================================================
-            try {
-                sendJoinMail(request.getEmail(), request.getNick_name());
-            } catch (Exception e) {
-                e.printStackTrace();
-                result.status = false;
-                result.msg = "메일 전송 실패";
-                return new ResponseEntity<>(result, HttpStatus.OK);
-            }
-            */
             mailConfig.sendJoinMail(sender, request.getEmail(), request.getNick_name());
         }
         // 아니면 오류가 난거
@@ -363,15 +353,19 @@ public class AccountController {
     }
     @GetMapping("/account/followcnt")
     @ApiOperation(value = "팔로우 수")
-    public Object getFollowCount(@RequestParam(required = true) final int uno){
-        FollowCnt cnt = userDao.getFollowCnt(uno);
+    public Object getFollowCount(@RequestParam(required = true) final String nick_name){
+        User user = userDao.getUserByNickName(nick_name);
+        FollowCnt cnt = userDao.getFollowCnt(user.getUno());
         
         final BasicResponse result = new BasicResponse();
         
         if(cnt != null){
+            HashMap<String, Object> responseData = new HashMap<>();
+            responseData.put("userInfo", user);
+            responseData.put("followCnt", cnt);
             result.status = true;
             result.msg = "success";
-            result.data = cnt;
+            result.data = responseData;
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
         result.status = false;
