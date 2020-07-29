@@ -1,20 +1,20 @@
 <template>
   <div>
-    <MyPageHeader :info="info"/>
-    <h1>내 프로필</h1>
-    <MyPageInformation :info="info" :followcnt="followcnt"/>
+    <OtherPageHeader :info="info"/>
+    <h1>다른 프로필</h1>
+    <OtherPageInformation :info="info" :followcnt="followcnt"/>
     <Footer />
   </div>
 </template>
 
 <script>
-import MyPageHeader from '@/components/account/mine/MyPageHeader.vue'
-import MyPageInformation from '@/components/account/mine/MyPageInformation.vue'
+import OtherPageHeader from '@/components/account/your/OtherPageHeader.vue'
+import OtherPageInformation from '@/components/account/your/OtherPageInformation.vue'
 import Footer from '@/components/common/custom/Footer.vue'
 import AccountApi from "@/api/AccountApi";
 
 export default {
-  name: 'MyPage',
+  name: 'OtherPage',
   data() {
     return {
       info: {},
@@ -22,8 +22,8 @@ export default {
     }
   },
   components: {
-    MyPageHeader,
-    MyPageInformation,
+    OtherPageHeader,
+    OtherPageInformation,
     Footer,
   },
   methods: {
@@ -32,7 +32,7 @@ export default {
   mounted() {
     let data = {
         my_nick_name : this.$store.state.userInfo.nick_name,
-        other_nick_name: this.$store.state.userInfo.nick_name
+        other_nick_name: this.$route.params.nick_name
       };
     AccountApi.requestProfile(
       data,
@@ -44,7 +44,6 @@ export default {
         this.$router.push({name:'Errors', query: {message: error.msg}})
       }
     );
-
   }
 }
 </script>

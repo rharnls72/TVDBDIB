@@ -1,9 +1,9 @@
 package com.web.curation.dao.reply;
 
 import java.util.List;
-import java.util.Map;
 
 import com.web.curation.model.reply.Reply;
+import com.web.curation.model.reply.ReplyRequest;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -15,8 +15,8 @@ public interface ProgramReplyDao extends ReplyDao {
     int createReply(Reply reply);
 
     // Read
-    List<Reply> getReplyList(Map<String, Object> param);
-    List<Reply> getReReplyList(Map<String, Object> param);
+    List<Reply> getReplyList(ReplyRequest req);
+    List<Reply> getReReplyList(ReplyRequest req);
 
     // Update
     int modifyReply(Reply reply);
