@@ -23,17 +23,42 @@
     <!-- Read -->
     <select id="getReplyList" resultType="Reply">
         SELECT 
-            sub.erno                AS `no`,
-            sub.parent_reply        AS `parent_reply`,
-            sub.content             AS `content`,
-            sub.write_date          AS `write_date`,
-            sub.writer_uno          AS `writer_uno`,
-            sub.writer_nick_name    AS `writer_nick_name`,
-            sub.writer_profile_pic  AS `writer_profile_pic`,
-            sub.like_num            AS `like_num`,
-            sub.reply_num           AS `reply_num`,
-            liker.uno               AS `liker_uno`,
-            liker.nick_name         AS `liker_nick_name`
+            sub.erno                  AS `no`
+            , sub.parent_reply        AS `parent_reply`
+            , sub.content             AS `content`
+            , sub.write_date          AS `write_date`
+            , sub.writer_uno          AS `writer_uno`
+            , sub.writer_nick_name    AS `writer_nick_name`
+            , sub.writer_profile_pic  AS `writer_profile_pic`
+            , sub.like_num            AS `like_num`
+            , IF((
+                SELECT
+                    COUNT(erl.lno)
+                FROM
+                    `episode_reply_like` erl
+                WHERE
+                    erl.erno = sub.erno
+                    AND
+                    erl.uno = #{uno}
+            ) > 0, true, false) AS `press_like`
+            , IFNULL((
+                SELECT
+                    COUNT(er.erno)
+                FROM
+                    `episode_reply` er
+                WHERE
+                    er.parent_reply = sub.erno
+            ), 0) AS `reply_num`
+            , (
+                SELECT
+                    `content`
+                FROM
+                    `episode_reply_view` erv
+                WHERE
+                    erv.parent_reply = sub.erno
+                ORDER BY erv.like_num DESC
+                LIMIT 1
+            ) AS `re_content`
         FROM
             (
             SELECT 
@@ -45,13 +70,9 @@
                 AND
                 `parent_reply` IS NULL
             ORDER BY `like_num` DESC
-            LIMIT ${start} , 20
+            LIMIT ${num} , 20
             ) sub
-                LEFT OUTER JOIN
-            `episode_reply_like` l ON sub.erno = l.erno
-                LEFT OUTER JOIN
-            `user` liker ON l.uno = liker.uno
-        ORDER BY `no` , `like_num` DESC;
+        ORDER BY `like_num` DESC, `no`
     </select>
 
     <select id="getReReplyList" resultType="Reply">
@@ -63,9 +84,17 @@
             sub.writer_uno          AS `writer_uno`,
             sub.writer_nick_name    AS `writer_nick_name`,
             sub.writer_profile_pic  AS `writer_profile_pic`,
-            sub.like_num            AS `like_num`,
-            liker.uno               AS `liker_uno`,
-            liker.nick_name         AS `liker_nick_name`
+            sub.like_num            AS `like_num`
+            , IF((
+                SELECT
+                    COUNT(erl.lno)
+                FROM
+                    `episode_reply_like` erl
+                WHERE
+                    erl.erno = sub.erno
+                    AND
+                    erl.uno = #{uno}
+            ) > 0, true, false) AS `press_like`
         FROM
             (
             SELECT 
@@ -75,13 +104,9 @@
             WHERE
                 `parent_reply` = #{no}
             ORDER BY `like_num` DESC
-            LIMIT ${start} , 20
+            LIMIT ${num} , 20
             ) sub
-                LEFT OUTER JOIN
-            `episode_reply_like` l ON sub.erno = l.erno
-                LEFT OUTER JOIN
-            `user` liker ON l.uno = liker.uno
-        ORDER BY `no` , `like_num` DESC;
+        ORDER BY `like_num` DESC, `no`
     </select>
 
     <!-- Update -->

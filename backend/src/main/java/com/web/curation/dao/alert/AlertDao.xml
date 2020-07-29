@@ -68,4 +68,46 @@
             ano = #{value}
     </delete>
 
+    <select id="getInfoByUser" resultType="Alert">
+        select profile_pic as picture, nick_name as subject_name, uno as subject_no
+        from user
+        where 
+            uno = #{value}
+    </select>
+
+    <select id="getInfoByFeedLike" resultType="Alert">
+        select user.profile_pic as picture, user.nick_name as subject_name, feed.fno as subject_no
+        from user, feed
+        where
+            user.uno = 
+                (select uno
+                from feed_like
+                where feed_like.lno = #{value})
+            and feed.fno = 
+                (select fno
+                from feed_like
+                where feed_like.lno = #{value})
+    </select>
+
+    <select id="getInfoByFeedReply" resultType="Alert">
+        select user.profile_pic as picture, user.nick_name as subject_name, feed.fno as subject_no
+        from user, feed
+        where
+            user.uno = 
+                (select uno
+                from feed_reply
+                where feed_like.frno = #{value})
+            and feed.fno = 
+                (select fno
+                from feed_reply
+                where feed_reply.frno = #{value})
+    </select>
+
+    <select id="getInfoByFeed" resultType="Alert">
+        select user.profile_pic as picture, user.nick_name as subject_name, feed.fno as subject_no
+        from user, feed
+        where 
+            feed.fno = #{value}
+            and feed.uno = user.uno
+    </select>
 </mapper>

@@ -18,6 +18,7 @@ public class JWTInterceptor implements HandlerInterceptor {
     @Autowired
     private JWTService jwtService;
 
+    @SuppressWarnings("unchecked")
     @Override
     @SuppressWarnings("unchecked")
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)

@@ -24,6 +24,7 @@ import FindPw from './views/user/FindPw.vue'
 import FindPwComplete from './views/user/FindPwComplete.vue'
 import FindPwRe from './views/user/FindPwRe.vue'
 import IndexCuration from './views/curation/IndexCuration.vue'
+import IndexSearch from './views/search/IndexSearch.vue'
 import Alert from './views/alert/Alert.vue'
 import EpisodeDetail from './views/curation/episode/EpisodeDetail.vue'
 import MyPage from './views/account/mine/MyPage.vue'
@@ -91,6 +92,11 @@ export default [
         component: IndexCuration
     },
     {
+        path: '/search/main',
+        name: 'IndexSearch',
+        component: IndexSearch
+    },
+    {
         path : '/user/findPw',
         name : 'FindPw',
         component : FindPw
@@ -146,7 +152,7 @@ export default [
         component: EpisodeDetail
     },
     {
-        path: '/:nick_name',
+        path: '/mypage/main',
         name: 'MyPage',
         component: MyPage        
     },
