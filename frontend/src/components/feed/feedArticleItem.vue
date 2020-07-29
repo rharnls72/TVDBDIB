@@ -8,8 +8,18 @@
         </div>
         <p class="date">9시간 후</p>
       </div>
-      <div class="content">
-        <p>{{feedTitle}}</p>
+      <div v-if="!option" class="content d-flex flex-comlumn justify-content-between align-items-center my-2">
+        <div>{{feedTitle}}</div>
+        <b-icon v-b-toggle.sidebar-1 icon="three-dots-vertical" font-scale="1.3"></b-icon>
+        <b-sidebar id="sidebar-1" shadow>
+          <div class="ml-3">
+            <div>수정</div>
+            <div>삭제</div>
+          </div>
+        </b-sidebar>
+      </div>
+      <div v-else class="content my-2">
+        <div>{{feedTitle}}</div>
       </div>
     </div>
     <div class="feed-card">

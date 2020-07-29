@@ -6,7 +6,7 @@
     </div>
     <div class="mt-2 pl-2 pr-2">
       <div v-for="r in replies" :key="r.id">
-        <p>{{r.user}} {{r.contents}}</p>
+        <div>{{r.user}} {{r.contents}}</div>
         <ReReplyItem :replies="reReplies"/>
       </div>
     </div>
@@ -15,6 +15,8 @@
 
 <script>
 import ReReplyItem from "@/components/ReReplyItem.vue"
+import axios from "axios"
+
 export default {
   name: "ReplyItem",
   data() {
@@ -28,8 +30,13 @@ export default {
         {id:5, user: 'chsmd', contents:'소통'}, 
         {id:6, user: 'chsmd', contents:'소통'}, 
       ],
-      reReplies: ['소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ','소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ'],
+      reReplies: [
+        {id:1, user: 'chsmd', contents:'소통'}, 
+        {id:2, user: 'chsmd', contents:'소통'},
+      ],
     }
+  },
+  methods: {
   },
   components: {
     ReReplyItem,
