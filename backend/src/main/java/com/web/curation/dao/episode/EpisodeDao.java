@@ -1,6 +1,7 @@
 package com.web.curation.dao.episode;
 
 import com.web.curation.model.episode.EpisodeDB;
+import com.web.curation.model.episode.EpisodeResponse;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -9,10 +10,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EpisodeDao {
     // Create
-    int addNewEpisode(EpisodeDB episode);
+    int addNewEpisode(EpisodeResponse episode);
 
     // Read
-    EpisodeDB getLikeReplyInfo(EpisodeDB episode);
+    int checkDataExist(EpisodeResponse episode);
+    EpisodeDB getLikeReplyInfo(EpisodeResponse episode);
 
     // Update
     int increaseShare(int eno);

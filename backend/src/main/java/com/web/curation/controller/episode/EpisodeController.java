@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,9 +19,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.web.curation.dao.episode.EpisodeDao;
 import com.web.curation.dao.following.FollowingDao;
 import com.web.curation.model.BasicResponse;
+import com.web.curation.model.episode.EpisodeDB;
 import com.web.curation.model.episode.EpisodeResponse;
 import com.web.curation.model.program.Program;
 
@@ -50,13 +55,39 @@ public class EpisodeController {
     static String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
     static String API_KEY = "1436d388221956af7b6cd27a6a7ec9d8";
 
+    @PutMapping("/episode/increase/share")
+    @ApiOperation(value = "에피소드 공유 수 증가")
+    public Object increaseShare(@RequestBody EpisodeDB req) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        // 공유 수 증가
+        int n = dao.increaseShare(req.getEno());
+
+        // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
+        if(n != 1) {
+            result.status = false;
+            result.msg = "Update 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+        // 공유 수 증가 완료
+        result.status = true;
+        result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
     /* 이 아래로 TMDB API 이용하는 파트 */
     @GetMapping("/episode/following/{uno}")
     @ApiOperation(value = "팔로우중인 프로그램의 에피소드 목록을 최신순으로 조회")
-    public Object getEpisodeListFromAPI(@PathVariable("uno") int uno) {
+    public Object getEpisodeListFromAPI(@PathVariable("uno") int uno, HttpServletRequest req) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
         RestTemplate restTemplate = new RestTemplate();
+
+        // 나중엔 토큰에서 유저 번호를 뽑아 써야함
+        // int uno = ((User) req.getAttribute("User")).getUno();
 
         // 팔로우중인 프로그램 리스트 조회
         //List<Program> programList = followdao.getProgramFollowings(uno);
@@ -124,6 +155,29 @@ public class EpisodeController {
                     return t1.compareTo(t2);
 			}
         });
+
+        ///
+        // 가져오는 Episode 수 만큼 DB 쿼리 최대 3번 최소 2번 요청...
+        ///
+        /////////////////////////////////////////////////////////////////////////////////////////////////// 정상작동할까요?
+        // 각 에피소드들에 대해 DB 에 존재하는지 확인, 존재하지 않으면 DB 에 추가
+        // + 추가정보(좋아요 수, 댓글 수 등) 구하기
+        for(EpisodeResponse episode : episodeList) {
+            // DB 에 존재하는지 확인
+            int n = dao.checkDataExist(episode);
+            
+            // DB 에 존재하지 않으면 추가
+            if(n == 0) {
+                dao.addNewEpisode(episode);
+            }
+            
+            // 각 에피소드 정보에 유저 번호 추가하기
+            episode.setUno(uno);
+
+            // 좋아요 수, 댓글 수 등 정보 구하기
+            episode.setAdditionalData(dao.getLikeReplyInfo(episode));
+        }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
         
         // 에피소드 목록을 포함한 응답 객체 반환
         result.status = true;
@@ -200,8 +254,8 @@ public class EpisodeController {
     @GetMapping("/episode/{pno}/{season}/{epno}")
     @ApiOperation(value = "에피소드 상세정보 조회")
     public Object getEpisodeDetailFromAPI(@PathVariable("pno") int pno, @PathVariable("season") int season,
-                                                                        @PathVariable("epno") int epno) {
-        // final BasicResponse result = new BasicResponse();
+                                                                        @PathVariable("epno") int epno, HttpServletRequest req) {
+        final BasicResponse result = new BasicResponse();
         RestTemplate restTemplate = new RestTemplate();
                                                                             
         // 일단 프로그램 (시즌 말고 그보다 더 상위인 프로그램) 정보가 필요하다. 프로그램 이름은 띄워줘야 하잖아...
@@ -227,7 +281,26 @@ public class EpisodeController {
         JSONObject detail = episodes.optJSONObject(epno-1); // episodes 배열 중에서 찾는 에피소드 번호에 해당하는 부분만 있음 된다.
         EpisodeResponse e = episodeSetter(program, epno, detail, " "); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
 
-        return e;
+        ///
+        // 가져오는 Episode 수 만큼 DB 쿼리 최대 3번 최소 2번 요청...
+        ///
+        /////////////////////////////////////////////////////////////////////////////////////////////////// 정상작동할까요?
+        // 에피소드에 대해 추가정보(좋아요 수, 댓글 수 등) 구하기
+        // 각 에피소드 정보에 유저 번호 추가하기
+        int uno = 1;
+        // int uno = ((User) req.getAttribute("User")).getUno();
+
+        e.setUno(uno);
+
+        // 좋아요 수, 댓글 수 등 정보 구하기
+        e.setAdditionalData(dao.getLikeReplyInfo(e));
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // 에피소드 를 포함한 응답 객체 반환
+        result.status = true;
+        result.msg = "success";
+        result.data = e;
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
 

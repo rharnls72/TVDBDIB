@@ -28,6 +28,7 @@ public class EpisodeResponse {
 	private ArrayList<String> guest;
 	
 	// Additional attribute
+	private int uno;
 	private int eno;
 	private int like_num;
 	private boolean press_like;
@@ -141,6 +142,13 @@ public class EpisodeResponse {
 	}
 
 
+	public int getUno() {
+		return this.uno;
+	}
+
+	public void setUno(int uno) {
+		this.uno = uno;
+	}
 
 	public int getEno() {
 		return this.eno;
@@ -196,5 +204,15 @@ public class EpisodeResponse {
 
 	public void setDibs_num(int dibs_num) {
 		this.dibs_num = dibs_num;
+	}
+
+	public void setAdditionalData(EpisodeDB episode) {
+		eno = episode.getEno();
+		like_num = episode.getLike_num();
+		press_like = episode.isPress_like();
+		reply_num = episode.getReply_num();
+		reply_content = episode.getReply_content();
+		share_num = episode.getShare_num();
+		dibs_num = episode.getDibs_num();
 	}
 }

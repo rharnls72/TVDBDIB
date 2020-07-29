@@ -21,7 +21,87 @@
     </insert>
 
     <!-- Read -->
+    <select id="checkDataExist" resultType="int">
+        select
+            count(`eno`)
+        from
+            `episode`
+        where
+            `pno` = #{pno}
+            and
+            `season` = #{season}
+            and
+            `episode` = #{episode}
+    </select>
+
     <select id="getLikeReplyInfo" resultType="EpisodeDB">
+        select
+            e.eno as `eno`
+            , e.share_num as `share_num`
+            , (
+                select
+                    count(er.erno)
+                from
+                    `episode_reply` er
+                where
+                    er.eno = e.eno
+            ) as `reply_num`
+            , (
+                select
+                    `content`
+                from
+                    `episode_reply_view` erv
+                where
+                    erv.parent_reply is null
+                    and
+                    erv.eno = e.eno
+                order by erv.like_num desc
+                limit 1
+            ) as `reply_content`
+            , (
+                select
+                    count(el.lno)
+                from
+                    `episode_like` el
+                where
+                    el.eno = e.eno
+            ) as `like_num`
+            , if((
+                select
+                    count(el.lno)
+                from
+                    `episode_like` el
+                where
+                    el.eno = e.eno
+                    and
+                    el.uno = #{uno}
+            ) > 0, true, false) as `press_like`
+            , (
+                select
+                    count(ed.dno)
+                from
+                    `episode_dibs` ed
+                where
+                    ed.eno = e.eno
+            ) as `dibs_num`
+            , if((
+                select
+                    count(ed.dno)
+                from
+                    `episode_dibs` ed
+                where
+                    ed.eno = e.eno
+                    and
+                    ed.uno = #{uno}
+            ) > 0, true, false) as `press_dibs`
+        from
+            `episode` e
+        where
+            `pno` = #{pno}
+            and
+            `season` = #{season}
+            and
+            `episode` = #{episode}
     </select>
                 
     <!-- Update -->
