@@ -189,7 +189,6 @@ public class EpisodeController {
     public Object getEpisodeListFromAPI(@PathVariable("uno") int uno) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
-
         RestTemplate restTemplate = new RestTemplate();
 
         // 팔로우중인 프로그램 리스트 조회
@@ -210,9 +209,11 @@ public class EpisodeController {
             int id = programJson.optInt("id");
             String name = programJson.optString("name");
             int season = 1;
+            String thumbnail = programJson.optString("backdrop_path");
             p.setPno(id);
             p.setPname(name);
             p.setSeason(season);
+            if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
             programList.add(p);
         }
 
@@ -227,13 +228,21 @@ public class EpisodeController {
             JSONObject programInfo = new JSONObject(re.getBody());
             JSONArray episodes = programInfo.optJSONArray("episodes");
 
+            re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY, String.class);
+            JSONObject programInfo_eng = new JSONObject(re.getBody());
+            JSONArray episodes_eng = programInfo_eng.optJSONArray("episodes");
+
             program.setSeason_name(programInfo.optString("name"));
 
             // 결과 데이터 중 episodes Array의 각 요소에 접근하여 episode 정보 추출
             for (int i=1; i<=episodes.length(); i++){
                 JSONObject detail = episodes.optJSONObject(i-1);
-                Episode2 e = episodeSetter(program, i, detail); // 'detail' 을 파싱하여 Episode 객체 세팅해서 리턴해주는 메서드
-                episodeList.add(e);
+                String overview_eng = episodes_eng.optJSONObject(i-1).optString("overview");
+                Episode2 e = episodeSetter(program, i, detail, overview_eng); // 'detail' 을 파싱하여 Episode 객체 세팅해서 리턴해주는 메서드
+                
+                if (e.getBroadcast_date() != null)
+                    episodeList.add(e);
+                //System.out.println(e.getBroadcast_date());
             }
         }
 
@@ -242,10 +251,10 @@ public class EpisodeController {
 			public int compare(Episode2 o1, Episode2 o2) {
                 LocalDate t2 = o1.getBroadcast_date();
                 LocalDate t1 = o2.getBroadcast_date();
-                if (t1 != null && t2 != null)
+                //if (t1 == null || t2 == null)
+                //    return 0;
+                //else
                     return t1.compareTo(t2);
-                else
-                    return 0;
 			}
         });
         
@@ -257,7 +266,7 @@ public class EpisodeController {
     }
 
     // Episode JSON 파싱
-    private Episode2 episodeSetter(Program2 program, int epno, JSONObject detail){
+    private Episode2 episodeSetter(Program2 program, int epno, JSONObject detail, String overview_eng){
         String summary = detail.optString("overview");
         JSONArray crews = detail.optJSONArray("crew");
         ArrayList<String> crew_arr = new ArrayList<String>();
@@ -284,24 +293,39 @@ public class EpisodeController {
 
         if (episode_air_date != null) {
             String[] episode_start_date = episode_air_date.split("-");
-            if (episode_start_date.length >= 3){
+            if (episode_start_date.length == 3){
                 LocalDate start_date = LocalDate.of(Integer.parseInt(episode_start_date[0]), 
                                                                     Integer.parseInt(episode_start_date[1]), 
                                                                     Integer.parseInt(episode_start_date[2]));
                 e.setBroadcast_date(start_date);
             }
         }
+
+        int pno = program.getPno(); 
+        int sno = program.getSeason();
+
+        // 한글로 된 설명이 없는 경우: 영어로 된 설명 받아오기 위해 요청을 한번 더 보낸다...
+        if (summary == null || summary.length() <= 1){
+            if (overview_eng == null || overview_eng.length() <= 1)
+                summary = "에피소드에 대한 설명이 없습니다.";
+            else
+                summary = overview_eng;
+        }
         
-        e.setPno(program.getPno());
+        e.setPno(pno);
         e.setPname(program.getPname());
-        e.setSeason(program.getSeason());
+        e.setSeason(sno);
         e.setSeason_name(program.getSeason_name());
 
         e.setEpisode(epno);
         e.setSummary(summary);
         e.setCrew(crew_arr);
         e.setGuest(guest_arr);
-        if (thumbnail != null) e.setThumbnail(IMAGE_BASE_URL + thumbnail);
+
+        if (thumbnail != null && thumbnail.length() > 1)
+            e.setThumbnail(IMAGE_BASE_URL + thumbnail);
+        else if (program.getThumbnail() != null)
+            e.setThumbnail(program.getThumbnail());
 
         return e;
     }
@@ -334,7 +358,7 @@ public class EpisodeController {
         program.setSeason_name(season_name);
 
         JSONObject detail = episodes.optJSONObject(epno-1); // episodes 배열 중에서 찾는 에피소드 번호에 해당하는 부분만 있음 된다.
-        Episode2 e = episodeSetter(program, epno, detail); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
+        Episode2 e = episodeSetter(program, epno, detail, " "); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
 
         return e;
     }
