@@ -1,5 +1,5 @@
 <template>
-  <div class="feed newsfeed">
+  <div class="feed newsfeed myfeed">
     <div class="wrapB">
       <div class="container mt-3">
         <div class="row p-0">
@@ -52,5 +52,8 @@ export default {
     box-shadow: none;
     border: 1px solid lightgray;
     border-radius: 0.25rem;
+  }
+  .myfeed {
+    padding-top: 50px;
   }
 </style>
