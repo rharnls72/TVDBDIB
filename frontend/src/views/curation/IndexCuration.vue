@@ -2,8 +2,7 @@
   <div class="feed newsfeed">
     <IndexCurationHeader />
     <div class="wrapB">
-      <h1>큐레이션</h1>
-      <div>
+      <div class="myfeed">
         <EpisodeItem v-for="curation in partCurations" :key="curation.key" :curation="curation"/>
         <infinite-loading @infinite="infiniteHandler"></infinite-loading>
       </div>
@@ -93,3 +92,8 @@ export default {
 */
 };
 </script>
+<style>
+  .myfeed {
+    padding-top: 70px;
+  }
+</style>
