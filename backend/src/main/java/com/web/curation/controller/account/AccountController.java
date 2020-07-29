@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.web.curation.dao.user.UserDao;
 import com.web.curation.model.BasicResponse;
+import com.web.curation.model.following.FollowCnt;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
 import com.web.curation.service.JWTService;
@@ -156,6 +157,16 @@ public class AccountController {
         if(n == 1) {
             result.status = true;
             result.msg = "success";
+            /* ===========================================================================================
+            try {
+                sendJoinMail(request.getEmail(), request.getNick_name());
+            } catch (Exception e) {
+                e.printStackTrace();
+                result.status = false;
+                result.msg = "메일 전송 실패";
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }
+            */
             mailConfig.sendJoinMail(sender, request.getEmail(), request.getNick_name());
         }
         // 아니면 오류가 난거
@@ -350,15 +361,17 @@ public class AccountController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @GetMapping("/account/profileinfo")
-    @ApiOperation(value = "프로필 정보")
-    public Object getProfileInfo(@RequestParam(required = true) final String email){
-        User user = userDao.getUserByEmail(email);
+    @GetMapping("/account/followcnt")
+    @ApiOperation(value = "팔로우 수")
+    public Object getFollowCount(@RequestParam(required = true) final int uno){
+        FollowCnt cnt = userDao.getFollowCnt(uno);
+        
         final BasicResponse result = new BasicResponse();
-        if(user !=null){
+        
+        if(cnt != null){
             result.status = true;
             result.msg = "success";
-            result.data = user;
+            result.data = cnt;
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
         result.status = false;

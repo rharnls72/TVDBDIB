@@ -37,9 +37,9 @@ CREATE TABLE `user` (
     `password` VARCHAR(128) NOT NULL,
     `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
     `nick_name` VARCHAR(20) NOT NULL,
-    `bio` VARCHAR(200),
+    `bio` VARCHAR(200) DEFAULT '소개를 작성해주세요.',
     `profile_pic` VARCHAR(100),
-    `is_private` BOOLEAN,
+    `is_private` BOOLEAN DEFAULT FALSE,
     `is_certification` BOOLEAN DEFAULT FALSE, 
     PRIMARY KEY (`uno`),
     UNIQUE KEY (`email`)
@@ -271,9 +271,12 @@ CREATE TABLE `message` (
 CREATE TABLE `alert` (
     `ano` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
-    `ctype` INT,
+    -- `ctype` INT,
     `cno` INT,
     `atype` INT NOT NULL,
+    `picture` VARCHAR(200),
+    `subject_name` VARCHAR(100),
+    `subject_no` INT,
     `read` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`ano`),
     FOREIGN KEY (`uno`)

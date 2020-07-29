@@ -178,6 +178,16 @@ public class EpisodeController {
             episode.setAdditionalData(dao.getLikeReplyInfo(episode));
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Collections.sort(episodeList, new Comparator<Episode2>() {
+		// 	public int compare(Episode2 o1, Episode2 o2) {
+        //         LocalDate t2 = o1.getBroadcast_date();
+        //         LocalDate t1 = o2.getBroadcast_date();
+        //         if (t1 != null && t2 != null)
+        //             return t1.compareTo(t2);
+        //         else
+        //             return 0;
+		// 	}
+        // });
         
         // 에피소드 목록을 포함한 응답 객체 반환
         result.status = true;
@@ -256,6 +266,10 @@ public class EpisodeController {
     public Object getEpisodeDetailFromAPI(@PathVariable("pno") int pno, @PathVariable("season") int season,
                                                                         @PathVariable("epno") int epno, HttpServletRequest req) {
         final BasicResponse result = new BasicResponse();
+
+        // 여기선 응답 상태코드 없이 결과만 반환?
+        // final BasicResponse result = new BasicResponse();
+        
         RestTemplate restTemplate = new RestTemplate();
                                                                             
         // 일단 프로그램 (시즌 말고 그보다 더 상위인 프로그램) 정보가 필요하다. 프로그램 이름은 띄워줘야 하잖아...
