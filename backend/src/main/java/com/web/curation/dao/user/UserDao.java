@@ -1,8 +1,6 @@
 
 package com.web.curation.dao.user;
 
-import java.util.HashMap;
-
 import com.web.curation.model.following.FollowCnt;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;

@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import MyPageHeader from '../../../components/account/mine/MyPageHeader.vue'
-import MyPageInformation from '../../../components/account/mine/MyPageInformation.vue'
-import Footer from '../../../components/common/custom/Footer.vue'
-import http from "@/api/http-common.js";
+import MyPageHeader from '@/components/account/mine/MyPageHeader.vue'
+import MyPageInformation from '@/components/account/mine/MyPageInformation.vue'
+import Footer from '@/components/common/custom/Footer.vue'
+import AccountApi from "@/api/AccountApi";
 
 export default {
   name: 'MyPage',
@@ -30,17 +30,21 @@ export default {
 
   },
   mounted() {
-    this.info = this.$store.state.userInfo;
-    http.get('/account/followcnt', {
-      params: {
-        my_nick_name : this.info.nick_name,
-        other_nick_name: this.info.nick_name
+    let data = {
+        my_nick_name : this.$store.state.userInfo.nick_name,
+        other_nick_name: this.$store.state.userInfo.nick_name
+      };
+    AccountApi.requestProfile(
+      data,
+      res => {
+        this.info = res.info;
+        this.followcnt = res.followcnt;
+      },
+      error => {
+        this.$router.push({name:'Errors', query: {message: error.msg}})
       }
-    })
-      .then(res => {
-        this.followcnt = res.data.data.followCnt;
-      })
-      .catch(err => console.error(err))
+    );
+
   }
 }
 </script>

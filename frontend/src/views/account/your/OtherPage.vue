@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import OtherPageHeader from '../../../components/account/your/OtherPageHeader.vue'
-import OtherPageInformation from '../../../components/account/your/OtherPageInformation.vue'
-import Footer from '../../../components/common/custom/Footer.vue'
-import http from "@/api/http-common.js";
+import OtherPageHeader from '@/components/account/your/OtherPageHeader.vue'
+import OtherPageInformation from '@/components/account/your/OtherPageInformation.vue'
+import Footer from '@/components/common/custom/Footer.vue'
+import AccountApi from "@/api/AccountApi";
 
 export default {
   name: 'OtherPage',
@@ -30,17 +30,20 @@ export default {
 
   },
   mounted() {
-    http.get('/account/followcnt', {
-      params: {
+    let data = {
         my_nick_name : this.$store.state.userInfo.nick_name,
         other_nick_name: this.$route.params.nick_name
+      };
+    AccountApi.requestProfile(
+      data,
+      res => {
+        this.info = res.info;
+        this.followcnt = res.followcnt;
+      },
+      error => {
+        this.$router.push({name:'Errors', query: {message: error.msg}})
       }
-    })
-      .then(res => {
-        this.info = res.data.data.userInfo;
-        this.followcnt = res.data.data.followCnt;
-      })
-      .catch(err => console.error(err))
+    );
   }
 }
 </script>

@@ -19,8 +19,8 @@
         </div>
         <p class="row mb-0 pb-3 introduce">{{info.bio}}</p>
         <p class="row p-0">
-          <button v-if="followcnt.is_follow==0" class="col-12 mybutton p-0 text-dark">팔로우</button>
-          <button v-else class="col-12 mybutton p-0 text-dark">팔로우 취소</button>
+          <button v-if="followcnt.is_follow==0" @click="follow()" class="col-12 mybutton p-0 text-dark">팔로우</button>
+          <button v-else @click="defollow()" class="col-12 mybutton p-0 text-dark">팔로우 취소</button>
         </p>
       </div>
     </div>
@@ -28,7 +28,8 @@
 </template>
 
 <script>
-import defaultProfile from '../../../assets/images/profile_default.png'
+import defaultProfile from '@/assets/images/profile_default.png'
+import AccountApi from "@/api/AccountApi";
 
 export default {
   name: 'MyPageInformation',
@@ -41,9 +42,38 @@ export default {
       defaultProfile,
     }
   },
-  mounted(){
-    console.log(this.followcnt.follower_cnt);
-  }
+  methods: {
+    follow(){
+      let data = {
+        follower : this.$store.state.userInfo.uno,
+        following: this.info.uno
+      };
+      AccountApi.requestFollow(
+        data,
+        res => {
+          //화면 재렌더링 알아보기
+        },
+        error => {
+          this.$router.push({name:'Errors', query: {message: error.msg}})
+        }
+      );
+    },
+    defollow(){
+      let data = {
+        follower : this.$store.state.userInfo.uno,
+        following: this.info.uno
+      };
+      AccountApi.requestDeFollow(
+        data,
+        res => {
+          //화면 재렌더링 알아보기
+        },
+        error => {
+          this.$router.push({name:'Errors', query: {message: error.msg}})
+        }
+      );
+    }
+  },
 }
 </script>
 
