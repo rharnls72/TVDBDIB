@@ -30,6 +30,8 @@ import EpisodeDetail from './views/curation/episode/EpisodeDetail.vue'
 import MyPage from './views/account/mine/MyPage.vue'
 import EditMyPage from './views/account/mine/EditMyPage.vue'
 
+import OtherPage from './views/account/your/OtherPage.vue'
+
 export default [
 
     {
@@ -161,5 +163,10 @@ export default [
         path: '/mypage/edit',
         name: 'EditMyPage',
         component: EditMyPage
+    },
+    {
+        path: '/profile/:nick_name',
+        name: 'OtherPage',
+        component: OtherPage
     },
 ]
