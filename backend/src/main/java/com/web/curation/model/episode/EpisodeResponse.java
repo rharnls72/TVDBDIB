@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Episode2 {
+public class EpisodeResponse {
 
     private int pno;
     private String pname; 
@@ -20,11 +20,21 @@ public class Episode2 {
     private String episode_name; 
     private String thumbnail; // 그 에피소드의 스틸컷 이미지.
     private ArrayList<String> genre;
-    private String poster; // 프로필사진으로 쓰일 프로그램 포스터.
+	private String poster; // 프로필사진으로 쓰일 프로그램 포스터.
+
     private LocalDate broadcast_date;
     private String summary;
     private ArrayList<String> crew;
-    private ArrayList<String> guest;
+	private ArrayList<String> guest;
+	
+	// Additional attribute
+	private int eno;
+	private int like_num;
+	private boolean press_like;
+	private int reply_num;
+	private String reply_content;
+	private int share_num;
+	private int dibs_num;
 
 	public int getPno() {
 		return this.pno;
@@ -82,6 +92,22 @@ public class Episode2 {
 		this.thumbnail = thumbnail;
 	}
 
+	public ArrayList<String> getGenre() {
+		return this.genre;
+	}
+
+	public void setGenre(ArrayList<String> genre) {
+		this.genre = genre;
+	}
+
+	public String getPoster() {
+		return this.poster;
+	}
+
+	public void setPoster(String poster) {
+		this.poster = poster;
+	}
+
 	public LocalDate getBroadcast_date() {
 		return this.broadcast_date;
 	}
@@ -116,5 +142,59 @@ public class Episode2 {
 
 
 
+	public int getEno() {
+		return this.eno;
+	}
 
+	public void setEno(int eno) {
+		this.eno = eno;
+	}
+
+	public int getLike_num() {
+		return this.like_num;
+	}
+
+	public void setLike_num(int like_num) {
+		this.like_num = like_num;
+	}
+
+	public boolean isPress_like() {
+		return this.press_like;
+	}
+
+	public void setPress_like(boolean press_like) {
+		this.press_like = press_like;
+	}
+
+	public int getReply_num() {
+		return this.reply_num;
+	}
+
+	public void setReply_num(int reply_num) {
+		this.reply_num = reply_num;
+	}
+
+	public String getReply_content() {
+		return this.reply_content;
+	}
+
+	public void setReply_content(String reply_content) {
+		this.reply_content = reply_content;
+	}
+
+	public int getShare_num() {
+		return this.share_num;
+	}
+
+	public void setShare_num(int share_num) {
+		this.share_num = share_num;
+	}
+
+	public int getDibs_num() {
+		return this.dibs_num;
+	}
+
+	public void setDibs_num(int dibs_num) {
+		this.dibs_num = dibs_num;
+	}
 }
