@@ -1,23 +1,24 @@
 <template>
   <div>
-    <MyPageHeader :nickname="nickname"/>
+    <MyPageHeader :info="info"/>
     <h1>내 프로필</h1>
-    <MyPageInformation />
+    <MyPageInformation :info="info" :followcnt="followcnt"/>
     <Footer />
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import MyPageHeader from '../../../components/account/mine/MyPageHeader.vue'
 import MyPageInformation from '../../../components/account/mine/MyPageInformation.vue'
 import Footer from '../../../components/common/custom/Footer.vue'
+import http from "@/api/http-common.js";
 
 export default {
   name: 'MyPage',
   data() {
     return {
-      nickname: 'hani',
+      info: {},
+      followcnt: {},
     }
   },
   components: {
@@ -26,14 +27,17 @@ export default {
     Footer,
   },
   methods: {
-    // getNickname() {
-    //   axios.get('http://localhost:9000/')
-    //     .then(res => {
 
-    //     })
-    //     .catch(err => console.error(err))
-    // },
   },
+  mounted() {
+    this.info = this.$store.state.userInfo;
+    http.get('/account/followcnt?uno=' + this.info.uno)
+      .then(res => {
+        this.followcnt = res.data.data;
+        console.log(this.followcnt);
+      })
+      .catch(err => console.error(err))
+  }
 }
 </script>
 

@@ -1,6 +1,9 @@
 
 package com.web.curation.dao.user;
 
+import java.util.HashMap;
+
+import com.web.curation.model.following.FollowCnt;
 import com.web.curation.model.user.SignupRequest;
 import com.web.curation.model.user.User;
 
@@ -17,16 +20,13 @@ public interface UserDao {
     User getUserByNickName(String nick_name);
 
     User findUserByEmailAndPassword(User user);
-
+    FollowCnt getFollowCnt(int uno);
     int checkPassword(User user);
     int checkNickName(String nick_name);
 
     int addNewUser(SignupRequest request);
 
     int modifyPassword(User user);
-    int modifyNickName(User user);
-    int modifyBio(User user);
-    int modifyPic(User user);
-    int modifyPrivate(User user);
+    int modifyProfile(User user);
     int emailConfirm(String email);
 }

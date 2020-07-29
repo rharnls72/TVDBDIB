@@ -4,7 +4,7 @@
       <b-icon-blank></b-icon-blank>
     </b-nav-item>
     <b-nav-item>
-      <p class="text-dark mb-0"><strong>{{ nickname }}</strong></p>
+      <p class="text-dark mb-0"><strong>{{ info.nick_name }}</strong></p>
     </b-nav-item>
     <b-nav-item>
       <b-icon-blank></b-icon-blank>
@@ -40,7 +40,7 @@
 export default {
   name: 'MyPageHeader',
   props: {
-    nickname: String,
+    info: Object,
   },
   methods: {
     // 계정 설정 페이지로 이동

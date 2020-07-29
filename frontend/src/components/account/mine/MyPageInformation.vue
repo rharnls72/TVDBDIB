@@ -5,19 +5,19 @@
         <div class="row p-0">
           <img class="col-3 p-0 mb-3" :src="defaultProfile" alt="default-image">
           <div class="col-3 my-3">
-            <h5 class="mb-0 text-center">340</h5>
+            <h5 class="mb-0 text-center">{{followcnt.feed_cnt}}</h5>
             <p class="mb-0 text-center">게시물</p>
           </div>
           <div class="col-3 my-3">
-            <h5 class="mb-0 text-center">340</h5>
+            <h5 class="mb-0 text-center">{{followcnt.follower_cnt}}</h5>
             <p class="mb-0 text-center">팔로워</p>
           </div>
           <div class="col-3 my-3">
-            <h5 class="mb-0 text-center">340</h5>
+            <h5 class="mb-0 text-center">{{followcnt.following_cnt}}</h5>
             <p class="mb-0 text-center">팔로잉</p>
           </div>
         </div>
-        <p class="row mb-0 pb-3 introduce">나 이런 사람이야~ 나 이런 사람이야~ 나 이런 사람이야~ 나 이런 사람이야~ 나 이런 사람이야~</p>
+        <p class="row mb-0 pb-3 introduce">{{info.bio}}</p>
         <p class="row p-0">
           <button class="col-12 mybutton p-0 text-dark">프로필 수정</button>
         </p>
@@ -31,9 +31,13 @@ import defaultProfile from '../../../assets/images/profile_default.png'
 
 export default {
   name: 'MyPageInformation',
+  props: {
+    info: Object,
+    followcnt: Object,
+  },
   data() {
     return {
-      defaultProfile
+      defaultProfile,
     }
   },
 }

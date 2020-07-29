@@ -37,9 +37,9 @@ CREATE TABLE `user` (
     `password` VARCHAR(128) NOT NULL,
     `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
     `nick_name` VARCHAR(20) NOT NULL,
-    `bio` VARCHAR(200),
+    `bio` VARCHAR(200) DEFAULT '소개를 작성해주세요.',
     `profile_pic` VARCHAR(100),
-    `is_private` BOOLEAN,
+    `is_private` BOOLEAN DEFAULT FALSE,
     `is_certification` BOOLEAN DEFAULT FALSE, 
     PRIMARY KEY (`uno`),
     UNIQUE KEY (`email`)
@@ -200,9 +200,6 @@ CREATE TABLE `program_reply` (
     `content` VARCHAR(200) NOT NULL,
     `write_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
     PRIMARY KEY (`prno`),
-    FOREIGN KEY (`pno`)
-        REFERENCES `program` (`pno`)
-        ON DELETE CASCADE,
     FOREIGN KEY (`parent_reply`)
         REFERENCES `program_reply` (`prno`)
         ON DELETE CASCADE,
@@ -226,10 +223,7 @@ CREATE TABLE `program_like` (
     `lno` INT AUTO_INCREMENT,
     `uno` INT NOT NULL,
     `pno` INT NOT NULL,
-    PRIMARY KEY (`lno`),
-    FOREIGN KEY (`pno`)
-        REFERENCES `program` (`pno`)
-        ON DELETE CASCADE
+    PRIMARY KEY (`lno`)
 );
 
 CREATE TABLE `episode_like` (
