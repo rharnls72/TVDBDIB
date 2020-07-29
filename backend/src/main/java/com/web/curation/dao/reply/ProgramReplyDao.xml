@@ -9,13 +9,17 @@
         insert into
             program_reply(
                 pno
+                <if test="parent_reply > 0">
                 , parent_reply
+                </if>
                 , uno
                 , content
             )
         values(
             #{no}
+            <if test="parent_reply > 0">
             , #{parent_reply}
+            </if>
             , #{writer_uno}
             , #{content}
         )
