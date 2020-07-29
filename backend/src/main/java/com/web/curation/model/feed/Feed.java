@@ -27,6 +27,7 @@ public class Feed {
     private int reply_num;
     private int like_num;
     private boolean press_like;
+    private String reply_content;
 
     public void setFno(int fno) {
         this.fno = fno;
@@ -120,5 +121,13 @@ public class Feed {
     }
     public boolean getPress_like() {
         return press_like;
+    }
+
+    public String getReply_content() {
+        return this.reply_content;
+    }
+
+    public void setReply_content(String reply_content) {
+        this.reply_content = reply_content;
     }
 }

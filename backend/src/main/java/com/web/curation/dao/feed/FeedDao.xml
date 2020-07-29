@@ -46,17 +46,17 @@
     <!-- Read -->
     <select id="getFeedList" resultType="Feed">
         SELECT
-            f.fno               AS fno
-            , f.uno             AS uno
-            , f.pno             AS pno
-            , f.eno             AS eno
-            , f.create_date     AS create_date
-            , f.content         AS content
-            , f.ctype           AS ctype
-            , f.thumbnail       AS thumbnail
-            , f.tag             AS tag
-            , u.nick_name       AS nick_name
-            , u.profile_pic     AS profile_pic
+            f.fno               AS `fno`
+            , f.uno             AS `uno`
+            , f.pno             AS `pno`
+            , f.eno             AS `eno`
+            , f.create_date     AS `create_date`
+            , f.content         AS `content`
+            , f.ctype           AS `ctype`
+            , f.thumbnail       AS `thumbnail`
+            , f.tag             AS `tag`
+            , u.nick_name       AS `nick_name`
+            , u.profile_pic     AS `profile_pic`
             , (
                 SELECT
                     COUNT(fr.frno)
@@ -65,6 +65,18 @@
                 WHERE
                     fr.fno = f.fno
             )   AS `reply_num`
+            , (
+                SELECT
+                    `content`
+                FROM
+                    `feed_reply_view` frv
+                WHERE
+                    frv.parent_reply IS NULL
+                    AND
+                    frv.fno = f.fno
+                ORDER BY frv.like_num DESC
+                LIMIT 1
+            ) AS `reply_content`
             , (
                 SELECT
                     COUNT(fl.lno)

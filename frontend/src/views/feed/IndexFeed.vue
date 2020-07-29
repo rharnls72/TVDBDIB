@@ -19,14 +19,17 @@
 
 <script>
 import { mapState } from "vuex";
+
 import "../../components/css/feed/feed-item.scss";
 import "../../components/css/feed/newsfeed.scss";
+
 import feedArticleItem from "@/components/feed/feedArticleItem.vue";
 import feedCountdownItem from "@/components/feed/feedCountdownItem.vue";
 import feedVoteItem from "@/components/feed/feedVoteItem.vue";
-import header from "@/api/header.js"
-import axios from "axios"
-import IndexCurationHeader from "@/components/curation/IndexCurationHeader.vue"
+
+import FeedApi from "@/api/FeedApi.js";
+
+import IndexCurationHeader from "@/components/curation/IndexCurationHeader.vue";
 import Footer from '@/components/common/custom/Footer.vue';
 
 export default {
@@ -49,6 +52,22 @@ export default {
 
   methods: {
     takeFeed() {
+      let data = {
+        num: this.requestCount
+      };
+
+      FeedApi.getFeedList(
+        data
+        , res => {
+          console.log(res.data);
+          this.feeds = this.feeds.concat(res.data.data);
+          this.requestCount++;
+        }
+        , err => {
+          console.log(err)
+        }
+      )
+      /*
       axios.post('http://localhost:9000/feed/list' ,{num: this.requestCount}, header())
         .then(res => {
           console.log(res.data)
@@ -56,6 +75,7 @@ export default {
           this.requestCount++
         })
         .catch(err => console.log(err))
+      */
     }
   },
   created() {
