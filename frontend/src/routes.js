@@ -146,7 +146,7 @@ export default [
         component: EpisodeDetail
     },
     {
-        path: '/:nick_name',
+        path: '/mypage/main',
         name: 'MyPage',
         component: MyPage        
     },
