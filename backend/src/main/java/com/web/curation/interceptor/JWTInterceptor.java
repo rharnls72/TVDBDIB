@@ -46,6 +46,7 @@ public class JWTInterceptor implements HandlerInterceptor {
                     System.out.println(user);
                     request.setAttribute("User", user);
                 } catch (Exception e) {
+                    System.out.println(request.getRequestURI());
                     System.out.println(e.getMessage());
                     return false;
                 }
