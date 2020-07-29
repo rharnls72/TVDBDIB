@@ -2,7 +2,7 @@
   <div id="app" class="columns">
     <AlertHeader />
       <div class="wrapB">
-          <AlertItem :todolists="todolists"/>
+        <AlertItem :alerts="alerts"/>
       </div>
     <Footer />
   </div>
@@ -10,7 +10,7 @@
 
 <script>
 import "@/components/css/user.scss";
-import axios from 'axios';
+import http from '@/api/http-common.js';
 import Footer from '@/components/common/custom/Footer.vue';
 import AlertHeader from '@/components/alert/AlertHeader.vue';
 import AlertItem from '@/components/alert/AlertItem.vue';
@@ -25,39 +25,21 @@ export default {
 
   data() {
     return {
-      todolists:[
-  {
-    no: 1,
-    done: 'Y',
-    write_date: "2020-05-20",
-    end_date: "2020-05-30",
-    content: "박하은님이 당신의 게시물에 좋아요를 표시했습니다."
-  },
-  { 
-    no: 2,
-    done: 'Y',
-    write_date: "2020-05-22",
-    end_date: "2020-05-31",
-    content: "이유림님이 당신을 언급했습니다."
-  },
-    { 
-    no: 3,
-    done: 'Y',
-    write_date: "2020-05-22",
-    end_date: "2020-05-31",
-    content: "서민성님이 머지 리퀘스트를 보냈습니다."
-  },
-    { 
-    no: 4,
-    done: 'N',
-    write_date: "2020-05-22",
-    end_date: "2020-05-31",
-    content: "손초능님이 당신을 팔로우했습니다."
-  }
-]
+      alerts:[]
   }
   },
 
+  created(){
+      http.get('/alert/list/2')
+        .then(res => {
+          console.log(res);
+          this.alerts = res.data.data;
+          console.log(this.alerts);
+        })
+        .catch(err => console.error(err))
+  },
+
+/*
   mounted() {
     Notification.requestPermission().then(function(result) {
       Notification.permission = result;
@@ -83,6 +65,6 @@ export default {
         };
       }
     },
-  }
+  }*/
 };
 </script>
