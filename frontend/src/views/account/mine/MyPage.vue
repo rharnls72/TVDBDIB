@@ -12,6 +12,7 @@ import MyPageHeader from '@/components/account/mine/MyPageHeader.vue'
 import MyPageInformation from '@/components/account/mine/MyPageInformation.vue'
 import Footer from '@/components/common/custom/Footer.vue'
 import AccountApi from "@/api/AccountApi";
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   name: 'MyPage',
@@ -45,7 +46,12 @@ export default {
       }
     );
 
-  }
+  },
+  created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+  },
 }
 </script>
 

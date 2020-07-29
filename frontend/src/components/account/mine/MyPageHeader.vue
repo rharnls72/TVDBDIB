@@ -27,6 +27,11 @@
                   <b-icon-blank class="h5"></b-icon-blank>
                   <p class="text-dark d-inline m-0">스크랩</p>
                 </b-nav-item>
+                <b-nav-item href="#link-2" @click="logout">
+                  <b-icon-bookmark class="text-dark d-inline"></b-icon-bookmark>
+                  <b-icon-blank class="h5"></b-icon-blank>
+                  <p class="text-dark d-inline m-0">로그아웃</p>
+                </b-nav-item>
               </b-nav>
             </nav>
           </div>
@@ -47,6 +52,10 @@ export default {
     // editAccount() {
 
     // },
+    logout(){
+      localStorage.removeItem('tvility');
+      this.$router.push({name:'Login'})
+    }
   },
 }
 </script>
