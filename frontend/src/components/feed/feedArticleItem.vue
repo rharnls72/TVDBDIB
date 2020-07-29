@@ -69,13 +69,15 @@
       <span v-else>
         <span>{{cc.content}}</span><br>
         <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
-        <span class="moreView">댓글 {{reply_num}}개</span>
+        <span v-if="!!option" class="moreView">댓글 {{reply_num}}개</span>
       </span>
     </div>
+    <ReplyItem v-if="!option"/>
   </div>
 </template>
 
 <script>
+import ReplyItem from "@/components/ReplyItem.vue"
 import defaultImage from "../../assets/images/img-placeholder.png";
 import defaultProfile from "../../assets/images/profile_default.png";
 import {mapState} from "vuex"
@@ -99,6 +101,9 @@ export default {
       feedTitle: '제목제목',
     };
   },
+  components: {
+    ReplyItem,
+  },
   computed: {
     ...mapState([
       'userInfo',
@@ -106,6 +111,7 @@ export default {
   },
   props:{
     article: Object,
+    option: Number,
   },
   methods: {
     changeIsLong() {
@@ -144,7 +150,7 @@ export default {
     console.log(this.article.content)
     this.cc = JSON.parse(this.article.content)
     console.log(this.cc)
-    if (this.cc.content.length > 10) {this.isLong=true}
+    if (this.cc.content.length > 10 && !!this.option) {this.isLong=true}
   }
 };
 </script>
