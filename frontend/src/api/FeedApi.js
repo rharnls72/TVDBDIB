@@ -63,8 +63,9 @@ const getFeedList = (data,callback,errorCallback) => {
 }
 
 const feedDetail = (data,callback,errorCallback) => {
-    http.get('/feed/detail/'+data.id, header())
+    http.get('/feed/detail/'+String(data.id), header())
     .then(res => {
+        console.log(res)
         if(res == null) {
             let error = {msg : '알 수 없는 오류 발생'};
             errorCallback(error);
@@ -122,7 +123,7 @@ const deleteFeed = (data,callback,errorCallback) => {
     // 성공 : call back 호출
     // 실패 :  errorCallback 호출
 
-    http.delete('/feed/delete' + data, header())
+    http.delete('/feed/delete/' + data, header())
         .then(res => {
             // 서버에서 정상적으로 처리되었으면 res 가 null 이 될 수 없음
             // 서버에서 db 쿼리 하다 오류난 경우일듯
@@ -213,8 +214,32 @@ const createFeedLike = (data,callback,errorCallback) => {
             errorCallback(err);
         });
 }
+
 const createReply = (data,callback,errorCallback) => {
     http.post('/reply/feed/create', data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback();
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+}
+
+const readReply = (data,callback,errorCallback) => {
+    http.post('/reply/feed/read', data, header())
         .then(res => {
             if(res == null) {
                 let error = {msg : '알 수 없는 오류 발생'};
@@ -245,6 +270,7 @@ const FeedApi = {
     , createFeedLike:(data,callback,errorCallback)=>createFeedLike(data,callback,errorCallback)
     , feedDetail:(data,callback, errorCallback)=>feedDetail(data, callback, errorCallback)
     , createReply:(data,callback, errorCallback)=>createReply(data, callback, errorCallback)
+    , readReply:(data,callback, errorCallback)=>readReply(data,callback, errorCallback)
 }
 
 export default FeedApi

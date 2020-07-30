@@ -192,7 +192,7 @@ export default {
           this.fno,
           res=> {
             console.log(res)
-            this.$router.push({path:'/feed/main'})
+            this.$emit('deleteItem', this.fno)
           },
           err=> console.log(err)
         )

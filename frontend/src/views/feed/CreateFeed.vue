@@ -53,7 +53,10 @@ export default {
     turnVote() {this.page = 3},
     turnCountdown() {this.page = 2},
   },
-  mounted() {
+  created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
     if (!this.$route.params.ftype === false) {
       this.page = Number(this.$route.params.ftype)
     } else {
@@ -62,11 +65,12 @@ export default {
     if (!this.$route.params.feedId === false) {
       this.isArticle = false
       this.fno = Number(this.$route.params.feedId)
-      console.log(this.$route.params.feedId)
+      console.log('??', this.$route.params.feedId)
       FeedApi.feedDetail(
         {id: this.$route.params.feedId},
         res => {
-          this.article = res.article;
+          console.log(res)
+          this.article = res.list;
           this.article.content = JSON.parse(this.article.content);
           this.article.tag = JSON.parse(this.article.tag);
           this.article.dibsNum = this.article.dibs_num;
@@ -81,11 +85,6 @@ export default {
       this.fno = null
       this.article = null
     }
-  },
-  created() {
-    GetUserApi.getUser(res => {
-      this.$store.commit('addUserInfo', res.user);
-    });
   },
 }
 </script>

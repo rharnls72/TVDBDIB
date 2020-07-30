@@ -177,7 +177,7 @@ export default {
             this.$store.commit('addUserInfo', res.userInfo);
 
             // curation/main 페이지로 이동
-            this.$router.push("/curation/main");
+            this.$router.push({path:"/curation/main"});
           },
           // 로그인 실패 시 호출 될 함수
           error => {

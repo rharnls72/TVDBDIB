@@ -161,13 +161,13 @@ export default {
           this.fno,
           res=> {
             console.log(res)
-            this.$router.push({path:'/feed/main'})
+            this.$emit('deleteItem', this.fno)
           },
           err=> console.log(err)
         )
     },
     updateFeed() {
-      this.$router.push({ path:'/feed/create/1/'+this.fno })
+      this.$router.push({ path:'/feed/create/1/' + String(this.fno) })
     }
   },
   created() {
