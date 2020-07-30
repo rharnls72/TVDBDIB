@@ -149,10 +149,6 @@ const deleteFeed = (data,callback,errorCallback) => {
         });
 }
 
-const createLike = (data,callback,errorCallback) => {
-    http.post('/like/feed/create', data, header())
-        .then(res => {
-
 const deleteFeedLike = (data,callback,errorCallback) => {
     // 피드 좋아요 삭제
     // 성공 : call back 호출
@@ -217,6 +213,28 @@ const createFeedLike = (data,callback,errorCallback) => {
             errorCallback(err);
         });
 }
+const createReply = (data,callback,errorCallback) => {
+    http.post('/reply/feed/create', data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback();
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+}
 
 const FeedApi = {
     createFeed:(data,callback,errorCallback)=>createFeed(data,callback,errorCallback)
@@ -225,6 +243,8 @@ const FeedApi = {
     , deleteFeed:(data,callback,errorCallback)=>deleteFeed(data,callback,errorCallback)
     , deleteFeedLike:(data,callback,errorCallback)=>deleteFeedLike(data,callback,errorCallback)
     , createFeedLike:(data,callback,errorCallback)=>createFeedLike(data,callback,errorCallback)
+    , feedDetail:(data,callback, errorCallback)=>feedDetail(data, callback, errorCallback)
+    , createReply:(data,callback, errorCallback)=>createReply(data, callback, errorCallback)
 }
 
 export default FeedApi

@@ -69,7 +69,6 @@
         </div>
       </div>
     </div>
-    <Footer />
   </div>
 </template>
 
@@ -80,7 +79,6 @@ import * as EmailValidator from "email-validator";
 // import KakaoLogin from "../../components/user/snsLogin/Kakao.vue";
 // import GoogleLogin from "../../components/user/snsLogin/Google.vue";
 import UserApi from "../../api/UserApi";
-import Footer from '../../components/common/custom/Footer.vue'
 import LoginHeader from '../../components/user/custom/LoginHeader.vue'
 import teamImage from '../../assets/images/custom/team-img.jpg'
 
@@ -91,7 +89,6 @@ export default {
   components: {
     // KakaoLogin,
     // GoogleLogin,
-    Footer,
     LoginHeader,
   },
   created() {
@@ -179,8 +176,8 @@ export default {
             // 로그인 정보를 vuex 에 저장
             this.$store.commit('addUserInfo', res.userInfo);
 
-            // feed/main 페이지로 이동
-            this.$router.push("/feed/main");
+            // curation/main 페이지로 이동
+            this.$router.push("/curation/main");
           },
           // 로그인 실패 시 호출 될 함수
           error => {
