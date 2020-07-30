@@ -7,14 +7,32 @@
             <b-icon-search></b-icon-search>
           </div>
         </div>
-        <b-form-input
+        
+        <!-- <b-form-input
           type="search"
           placeholder="검색"
           ref="searchInput"
           v-model="word"
           class="p-0"
           style="height: auto; border: 0px; background-color: #eee;">
-        </b-form-input>
+        </b-form-input> -->
+       
+       <!-- 이 컴포넌트 쓰면 목록 내에서 AutoComplete 가 되는데
+            css 를 어떻게 줘야하지
+            https://github.com/alexurquhart/vue-bootstrap-typeahead
+         -->
+        <vue-bootstrap-typeahead
+          :data="users"
+          v-model="word"
+          size="sm"
+          textVariant="red"
+          :serializer="u => u.nick_name"
+          :minMatchingChars='1'
+          placeholder="Type a nick_name..."
+          @hit="selectedUser = $event"
+          ref="searchInput"
+          style="height: auto; width: 80%; border: 0px; background-color: #eee;"
+        />
       </b-input-group>
     </b-nav>
     <b-tabs class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
@@ -28,6 +46,7 @@
 
 <script>
 import SearchApi from '@/api/SearchApi.js';
+import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 
 export default {
   name: 'IndexSearchHeader',
@@ -35,17 +54,38 @@ export default {
     return {
       tabState: 3,
       word: "",
-      users: []
+      users: [],
+
+      selectedUser: {}
     }
+  },
+  created() {
+    // 모든 유저 정보를 받아와도 크기가 많이 안클거같은데
+    // 아니면 이거 안쓰고 아래 watch 에 주석 지워서 
+    // 매 글자 입력마다 목록 새로 가져와도 되고
+    SearchApi.getAllUser(
+      'NoData'
+      , res => {
+        this.users = res.data.data;
+        console.log(this.users);
+      }
+      , err => {
+        console.log(err);
+      }
+    );
   },
   watch: {
     word(newWord) {
-      this.getUserList(newWord);
+      // this.getUserList(newWord);
+    },
+    selectedUser(newUser) {
+      console.log(newUser);
+      this.$router.push("/profile/" + newUser.nick_name);
     }
   },
   methods: {
     searchIcon(){
-      this.$refs.searchInput.focus();
+      // this.$refs.searchInput.focus();
     },
     // 탭을 클릭하면 해당 탭을 활성화
     changeState(tabNumber) {
@@ -67,6 +107,9 @@ export default {
       );
     }
   },
+  components: {
+    VueBootstrapTypeahead
+  }
 }
 </script>
 
