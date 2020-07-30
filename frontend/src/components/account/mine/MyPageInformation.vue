@@ -19,7 +19,7 @@
         </div>
         <p class="row mb-0 pb-3 introduce">{{info.bio}}</p>
         <p class="row p-0">
-          <button class="col-12 mybutton p-0 text-dark">프로필 수정</button>
+          <button class="col-12 mybutton p-0 text-dark" @click="editmypage">프로필 수정</button>
         </p>
       </div>
     </div>
@@ -38,6 +38,11 @@ export default {
   data() {
     return {
       defaultProfile,
+    }
+  },
+  methods: {
+    editmypage(){
+      this.$router.push({name:'EditMyPage'})
     }
   },
 }
