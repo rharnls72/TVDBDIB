@@ -76,12 +76,13 @@
 </template>
 
 <script>
-import "../../components/css/user.scss";
+import "@/components/css/user.scss";
 import PV from "password-validator";
 import * as EmailValidator from "email-validator";
-import KakaoLogin from "../../components/user/snsLogin/Kakao.vue";
-import GoogleLogin from "../../components/user/snsLogin/Google.vue";
-import UserApi from "../../api/UserApi";
+import KakaoLogin from "@/components/user/snsLogin/Kakao.vue";
+import GoogleLogin from "@/components/user/snsLogin/Google.vue";
+import UserApi from "@/api/UserApi";
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   components: {
@@ -89,8 +90,10 @@ export default {
     GoogleLogin
   },
   created() {
-    var getValue = JSON.parse(localStorage.getItem('tvility'));
-    // if(getValue != null)  this.$router.push("/feed/main");
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+    if(this.$store.state.userInfo != null)  this.$router.push({name:'IndexCuration'});
 
     this.component = this;
 
@@ -171,7 +174,7 @@ export default {
             this.$store.commit('addUserInfo', res.userInfo);
 
             // feed/main 페이지로 이동
-            this.$router.push("/feed/main");
+            this.$router.push({name:'IndexCuration'});
           },
           // 로그인 실패 시 호출 될 함수
           error => {

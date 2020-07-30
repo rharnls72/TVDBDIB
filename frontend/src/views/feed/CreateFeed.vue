@@ -34,6 +34,8 @@ import CreateCountdown from '@/components/feed/CreateCountdown.vue'
 import axios from "axios"
 import header from "@/api/header.js"
 
+import GetUserApi from "@/api/GetUserApi"
+
 export default {
   name: 'CreateFeed',
   components: {
@@ -87,7 +89,12 @@ export default {
       this.fno = null
       this.article = null
     }
-  }
+  },
+  created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+  },
 }
 </script>
 

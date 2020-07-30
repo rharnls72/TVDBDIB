@@ -31,6 +31,7 @@ import FeedApi from "@/api/FeedApi.js";
 
 import IndexCurationHeader from "@/components/curation/IndexCurationHeader.vue";
 import Footer from '@/components/common/custom/Footer.vue';
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   data() {
@@ -79,7 +80,11 @@ export default {
     }
   },
   created() {
-    this.takeFeed()
+    this.takeFeed();
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+
   }
 };
 </script>
