@@ -29,6 +29,9 @@ import Alert from './views/alert/Alert.vue'
 import EpisodeDetail from './views/curation/episode/EpisodeDetail.vue'
 import MyPage from './views/account/mine/MyPage.vue'
 import EditMyPage from './views/account/mine/EditMyPage.vue'
+
+import Setting from './views/account/mine/Setting.vue'
+
 import OtherPage from './views/account/your/OtherPage.vue'
 
 import ViewFollowings from './views/account/ViewFollowings.vue'
@@ -180,5 +183,10 @@ export default [
         path: '/profile/followers/:uno',
         name: 'ViewFollowers',
         component: ViewFollowers
+    },
+    {
+        path: '/setting',
+        name: 'Setting',
+        component: Setting
     },
 ]
