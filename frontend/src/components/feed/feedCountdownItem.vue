@@ -94,9 +94,8 @@
 import ReplyItem from "@/components/ReplyItem.vue"
 import defaultImage from "../../assets/images/img-placeholder.png";
 import defaultProfile from "../../assets/images/profile_default.png";
-import {mapState} from "vuex"
-import header from "@/api/header.js"
-import axios from "axios"
+
+import FeedApi from "@/api/FeedApi.js"
 
 export default {
     name: 'feedCountdownItem',
@@ -112,7 +111,6 @@ export default {
         },
         date: "2020-08-31",
         Time: "21:35:30",
-        comment: null,
         tags: ['소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ'],
         reply: ['wow', '너무 좋아용 ㅎㅎ'],
         like_num: 12,
@@ -130,9 +128,6 @@ export default {
       ReplyItem,
     },
     computed: {
-      ...mapState([
-        'userInfo',
-      ]),
       createAfter() {
         const today = new Date()
         return parseInt((today-new Date(this.create_date)) / (1000*60*60))
@@ -166,33 +161,21 @@ export default {
         this.timer()
         setInterval(this.timer, 1000)
       },
-      pushReply() {
-        axios.post('http://localhost:9000/reply/feed/create',
-        {
-          no: this.article.fno,
-          content: this.additionReply,
-          writer_uno: 1,
-        }, header())
-      },
       touchLikeIcon() {
         this.likeIcon = !this.likeIcon
         if (this.likeIcon) {
           this.like_num ++
-          axios.post('http://localhost:9000/like/feed/create', {
-            uno: this.$store.state.userInfo.uno,
-            tno: this.fno
-          }, header())
-            .then(res => console.log(res))
-            .catch(err => console.log(err))
+          FeedApi.createFeedLike(
+          { tno: this.fno }
+          , res => console.log(res)
+          , err => console.log(err))
         }
         else {
           this.like_num --
-          axios.post('http://localhost:9000/like/feed/delete', {
-            uno: this.$store.state.userInfo.uno,
-            tno: this.fno
-          }, header())
-            .then(res => console.log(res))
-            .catch(err => console.log(err))
+          FeedApi.deleteFeedLike(
+          { tno: this.fno }
+          , res => console.log(res)
+          , err => console.log(err))
         }
       },
       touchScrapIcon() {
@@ -206,12 +189,14 @@ export default {
         // console.log(this.scrapIcon)
       },
       delFeed() {
-        axios.delete('http://localhost:9000/feed/delete/'+this.fno, header())
-          .then(res => {
+        FeedApi.deleteFeed(
+          this.fno,
+          res=> {
             console.log(res)
-            this.$router.push('/feed/main')
-          })
-          .catch(err => console.log(err))
+            this.$router.push({path:'/feed/main'})
+          },
+          err=> console.log(err)
+        )
       },
       updateFeed() {
         this.$router.push({ path:'/feed/create/2/'+this.fno })
@@ -224,24 +209,22 @@ export default {
       }
     },
     created() {
-      if (this.article !== null) {
-        console.log(111)
-        this.feedTitle = this.article.content.content.title
-        this.date = this.article.content.content.date
-        this.Time = this.article.content.content.time
-        this.tags = this.article.tag
-        this.reply = this.article.reply_content
-        this.reply_num = this.article.reply_num
-        this.thumbnail = this.article.thumbnail
-        this.writer_uno = this.article.uno
-        this.likeIcon = this.article.prees_like
-        this.scrapIcon = this.article.press_dibs
-        if (!this.article.dibsNum) {this.scrapNum = 0}
-        else {this.scrapNum = this.article.dibsNum}
-        this.create_date = this.article.create_date
-        if (!this.article.like_num) {this.like_num = 0}
-        else {this.like_num = this.article.like_num}
-      }
+      console.log(111)
+      this.feedTitle = this.article.content.content.title
+      this.date = this.article.content.content.date
+      this.Time = this.article.content.content.time
+      this.tags = this.article.tag
+      this.reply = this.article.reply_content
+      this.reply_num = this.article.reply_num
+      this.thumbnail = this.article.thumbnail
+      this.writer_uno = this.article.uno
+      this.likeIcon = this.article.press_like
+      this.scrapIcon = this.article.press_dibs
+      if (!this.article.dibsNum) {this.scrapNum = 0}
+      else {this.scrapNum = this.article.dibsNum}
+      this.create_date = this.article.create_date
+      if (!this.article.like_num) {this.like_num = 0}
+      else {this.like_num = this.article.like_num}
     }
   }
 </script>

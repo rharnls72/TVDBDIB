@@ -83,9 +83,8 @@
 import ReplyItem from "@/components/ReplyItem.vue"
 import defaultImage from "@/assets/images/img-placeholder.png";
 import defaultProfile from "@/assets/images/profile_default.png";
-import {mapState} from 'vuex'
-import axios from 'axios'
-import header from '@/api/header.js'
+
+import FeedApi from "@/api/FeedApi.js"
 
 export default {
   name: 'feedVoteItem',
@@ -99,7 +98,6 @@ export default {
         {id: 2, content:"항목 3", count:8},
       ],
       totalNum: null,
-      comment: null,
       tags: ['소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ','소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ'],
       reply: ['wow', '너무 좋아용 ㅎㅎ'],
       additionReply: "",
@@ -119,9 +117,6 @@ export default {
     fno: Number,
   },
   computed: {
-    ...mapState([
-      'userInfo',
-    ]),
     createAfter() {
       const today = new Date()
       return parseInt((today-new Date(this.create_date)) / (1000*60*60))
@@ -145,21 +140,17 @@ export default {
       this.likeIcon = !this.likeIcon
       if (this.likeIcon) {
         this.like_num ++
-        axios.post('http://localhost:9000/like/feed/create', {
-          uno: this.$store.state.userInfo.uno,
-          tno: this.fno
-        }, header())
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
+        FeedApi.createFeedLike(
+          { tno: this.fno }
+          , res => console.log(res)
+          , err => console.log(err))
       }
       else {
         this.like_num --
-        axios.post('http://localhost:9000/like/feed/delete', {
-          uno: this.$store.state.userInfo.uno,
-          tno: this.fno
-        }, header())
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
+        FeedApi.deleteFeedLike(
+          { tno: this.fno }
+          , res => console.log(res)
+          , err => console.log(err))
       }
       // console.log(this.likeIcon)
     },
@@ -188,17 +179,21 @@ export default {
         tag: JSON.stringify(this.tags),
         fno: this.fno
       };
-      axios.put('http://localhost:9000/feed/update', data, header())
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
+      FeedApi.updateFeed(
+        data
+        , res => console.log(res)
+        , err => console.log(err)
+      )
     },
     delFeed() {
-      axios.delete('http://localhost:9000/feed/delete/'+this.fno, header())
-        .then(res => {
-          console.log(res)
-          this.$router.push('/feed/main')
-        })
-        .catch(err => console.log(err))
+      FeedApi.deleteFeed(
+          this.fno,
+          res=> {
+            console.log(res)
+            this.$router.push({path:'/feed/main'})
+          },
+          err=> console.log(err)
+        )
     },
     updateFeed() {
       this.$router.push({ path:'/feed/create/3/'+this.fno })
@@ -208,23 +203,22 @@ export default {
     this.totalNumber()
   },
   created() {
-    if (this.article !== null) {
-      this.feedTitle = this.article.content.title
-      this.vote = this.article.content.content
-      this.tags = this.article.tag
-      this.reply = this.article.reply_content
-      this.reply_num = this.article.reply_num
-      this.thumbnail = this.article.thumbnail
-      this.writer_uno = this.article.uno
-      this.likeIcon = this.article.prees_like
-      this.scrapIcon = this.article.press_dibs
-      if (!this.article.dibsNum) {this.scrapNum = 0}
-      else {this.scrapNum = this.article.dibsNum}
-      this.create_date = this.article.create_date
-      if (!this.article.like_num) {this.like_num = 0}
-      else {this.like_num = this.article.like_num}
-      console.log(this.vote)
-    }
+    this.feedTitle = this.article.content.title
+    this.vote = this.article.content.content
+    this.tags = this.article.tag
+    this.reply = this.article.reply_content
+    this.reply_num = this.article.reply_num
+    this.thumbnail = this.article.thumbnail
+    this.writer_uno = this.article.uno
+    this.likeIcon = this.article.press_like
+    this.scrapIcon = this.article.press_dibs
+    if (!this.article.dibsNum) {this.scrapNum = 0}
+    else {this.scrapNum = this.article.dibsNum}
+    this.create_date = this.article.create_date
+    if (!this.article.like_num) {this.like_num = 0}
+    else {this.like_num = this.article.like_num}
+    console.log(this.vote)
+    this.totalNum()
   }
 };
 </script>

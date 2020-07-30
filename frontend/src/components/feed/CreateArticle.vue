@@ -28,10 +28,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import {mapState} from 'vuex'
 import FeedApi from '../../api/FeedApi'
-import header from '@/api/header.js'
 
 export default {
   name: 'CreateArticle',
@@ -93,12 +91,15 @@ export default {
         )
       } else {
         Data.fno = this.fno
-        axios.put("http://localhost:9000/feed/update", Data, header())
-          .then(res => {
+
+        FeedApi.updateFeed(
+          Data,
+          res=> {
             console.log(res)
-            this.$router.push({path:'/feed/feedDetail/'+this.fno})
-          })
-          .catch(err => console.log(err))
+            this.$router.push({path:'/feed/main'})
+          },
+          err=> console.log(err)
+          )
       }
 
       // axios.post('http://localhost:9000/feed/create', Data, header())
