@@ -176,8 +176,8 @@ export default {
             // 로그인 정보를 vuex 에 저장
             this.$store.commit('addUserInfo', res.userInfo);
 
-            // feed/main 페이지로 이동
-            this.$router.push("/feed/main");
+            // curation/main 페이지로 이동
+            this.$router.push("/curation/main");
           },
           // 로그인 실패 시 호출 될 함수
           error => {
