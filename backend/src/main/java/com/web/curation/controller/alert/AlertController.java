@@ -90,8 +90,9 @@ public class AlertController {
                     break;
             }
             System.out.println(return_alert.getSubject_no());
-            return_alert.setAno(alert.getAtype());
+            return_alert.setAtype(alert.getAtype());
             return_alert.setAno(alert.getAno());
+            return_alert.setRead(alert.getRead());
             return_list.add(return_alert);
         }
 
