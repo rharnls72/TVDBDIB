@@ -37,7 +37,7 @@ CREATE TABLE `user` (
     `password` VARCHAR(128) NOT NULL,
     `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
     `nick_name` VARCHAR(20) NOT NULL,
-    `bio` VARCHAR(200) DEFAULT '소개를 작성해주세요.',
+    `bio` VARCHAR(200) DEFAULT 'what the??',
     `profile_pic` VARCHAR(100),
     `is_private` BOOLEAN DEFAULT FALSE,
     `is_certification` BOOLEAN DEFAULT FALSE, 

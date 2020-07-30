@@ -7,6 +7,8 @@ const createFeed = (data,callback,errorCallback) => {
     // 성공 : call back 호출
     // 실패 :  errorCallback 호출
 
+    sessionStorage.getItem('jwt-token')
+
     http.post('/feed/create', data, header())
         .then(res => {
             // 서버에서 정상적으로 처리되었으면 res 가 null 이 될 수 없음
