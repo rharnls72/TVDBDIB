@@ -319,19 +319,14 @@ public class AccountController {
 
     @GetMapping("/account/checkNick")
     @ApiOperation(value = "닉네임 확인")
-    public Object checkNick(@RequestParam(required = true) final String nick_name) {
+    public Object checkNick(@RequestParam(required = true) final String nick_name,
+                    @RequestParam(required = true) final String new_nick_name) {
         final BasicResponse result = new BasicResponse();
-        User user = new User();
-        user.setNick_name(nick_name);
-        
-        int n = userDao.checkNickName(nick_name);
-        if(n != 1) {
+        if(new_nick_name.equals("") || (!nick_name.equals(new_nick_name) && userDao.checkNickName(new_nick_name) == 1)) {
             result.status = false;
-            result.msg = "이미 존재하는 닉네임입니다.";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
         result.status = true;
-        result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -349,6 +344,7 @@ public class AccountController {
 
         result.status = true;
         result.msg = "success";
+        result.data = userDao.getUserByEmail(user.getEmail());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @GetMapping("/account/followcnt")

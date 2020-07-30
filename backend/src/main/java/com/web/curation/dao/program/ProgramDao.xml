@@ -36,7 +36,7 @@
             ), 0) AS `reply_num`
             , (
                 SELECT
-                    `content`
+                    CONCAT(`writer_nick_name`, ':', `content`)
                 FROM
                     `program_reply_view` prv
                 WHERE

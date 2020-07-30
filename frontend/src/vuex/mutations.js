@@ -1,4 +1,7 @@
 export default {
+    setAutoLogin(state, isAuto){
+        state.isAutoLogin = isAuto;
+    },
     addUserInfo(state, userInfo) {
         state.userInfo = userInfo;
     },

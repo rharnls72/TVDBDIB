@@ -187,6 +187,7 @@ public class ReplyController {
         int updateReply(Reply reply, ReplyDao dao);
     }
 
+    ////////////////////////////////////////////// 댓글 수정 파트 ///////////////////////////////////////
     @PostMapping("/reply/program/update")
     @ApiOperation(value = "프로그램 댓글 수정")
     public Object updateProgramReply(@RequestBody Reply reply) {
@@ -203,6 +204,24 @@ public class ReplyController {
     @ApiOperation(value = "피드 댓글 수정")
     public Object updateFeedReply(@RequestBody Reply reply) {
         return updateReply(reply, feedReplyDao, (param_reply, dao) -> dao.modifyReply(param_reply));
+    }
+    //////////////////////////////////////////// 댓글 숨김 파트 ////////////////////////////////////////
+    @PostMapping("/reply/program/hide")
+    @ApiOperation(value = "프로그램 댓글 숨김/해제")
+    public Object setHideProgramReply(@RequestBody Reply reply) {
+        return updateReply(reply, programReplyDao, (param_reply, dao) -> dao.setHideReply(param_reply));
+    }
+
+    @PostMapping("/reply/episode/hide")
+    @ApiOperation(value = "에피소드 댓글 숨김/해제")
+    public Object setHideEpisodeReply(@RequestBody Reply reply) {
+        return updateReply(reply, episodeReplyDao, (param_reply, dao) -> dao.setHideReply(param_reply));
+    }
+
+    @PostMapping("/reply/feed/hide")
+    @ApiOperation(value = "피드 댓글 숨김/해제")
+    public Object setHideFeedReply(@RequestBody Reply reply) {
+        return updateReply(reply, feedReplyDao, (param_reply, dao) -> dao.setHideReply(param_reply));
     }
 
     ////////////////////////////////////////////////////////////////////
