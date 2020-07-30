@@ -136,7 +136,6 @@ export default {
       if (this.likeIcon) {
         this.like_num ++
         axios.post('http://localhost:9000/like/feed/create', {
-          uno: this.$store.state.userInfo.uno,
           tno: this.fno
         }, header())
           .then(res => console.log(res))
@@ -145,7 +144,6 @@ export default {
       else {
         this.like_num --
         axios.post('http://localhost:9000/like/feed/delete', {
-          uno: this.$store.state.userInfo.uno,
           tno: this.fno
         }, header())
           .then(res => console.log(res))
@@ -182,7 +180,7 @@ export default {
     this.reply_num = this.article.reply_num
     this.thumbnail = this.article.thumbnail
     this.writer_uno = this.article.uno
-    this.likeIcon = this.article.prees_like
+    this.likeIcon = this.article.press_like
     this.scrapIcon = this.article.press_dibs
     if (!this.article.dibsNum) {this.scrapNum = 0}
     else {this.scrapNum = this.article.dibsNum}
