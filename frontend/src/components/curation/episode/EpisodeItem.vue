@@ -52,11 +52,11 @@
       </div>
       <div class="mr-1">
         <!-- 우리가 생각한 공유 (해당 게시물에 대한 글 바로 작성) -->
-        <div class="mr-2">
+        <!-- <div class="mr-2">
           <button class="h5">
             <b-icon-pencil></b-icon-pencil>
           </button>
-        </div>
+        </div> -->
         <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
         <div>
           <button class="h5">
@@ -82,10 +82,11 @@
       </div>
     </div>
     <!-- 추후에 댓글 연결!~ -->
-    <div class="content">
+    <ReplyItem />
+    <!-- <div class="content">
       <p>댓글이야 댓글 댓글!~</p>
       <p class="more">댓글 1개</p>
-    </div>
+    </div> -->
     <!---->
     <!---->
   </div>
@@ -94,6 +95,7 @@
 <script>
 import defaultImage from "../../../assets/images/img-placeholder.png";
 import defaultProfile from "../../../assets/images/profile_default.png";
+import ReplyItem from '../../ReplyItem.vue'
 
 export default {
   name: 'EpisodeItem',
@@ -111,6 +113,9 @@ export default {
   props: {
     curation: Object,
     id: Number,
+  },
+  components: {
+    ReplyItem,
   },
   methods: {
     readMore() {
