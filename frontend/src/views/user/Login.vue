@@ -76,12 +76,13 @@
 </template>
 
 <script>
-import "../../components/css/user.scss";
+import "@/components/css/user.scss";
 import PV from "password-validator";
 import * as EmailValidator from "email-validator";
-import KakaoLogin from "../../components/user/snsLogin/Kakao.vue";
-import GoogleLogin from "../../components/user/snsLogin/Google.vue";
-import UserApi from "../../api/UserApi";
+import KakaoLogin from "@/components/user/snsLogin/Kakao.vue";
+import GoogleLogin from "@/components/user/snsLogin/Google.vue";
+import UserApi from "@/api/UserApi";
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   components: {
@@ -89,8 +90,10 @@ export default {
     GoogleLogin
   },
   created() {
-    var getValue = JSON.parse(localStorage.getItem('tvility'));
-    // if(getValue != null)  this.$router.push("/feed/main");
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+    if(this.$store.state.isAutoLogin)  this.$router.push({name:'IndexCuration'});
 
     this.component = this;
 
@@ -161,17 +164,17 @@ export default {
 
             // 로그인 완료 시 세션 저장소에 받은 토큰 정보 저장
             sessionStorage.setItem('jwt-token', res.jwtToken);
-
+            localStorage.setItem('tvility', JSON.stringify(res.userInfo));
             // 유저 정보 저장 선택 시 로컬 저장소에 유저 정보 저장
             if(this.isSave){
-              localStorage.setItem('tvility', JSON.stringify(res.userInfo));
+              this.$store.commit('setAutoLogin', true);
             }
 
             // 로그인 정보를 vuex 에 저장
             this.$store.commit('addUserInfo', res.userInfo);
 
             // feed/main 페이지로 이동
-            this.$router.push("/feed/main");
+            this.$router.push({name:'IndexCuration'});
           },
           // 로그인 실패 시 호출 될 함수
           error => {

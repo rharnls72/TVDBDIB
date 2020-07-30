@@ -2,8 +2,7 @@
   <div class="feed newsfeed">
     <IndexCurationHeader />
     <div class="wrapB">
-      <h1>큐레이션</h1>
-      <div>
+      <div class="myfeed">
         <EpisodeItem v-for="curation in partCurations" :key="curation.key" :curation="curation"/>
         <infinite-loading @infinite="infiniteHandler"></infinite-loading>
       </div>
@@ -22,6 +21,7 @@ import Footer from '../../components/common/custom/Footer.vue';
 import IndexCurationHeader from '../../components/curation/IndexCurationHeader.vue'
 import header from "@/api/header.js"
 import axios from "axios"
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   name: 'IndexCuration',
@@ -77,6 +77,9 @@ export default {
   },
   // 1. 데이터 모두 다 받아오기
   created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
     axios.get('http://localhost:9000/episode/following/1', header())
       .then(res => {
         console.log(res);
@@ -93,3 +96,8 @@ export default {
 */
 };
 </script>
+<style>
+  .myfeed {
+    padding-top: 70px;
+  }
+</style>

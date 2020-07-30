@@ -12,6 +12,6 @@
     <select id="searchByFeedTag" resultType="Feed">
         select *
         from feed
-        where tag like CONCAT('[', #{value}, ']')
+        where tag like CONCAT('"', #{value}, '"')
     </select>
 </mapper>

@@ -9,11 +9,17 @@
         insert into
             feed_reply(
                 fno
+                <if test="parent_reply > 0">
+                , parent_reply
+                </if>
                 , uno
                 , content
             )
         values(
             #{no}
+            <if test="parent_reply > 0">
+            , #{parent_reply}
+            </if>
             , #{writer_uno}
             , #{content}
         )
