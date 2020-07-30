@@ -22,6 +22,7 @@ DROP TABLE IF EXISTS `feed`;
 DROP TABLE IF EXISTS `episode`;
 DROP TABLE IF EXISTS `program`;
 DROP TABLE IF EXISTS `follow_request`;
+DROP TABLE IF EXISTS `search_history`;
 
 DROP VIEW IF EXISTS `episode_reply_view`;
 DROP VIEW IF EXISTS `program_reply_view`;
@@ -37,7 +38,7 @@ CREATE TABLE `user` (
     `password` VARCHAR(128) NOT NULL,
     `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
     `nick_name` VARCHAR(20) NOT NULL,
-    `bio` VARCHAR(200) DEFAULT 'what the??',
+    `bio` VARCHAR(200) DEFAULT 'Write cow dog',
     `profile_pic` VARCHAR(100),
     `is_private` BOOLEAN DEFAULT FALSE,
     `is_certification` BOOLEAN DEFAULT FALSE, 
@@ -81,9 +82,6 @@ CREATE TABLE `program_follow` (
     PRIMARY KEY (`uno`, `pno`),
     CONSTRAINT FK_uno FOREIGN KEY (`uno`)
         REFERENCES `user` (`uno`)
-        ON DELETE CASCADE,
-    CONSTRAINT FK_pno1 FOREIGN KEY (`pno`)
-        REFERENCES `program` (`pno`)
         ON DELETE CASCADE
 );
 
@@ -108,9 +106,6 @@ CREATE TABLE `feed` (
     PRIMARY KEY (`fno`),
     FOREIGN KEY (`uno`)
         REFERENCES `user` (`uno`)
-        ON DELETE CASCADE,
-    FOREIGN KEY (`pno`)
-        REFERENCES `program` (`pno`)
         ON DELETE CASCADE,
     FOREIGN KEY (`eno`)
         REFERENCES `episode` (`eno`)
@@ -150,6 +145,7 @@ CREATE TABLE `episode_reply` (
     `uno` INT NOT NULL,
     `content` VARCHAR(200) NOT NULL,
     `write_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
+    `hide` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`erno`),
     FOREIGN KEY (`eno`)
         REFERENCES `episode` (`eno`)
@@ -169,6 +165,7 @@ CREATE TABLE `feed_reply` (
     `uno` INT NOT NULL,
     `content` VARCHAR(200) NOT NULL,
     `write_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
+    `hide` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`frno`),
     FOREIGN KEY (`fno`)
         REFERENCES `feed` (`fno`)
@@ -188,6 +185,7 @@ CREATE TABLE `program_reply` (
     `uno` INT NOT NULL,
     `content` VARCHAR(200) NOT NULL,
     `write_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
+    `hide` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`prno`),
     FOREIGN KEY (`parent_reply`)
         REFERENCES `program_reply` (`prno`)
@@ -293,6 +291,19 @@ CREATE TABLE `follow_request` (
         REFERENCES `user` (`uno`)
         ON DELETE CASCADE,
     FOREIGN KEY (`follower`)
+        REFERENCES `user` (`uno`)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE `search_history` (
+    `hno` INT AUTO_INCREMENT,
+    `uno` INT,
+    `search_uno` INT,
+    PRIMARY KEY (`hno`),
+    FOREIGN KEY (`uno`)
+        REFERENCES `user` (`uno`)
+        ON DELETE CASCADE,
+    FOREIGN KEY (`search_uno`)
         REFERENCES `user` (`uno`)
         ON DELETE CASCADE
 );

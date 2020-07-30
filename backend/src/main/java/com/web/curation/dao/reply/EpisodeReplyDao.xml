@@ -35,6 +35,7 @@
             , sub.writer_nick_name    AS `writer_nick_name`
             , sub.writer_profile_pic  AS `writer_profile_pic`
             , sub.like_num            AS `like_num`
+            , sub.hide                AS `hide`
             , IF((
                 SELECT
                     COUNT(erl.lno)
@@ -88,7 +89,8 @@
             sub.writer_uno          AS `writer_uno`,
             sub.writer_nick_name    AS `writer_nick_name`,
             sub.writer_profile_pic  AS `writer_profile_pic`,
-            sub.like_num            AS `like_num`
+            sub.like_num            AS `like_num`,
+            sub.hide                AS `hide`
             , IF((
                 SELECT
                     COUNT(erl.lno)
@@ -119,6 +121,15 @@
             episode_reply
         set
             content = #{content}
+        where
+            erno = #{no}
+    </update>
+
+    <update id="setHideReply">
+        update
+            episode_reply
+        set
+            hide = !hide
         where
             erno = #{no}
     </update>

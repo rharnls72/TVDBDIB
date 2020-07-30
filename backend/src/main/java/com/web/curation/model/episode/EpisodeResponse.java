@@ -34,6 +34,8 @@ public class EpisodeResponse {
 	private boolean press_like;
 	private int reply_num;
 	private String reply_content;
+	private String reply_user_nick;
+
 	private int share_num;
 	private int dibs_num;
 
@@ -187,7 +189,17 @@ public class EpisodeResponse {
 	}
 
 	public void setReply_content(String reply_content) {
-		this.reply_content = reply_content;
+		String[] strs = reply_content.split(":");
+        this.reply_user_nick = strs[0];
+        this.reply_content = strs[1];
+	}
+
+	public String getReply_user_nick() {
+		return this.reply_user_nick;
+	}
+
+	public void setReply_user_nick(String reply_user_nick) {
+		this.reply_user_nick = reply_user_nick;
 	}
 
 	public int getShare_num() {

@@ -21,6 +21,7 @@ public class Reply {
     private int reply_num;
     private boolean press_like;
     private String re_content;
+    private boolean hide;
 
     // Getter Setter
     public void setNo(int no) {
@@ -91,5 +92,13 @@ public class Reply {
 
     public void setRe_content(String re_content) {
         this.re_content = re_content;
+    }
+
+    public boolean isHide() {
+        return this.hide;
+    }
+
+    public void setHide(boolean hide) {
+        this.hide = hide;
     }
 }

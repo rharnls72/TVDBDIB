@@ -6,9 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import com.web.curation.model.BasicResponse;
 import com.web.curation.model.episode.EpisodeDB;
 import com.web.curation.model.episode.EpisodeResponse;
 import com.web.curation.model.program.Program;
+import com.web.curation.model.user.User;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -77,6 +80,57 @@ public class EpisodeController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // 에피소드 찜
+    @PostMapping("/episode/dibs/add")
+    @ApiOperation(value = "에피소드 찜 추가")
+    public Object addDibs(@RequestBody EpisodeDB req, HttpServletRequest httpReq) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        req.setUno(((User) httpReq.getAttribute("User")).getUno());
+
+        // 에피소드 찜
+        int n = dao.addEpisodeDibs(req);
+
+        // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
+        if(n != 1) {
+            result.status = false;
+            result.msg = "Insert 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+        // 완료
+        result.status = true;
+        result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // 에피소드 찜 해제
+    @DeleteMapping("/episode/dibs/delete/{eno}")
+    @ApiOperation(value = "에피소드 찜 삭제")
+    public Object deleteDibs(@PathVariable("eno") int eno, HttpServletRequest httpReq) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        EpisodeDB req = new EpisodeDB();
+        req.setEno(eno);
+        req.setUno(((User) httpReq.getAttribute("User")).getUno());
+
+        // 에피소드 찜 삭제
+        int n = dao.deleteEpisodeDibs(req);
+
+        // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
+        if(n != 1) {
+            result.status = false;
+            result.msg = "Delete 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+        // 완료
+        result.status = true;
+        result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     /* 이 아래로 TMDB API 이용하는 파트 */
     @GetMapping("/episode/following/{uno}")
