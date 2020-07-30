@@ -51,7 +51,7 @@ export default {
       AccountApi.requestFollow(
         data,
         res => {
-          //화면 재렌더링 알아보기
+          this.$router.go(this.$router.currentRoute);
         },
         error => {
           this.$router.push({name:'Errors', query: {message: error.msg}})
@@ -66,7 +66,7 @@ export default {
       AccountApi.requestDeFollow(
         data,
         res => {
-          //화면 재렌더링 알아보기
+          this.$router.go(this.$router.currentRoute);
         },
         error => {
           this.$router.push({name:'Errors', query: {message: error.msg}})
