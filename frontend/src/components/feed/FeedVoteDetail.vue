@@ -167,24 +167,21 @@ export default {
         tag: JSON.stringify(this.tags),
         fno: this.fno
       };
-      FeedApi.feedUpdate(
-          data,
-          res => {},
-          error => {
-            this.$router.push({name:'Errors', query: {message: error.msg}})
-          }
-        );
+      FeedApi.updateFeed(
+        data
+        , res => console.log(res)
+        , err => console.log(err)
+      )
     },
     delFeed() {
-      FeedApi.feedDelete(
-        { fno: this.fno },
-        res => {
-            this.$router.push('/feed/main')
+      FeedApi.deleteFeed(
+          this.fno,
+          res=> {
+            console.log(res)
+            this.$router.push({path:'/feed/main'})
           },
-          error => {
-            this.$router.push({name:'Errors', query: {message: error.msg}})
-          }
-      );
+          err=> console.log(err)
+        )
     },
     updateFeed() {
       this.$router.push({ path:'/feed/create/3/'+this.fno })
