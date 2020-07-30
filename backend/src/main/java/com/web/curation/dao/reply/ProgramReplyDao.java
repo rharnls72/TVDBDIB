@@ -20,6 +20,7 @@ public interface ProgramReplyDao extends ReplyDao {
 
     // Update
     int modifyReply(Reply reply);
+    int setHideReply(Reply reply);
 
     // Delete
     int deleteReply(int erno);
