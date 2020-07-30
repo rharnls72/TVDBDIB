@@ -12,7 +12,7 @@
     <select id="searchByFeedTag" resultType="Feed">
         select *
         from feed
-        where tag like CONCAT('[', #{value}, ']')
+        where tag like CONCAT('"', #{value}, '"')
     </select>
 
     <select id="getAllUser" resultType="User">
@@ -21,4 +21,55 @@
         from
             `user`
     </select>
+
+    <insert id="addHistory">
+        insert into
+            search_history(
+                uno
+                , search_uno
+            )
+        values(
+            #{uno}
+            , #{search_uno}
+        )
+    </insert>
+
+    <select id="getHistoryList" resultType="User">
+        select
+            u.uno               as `uno`
+            , u.email           as `email`
+            , u.create_date     as `create_date`
+            , u.nick_name       as `nick_name`
+            , u.bio             as `bio`
+            , u.profile_pic     as `profile_pic`
+        from
+            (
+                select
+                    `hno`
+                    , `search_uno`
+                from
+                    `search_history`
+                where
+                    `uno` = #{value}
+            ) h
+                JOIN
+            `user` u ON h.search_uno = u.uno
+        order by h.hno desc
+    </select>
+
+    <delete id="deleteHistory">
+        delete from
+            search_history
+        where
+            uno = #{uno}
+            and
+            search_uno = #{search_uno}
+    </delete>
+
+    <delete id="deleteAllHistory">
+        delete from
+            search_history
+        where
+            uno = #{value}
+    </delete>
 </mapper>

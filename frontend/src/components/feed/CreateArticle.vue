@@ -31,6 +31,7 @@
 import axios from 'axios'
 import {mapState} from 'vuex'
 import FeedApi from '../../api/FeedApi'
+import header from '@/api/header.js'
 
 export default {
   name: 'CreateArticle',
@@ -40,6 +41,10 @@ export default {
       content: null,
       value: [],
     }
+  },
+  props: {
+    article: Object,
+    fno: Number,
   },
   computed: {
     ...mapState([
@@ -54,6 +59,7 @@ export default {
     },
     makeData() {
       var jsonObj = {
+        title: this.title,
         content: this.content,
       }
       return JSON.stringify(jsonObj)
@@ -61,27 +67,59 @@ export default {
     submitArticle() {
       let sendData = this.makeData();
 
+      console.log(this.$store.state.isUser)
       // createFeed 요청에 줄 데이터 목록
       // uno 는 토큰을 통해 사용하기위해 제거
-      let data = {
+      let Data = {
         ctype: 1,
         content: sendData,
         tag: JSON.stringify(this.value)
       };
 
       // Axios 요청
-      FeedApi.createFeed(
-        // 요청에 쓸 데이터 전달
-        data
-        // 성공시 수행할 콜백 메서드
-        , res => {
-          console.log(res);
-        }
-        // 실패시 수행할 콜백 메서드
-        , err => {
-          console.log(err);
-        } 
-      );
+      if (this.fno === null) {
+        FeedApi.createFeed(
+          // 요청에 쓸 데이터 전달
+          Data
+          // 성공시 수행할 콜백 메서드
+          , res => {
+            console.log(res);
+            this.$router.push({path: '/feed/main'})
+          }
+          // 실패시 수행할 콜백 메서드
+          , err => {
+            console.log(err);
+          } 
+        )
+      } else {
+        Data.fno = this.fno
+        axios.put("http://localhost:9000/feed/update", Data, header())
+          .then(res => {
+            console.log(res)
+            this.$router.push({path:'/feed/feedDetail/'+this.fno})
+          })
+          .catch(err => console.log(err))
+      }
+
+      // axios.post('http://localhost:9000/feed/create', Data, header())
+      //   .then(res => console.log(res))
+      //   .catch(err => console.log(err))
+    }
+  },
+  mounted() {
+    console.log(this.fno)
+    if (this.article !== null) {
+      console.log(this.article.content)
+      const data = this.article
+      console.log(data)
+      this.title = data.content.title
+      this.content = data.content.content
+      this.value = this.article.tag
+      console.log(this.title, this.content, this.value)
+    } else {
+      this.title = null
+      this.content = null
+      this.value = []
     }
   }
 }

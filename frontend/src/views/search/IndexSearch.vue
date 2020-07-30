@@ -14,12 +14,18 @@ import "../../components/css/feed/feed-item.scss";
 import "../../components/css/feed/newsfeed.scss";
 import Footer from '../../components/common/custom/Footer.vue';
 import IndexSearchHeader from '../../components/search/IndexSearchHeader.vue'
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   name: 'IndexSearch',
   components: {
     IndexSearchHeader,
     Footer,
+  },
+  created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
   },
 };
 </script>

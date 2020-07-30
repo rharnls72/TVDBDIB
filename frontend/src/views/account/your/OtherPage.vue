@@ -12,6 +12,7 @@ import OtherPageHeader from '@/components/account/your/OtherPageHeader.vue'
 import OtherPageInformation from '@/components/account/your/OtherPageInformation.vue'
 import Footer from '@/components/common/custom/Footer.vue'
 import AccountApi from "@/api/AccountApi";
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   name: 'OtherPage',
@@ -44,7 +45,12 @@ export default {
         this.$router.push({name:'Errors', query: {message: error.msg}})
       }
     );
-  }
+  },
+  created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+  },
 }
 </script>
 
