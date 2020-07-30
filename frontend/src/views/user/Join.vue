@@ -5,17 +5,18 @@
     Sub PJT I에서는 UX, 디자인 등을 포함하여 백엔드를 제외하여 개발합니다.
  -->
 <template>
-  <div class="user join wrapC">
-    <h1>가입하기</h1>
-    <div class="form-wrap">
+  <div class="user join m-0">
+    <LoginHeader />
+    <div class="form-wrap wrapC myjoin">
       <div class="input-with-label">
         <input
           v-model="nick_name"
           v-bind:class="{error : error.nick_name, complete:!error.nick_name&&nick_name.length!==0}"
           id="nick_name"
           placeholder="닉네임을 입력하세요."
-          type="text" />
-        <label for="nick_name">닉네임</label>
+          type="text"
+        />
+        <label for="nick_name" class="m-0">닉네임</label>
         <div class="error-text" v-if="error.nick_name">{{error.nick_name}}</div>
       </div>
 
@@ -79,6 +80,7 @@ import "../../components/css/user.scss";
 import UserApi from "../../api/UserApi";
 import PV from "password-validator";
 import * as EmailValidator from "email-validator";
+import LoginHeader from '../../components/user/custom/LoginHeader.vue'
 
 export default {
   created() {
@@ -204,8 +206,15 @@ export default {
 
       termPopup: false
     };
-  }
+  },
+  components: {
+    LoginHeader,
+  },
 };
 </script>
 
-
+<style scoped>
+  .myjoin {
+    padding-top: 70px;
+  }
+</style>
