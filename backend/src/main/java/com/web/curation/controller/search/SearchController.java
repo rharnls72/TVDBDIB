@@ -75,7 +75,10 @@ public class SearchController {
 
     @PostMapping("/search/history/save")
     @ApiOperation(value = "유저 검색 히스토리 저장")
-    public Object saveHistory(@RequestBody SearchRequest req) {
+    public Object saveHistory(@RequestBody SearchRequest req, HttpServletRequest request) {
+        int uno = ((User) request.getAttribute("User")).getUno();
+        req.setUno(uno);
+
         int n = searchDao.addHistory(req);
 
         if(n != 1) {
