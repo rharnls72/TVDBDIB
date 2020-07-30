@@ -1,12 +1,12 @@
 import http from "./http-common.js";
-
+import header from "./header.js"
 const requestProfile = (data,callback,errorCallback) => {
     http.get('/account/followcnt', {
         params: {
           my_nick_name : data.my_nick_name,
           other_nick_name: data.other_nick_name
         }
-    })
+    }, header())
     .then(res => {
         if(res == null) {
             let error = {msg : '알 수 없는 오류 발생'};
@@ -32,7 +32,7 @@ const requestFollow = (data,callback,errorCallback) => {
     http.post('/following/user/add', {
         follower : data.follower,
         following: data.following
-    })
+    }, header())
     .then(res => {
         if(res == null) {
             let error = {msg : '알 수 없는 오류 발생'};
@@ -56,7 +56,7 @@ const requestDeFollow = (data,callback,errorCallback) => {
     http.post('/following/user/cancel', {
         follower : data.follower,
         following: data.following
-    })
+    }, header())
     .then(res => {
         if(res == null) {
             let error = {msg : '알 수 없는 오류 발생'};
@@ -83,7 +83,7 @@ const requestFindNick = (data,callback,errorCallback) => {
             nick_name : data.nick_name,
             new_nick_name : data.new_nick_name
         }
-    })
+    }, header())
     .then(res => {
         if(res == null) {
             let error = {msg : '알 수 없는 오류 발생'};
@@ -100,7 +100,7 @@ const requestFindNick = (data,callback,errorCallback) => {
 }
 const requestModifyProfile = (data,callback,errorCallback) => {
     console.log(data);
-    http.put('/account/modifyprofile', data)
+    http.put('/account/modifyprofile', data, header())
         .then(res => {
             if(res == null) {
                 let error = {msg : '알 수 없는 오류 발생'};
