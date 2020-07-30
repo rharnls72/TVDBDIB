@@ -48,7 +48,7 @@
             ) as `reply_num`
             , (
                 select
-                    `content`
+                    CONCAT(`writer_nick_name`, ':', `content`)
                 from
                     `episode_reply_view` erv
                 where
