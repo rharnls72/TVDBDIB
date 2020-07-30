@@ -98,7 +98,7 @@ export default {
 */
 };
 </script>
-<style>
+<style scoped>
   .myfeed {
     padding-top: 70px;
   }
