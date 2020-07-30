@@ -84,6 +84,8 @@ import Footer from '../../components/common/custom/Footer.vue'
 import LoginHeader from '../../components/user/custom/LoginHeader.vue'
 import teamImage from '../../assets/images/custom/team-img.jpg'
 
+import GetUserApi from "@/api/GetUserApi"
+
 export default {
   name: 'Login',
   components: {
