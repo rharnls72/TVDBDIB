@@ -4,19 +4,15 @@
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info mb-2">
         <div class="user-name">
-          <button>{{article.nick_name}}</button>
+          <button>{{nick_name}}</button>
         </div>
         <p class="date">{{createAfter}} 시간 전</p>
       </div>
       <div class="content d-flex flex-comlumn justify-content-between align-items-center my-2">
         <div>{{feedTitle}}</div>
-        <b-icon v-b-toggle.sidebar-1 icon="three-dots-vertical" font-scale="1.3"></b-icon>
-        <b-sidebar id="sidebar-1" shadow>
-          <div class="ml-3">
-            <div @click="updateFeed">수정</div>
-            <div @click="delFeed">삭제</div>
-          </div>
-        </b-sidebar>
+        <div v-if="!!this.$store.state.userInfo && this.$store.state.userInfo.uno === writer_uno">
+          <span @click="updateFeed">수정</span>   <span @click="delFeed">삭제</span>
+        </div>
       </div>
     </div>
     <div class="feed-card">
@@ -40,12 +36,14 @@
             <b-icon-heart v-if="!likeIcon"></b-icon-heart>
             <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
           </button>
+          {{like_num}}
         </div>
         <!-- 댓글 -->
         <div class="mr-3">
           <button class="h6 mr-1">
             <b-icon-chat></b-icon-chat>
           </button>
+          {{reply_num}}
         </div>
         <!-- 스크랩 -->
         <div class="mr-3">
@@ -71,12 +69,12 @@
       <span class="font-weight-bold">좋아요 {{like_num}}명</span>
     </div>
     <div class="wrap mt-2">
-      <span class="font-weight-bold">유저이름 </span>
       <span>
-        <span>{{content}}</span><br>
+        <span class="font-weight-bold">{{nick_name}} </span>{{content}}<br>
         <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
         <span v-if="!isLong" @click="changeIsLong" class="moreView">댓글 {{reply_num}}개</span>
       </span>
+      <span class="font-weight-bold">{{reply_user_nick}} </span>{{reply_content}}
       <ReplyItem v-if="isLong" :fno="fno"/>
     </div>
   </div>
@@ -109,6 +107,9 @@ export default {
       scrapNum: 12,
       create_date: 'ddddd0',
       isLong: false,
+      reply_user_nick: [],
+      nick_name: null,
+      reply_content: null,
     };
   },
   components: {
@@ -179,6 +180,9 @@ export default {
     this.writer_uno = this.article.uno
     this.likeIcon = this.article.press_like
     this.scrapIcon = this.article.press_dibs
+    this.reply_user_nick = this.article.reply_user_nick
+    this.nick_name = this.article.nick_name
+    this.reply_content = this.article.reply_content
     if (!this.article.dibsNum) {this.scrapNum = 0}
     else {this.scrapNum = this.article.dibsNum}
     this.create_date = this.article.create_date
