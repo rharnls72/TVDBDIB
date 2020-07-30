@@ -1,14 +1,11 @@
-
-
 <template>
-  <div class="user" id="login">
-    <div class="wrapC">
-      <h1>
-        로그인을 하고 나면
-        <br />좋은 일만 있을 거예요.
-      </h1>
-
-      <div class="input-with-label">
+  <div class="user m-0" id="login">
+    <LoginHeader />
+    <div class="wrapC myfeed">
+      <div class="feed-card myfeedcard">
+        <div><img class="mythumbnail" :src="teamImage" alt="team-image"></div>
+      </div>
+      <div class="input-with-label mt-3">
         <input
           v-model="email"
           v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
@@ -48,7 +45,7 @@
         :class="{disabled : !isSubmit}"
       >로그인</button>
 
-      <div class="sns-login">
+      <!-- <div class="sns-login">
         <div class="text">
           <p>SNS 간편 로그인</p>
           <div class="bar"></div>
@@ -56,44 +53,48 @@
 
         <kakaoLogin :component="component" />
         <GoogleLogin :component="component" />
-      </div>
-      <div class="add-option">
+      </div> -->
+      <div class="add-option mt-3">
         <div class="text">
           <p>혹시</p>
           <div class="bar"></div>
         </div>
-        <div class="wrap">
+        <div class="wrap m-0">
           <p>비밀번호를 잊으셨나요?</p>
           <router-link to="/user/findPw" class="btn--text">비밀번호 찾기</router-link>
         </div>
-        <div class="wrap">
+        <div class="wrap m-0">
           <p>아직 회원이 아니신가요?</p>
           <router-link to="/user/join" class="btn--text">가입하기</router-link>
         </div>
       </div>
     </div>
+    <Footer />
   </div>
 </template>
 
 <script>
-import "@/components/css/user.scss";
+import "../../components/css/user.scss";
 import PV from "password-validator";
 import * as EmailValidator from "email-validator";
-import KakaoLogin from "@/components/user/snsLogin/Kakao.vue";
-import GoogleLogin from "@/components/user/snsLogin/Google.vue";
-import UserApi from "@/api/UserApi";
-import GetUserApi from "@/api/GetUserApi"
+// import KakaoLogin from "../../components/user/snsLogin/Kakao.vue";
+// import GoogleLogin from "../../components/user/snsLogin/Google.vue";
+import UserApi from "../../api/UserApi";
+import Footer from '../../components/common/custom/Footer.vue'
+import LoginHeader from '../../components/user/custom/LoginHeader.vue'
+import teamImage from '../../assets/images/custom/team-img.jpg'
 
 export default {
+  name: 'Login',
   components: {
-    KakaoLogin,
-    GoogleLogin
+    // KakaoLogin,
+    // GoogleLogin,
+    Footer,
+    LoginHeader,
   },
   created() {
-    GetUserApi.getUser(res => {
-      this.$store.commit('addUserInfo', res.user);
-    });
-    if(this.$store.state.userInfo != null)  this.$router.push({name:'IndexCuration'});
+    var getValue = JSON.parse(localStorage.getItem('tvility'));
+    // if(getValue != null)  this.$router.push("/feed/main");
 
     this.component = this;
 
@@ -174,7 +175,7 @@ export default {
             this.$store.commit('addUserInfo', res.userInfo);
 
             // feed/main 페이지로 이동
-            this.$router.push({name:'IndexCuration'});
+            this.$router.push("/feed/main");
           },
           // 로그인 실패 시 호출 될 함수
           error => {
@@ -200,10 +201,23 @@ export default {
         passowrd: false
       },
       isSubmit: false,
-      component: this
+      component: this,
+      teamImage,
     };
   }
 };
 </script>
 
-
+<style scoped>
+  .myfeed {
+    padding-top: 70px;
+  }
+  .myfeedcard {
+    width: 100%;
+    height: auto;
+  }
+  .mythumbnail {
+    width: 100%;
+    height: auto;
+  }
+</style>
