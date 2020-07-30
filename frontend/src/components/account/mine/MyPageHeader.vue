@@ -53,6 +53,7 @@ export default {
 
     // },
     logout(){
+      this.$store.commit('setAutoLogin', false);
       localStorage.removeItem('tvility');
       this.$router.push({name:'Login'})
     }

@@ -93,7 +93,7 @@ export default {
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });
-    if(this.$store.state.userInfo != null)  this.$router.push({name:'IndexCuration'});
+    if(this.$store.state.isAutoLogin)  this.$router.push({name:'IndexCuration'});
 
     this.component = this;
 
@@ -164,10 +164,10 @@ export default {
 
             // 로그인 완료 시 세션 저장소에 받은 토큰 정보 저장
             sessionStorage.setItem('jwt-token', res.jwtToken);
-
+            localStorage.setItem('tvility', JSON.stringify(res.userInfo));
             // 유저 정보 저장 선택 시 로컬 저장소에 유저 정보 저장
             if(this.isSave){
-              localStorage.setItem('tvility', JSON.stringify(res.userInfo));
+              this.$store.commit('setAutoLogin', true);
             }
 
             // 로그인 정보를 vuex 에 저장
