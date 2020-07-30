@@ -22,7 +22,7 @@ import Footer from '@/components/common/custom/Footer.vue';
 import AlertHeader from '@/components/alert/AlertHeader.vue';
 import AlertItem from '@/components/alert/AlertItem.vue';
 import GetUserApi from "@/api/GetUserApi"
-
+import header from "@/api/header.js"
 export default {
   name: 'AlertTest',
    components: {
@@ -63,7 +63,7 @@ export default {
     let uno = this.$store.state.userInfo.uno;
     console.log(this.$store.state.userInfo);
     // 알림 가져오기.
-      http.get('/alert/list/' + uno)
+      http.get('/alert/list/' + uno, header())
         .then(res => {
           console.log(res);
           this.generals = res.data.data;
@@ -72,7 +72,7 @@ export default {
         .catch(err => console.error(err))
 
       // 팔로우 요청 가져오기.
-      http.get('/followrequest/list/' + uno)
+      http.get('/followrequest/list/' + uno, header())
         .then(res => {
           console.log(res);
           let requests = res.data.data;
