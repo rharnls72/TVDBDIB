@@ -1,5 +1,5 @@
 <template>
-  <div class="user m-0" id="login">
+  <div class="user mt-0 myuser" id="login">
     <LoginHeader />
     <div class="wrapC myfeed">
       <div class="feed-card myfeedcard">
@@ -212,6 +212,9 @@ export default {
 </script>
 
 <style scoped>
+  .myuser {
+    margin-bottom: 50px;
+  }
   .myfeed {
     padding-top: 70px;
   }
