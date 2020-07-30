@@ -76,9 +76,7 @@ export default {
               nick_name: res.data.data[i].nick_name,
             });
           }
-          console.log(this.feeds)
           this.isTakeFeed = Number(this.article.ctype)
-          console.log(this.isTakeFeed)
         }
         , err => {
           console.log(err)

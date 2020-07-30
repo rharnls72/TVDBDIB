@@ -17,7 +17,7 @@
           <div class="p-1">
             <nav class="mb-3">
               <b-nav vertical>
-                <b-nav-item href="#link-1" @click="hide">
+                <b-nav-item href="#link-1" @click="moveTab('Setting')">
                   <b-icon-gear-wide class="text-dark d-inline"></b-icon-gear-wide>
                   <b-icon-blank class="h5"></b-icon-blank>
                   <p class="text-dark d-inline m-0">설정</p>
@@ -26,11 +26,6 @@
                   <b-icon-bookmark class="text-dark d-inline"></b-icon-bookmark>
                   <b-icon-blank class="h5"></b-icon-blank>
                   <p class="text-dark d-inline m-0">스크랩</p>
-                </b-nav-item>
-                <b-nav-item href="#link-2" @click="logout">
-                  <b-icon-bookmark class="text-dark d-inline"></b-icon-bookmark>
-                  <b-icon-blank class="h5"></b-icon-blank>
-                  <p class="text-dark d-inline m-0">로그아웃</p>
                 </b-nav-item>
               </b-nav>
             </nav>
@@ -52,10 +47,8 @@ export default {
     // editAccount() {
 
     // },
-    logout(){
-      this.$store.commit('setAutoLogin', false);
-      localStorage.removeItem('tvility');
-      this.$router.push({name:'Login'})
+    moveTab(name) {
+      this.$router.push({name: name})
     }
   },
 }
