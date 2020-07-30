@@ -61,13 +61,13 @@ export default {
       this.scrapIcon = !this.scrapIcon
     },
     delDetail() {
-      FeedApi.feedDelete(
-        { fno: this.id },
-        res => { },
-        error => {
-          this.$router.push({name:'Errors', query: {message: error.msg}})
-        }
-      );
+      FeedApi.deleteFeed(
+          this.id,
+          res=> {
+            console.log(res)
+          },
+          err=> console.log(err)
+        )
     },
   },
   mounted() {

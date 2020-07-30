@@ -195,17 +195,14 @@ export default {
       // console.log(this.scrapIcon)
     },
     delFeed() {
-      FeedApi.feedDelete(
-        {
-          fno: this.fno
-        },
-        res => {
-            this.$router.push('/feed/main')
+      FeedApi.deleteFeed(
+          this.fno,
+          res=> {
+            console.log(res)
+            this.$router.push({path:'/feed/main'})
           },
-          error => {
-            this.$router.push({name:'Errors', query: {message: error.msg}})
-          }
-      );
+          err=> console.log(err)
+        )
     },
     updateFeed() {
       this.$router.push({ path:'/feed/create/2/'+this.fno })
