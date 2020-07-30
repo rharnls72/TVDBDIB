@@ -6,10 +6,17 @@
         <div class="user-name">
           <button>SSAFY</button>
         </div>
-        <p class="date">9시간 후</p>
+        <p class="date">{{createAfter}} 시간 전</p>
       </div>
-      <div class="content">
-        <p>{{feedTitle}}</p>
+      <div class="content d-flex flex-comlumn justify-content-between align-items-center my-2">
+        <div>{{feedTitle}}</div>
+        <b-icon v-b-toggle.sidebar-1 icon="three-dots-vertical" font-scale="1.3"></b-icon>
+        <b-sidebar id="sidebar-1" shadow>
+          <div class="ml-3">
+            <div @click="updateFeed">수정</div>
+            <div @click="delFeed">삭제</div>
+          </div>
+        </b-sidebar>
       </div>
     </div>
     <div class="feed-card">
@@ -56,7 +63,7 @@
             <b-icon-bookmark v-if="!scrapIcon"></b-icon-bookmark>
             <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
-          0 
+          {{scrapNum}}
           <!-- 스크랩 카운트 -->
         </div>
         <!---->
@@ -75,18 +82,21 @@
     </div>
     <div class="wrap mt-2">
       <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
-      <span class="moreView">댓글 {{reply_num}}개</span>
+      <span v-if="!isStretch" class="moreView" @click="turnStretch">댓글 {{reply_num}}개</span>
     </div>
+    <ReplyItem v-if="isStretch" :fno="fno"/>
   </div>
     <!---->
     <!---->
 </template>
 
 <script>
+import ReplyItem from "@/components/ReplyItem.vue"
 import defaultImage from "../../assets/images/img-placeholder.png";
 import defaultProfile from "../../assets/images/profile_default.png";
-import axios from "axios"
+import {mapState} from "vuex"
 import header from "@/api/header.js"
+import axios from "axios"
 
 export default {
     name: 'feedCountdownItem',
@@ -109,13 +119,29 @@ export default {
         reply_num: 11,
         likeIcon: false,
         scrapIcon: false,
+        isStretch: false,
       }
     },
     props: {
       article: Object,
       fno: Number,
     },
+    components: {
+      ReplyItem,
+    },
+    computed: {
+      ...mapState([
+        'userInfo',
+      ]),
+      createAfter() {
+        const today = new Date()
+        return parseInt((today-new Date(this.create_date)) / (1000*60*60))
+      }
+    },
     methods: {
+      turnStretch() {
+        this.isStretch = true
+      },
       changeString(str) {
         str = String(str)
         if (str.length === 1) {
@@ -151,26 +177,71 @@ export default {
       touchLikeIcon() {
         this.likeIcon = !this.likeIcon
         if (this.likeIcon) {
-          this.likeCount ++
+          this.like_num ++
+          axios.post('http://localhost:9000/like/feed/create', {
+            uno: this.$store.state.userInfo.uno,
+            tno: this.fno
+          }, header())
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
         }
         else {
-          this.likeCount --
+          this.like_num --
+          axios.post('http://localhost:9000/like/feed/delete', {
+            uno: this.$store.state.userInfo.uno,
+            tno: this.fno
+          }, header())
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
         }
-        // console.log(this.likeIcon)
       },
       touchScrapIcon() {
         this.scrapIcon = !this.scrapIcon
         if (this.scrapIcon) {
-          this.scrapCount ++
+          this.scrapNum ++
         }
         else {
-          this.scrapCount --
+          this.scrapNum --
         }
         // console.log(this.scrapIcon)
       },
+      delFeed() {
+        axios.delete('http://localhost:9000/feed/delete/'+this.fno, header())
+          .then(res => {
+            console.log(res)
+            this.$router.push('/feed/main')
+          })
+          .catch(err => console.log(err))
+      },
+      updateFeed() {
+        this.$router.push({ path:'/feed/create/2/'+this.fno })
+      }
+    },
+    watch: {
+      date: function(n, o) {
+        console.log(this.date)
+        this.submitDateTime()
+      }
     },
     created() {
-      this.submitDateTime()
+      if (this.article !== null) {
+        console.log(111)
+        this.feedTitle = this.article.content.content.title
+        this.date = this.article.content.content.date
+        this.Time = this.article.content.content.time
+        this.tags = this.article.tag
+        this.reply = this.article.reply_content
+        this.reply_num = this.article.reply_num
+        this.thumbnail = this.article.thumbnail
+        this.writer_uno = this.article.uno
+        this.likeIcon = this.article.prees_like
+        this.scrapIcon = this.article.press_dibs
+        if (!this.article.dibsNum) {this.scrapNum = 0}
+        else {this.scrapNum = this.article.dibsNum}
+        this.create_date = this.article.create_date
+        if (!this.article.like_num) {this.like_num = 0}
+        else {this.like_num = this.article.like_num}
+      }
     }
   }
 </script>
