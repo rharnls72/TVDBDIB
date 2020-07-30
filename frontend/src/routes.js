@@ -120,7 +120,7 @@ export default [
         component : FindPwRe
     },
     {
-        path: '/feed/create',
+        path: '/feed/create/:ftype?/:feedId?',
         name: 'CreateFeed',
         component: CreateFeed
     },

@@ -112,7 +112,8 @@ export default {
       }
     },
     props: {
-      countdown: Object,
+      article: Object,
+      fno: Number,
     },
     methods: {
       changeString(str) {
