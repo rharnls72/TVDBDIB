@@ -56,13 +56,13 @@
       </div>
     </div>
 
-    <label>
+    <!-- <label>
       <input v-model="isTerm" type="checkbox" id="term" />
       <span>약관을 동의합니다.</span>
-    </label>
+    </label> -->
 
     <!-- go-term CSS 적용 -->
-    <span class="go-term" @click="termPopup=true">약관보기</span>
+    <!-- <span class="go-term" @click="termPopup=true">약관보기</span> -->
 
     <button
       class="btn-bottom"
@@ -105,9 +105,9 @@ export default {
     email: function(v) {
       this.checkForm();
     },
-    isTerm: function(v) {
-      this.checkForm();
-    }
+    // isTerm: function(v) {
+    //   this.checkForm();
+    // }
   },
   methods: {
     checkForm() {
@@ -137,7 +137,7 @@ export default {
         this.error.nick_name = "닉네임은 20Byte를 넘지 않아야 합니다."
       else this.error.nick_name = false;
 
-      this.error.term = !this.isTerm;
+      // this.error.term = !this.isTerm;
 
       let isSubmit = true;
       Object.values(this.error).map(v => {
