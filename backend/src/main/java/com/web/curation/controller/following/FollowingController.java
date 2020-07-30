@@ -97,9 +97,11 @@ public class FollowingController {
     public Object getUserFollowings(@PathVariable("uno") int uno) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
+        System.out.println(uno);
 
         // 팔로잉하는 유저 리스트 조회
         List<User> ul = dao.getUserFollowings(uno);
+        System.out.println(ul.size());
 
         // 팔로잉 하는 프로그램 리스트 조회
         List<Program> pl = dao.getProgramFollowings(uno);
