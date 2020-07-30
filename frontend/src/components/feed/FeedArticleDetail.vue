@@ -86,8 +86,7 @@ import ReplyItem from "@/components/ReplyItem.vue"
 import defaultImage from "../../assets/images/img-placeholder.png";
 import defaultProfile from "../../assets/images/profile_default.png";
 import {mapState} from "vuex"
-import header from "@/api/header.js"
-import axios from "axios"
+import FeedApi from '../../api/FeedApi';
 export default {
   data: () => {
     return { 
@@ -126,12 +125,20 @@ export default {
   },
   methods: {
     pushReply() {
-      axios.post('http://localhost:9000/reply/feed/create',
-      {
-        no: this.article.fno,
-        content: this.additionReply,
-        writer_uno: 1,
-      }, header())
+      FeedApi.createReply(
+        {
+          no: this.article.fno,
+          content: this.additionReply,
+          writer_uno: 1,
+        },
+        res => {
+            
+          },
+          error => {
+            this.$router.push({name:'Errors', query: {message: error.msg}})
+          }
+      );
+      
     },
     touchLikeIcon() {
       this.likeIcon = !this.likeIcon
@@ -154,12 +161,14 @@ export default {
       // console.log(this.scrapIcon)
     },
     delFeed() {
-      axios.delete('http://localhost:9000/feed/delete/'+this.fno, header())
-        .then(res => {
-          console.log(res)
-          this.$router.push('/feed/main')
-        })
-        .catch(err => console.log(err))
+      FeedApi.deleteFeed(
+          this.fno,
+          res=> {
+            console.log(res)
+            this.$router.push({path:'/feed/main'})
+          },
+          err=> console.log(err)
+        )
     },
     updateFeed() {
       this.$router.push({ path:'/feed/create/1/'+this.fno })

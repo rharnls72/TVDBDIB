@@ -19,9 +19,9 @@ import EpisodeItem from "../../components/curation/episode/EpisodeItem.vue";
 import InfiniteLoading from 'vue-infinite-loading';
 import Footer from '../../components/common/custom/Footer.vue';
 import IndexCurationHeader from '../../components/curation/IndexCurationHeader.vue'
-import header from "@/api/header.js"
-import axios from "axios"
+
 import GetUserApi from "@/api/GetUserApi"
+import CurationApi from "@/api/CurationApi"
 
 export default {
   name: 'IndexCuration',
@@ -56,14 +56,15 @@ export default {
       this.loading_complete = true;
     },
     makeTotalCuations() {
-      axios.get('http://localhost:9000/episode/following/1', header())
-      .then(res => {
-        console.log(res);
-        this.curations = res.data.data
-        console.log(this.curations)
-        this.makeCurations()
-      })
-      .catch(err => console.error(err))
+      CurationApi.requestEpisode(
+        res => {
+            this.curations = res.list;
+            this.makeCurations();
+          },
+          error => {
+            this.$router.push({name:'Errors', query: {message: error.msg}})
+          }
+      );
     },
     // 무한 스크롤 기능 구현
     infiniteHandler($state) {
@@ -80,14 +81,15 @@ export default {
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });
-    axios.get('http://localhost:9000/episode/following/1', header())
-      .then(res => {
-        console.log(res);
-        this.curations = res.data.data
-        console.log(this.curations)
-        this.makeCurations()
-      })
-      .catch(err => console.error(err))
+    CurationApi.requestEpisode(
+      res => {
+        this.curations = res.list;
+        this.makeCurations();
+      },
+      error => {
+        this.$router.push({name:'Errors', query: {message: error.msg}})
+      }
+    );
   },
 /*
   mounted(){

@@ -80,8 +80,7 @@ import ReplyItem from "@/components/ReplyItem.vue"
 import defaultImage from "@/assets/images/img-placeholder.png";
 import defaultProfile from "@/assets/images/profile_default.png";
 import {mapState} from 'vuex'
-import axios from 'axios'
-import header from '@/api/header.js'
+import FeedApi from '../../api/FeedApi';
 
 export default {
   data: () => {
@@ -168,17 +167,21 @@ export default {
         tag: JSON.stringify(this.tags),
         fno: this.fno
       };
-      axios.put('http://localhost:9000/feed/update', data, header())
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
+      FeedApi.updateFeed(
+        data
+        , res => console.log(res)
+        , err => console.log(err)
+      )
     },
     delFeed() {
-      axios.delete('http://localhost:9000/feed/delete/'+this.fno, header())
-        .then(res => {
-          console.log(res)
-          this.$router.push('/feed/main')
-        })
-        .catch(err => console.log(err))
+      FeedApi.deleteFeed(
+          this.fno,
+          res=> {
+            console.log(res)
+            this.$router.push({path:'/feed/main'})
+          },
+          err=> console.log(err)
+        )
     },
     updateFeed() {
       this.$router.push({ path:'/feed/create/3/'+this.fno })

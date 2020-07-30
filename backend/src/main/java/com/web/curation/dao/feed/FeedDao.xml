@@ -128,6 +128,8 @@
                         WHERE
                             `follower` = #{uno}
                     )
+                    OR
+                    `uno` = #{uno}
                 ORDER BY `fno` DESC
                 LIMIT ${num} , 20
             ) t

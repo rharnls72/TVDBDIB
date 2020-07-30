@@ -21,6 +21,7 @@ import Footer from '@/components/common/custom/Footer.vue';
 import FollowerHeader from '@/components/account/FollowerHeader.vue';
 import UserListItem from '@/components/account/UserListItem.vue';
 import GetUserApi from "@/api/GetUserApi"
+import header from "@/api/header.js"
 
 export default {
   name: 'AlertTest',
@@ -45,7 +46,7 @@ export default {
     let uno = this.$route.params.uno;
 
     // 이 사람을 팔로우하는 사람의 리스트를 가져온다
-    http.get('/following/user/followers/' + uno)
+    http.get('/following/user/followers/' + uno, header())
         .then(res => {
             console.log(res);
             this.users = res.data.data.user_list;
@@ -58,7 +59,7 @@ export default {
       requestMyFollowing(){
         let myuno = this.$store.state.userInfo.uno;
         console.log(myuno);
-        http.get('/following/user/followings/' + myuno)
+        http.get('/following/user/followings/' + myuno, header())
         .then(res => {
             console.log(res);
             let temp_following_list = res.data.data.user_list;

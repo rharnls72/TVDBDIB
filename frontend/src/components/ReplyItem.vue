@@ -18,7 +18,6 @@
 
 <script>
 import ReReplyItem from "@/components/ReReplyItem.vue"
-import axios from "axios"
 
 export default {
   name: "ReplyItem",
@@ -42,7 +41,6 @@ export default {
   },
   props: {
     fno: Number,
-    // replies: Array,
   },
   methods: {
     pushReply() {

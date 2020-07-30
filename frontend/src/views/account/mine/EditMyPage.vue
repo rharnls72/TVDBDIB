@@ -1,7 +1,7 @@
 <template>
   <div>
-    <EditMyPageHeader :info="info" :valid="valid"/>
-    <EditMyPageForm :info="info" :valid="valid"/>
+    <EditMyPageHeader :info="info" :is_valid="is_valid"/>
+    <EditMyPageForm :info="info" :is_valid="is_valid"/>
   </div>
 </template>
 
@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       info: {},
-      valid: false,
+      is_valid: {},
     }
   },
   created() {
@@ -29,6 +29,7 @@ export default {
   },
   mounted() {
     this.info = JSON.parse(JSON.stringify(this.$store.state.userInfo));
+    this.is_valid = {is_valid:"is-invalid"};
   },
 }
 </script>
