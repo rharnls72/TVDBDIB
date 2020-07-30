@@ -30,7 +30,12 @@ import EpisodeDetail from './views/curation/episode/EpisodeDetail.vue'
 import MyPage from './views/account/mine/MyPage.vue'
 import EditMyPage from './views/account/mine/EditMyPage.vue'
 
+import Setting from './views/account/mine/Setting.vue'
+
 import OtherPage from './views/account/your/OtherPage.vue'
+
+import ViewFollowings from './views/account/ViewFollowings.vue'
+import ViewFollowers from './views/account/ViewFollowers.vue'
 
 export default [
 
@@ -168,5 +173,20 @@ export default [
         path: '/profile/:nick_name',
         name: 'OtherPage',
         component: OtherPage
+    },
+    {
+        path: '/profile/followings/:uno',
+        name: 'ViewFollowings',
+        component: ViewFollowings
+    },
+    {
+        path: '/profile/followers/:uno',
+        name: 'ViewFollowers',
+        component: ViewFollowers
+    },
+    {
+        path: '/setting',
+        name: 'Setting',
+        component: Setting
     },
 ]

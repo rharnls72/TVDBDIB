@@ -65,10 +65,9 @@
     </update>
     <update id="modifyProfile">
         update user
-        set nick_name = #{nick_name}
-        set bio = #{bio}
-        set profile_pic = #{profile_pic}
-        set is_private = #{is_private}
+        set nick_name = #{nick_name},
+            bio = #{bio},
+            profile_pic = #{profile_pic}
         where email = #{email}
     </update>
     
