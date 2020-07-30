@@ -127,9 +127,19 @@ export default {
     }
   },
   mounted() {
-    this.contains = this.article.content.content
-    this.title = this.article.content.title
-    this.value = this.article.tag
+    if (this.article !== null) {
+      this.contains = this.article.content.content
+      this.title = this.article.content.title
+      this.value = this.article.tag
+    } 
+    else {
+      this.contains = [
+        {id: 0, text: null, count: 0},
+        {id: 1, text: null, count: 0},
+      ]
+      this.title = null
+      this.value = []
+    }
   }
 }
 </script>

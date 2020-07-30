@@ -83,7 +83,7 @@
       <span v-if="!isStretch" class="moreView" @click="turnStretch">댓글 {{reply_num}}개</span>
     </div>
     <span class="font-weight-bold">{{reply_user_nick}} </span>{{reply_content}}
-    <ReplyItem v-if="isStretch" :fno="fno"/>
+    <ReplyItem v-if="isStretch" :fno="fno" :uno="writer_uno"/>
   </div>
     <!---->
     <!---->
@@ -121,6 +121,7 @@ export default {
         reply_content: null,
         reply_user_nick: [],
         nick_name: null,
+        writer_uno: null,
       }
     },
     props: {
@@ -196,7 +197,7 @@ export default {
           this.fno,
           res=> {
             console.log(res)
-            this.$router.push({path:'/feed/main'})
+            this.$emit('deleteItem', this.fno)
           },
           err=> console.log(err)
         )

@@ -18,35 +18,27 @@
 
 <script>
 import ReReplyItem from "@/components/ReReplyItem.vue"
+import GetUserApi from "@/api/GetUserApi.js"
+import FeedApi from "@/api/FeedApi.js"
 
 export default {
   name: "ReplyItem",
   data() {
     return {
       content: null,
-      replies: [
-        {id:1, user: 'chsmd', contents:'소통'}, 
-        {id:2, user: 'chsmd', contents:'소통'}, 
-        // {id:3, user: 'chsmd', contents:'소통'}, 
-        // {id:4, user: 'chsmd', contents:'소통'}, 
-        // {id:5, user: 'chsmd', contents:'소통'}, 
-        // {id:6, user: 'chsmd', contents:'소통'}, 
-      ],
-      reReplies: [
-        {id:1, user: 'chsmd', contents:'소통'}, 
-        {id:2, user: 'chsmd', contents:'소통'},
-      ],
-      k: 7
+      replies: [],
+      num: null,
     }
   },
   props: {
     fno: Number,
+    uno: Number,
   },
   methods: {
     pushReply() {
       this.replies.push({
         id: this.k,
-        user: 'chsmd',
+        user: this.$store.state.userInfo.nick_name,
         contents: String(this.content)
       })
       this.k++
@@ -58,6 +50,20 @@ export default {
   },
   components: {
     ReReplyItem,
+  },
+  created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+    FeedApi.readReply(
+      { 
+        no: this.fno,
+        num: 3,
+        uno: this.nuo
+      }
+      , res => console.log(res)
+      , err => console.log(err)
+    )
   }
 }
 </script>
