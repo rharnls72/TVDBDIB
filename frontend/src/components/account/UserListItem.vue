@@ -25,7 +25,7 @@
 import defaultProfile from "@/assets/images/profile_default.png";
 import http from '@/api/http-common.js';
 //import commentcss from "@/components/css/feed/comment-list.scss";
-
+import header from "@/api/header.js"
 export default {
   name: 'userItem',
   data: () => {
@@ -45,7 +45,7 @@ export default {
         http.post('/following/user/cancel', {
             follower: this.$store.state.userInfo.uno,
             following: user.uno
-        })
+        }, header())
         .then(res => {
           this.makeToast("언팔로우를 완료했습니다.", "primary");
             let delete_index = this.$props.users.findIndex(x => x.uno == user.uno);
@@ -61,7 +61,7 @@ export default {
         http.post('/following/user/add', {
             follower: this.$store.state.userInfo.uno,
             following: user.uno
-        })
+        }, header())
         .then(res => {
           this.makeToast("팔로우에 성공했습니다.", "primary");
             let delete_index = this.$props.users.findIndex(x => x.uno == user.uno);

@@ -4,9 +4,9 @@
     <div class="wrapB">
       <h1>뉴스피드</h1>
       <div v-for="d in feeds" :key="d.fno">
-        <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno"/>
-        <feedCountdownItem v-if="d.ctype===2" :article="d" :fno="d.fno"/>
-        <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno"/>
+        <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
+        <feedCountdownItem v-if="d.ctype===2" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
+        <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
       </div>
     </div>
     <Footer/>
@@ -54,35 +54,23 @@ export default {
       FeedApi.getFeedList(
         data
         , res => {
-          console.log(111, res.data);
-          this.feeds = [];
-          for (let i=0; i<res.data.data.length; i++) {
-            this.feeds.push({
-              content: JSON.parse(res.data.data[i].content),
-              tag: JSON.parse(res.data.data[i].tag),
-              ctype: res.data.data[i].ctype,
-              dibsNum: res.data.data[i].dibs_num,
-              fno: res.data.data[i].fno,
-              press_dibs: res.data.data[i].press_dibs,
-              press_like: res.data.data[i].press_like,
-              like_num: res.data.data[i].like_num,
-              profile_pic: res.data.data[i].profile_pic,
-              reply_content: res.data.data[i].reply_content,
-              reply_num: res.data.data[i].reply_num,
-              thumbnail: res.data.data[i].thumbnail,
-              uno: res.data.data[i].uno,
-              create_date: res.data.data[i].create_date,
-              reply_user_nick: res.data.data[i].reply_user_nick,
-              nick_name: res.data.data[i].nick_name,
-            });
+          console.log(111, res);
+
+          this.feeds = res.list
+          for (let i=0; i<res.list.length; i++) {
+            this.feeds[i].content = JSON.parse(this.feeds[i].content)
+            this.feeds[i].tag = JSON.parse(this.feeds[i].tag)
           }
-          this.isTakeFeed = Number(this.article.ctype)
+          this.requestCount++
+          console.log(this.feeds)
+          setTimeout(()=>{}, 1000)
         }
         , err => {
           console.log(err)
         }
       )
-    }
+    },
+    removeFeed(fno) {this.feeds = this.feeds.filter(res => res.fno!==fno)}
   },
 
   mounted() {
