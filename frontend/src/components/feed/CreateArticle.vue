@@ -101,10 +101,6 @@ export default {
           err=> console.log(err)
           )
       }
-
-      // axios.post('http://localhost:9000/feed/create', Data, header())
-      //   .then(res => console.log(res))
-      //   .catch(err => console.log(err))
     }
   },
   mounted() {

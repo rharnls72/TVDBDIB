@@ -14,8 +14,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import header from '@/api/header.js'
 import {mapState} from 'vuex'
 
 export default {
