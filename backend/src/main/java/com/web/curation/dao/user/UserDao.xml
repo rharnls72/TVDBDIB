@@ -24,6 +24,14 @@
             and password = #{password}
     </select>
 
+    <select id="getFollowCnt" resultType="FollowCnt">
+        SELECT feed.feed_cnt, follower.follower_cnt, following.following_cnt, is_follow.is_follow
+        FROM (SELECT COUNT(*) as feed_cnt FROM feed WHERE uno = #{other_uno}) as feed , 
+	    (SELECT COUNT(*) as follower_cnt FROM user_follow WHERE following = #{other_uno}) as follower,
+        (SELECT COUNT(*) as following_cnt FROM user_follow WHERE follower = #{other_uno}) as following,
+        (SELECT COUNT(*) as is_follow FROM user_follow WHERE follower = #{my_uno} and following = #{other_uno}) as is_follow
+    </select>
+
     <select id="checkPassword" resultType="int">
         select count(*)
         from user

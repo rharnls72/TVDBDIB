@@ -28,6 +28,9 @@ import IndexSearch from './views/search/IndexSearch.vue'
 import Alert from './views/alert/Alert.vue'
 import EpisodeDetail from './views/curation/episode/EpisodeDetail.vue'
 import MyPage from './views/account/mine/MyPage.vue'
+import EditMyPage from './views/account/mine/EditMyPage.vue'
+
+import OtherPage from './views/account/your/OtherPage.vue'
 
 export default [
 
@@ -127,7 +130,7 @@ export default [
         component: FeedItem
     },
     {
-        path: '/feed/feedDetail',
+        path: '/feed/feedDetail/:id',
         name: 'FeedDetail',
         component: feedDetail
     },
@@ -152,8 +155,18 @@ export default [
         component: EpisodeDetail
     },
     {
-        path: '/:nick_name',
+        path: '/mypage/main',
         name: 'MyPage',
         component: MyPage        
+    },
+    {
+        path: '/mypage/edit',
+        name: 'EditMyPage',
+        component: EditMyPage
+    },
+    {
+        path: '/profile/:nick_name',
+        name: 'OtherPage',
+        component: OtherPage
     },
 ]

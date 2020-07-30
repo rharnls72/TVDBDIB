@@ -13,4 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface SearchDao {
    List<User> searchByNickName(String str);
    List<Feed> searchByFeedTag(String str);
+
+   List<User> getAllUser();
 }

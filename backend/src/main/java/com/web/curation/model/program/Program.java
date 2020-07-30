@@ -1,6 +1,9 @@
 package com.web.curation.model.program;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import com.web.curation.model.episode.EpisodeResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,97 +13,163 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Program {
+    // 프로그램 고유번호는 꼭 필요함
     private int pno;
-    private String name;
-    private String broadcaster;
-    private String genre;
+
+    /////////////////////////////////////////////
+    // API 로 받아온 프로그램 정보와 매핑될 변수들
+    private String pname;
     private int season;
-    private String alias;
-    private LocalDateTime start_date;
-    private LocalDateTime end_date;
-    private String director;
-    private String cast;
+    private String season_name;
+    private ArrayList<String> genre;
+    private ArrayList<String> broadcaster;
+    private String homepage;
     private String description;
-    private String broadcast_time;
     private String thumbnail;
+    private LocalDate start_date;
+    private float rating;
+    private ArrayList<EpisodeResponse> episode_list;
+    /////////////////////////////////////////////
+
+    // 프로그램 정보와 함께 넘길 정보들(좋아요 수, 좋아요 여부, 댓글 수, 대표 댓글 한 개)
+    private int like_num;
+    private int reply_num;
+    private boolean press_like;
+    private String reply_content;
+
+    public int getPno() {
+        return this.pno;
+    }
 
     public void setPno(int pno) {
         this.pno = pno;
     }
-    public int getPno() {
-        return pno;
+
+    public int getLike_num() {
+        return this.like_num;
     }
-    public void setName(String name) {
-        this.name = name;
+
+    public void setLike_num(int like_num) {
+        this.like_num = like_num;
     }
-    public String getName() {
-        return name;
+
+    public int getReply_num() {
+        return this.reply_num;
     }
-    public void setBroadcaster(String broadcaster) {
-        this.broadcaster = broadcaster;
+
+    public void setReply_num(int reply_num) {
+        this.reply_num = reply_num;
     }
-    public String getBroadcaster() {
-        return broadcaster;
+
+    public boolean isPress_like() {
+        return this.press_like;
     }
-    public void setGenre(String genre) {
-        this.genre = genre;
+
+    public void setPress_like(boolean press_like) {
+        this.press_like = press_like;
     }
-    public String getGenre() {
-        return genre;
+
+    public String getReply_content() {
+        return this.reply_content;
     }
+
+    public void setReply_content(String reply_content) {
+        this.reply_content = reply_content;
+    }
+
+    public void setLikeReplyInfo(Program res) {
+        like_num = res.like_num;
+        press_like = res.press_like;
+        reply_num = res.reply_num;
+        reply_content = res.reply_content;
+    }
+
+    public String getPname() {
+        return this.pname;
+    }
+
+    public void setPname(String pname) {
+        this.pname = pname;
+    }
+
+    public int getSeason() {
+        return this.season;
+    }
+
     public void setSeason(int season) {
         this.season = season;
     }
-    public int getSeason() {
-        return season;
+
+    public String getSeason_name() {
+        return this.season_name;
     }
-    public void setAlias(String alias) {
-        this.alias = alias;
+
+    public void setSeason_name(String season_name) {
+        this.season_name = season_name;
     }
-    public String getAlias() {
-        return alias;
+
+    public ArrayList<String> getGenre() {
+        return this.genre;
     }
-    public void setStart_date(LocalDateTime start_date) {
-        this.start_date = start_date;
+
+    public void setGenre(ArrayList<String> genre) {
+        this.genre = genre;
     }
-    public LocalDateTime getStart_date() {
-        return start_date;
+
+    public ArrayList<String> getBroadcaster() {
+        return this.broadcaster;
     }
-    public void setEnd_date(LocalDateTime end_date) {
-        this.end_date = end_date;
+
+    public void setBroadcaster(ArrayList<String> broadcaster) {
+        this.broadcaster = broadcaster;
     }
-    public LocalDateTime getEnd_date() {
-        return end_date;
+
+    public String getHomepage() {
+        return this.homepage;
     }
-    public void setDirector(String director) {
-        this.director = director;
+
+    public void setHomepage(String homepage) {
+        this.homepage = homepage;
     }
-    public String getDirector() {
-        return director;
+
+    public String getDescription() {
+        return this.description;
     }
-    public void setCast(String cast) {
-        this.cast = cast;
-    }
-    public String getCast() {
-        return cast;
-    }
+
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getDescription() {
-        return description;
+
+    public String getThumbnail() {
+        return this.thumbnail;
     }
-    public void setBroadcast_time(String broadcast_time) {
-        this.broadcast_time = broadcast_time;
-    }
-    public String getBroadcast_time() {
-        return broadcast_time;
-    }
+
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
-    public String getThumbnail() {
-        return thumbnail;
+
+    public LocalDate getStart_date() {
+        return this.start_date;
+    }
+
+    public void setStart_date(LocalDate start_date) {
+        this.start_date = start_date;
+    }
+
+    public float getRating() {
+        return this.rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public ArrayList<EpisodeResponse> getEpisode_list() {
+        return this.episode_list;
+    }
+
+    public void setEpisode_list(ArrayList<EpisodeResponse> episode_list) {
+        this.episode_list = episode_list;
     }
 }
 

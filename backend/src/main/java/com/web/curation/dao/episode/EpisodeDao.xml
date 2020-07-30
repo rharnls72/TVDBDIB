@@ -9,74 +9,117 @@
     <insert id="addNewEpisode">
         insert into
             episode(
-                pno
-                , episode
-                , summary
-                , broadcast_date
-                , guest
-                , thumbnail
-                , replay_link
+                `pno`
+                , `season`
+                , `episode`
             )
         values(
             #{pno}
+            , #{season}
             , #{episode}
-            , #{summary}
-            , #{broadcast_date}
-            , #{guest}
-            , #{thumbnail}
-            , #{replay_link}
         )
     </insert>
 
     <!-- Read -->
-    <select id="getAllEpisodeList" resultType="Episode">
+    <select id="checkDataExist" resultType="int">
         select
-            *
+            count(`eno`)
         from
-            episode join program_follow on episode.pno = program_follow.pno 
+            `episode`
         where
-            uno = #{uno}
-        limit #{num}, 20
+            `pno` = #{pno}
+            and
+            `season` = #{season}
+            and
+            `episode` = #{episode}
     </select>
-    <select id="getEpisodeList" resultType="Episode">
+
+    <select id="getLikeReplyInfo" resultType="EpisodeDB">
         select
-            *
+            e.eno as `eno`
+            , e.share_num as `share_num`
+            , (
+                select
+                    count(er.erno)
+                from
+                    `episode_reply` er
+                where
+                    er.eno = e.eno
+            ) as `reply_num`
+            , (
+                select
+                    `content`
+                from
+                    `episode_reply_view` erv
+                where
+                    erv.parent_reply is null
+                    and
+                    erv.eno = e.eno
+                order by erv.like_num desc
+                limit 1
+            ) as `reply_content`
+            , (
+                select
+                    count(el.lno)
+                from
+                    `episode_like` el
+                where
+                    el.eno = e.eno
+            ) as `like_num`
+            , if((
+                select
+                    count(el.lno)
+                from
+                    `episode_like` el
+                where
+                    el.eno = e.eno
+                    and
+                    el.uno = #{uno}
+            ) > 0, true, false) as `press_like`
+            , (
+                select
+                    count(ed.dno)
+                from
+                    `episode_dibs` ed
+                where
+                    ed.eno = e.eno
+            ) as `dibs_num`
+            , if((
+                select
+                    count(ed.dno)
+                from
+                    `episode_dibs` ed
+                where
+                    ed.eno = e.eno
+                    and
+                    ed.uno = #{uno}
+            ) > 0, true, false) as `press_dibs`
         from
-            episode
+            `episode` e
         where
-            pno = #{value}
-    </select>
-    <select id="getEpisodeDetail" resultType="Episode">
-        select
-            *
-        from
-            episode
-        where
-            eno = #{value}
+            `pno` = #{pno}
+            and
+            `season` = #{season}
+            and
+            `episode` = #{episode}
     </select>
                 
     <!-- Update -->
-    <update id="modifyEpisode">
+    <update id="increaseShare">
         update
-            episode
+            `episode`
         set
-            <!-- pno                = #{pno} -->
-            <!-- , episode       = #{episode} -->
-            summary             = #{summary}
-            <!-- , broadcast_date            = #{broadcast_date} -->
-            <!-- , guest             = #{guest} -->
-            , thumbnail          = #{thumbnail}
-            , replay_link              = #{replay_link}
+            `share_num` = `share_num` + 1
         where
-            eno = #{eno}
+            `eno` = #{value}
     </update>
 
     <!-- Delete -->
     <delete id="deleteEpisode">
         delete from
-            episode
+            `episode`
         where
-            eno = #{value}
+            `eno` = #{value}
     </delete>
 
 </mapper>

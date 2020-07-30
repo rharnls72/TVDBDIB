@@ -1,23 +1,23 @@
 <template>
   <div>
-    <MyPageHeader :nickname="nickname"/>
-    <h1>내 프로필</h1>
-    <MyPageInformation />
+    <MyPageHeader :info="info"/>
+    <MyPageInformation :info="info" :followcnt="followcnt"/>
     <Footer />
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import MyPageHeader from '../../../components/account/mine/MyPageHeader.vue'
-import MyPageInformation from '../../../components/account/mine/MyPageInformation.vue'
-import Footer from '../../../components/common/custom/Footer.vue'
+import MyPageHeader from '@/components/account/mine/MyPageHeader.vue'
+import MyPageInformation from '@/components/account/mine/MyPageInformation.vue'
+import Footer from '@/components/common/custom/Footer.vue'
+import AccountApi from "@/api/AccountApi";
 
 export default {
   name: 'MyPage',
   data() {
     return {
-      nickname: 'hani',
+      info: {},
+      followcnt: {},
     }
   },
   components: {
@@ -26,14 +26,25 @@ export default {
     Footer,
   },
   methods: {
-    // getNickname() {
-    //   axios.get('http://localhost:9000/')
-    //     .then(res => {
 
-    //     })
-    //     .catch(err => console.error(err))
-    // },
   },
+  mounted() {
+    let data = {
+        my_nick_name : this.$store.state.userInfo.nick_name,
+        other_nick_name: this.$store.state.userInfo.nick_name
+      };
+    AccountApi.requestProfile(
+      data,
+      res => {
+        this.info = res.info;
+        this.followcnt = res.followcnt;
+      },
+      error => {
+        this.$router.push({name:'Errors', query: {message: error.msg}})
+      }
+    );
+
+  }
 }
 </script>
 
