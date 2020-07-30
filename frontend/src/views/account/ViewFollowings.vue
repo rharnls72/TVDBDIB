@@ -6,9 +6,8 @@
     <b-tabs v-model="tabIndex" class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
     </b-tabs>
     </div>
-
       <div class="wrapB">
-        <UserListItem :users="users"/>
+        <UserListItem v-if='loadComplete' :users="users"/>
       </div>
     <Footer />
   </div>
@@ -32,6 +31,10 @@ export default {
 
   data() {
     return {
+    // 분명 isFollowing 속성을 추가해줬고 콘솔에서도 출력되는데 팔로우-언팔로우 버튼이 제대로 안 뜨는 현상
+    // -> 두번째 요청 보내는 사이에 UserListItem이 렌더링돼서 그런 것이었음...
+    // 두번째 요청까지 다 끝나기 전에는 props 넘겨주지 않게 해야 했다 
+    loadComplete: false, // 그래서 넣은 속성
       users: [],
       my_followings: []
   }
@@ -71,14 +74,22 @@ export default {
                     no_arr.push(temp_following_list[i].uno);
                 }
                 console.log(no_arr);
-                // 해당 유저가 나도 팔로중인 유저라면, isFollowing을 true로 만들어준다
-                for (let i=0; i<this.users.length; i++){
-                    console.log(no_arr.indexOf(this.users[i].uno))
-                    if (no_arr.indexOf(this.users[i].uno) >= 0)
-                        this.users[i].isFollowing = true;
-                }
+                this.my_followings = no_arr;
             })
             .catch(err => console.error(err))
+            .finally(() => {
+                for (let i=0; i<this.users.length; i++){
+                    console.log(this.my_followings.indexOf(this.users[i].uno))
+                    if (this.my_followings.indexOf(this.users[i].uno) >= 0){
+                        this.users[i].isFollowing = true;
+                    }
+                    else{
+                        this.users[i].isFollowing = false;
+                    }
+                    console.log(this.users[i].isFollowing);
+                }
+                this.loadComplete = true;
+            })
         }
         // 내 페이지인 경우 = 페이지 로딩시 모든 유저가 팔로잉 상태임이 보장된다
         else {
@@ -86,6 +97,7 @@ export default {
                 console.log("test");
                 this.users[i].isFollowing = true;
             }
+            this.loadComplete = true;
         }
       }
   }

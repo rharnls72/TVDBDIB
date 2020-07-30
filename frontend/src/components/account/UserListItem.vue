@@ -12,8 +12,8 @@
               {{user.nick_name}}
             </span>
             <span class="float-right my-auto col-3 col-sm-3 removeBtn" type="button">
-                <button @click="unfollow(user)" class="float-right btn btn-danger btn-sm" v-if="user.isFollowing">언팔로우</button>
-                <button @click="follow(user)" class="float-right btn btn-primary btn-sm" v-if="!user.isFollowing">팔로우</button>
+                <button @click="unfollow(user)" class="float-right btn btn-danger btn-sm" :class="{hidden: !user.isFollowing}">언팔로우</button>
+                <button @click="follow(user)" class="float-right btn btn-primary btn-sm" :class="{hidden: user.isFollowing}">팔로우</button>
             </span>
         </div>
         </li>
@@ -48,17 +48,26 @@ export default {
         })
         .then(res => {
           this.makeToast("언팔로우를 완료했습니다.", "primary");
+            let delete_index = this.$props.users.findIndex(x => x.uno == user.uno);
+            this.$props.users.splice(delete_index, 1);
+            user.isFollowing = 0;
+            this.$props.users.splice(delete_index, 0, user);
         })
         .catch(err => this.makeToast(err, "danger"))
     },
 
     follow(user){
+        console.log(user);
         http.post('/following/user/add', {
             follower: this.$store.state.userInfo.uno,
             following: user.uno
         })
         .then(res => {
           this.makeToast("팔로우에 성공했습니다.", "primary");
+            let delete_index = this.$props.users.findIndex(x => x.uno == user.uno);
+            this.$props.users.splice(delete_index, 1);
+            user.isFollowing = 1;
+            this.$props.users.splice(delete_index, 0, user);
         })
         .catch(err => this.makeToast(err, "danger"))
     },
@@ -139,6 +148,10 @@ img{
 
 p{
   margin: 5%;
+}
+
+.hidden{
+    display: none;
 }
 
 </style>

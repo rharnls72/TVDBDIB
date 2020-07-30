@@ -31,8 +31,8 @@ import MyPage from './views/account/mine/MyPage.vue'
 import EditMyPage from './views/account/mine/EditMyPage.vue'
 import OtherPage from './views/account/your/OtherPage.vue'
 
-import MyFollowings from './views/account/mine/MyFollowings.vue'
-import MyFollowers from './views/account/mine/MyFollowers.vue'
+import ViewFollowings from './views/account/ViewFollowings.vue'
+import ViewFollowers from './views/account/ViewFollowers.vue'
 
 export default [
 
@@ -173,12 +173,12 @@ export default [
     },
     {
         path: '/profile/followings/:uno',
-        name: 'MyFollowings',
-        component: MyFollowings
+        name: 'ViewFollowings',
+        component: ViewFollowings
     },
     {
         path: '/profile/followers/:uno',
-        name: 'MyFollowers',
-        component: MyFollowers
+        name: 'ViewFollowers',
+        component: ViewFollowers
     },
 ]
