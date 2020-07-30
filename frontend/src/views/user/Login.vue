@@ -69,7 +69,6 @@
         </div>
       </div>
     </div>
-    <Footer />
   </div>
 </template>
 
@@ -80,7 +79,6 @@ import * as EmailValidator from "email-validator";
 // import KakaoLogin from "../../components/user/snsLogin/Kakao.vue";
 // import GoogleLogin from "../../components/user/snsLogin/Google.vue";
 import UserApi from "../../api/UserApi";
-import Footer from '../../components/common/custom/Footer.vue'
 import LoginHeader from '../../components/user/custom/LoginHeader.vue'
 import teamImage from '../../assets/images/custom/team-img.jpg'
 
@@ -91,7 +89,6 @@ export default {
   components: {
     // KakaoLogin,
     // GoogleLogin,
-    Footer,
     LoginHeader,
   },
   created() {
