@@ -36,6 +36,7 @@ public class Program {
     private int reply_num;
     private boolean press_like;
     private String reply_content;
+    private String reply_user_nick;
 
     public int getPno() {
         return this.pno;
@@ -74,7 +75,17 @@ public class Program {
     }
 
     public void setReply_content(String reply_content) {
-        this.reply_content = reply_content;
+        String[] strs = reply_content.split(":");
+        this.reply_user_nick = strs[0];
+        this.reply_content = strs[1];
+    }
+
+    public String getReply_user_nick() {
+        return this.reply_user_nick;
+    }
+
+    public void setReply_user_nick(String reply_user_nick) {
+        this.reply_user_nick = reply_user_nick;
     }
 
     public void setLikeReplyInfo(Program res) {

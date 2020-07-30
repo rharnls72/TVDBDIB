@@ -67,7 +67,7 @@
             )   AS `reply_num`
             , (
                 SELECT
-                    `content`
+                    CONCAT(`writer_nick_name`, ':', `content`)
                 FROM
                     `feed_reply_view` frv
                 WHERE
@@ -128,6 +128,8 @@
                         WHERE
                             `follower` = #{uno}
                     )
+                    OR
+                    `uno` = #{uno}
                 ORDER BY `fno` DESC
                 LIMIT ${num} , 20
             ) t

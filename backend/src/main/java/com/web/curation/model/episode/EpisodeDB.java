@@ -22,6 +22,8 @@ public class EpisodeDB {
 	private int dibs_num;
 	private boolean press_dibs;
 
+	private int uno;
+
     public int getEno() {
         return this.eno;
     }
@@ -109,6 +111,14 @@ public class EpisodeDB {
 
 	public void setPress_dibs(boolean press_dibs) {
 		this.press_dibs = press_dibs;
+	}
+
+	public int getUno() {
+		return this.uno;
+	}
+
+	public void setUno(int uno) {
+		this.uno = uno;
 	}
 }
 

@@ -145,6 +145,7 @@ CREATE TABLE `episode_reply` (
     `uno` INT NOT NULL,
     `content` VARCHAR(200) NOT NULL,
     `write_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
+    `hide` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`erno`),
     FOREIGN KEY (`eno`)
         REFERENCES `episode` (`eno`)
@@ -164,6 +165,7 @@ CREATE TABLE `feed_reply` (
     `uno` INT NOT NULL,
     `content` VARCHAR(200) NOT NULL,
     `write_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
+    `hide` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`frno`),
     FOREIGN KEY (`fno`)
         REFERENCES `feed` (`fno`)
@@ -183,6 +185,7 @@ CREATE TABLE `program_reply` (
     `uno` INT NOT NULL,
     `content` VARCHAR(200) NOT NULL,
     `write_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
+    `hide` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`prno`),
     FOREIGN KEY (`parent_reply`)
         REFERENCES `program_reply` (`prno`)

@@ -64,12 +64,11 @@ export default {
   },
   props: {
     info: Object,
-    valid: Boolean
+    is_valid: Object
   },
   watch: {
     nick_name: function(v){
       this.checkNick();
-      this.syncData();
     },
     bio: function(){
       this.syncData();
@@ -90,6 +89,7 @@ export default {
           }else{
             this.isNick = "is-invalid";
           }
+          this.syncData();
         },
         error => {
           this.$router.push({name:'Errors', query: {message: error.msg}})
@@ -99,13 +99,13 @@ export default {
     syncData(){
       this.info.nick_name = this.nick_name;
       this.info.bio = this.bio;
-      if(this.isNick == "is-valid" && this.bio.length >= 0){
-        this.valid = true;
+      if(this.isNick == "is-valid" && this.bio.length > 0){
+        this.is_valid.is_valid = "is-valid";
       }else{
-        this.valid = false;
+        this.is_valid.is_valid = "is-invalid";
       }
       this.$emit('info', this.info);
-      this.$emit('valid', this.valid);
+      this.$emit('is_valid', this.is_valid);
     }
   },
 }
