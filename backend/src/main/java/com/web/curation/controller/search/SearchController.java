@@ -52,6 +52,17 @@ public class SearchController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/search/all/user")
+    @ApiOperation(value = "모든 유저 목록 검색")
+    public Object searchAllUser() {
+        List<User> list = searchDao.getAllUser();
+        final BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.msg = "success";
+        result.data = list;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @GetMapping("/search/taglist")
     @ApiOperation(value = "피드 목록 검색")
     public Object searchByTagList(@RequestParam(required = true) final String str){
@@ -71,7 +82,7 @@ public class SearchController {
         final BasicResponse result = new BasicResponse();
         result.status = true;
         result.msg = "success";
-        // result.data = list;
+        result.data = list;
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

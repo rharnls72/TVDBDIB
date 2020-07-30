@@ -1,10 +1,10 @@
 <template>
-  <b-nav justified class="myheader">
+  <b-nav justified class="myheader align-items-center">
     <b-nav-item>
       <b-icon-blank></b-icon-blank>
     </b-nav-item>
     <b-nav-item>
-      <p class="text-dark mb-0"><strong>{{  }}</strong></p>
+      <p class="text-dark mb-0"><strong>{{ info.nick_name }}</strong></p>
     </b-nav-item>
     <b-nav-item>
       <b-icon-blank></b-icon-blank>
@@ -27,6 +27,11 @@
                   <b-icon-blank class="h5"></b-icon-blank>
                   <p class="text-dark d-inline m-0">스크랩</p>
                 </b-nav-item>
+                <b-nav-item href="#link-2" @click="logout">
+                  <b-icon-bookmark class="text-dark d-inline"></b-icon-bookmark>
+                  <b-icon-blank class="h5"></b-icon-blank>
+                  <p class="text-dark d-inline m-0">로그아웃</p>
+                </b-nav-item>
               </b-nav>
             </nav>
           </div>
@@ -47,6 +52,10 @@ export default {
     // editAccount() {
 
     // },
+    logout(){
+      localStorage.removeItem('tvility');
+      this.$router.push({name:'Login'})
+    }
   },
 }
 </script>
@@ -56,6 +65,7 @@ export default {
     background-color: #eee;
     position: fixed;
     width: 100%;
+    height: 50px;
     z-index: 1;
   }
 </style>

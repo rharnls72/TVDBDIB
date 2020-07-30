@@ -2,10 +2,8 @@
   <div class="feed newsfeed">
     <IndexCurationHeader />
     <div class="wrapB">
-      <h1>큐레이션</h1>
-      <div>
-        <button @click="makeTotalCuations" >make</button>
-        <EpisodeItem v-for="curation in partCurations" :key="curation.pno" :curation="curation"/>
+      <div class="myfeed">
+        <EpisodeItem v-for="curation in partCurations" :key="curation.key" :curation="curation"/>
         <infinite-loading @infinite="infiniteHandler"></infinite-loading>
       </div>
     </div>
@@ -23,6 +21,7 @@ import Footer from '../../components/common/custom/Footer.vue';
 import IndexCurationHeader from '../../components/curation/IndexCurationHeader.vue'
 import header from "@/api/header.js"
 import axios from "axios"
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   name: 'IndexCuration',
@@ -33,6 +32,7 @@ export default {
       startPoint: 0,
       interval: 5,
       partCurations: [],
+      loading_complete: false
     }
   },
   props: ["keyword"],
@@ -48,10 +48,12 @@ export default {
       console.log(this.startPoint);
       let temp = []
       for (let i = this.startPoint; i < this.startPoint + this.interval; i++) {
+        this.curations[i].key = this.curations[i].pno * 10000 + this.curations[i].episode;
         temp.push(this.curations[i])
       }
-      this.partCurations = this.partCurations.concat(temp)
-      //console.log(this.partCurations)
+      this.partCurations = this.partCurations.concat(temp);
+      this.startPoint += this.interval;
+      this.loading_complete = true;
     },
     makeTotalCuations() {
       axios.get('http://localhost:9000/episode/following/1', header())
@@ -66,14 +68,18 @@ export default {
     // 무한 스크롤 기능 구현
     infiniteHandler($state) {
       setTimeout(() => {
-        this.makeCurations()
+        if (this.loading_complete){
+          this.makeCurations()
+        }
         $state.loaded();
-      }, 2000);
-      this.startPoint += this.interval
+      }, 300);
     },
   },
   // 1. 데이터 모두 다 받아오기
   created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
     axios.get('http://localhost:9000/episode/following/1', header())
       .then(res => {
         console.log(res);
@@ -83,5 +89,15 @@ export default {
       })
       .catch(err => console.error(err))
   },
+/*
+  mounted(){
+    this.loading_complete = true;
+  }
+*/
 };
 </script>
+<style>
+  .myfeed {
+    padding-top: 70px;
+  }
+</style>

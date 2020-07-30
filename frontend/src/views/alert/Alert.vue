@@ -21,6 +21,7 @@ import http from '@/api/http-common.js';
 import Footer from '@/components/common/custom/Footer.vue';
 import AlertHeader from '@/components/alert/AlertHeader.vue';
 import AlertItem from '@/components/alert/AlertItem.vue';
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   name: 'AlertTest',
@@ -55,6 +56,10 @@ export default {
   },
 
   created(){
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+    
     let uno = this.$store.state.userInfo.uno;
     console.log(this.$store.state.userInfo);
     // 알림 가져오기.

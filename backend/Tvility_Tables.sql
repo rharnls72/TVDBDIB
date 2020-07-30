@@ -37,9 +37,9 @@ CREATE TABLE `user` (
     `password` VARCHAR(128) NOT NULL,
     `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP (),
     `nick_name` VARCHAR(20) NOT NULL,
-    `bio` VARCHAR(200),
+    `bio` VARCHAR(200) DEFAULT 'what the??',
     `profile_pic` VARCHAR(100),
-    `is_private` BOOLEAN,
+    `is_private` BOOLEAN DEFAULT FALSE,
     `is_certification` BOOLEAN DEFAULT FALSE, 
     PRIMARY KEY (`uno`),
     UNIQUE KEY (`email`)
@@ -90,20 +90,9 @@ CREATE TABLE `program_follow` (
 CREATE TABLE `episode` (
     `eno` INT PRIMARY KEY AUTO_INCREMENT,
     `pno` INT,
+    `season` INT,
     `episode` INT,
-    `summary` VARCHAR(1000),
-    `broadcast_date` DATETIME,
-    `guest` VARCHAR(10000),
-    `thumbnail` VARCHAR(200),
-    `shares` INT DEFAULT 0,
-    `dibs` INT DEFAULT 0,
-    `likes` INT DEFAULT 0,
-    `replay_link` VARCHAR(2000),
-    `reply_count` INT DEFAULT 0,
-    `reply` VARCHAR(200),
-    CONSTRAINT FK_pno2 FOREIGN KEY (`pno`)
-        REFERENCES `program` (`pno`)
-        ON DELETE CASCADE
+    `share_num` INT DEFAULT 0
 );
 
 CREATE TABLE `feed` (
