@@ -82,10 +82,11 @@
       </div>
     </div>
     <!-- 추후에 댓글 연결!~ -->
-    <div class="content">
+    <ReplyItem />
+    <!-- <div class="content">
       <p>댓글이야 댓글 댓글!~</p>
       <p class="more">댓글 1개</p>
-    </div>
+    </div> -->
     <!---->
     <!---->
   </div>
@@ -94,6 +95,7 @@
 <script>
 import defaultImage from "../../../assets/images/img-placeholder.png";
 import defaultProfile from "../../../assets/images/profile_default.png";
+import ReplyItem from '../../ReplyItem.vue'
 
 export default {
   name: 'EpisodeItem',
@@ -111,6 +113,9 @@ export default {
   props: {
     curation: Object,
     id: Number,
+  },
+  components: {
+    ReplyItem,
   },
   methods: {
     readMore() {
