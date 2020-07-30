@@ -92,8 +92,9 @@ export default {
   created() {
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
+      // 비동기 요청이 완료되었을 때 store 에 유저 정보가 있는지 확인해야함(여기에 위치해야함)
+      if(this.$store.state.userInfo != null)  this.$router.push({name:'IndexCuration'});
     });
-    if(this.$store.state.userInfo != null)  this.$router.push({name:'IndexCuration'});
 
     this.component = this;
 
