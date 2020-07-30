@@ -71,7 +71,9 @@ export default {
               reply_num: res.data.data[i].reply_num,
               thumbnail: res.data.data[i].thumbnail,
               uno: res.data.data[i].uno,
-              create_date: res.data.data[i].create_date
+              create_date: res.data.data[i].create_date,
+              reply_user_nick: res.data.data[i].reply_user_nick,
+              nick_name: res.data.data[i].nick_name,
             });
           }
           console.log(this.feeds)
@@ -82,26 +84,20 @@ export default {
           console.log(err)
         }
       )
-      /*
-      axios.post('http://localhost:9000/feed/list' ,{num: this.requestCount}, header())
-        .then(res => {
-          console.log(res.data)
-          this.feeds = this.feeds.concat(res.data.data)
-          this.requestCount++
-        })
-        .catch(err => console.log(err))
-      */
     }
   },
 
   mounted() {
     this.takeFeed()
-  },
-  created() {
-    this.takeFeed();
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });
+  },
+  created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+    this.takeFeed();
   }
 }
 </script>
