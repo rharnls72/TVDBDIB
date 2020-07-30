@@ -42,8 +42,6 @@
 
 <script>
 import FeedApi from '../../api/FeedApi'
-import axios from 'axios'
-import header from '@/api/header.js'
 
 export default {
   name: 'CreateVote',
@@ -106,7 +104,7 @@ export default {
           // 성공시 수행할 콜백 메서드
           , res => {
             console.log(res);
-            this.$router.push('/feed/main')
+            this.$router.push({path:'/feed/main'})
           }
           // 실패시 수행할 콜백 메서드
           , err => {
@@ -114,13 +112,17 @@ export default {
           } 
         );
       } else {
+        
         data.fno = this.fno
-        axios.put('http://localhost:9000/feed/update', data, header())
-          .then(res => {
+
+        FeedApi.updateFeed(
+          data,
+          res=> {
             console.log(res)
-            this.$router.push({path:'/feed/feedDetail/'+this.fno})
-          })
-          .catch(err => console.log(err))
+            this.$router.push({path:'/feed/main'})
+          },
+          err=> console.log(err)
+          )
       }
     }
   },

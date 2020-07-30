@@ -67,8 +67,6 @@
 
 <script>
 import FeedApi from '../../api/FeedApi'
-import header from '@/api/header.js'
-import axios from 'axios'
 
 export default {
   name: 'CreateCountdown',
@@ -169,14 +167,17 @@ export default {
           } 
         )
       } else {
+        
         data.fno = this.fno
-        axios.put('http://localhost:9000/feed/update', data, header())
-          .then(res => {
+
+        FeedApi.updateFeed(
+          data,
+          res=> {
             console.log(res)
-            this.fno = null
             this.$router.push({path:'/feed/main'})
-          })
-          .catch(err => console.log(err))
+          },
+          err=> console.log(err)
+          )
       }
     }
   },

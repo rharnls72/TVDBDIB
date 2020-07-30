@@ -86,9 +86,9 @@
 import ReplyItem from "@/components/ReplyItem.vue"
 import defaultImage from "../../assets/images/img-placeholder.png";
 import defaultProfile from "../../assets/images/profile_default.png";
-import {mapState} from "vuex"
-import header from "@/api/header.js"
-import axios from "axios"
+
+import FeedApi from "@/api/FeedApi.js"
+
 export default {
   name: 'feedArticleItem',
   data: () => {
@@ -115,9 +115,6 @@ export default {
     ReplyItem,
   },
   computed: {
-    ...mapState([
-      'userInfo',
-    ]),
     createAfter() {
       const today = new Date()
       return parseInt((today-new Date(this.create_date)) / (1000*60*60))
@@ -135,19 +132,17 @@ export default {
       this.likeIcon = !this.likeIcon
       if (this.likeIcon) {
         this.like_num ++
-        axios.post('http://localhost:9000/like/feed/create', {
-          tno: this.fno
-        }, header())
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
+        FeedApi.createFeedLike(
+          { tno: this.fno }
+          , res => console.log(res)
+          , err => console.log(err))
       }
       else {
         this.like_num --
-        axios.post('http://localhost:9000/like/feed/delete', {
-          tno: this.fno
-        }, header())
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
+        FeedApi.deleteFeedLike(
+          { tno: this.fno }
+          , res => console.log(res)
+          , err => console.log(err))
       }
     },
     touchScrapIcon() {
@@ -161,12 +156,14 @@ export default {
       // console.log(this.scrapIcon)
     },
     delFeed() {
-      axios.delete('http://localhost:9000/feed/delete/'+this.fno, header())
-        .then(res => {
-          console.log(res)
-          this.$router.push('/feed/main')
-        })
-        .catch(err => console.log(err))
+      FeedApi.deleteFeed(
+          this.fno,
+          res=> {
+            console.log(res)
+            this.$router.push({path:'/feed/main'})
+          },
+          err=> console.log(err)
+        )
     },
     updateFeed() {
       this.$router.push({ path:'/feed/create/1/'+this.fno })

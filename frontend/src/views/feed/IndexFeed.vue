@@ -82,15 +82,6 @@ export default {
           console.log(err)
         }
       )
-      /*
-      axios.post('http://localhost:9000/feed/list' ,{num: this.requestCount}, header())
-        .then(res => {
-          console.log(res.data)
-          this.feeds = this.feeds.concat(res.data.data)
-          this.requestCount++
-        })
-        .catch(err => console.log(err))
-      */
     }
   },
 
@@ -98,10 +89,10 @@ export default {
     this.takeFeed()
   },
   created() {
-    this.takeFeed();
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });
+    this.takeFeed();
   }
 }
 </script>

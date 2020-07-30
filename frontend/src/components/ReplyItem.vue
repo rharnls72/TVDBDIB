@@ -42,7 +42,6 @@ export default {
   },
   props: {
     fno: Number,
-    // replies: Array,
   },
   methods: {
     pushReply() {
