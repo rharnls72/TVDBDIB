@@ -9,7 +9,7 @@ Vue.use(Vuex)
 const state = {
     isUser: false,
     userInfo: {},
-
+    isAutoLogin: false,
     loginEmail: ""
 }
 
