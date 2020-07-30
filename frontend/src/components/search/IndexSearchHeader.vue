@@ -55,6 +55,7 @@ export default {
       tabState: 3,
       word: "",
       users: [],
+      search_history: [],
 
       selectedUser: {}
     }
@@ -73,6 +74,18 @@ export default {
         console.log(err);
       }
     );
+
+    // 유저 히스토리 가져오기
+    SearchApi.getHistoryList(
+      "noData"
+      , res => {
+        this.search_history = res.data.data;
+        console.log(this.search_history);
+      }
+      , err => {
+        console.log(err);
+      }
+    );
   },
   watch: {
     word(newWord) {
@@ -80,6 +93,18 @@ export default {
     },
     selectedUser(newUser) {
       console.log(newUser);
+      let data = {
+        search_uno : newUser.uno
+      };
+      SearchApi.addHistory(
+        data
+        , res => {
+          console.log("Add History Success!!");
+        }
+        , err => {
+          console.log(err);
+        }
+      );
       this.$router.push("/profile/" + newUser.nick_name);
     }
   },

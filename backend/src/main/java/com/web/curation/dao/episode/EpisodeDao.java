@@ -12,6 +12,8 @@ public interface EpisodeDao {
     // Create
     int addNewEpisode(EpisodeResponse episode);
 
+    int addEpisodeDibs(EpisodeDB req);
+
     // Read
     int checkDataExist(EpisodeResponse episode);
     EpisodeDB getLikeReplyInfo(EpisodeResponse episode);
@@ -21,4 +23,6 @@ public interface EpisodeDao {
 
     // Delete
     int deleteEpisode(int eno);
+
+    int deleteEpisodeDibs(EpisodeDB req);
 }

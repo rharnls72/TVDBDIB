@@ -20,6 +20,18 @@
         )
     </insert>
 
+    <insert id="addEpisodeDibs">
+        insert into
+            episode_dibs(
+                `eno`
+                , `uno`
+            )
+        values(
+            #{eno}
+            , #{uno}
+        )
+    </insert>
+
     <!-- Read -->
     <select id="checkDataExist" resultType="int">
         select
@@ -48,7 +60,7 @@
             ) as `reply_num`
             , (
                 select
-                    `content`
+                    CONCAT(`writer_nick_name`, ':', `content`)
                 from
                     `episode_reply_view` erv
                 where
@@ -120,6 +132,15 @@
             `episode`
         where
             `eno` = #{value}
+    </delete>
+
+    <delete id="deleteEpisodeDibs">
+        delete from
+            `episode_dibs`
+        where
+            `eno` = #{eno}
+            and
+            `uno` = #{uno}
     </delete>
 
 </mapper>

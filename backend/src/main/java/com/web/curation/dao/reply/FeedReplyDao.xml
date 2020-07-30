@@ -36,6 +36,7 @@
             , sub.writer_nick_name    AS `writer_nick_name`
             , sub.writer_profile_pic  AS `writer_profile_pic`
             , sub.like_num            AS `like_num`
+            , sub.hide                AS `hide`
             , IF((
                 SELECT
                     COUNT(frl.lno)
@@ -89,7 +90,8 @@
             sub.writer_uno          AS `writer_uno`,
             sub.writer_nick_name    AS `writer_nick_name`,
             sub.writer_profile_pic  AS `writer_profile_pic`,
-            sub.like_num            AS `like_num`
+            sub.like_num            AS `like_num`,
+            sub.hide                AS `hide`
             , IF((
                 SELECT
                     COUNT(frl.lno)
@@ -120,6 +122,15 @@
             feed_reply
         set
             content = #{content}
+        where
+            frno = #{no}
+    </update>
+
+    <update id="setHideReply">
+        update
+            feed_reply
+        set
+            hide = !hide
         where
             frno = #{no}
     </update>
