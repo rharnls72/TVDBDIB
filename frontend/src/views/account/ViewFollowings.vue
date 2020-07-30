@@ -20,7 +20,7 @@ import Footer from '@/components/common/custom/Footer.vue';
 import FollowingHeader from '@/components/account/FollowingHeader.vue';
 import UserListItem from '@/components/account/UserListItem.vue';
 import GetUserApi from "@/api/GetUserApi"
-
+import header from "@/api/header.js"
 export default {
   name: 'AlertTest',
    components: {
@@ -47,7 +47,7 @@ export default {
     let uno = this.$route.params.uno;
 
     // 팔로잉 유저 리스트 받아오기
-    http.get('/following/user/followings/' + uno)
+    http.get('/following/user/followings/' + uno, header())
     .then(res => {
         console.log(res);
         this.users = res.data.data.user_list;
@@ -65,7 +65,7 @@ export default {
 
         // 다른 사람의 페이지인 경우: 내 팔로잉 리스트도 가져온다. (팔로/언팔 버튼 보여주기 위함)
         if (myuno != uno){
-            http.get('/following/user/followings/' + myuno)
+            http.get('/following/user/followings/' + myuno, header())
             .then(res => {
                 console.log(res);
                 let temp_following_list = res.data.data.user_list;
