@@ -14,6 +14,7 @@ import http from '@/api/http-common.js';
 import Footer from '@/components/common/custom/Footer.vue';
 import AlertHeader from '@/components/alert/AlertHeader.vue';
 import AlertItem from '@/components/alert/AlertItem.vue';
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   name: 'AlertTest',
@@ -30,6 +31,9 @@ export default {
   },
 
   created(){
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
       http.get('/alert/list/2')
         .then(res => {
           console.log(res);

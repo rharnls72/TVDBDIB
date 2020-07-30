@@ -29,6 +29,7 @@
 import CreateVote from '@/components/feed/CreateVote.vue'
 import CreateArticle from '@/components/feed/CreateArticle.vue'
 import CreateCountdown from '@/components/feed/CreateCountdown.vue'
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   name: 'CreateFeed',
@@ -44,7 +45,12 @@ export default {
     turnArticle() {this.page = 'article'},
     turnVote() {this.page = 'vote'},
     turnCountdown() {this.page = 'countdown'},
-  }
+  },
+  created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+  },
 }
 </script>
 
