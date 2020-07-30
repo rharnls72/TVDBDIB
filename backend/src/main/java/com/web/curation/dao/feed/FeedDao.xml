@@ -67,7 +67,7 @@
             )   AS `reply_num`
             , (
                 SELECT
-                    `content`
+                    CONCAT(`writer_nick_name`, ':', `content`)
                 FROM
                     `feed_reply_view` frv
                 WHERE
@@ -95,6 +95,24 @@
                     AND
                     fl.uno = #{uno}
             ) > 0, true, false)   AS `press_like`
+            , (
+                SELECT
+                    COUNT(fd.dno)
+                FROM
+                    `feed_dibs` fd
+                WHERE
+                    fd.fno = f.fno
+            ) AS `dibs_num`
+            , IF((
+                SELECT
+                    COUNT(fd.dno)
+                FROM
+                    `feed_dibs` fd
+                WHERE
+                    fd.fno = f.fno
+                    AND
+                    fd.uno = #{uno}
+            ) > 0, true, false) AS `press_dibs`
         FROM
             (
                 SELECT

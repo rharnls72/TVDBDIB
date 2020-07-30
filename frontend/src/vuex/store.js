@@ -9,8 +9,10 @@ Vue.use(Vuex)
 const state = {
     isUser: false,
     userInfo: {},
+    isAutoLogin: false,
 
-    loginEmail: ""
+    loginEmail: "",
+    updateFeed: null,
 }
 
 export default new Vuex.Store({

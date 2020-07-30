@@ -51,7 +51,7 @@
             <b-icon-bookmark v-if="!scrapIcon"></b-icon-bookmark>
             <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
-          {{scrapNum}} 
+          {{scrapNum}}
           <!-- 스크랩 카운트 -->
         </div>
         <!---->
@@ -69,13 +69,9 @@
       <span class="font-weight-bold">좋아요 {{like_num}}명</span>
     </div>
     <div class="wrap mt-2">
-      <span class="font-weight-bold">유저이름 </span>
-      <span>
-        <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
-        <span v-if="!isLong" @click="changeIsLong" class="moreView">댓글 {{reply_num}}개</span>
-      </span>
-      <ReplyItem v-if="isLong" :fno="fno"/>
+      <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
     </div>
+    <ReplyItem :fno="fno"/>
   </div>
 </template>
 
@@ -88,7 +84,6 @@ import axios from 'axios'
 import header from '@/api/header.js'
 
 export default {
-  name: 'feedVoteItem',
   data: () => {
     return { 
       defaultImage, defaultProfile,
@@ -111,7 +106,6 @@ export default {
       writer_uno: 1,
       scrapNum: 12,
       create_date: 'ddddd0',
-      isLong: false,
     }
   },
   props: {
@@ -133,33 +127,18 @@ export default {
   methods: {
     totalNumber() {
       let t = 0
-      for (let i=0; i<this.vote.length; i++) {
-        t += this.vote[i].count
-      }
+      this.vote.foreach(res => {
+        t += Number(res.count)
+      })
       this.totalNum = t
-    },
-    changeIsLong() {
-      this.isLong=true
     },
     touchLikeIcon() {
       this.likeIcon = !this.likeIcon
       if (this.likeIcon) {
         this.like_num ++
-        axios.post('http://localhost:9000/like/feed/create', {
-          uno: this.$store.state.userInfo.uno,
-          tno: this.fno
-        }, header())
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
       }
       else {
         this.like_num --
-        axios.post('http://localhost:9000/like/feed/delete', {
-          uno: this.$store.state.userInfo.uno,
-          tno: this.fno
-        }, header())
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
       }
       // console.log(this.likeIcon)
     },
@@ -172,7 +151,8 @@ export default {
         this.scrapNum --
       }
       // console.log(this.scrapIcon)
-    },makeData() {
+    },
+    makeData() {
       var jsonObj = {
         title: this.feedTitle,
         content: this.vote,

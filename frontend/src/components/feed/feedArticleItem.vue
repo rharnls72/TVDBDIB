@@ -6,20 +6,17 @@
         <div class="user-name">
           <button>{{article.nick_name}}</button>
         </div>
-        <p class="date">9시간 후</p>
+        <p class="date">{{createAfter}} 시간 전</p>
       </div>
-      <div v-if="!option" class="content d-flex flex-comlumn justify-content-between align-items-center my-2">
+      <div class="content d-flex flex-comlumn justify-content-between align-items-center my-2">
         <div>{{feedTitle}}</div>
         <b-icon v-b-toggle.sidebar-1 icon="three-dots-vertical" font-scale="1.3"></b-icon>
         <b-sidebar id="sidebar-1" shadow>
           <div class="ml-3">
-            <div>수정</div>
-            <div>삭제</div>
+            <div @click="updateFeed">수정</div>
+            <div @click="delFeed">삭제</div>
           </div>
         </b-sidebar>
-      </div>
-      <div v-else class="content my-2">
-        <div>{{feedTitle}}</div>
       </div>
     </div>
     <div class="feed-card">
@@ -56,7 +53,7 @@
             <b-icon-bookmark v-if="!scrapIcon"></b-icon-bookmark>
             <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
-          0 
+          {{scrapNum}} 
           <!-- 스크랩 카운트 -->
         </div>
         <!---->
@@ -75,14 +72,13 @@
     </div>
     <div class="wrap mt-2">
       <span class="font-weight-bold">유저이름 </span>
-      <span v-if="isLong">{{cc.content.slice(0, 10)}}... <span class="moreView" @click="changeIsLong">더 보기</span></span>
-      <span v-else>
-        <span>{{cc.content}}</span><br>
+      <span>
+        <span>{{content}}</span><br>
         <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
-        <span v-if="!!option" class="moreView">댓글 {{reply_num}}개</span>
+        <span v-if="!isLong" @click="changeIsLong" class="moreView">댓글 {{reply_num}}개</span>
       </span>
+      <ReplyItem v-if="isLong" :fno="fno"/>
     </div>
-    <ReplyItem v-if="!option"/>
   </div>
 </template>
 
@@ -94,6 +90,7 @@ import {mapState} from "vuex"
 import header from "@/api/header.js"
 import axios from "axios"
 export default {
+  name: 'feedArticleItem',
   data: () => {
     return { 
       defaultImage, defaultProfile,
@@ -106,9 +103,12 @@ export default {
       scrapIcon: false,
       like_num: 12,
       reply_num: 11,
-      isLong: false,
-      cc: null,
       feedTitle: '제목제목',
+      thumbnail: 'asdfasdf',
+      writer_uno: 1,
+      scrapNum: 12,
+      create_date: 'ddddd0',
+      isLong: false,
     };
   },
   components: {
@@ -117,50 +117,76 @@ export default {
   computed: {
     ...mapState([
       'userInfo',
-    ])
+    ]),
+    createAfter() {
+      const today = new Date()
+      return parseInt((today-new Date(this.create_date)) / (1000*60*60))
+    }
   },
   props:{
     article: Object,
-    option: Number,
+    fno: Number,
   },
   methods: {
     changeIsLong() {
-      this.isLong=false
-    },
-    pushReply() {
-      axios.post('http://localhost:9000/reply/feed/create',
-      {
-        no: this.article.fno,
-        content: this.additionReply,
-        writer_uno: 1,
-      }, header())
+      this.isLong=true
     },
     touchLikeIcon() {
       this.likeIcon = !this.likeIcon
       if (this.likeIcon) {
-        this.likeCount ++
+        this.like_num ++
+        axios.post('http://localhost:9000/like/feed/create', {
+          tno: this.fno
+        }, header())
+          .then(res => console.log(res))
+          .catch(err => console.log(err))
       }
       else {
-        this.likeCount --
+        this.like_num --
+        axios.post('http://localhost:9000/like/feed/delete', {
+          tno: this.fno
+        }, header())
+          .then(res => console.log(res))
+          .catch(err => console.log(err))
       }
-      // console.log(this.likeIcon)
     },
     touchScrapIcon() {
       this.scrapIcon = !this.scrapIcon
       if (this.scrapIcon) {
-        this.scrapCount ++
+        this.scrapNum ++
       }
       else {
-        this.scrapCount --
+        this.scrapNum --
       }
       // console.log(this.scrapIcon)
     },
+    delFeed() {
+      axios.delete('http://localhost:9000/feed/delete/'+this.fno, header())
+        .then(res => {
+          console.log(res)
+          this.$router.push('/feed/main')
+        })
+        .catch(err => console.log(err))
+    },
+    updateFeed() {
+      this.$router.push({ path:'/feed/create/1/'+this.fno })
+    }
   },
   created() {
-    console.log(this.article.content)
-    this.cc = JSON.parse(this.article.content)
-    console.log(this.cc)
-    if (this.cc.content.length > 10 && !!this.option) {this.isLong=true}
+    this.feedTitle = this.article.content.title
+    this.content = this.article.content.content
+    this.tags = this.article.tag
+    this.reply = this.article.reply_content
+    this.reply_num = this.article.reply_num
+    this.thumbnail = this.article.thumbnail
+    this.writer_uno = this.article.uno
+    this.likeIcon = this.article.press_like
+    this.scrapIcon = this.article.press_dibs
+    if (!this.article.dibsNum) {this.scrapNum = 0}
+    else {this.scrapNum = this.article.dibsNum}
+    this.create_date = this.article.create_date
+    if (!this.article.like_num) {this.like_num = 0}
+    else {this.like_num = this.article.like_num}
   }
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <b-nav justified class="myheader">
+  <b-nav justified class="myheader align-items-center">
     <b-nav-item>
       <b-icon-blank></b-icon-blank>
     </b-nav-item>
@@ -53,6 +53,7 @@ export default {
 
     // },
     logout(){
+      this.$store.commit('setAutoLogin', false);
       localStorage.removeItem('tvility');
       this.$router.push({name:'Login'})
     }
@@ -65,6 +66,7 @@ export default {
     background-color: #eee;
     position: fixed;
     width: 100%;
+    height: 50px;
     z-index: 1;
   }
 </style>

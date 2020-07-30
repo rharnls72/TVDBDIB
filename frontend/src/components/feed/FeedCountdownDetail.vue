@@ -21,12 +21,24 @@
     </div>
     <div class="feed-card">
       <div class="mythumbnail d-flex flex-column justify-content-center align-items-center">
-        <div v-for="content in vote" :key="content.id" style="width: 80%;">
-          <div class="my-2">
-            <label class="d-flex justify-content-between"><span>{{content.text}}</span><span @click="voteOption(content)" class="moreView">투표하기</span></label>
-            <b-progress :value="content.count" :max="totalNum" show-progress></b-progress>
+        <div class="py-5 d-flex justify-content-center py-3">
+          <div>
+            <div class="time">{{Value.date}}</div>
+            <p class="text-center">일</p>
           </div>
-        </div>
+          <div>
+            <div class="time">{{Value.hour}}</div>
+            <p class="text-center">시간</p>
+          </div>
+          <div>
+            <div class="time">{{Value.min}}</div>
+            <p class="text-center">분</p>
+          </div>
+          <div>
+            <div class="time">{{Value.sec}}</div>
+            <p class="text-center">초</p>
+          </div>
+        </div>  
       </div>
     </div>
     <!---->
@@ -51,7 +63,7 @@
             <b-icon-bookmark v-if="!scrapIcon"></b-icon-bookmark>
             <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
-          {{scrapNum}} 
+          {{scrapNum}}
           <!-- 스크랩 카운트 -->
         </div>
         <!---->
@@ -69,54 +81,48 @@
       <span class="font-weight-bold">좋아요 {{like_num}}명</span>
     </div>
     <div class="wrap mt-2">
-      <span class="font-weight-bold">유저이름 </span>
-      <span>
-        <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
-        <span v-if="!isLong" @click="changeIsLong" class="moreView">댓글 {{reply_num}}개</span>
-      </span>
-      <ReplyItem v-if="isLong" :fno="fno"/>
+      <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
     </div>
+    <ReplyItem :fno="fno"/>
   </div>
 </template>
 
 <script>
 import ReplyItem from "@/components/ReplyItem.vue"
-import defaultImage from "@/assets/images/img-placeholder.png";
-import defaultProfile from "@/assets/images/profile_default.png";
-import {mapState} from 'vuex'
-import axios from 'axios'
-import header from '@/api/header.js'
-
+import defaultImage from "../../assets/images/img-placeholder.png";
+import defaultProfile from "../../assets/images/profile_default.png";
+import {mapState} from "vuex"
+import header from "@/api/header.js"
+import axios from "axios"
 export default {
-  name: 'feedVoteItem',
   data: () => {
     return { 
       defaultImage, defaultProfile,
-      feedTitle: '투표투표',
-      vote: [
-        {id: 0, content:"항목 1", count:10},
-        {id: 1, content:"항목 2", count:40},
-        {id: 2, content:"항목 3", count:8},
-      ],
-      totalNum: null,
-      comment: null,
-      tags: ['소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ','소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ'],
-      reply: ['wow', '너무 좋아용 ㅎㅎ'],
-      additionReply: "",
-      likeIcon: false,
-      scrapIcon: false,
-      like_num: 12,
-      reply_num: 11,
-      thumbnail: 'asdfasdf',
-      writer_uno: 1,
-      scrapNum: 12,
-      create_date: 'ddddd0',
-      isLong: false,
-    }
+      feedTitle: "카운트다운!!",
+        Value: {
+          date: "00",
+          hour: "00",
+          min: "00",
+          sec: "00"
+        },
+        date: "2020-08-31",
+        Time: "21:35:30",
+        comment: null,
+        tags: ['소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ'],
+        reply: ['wow', '너무 좋아용 ㅎㅎ'],
+        like_num: 12,
+        reply_num: 11,
+        likeIcon: false,
+        scrapIcon: false,
+        writer_uno: null,
+        additionReply: "",
+        thumbnail: 'asdfasdf',
+        scrapNum: 12,
+        create_date: 'ddddd0',
+    };
   },
-  props: {
-    article: Object,
-    fno: Number,
+  components: {
+    ReplyItem,
   },
   computed: {
     ...mapState([
@@ -127,39 +133,50 @@ export default {
       return parseInt((today-new Date(this.create_date)) / (1000*60*60))
     }
   },
-  components: {
-    ReplyItem,
+  props:{
+    article: Object,
+    fno: Number,
   },
   methods: {
-    totalNumber() {
-      let t = 0
-      for (let i=0; i<this.vote.length; i++) {
-        t += this.vote[i].count
+    changeString(str) {
+      str = String(str)
+      if (str.length === 1) {
+        return '0'+str
       }
-      this.totalNum = t
+      return str
     },
-    changeIsLong() {
-      this.isLong=true
+    timer() {
+      let today = new Date()
+      let selectDate = new Date(this.date+'T'+this.Time)
+
+      let countdown = parseInt((selectDate - today) / 1000)
+
+      this.Value.sec = this.changeString(countdown % 60)
+      countdown = parseInt(countdown / 60)
+      this.Value.min = this.changeString(countdown % 60)
+      countdown = parseInt(countdown / 60)
+      this.Value.hour = this.changeString(countdown % 24)
+      this.Value.date = this.changeString(parseInt(countdown / 24))
+    },
+    submitDateTime() {
+      this.timer()
+      setInterval(this.timer, 1000)
+    },
+    pushReply() {
+      axios.post('http://localhost:9000/reply/feed/create',
+      {
+        no: this.article.fno,
+        content: this.additionReply,
+        writer_uno: 1,
+      }, header())
     },
     touchLikeIcon() {
       this.likeIcon = !this.likeIcon
       if (this.likeIcon) {
         this.like_num ++
-        axios.post('http://localhost:9000/like/feed/create', {
-          uno: this.$store.state.userInfo.uno,
-          tno: this.fno
-        }, header())
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
       }
       else {
         this.like_num --
-        axios.post('http://localhost:9000/like/feed/delete', {
-          uno: this.$store.state.userInfo.uno,
-          tno: this.fno
-        }, header())
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
       }
       // console.log(this.likeIcon)
     },
@@ -172,25 +189,6 @@ export default {
         this.scrapNum --
       }
       // console.log(this.scrapIcon)
-    },makeData() {
-      var jsonObj = {
-        title: this.feedTitle,
-        content: this.vote,
-      }
-      return JSON.stringify(jsonObj)
-    },
-    voteOption(opt) {
-      opt.count++
-      let sendData = this.makeData()
-      let data = {
-        ctype: 3,
-        content: sendData,
-        tag: JSON.stringify(this.tags),
-        fno: this.fno
-      };
-      axios.put('http://localhost:9000/feed/update', data, header())
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
     },
     delFeed() {
       axios.delete('http://localhost:9000/feed/delete/'+this.fno, header())
@@ -201,16 +199,22 @@ export default {
         .catch(err => console.log(err))
     },
     updateFeed() {
-      this.$router.push({ path:'/feed/create/3/'+this.fno })
+      this.$router.push({ path:'/feed/create/2/'+this.fno })
     }
   },
-  updated() {
-    this.totalNumber()
+  watch: {
+    date: function(n, o) {
+      console.log(this.date)
+      this.submitDateTime()
+    }
   },
   created() {
+    console.log('feedcountdetail', this.article)
     if (this.article !== null) {
-      this.feedTitle = this.article.content.title
-      this.vote = this.article.content.content
+      console.log(111)
+      this.feedTitle = this.article.content.content.title
+      this.date = this.article.content.content.date
+      this.Time = this.article.content.content.time
       this.tags = this.article.tag
       this.reply = this.article.reply_content
       this.reply_num = this.article.reply_num
@@ -223,9 +227,8 @@ export default {
       this.create_date = this.article.create_date
       if (!this.article.like_num) {this.like_num = 0}
       else {this.like_num = this.article.like_num}
-      console.log(this.vote)
     }
-  }
+  },
 };
 </script>
 
@@ -233,6 +236,15 @@ export default {
 /* .content {
  border-bottom: 1px solid gray;
 } */
+
+.time {
+  width: 40px;
+  margin-right: 10px;
+  margin-left: 10px;
+  border-bottom: 1px solid black;
+  text-align: center;
+  font-weight: 700;
+}
 .moreView {
   color: darkgray; 
 }

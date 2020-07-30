@@ -25,9 +25,13 @@ public class Feed {
     private String nick_name;
     private String profile_pic;
     private int reply_num;
+    private String reply_content;
+    private String reply_user_nick;
+
     private int like_num;
     private boolean press_like;
-    private String reply_content;
+    private int dibs_num;
+    private boolean press_dibs;
 
     public void setFno(int fno) {
         this.fno = fno;
@@ -110,6 +114,13 @@ public class Feed {
     public int getReply_num() {
         return reply_num;
     }
+    public String getReply_user_nick() {
+        return this.reply_user_nick;
+    }
+
+    public void setReply_user_nick(String reply_user_nick) {
+        this.reply_user_nick = reply_user_nick;
+    }
     public void setLike_num(int like_num) {
         this.like_num = like_num;
     }
@@ -128,6 +139,24 @@ public class Feed {
     }
 
     public void setReply_content(String reply_content) {
-        this.reply_content = reply_content;
+        String[] strs = reply_content.split(":");
+        this.reply_user_nick = strs[0];
+        this.reply_content = strs[1];
+    }
+
+    public int getDibs_num() {
+        return this.dibs_num;
+    }
+
+    public void setDibs_num(int dibs_num) {
+        this.dibs_num = dibs_num;
+    }
+
+    public boolean isPress_dibs() {
+        return this.press_dibs;
+    }
+
+    public void setPress_dibs(boolean press_dibs) {
+        this.press_dibs = press_dibs;
     }
 }
