@@ -8,11 +8,11 @@
             <h5 class="mb-0 text-center">{{followcnt.feed_cnt}}</h5>
             <p class="mb-0 text-center">게시물</p>
           </div>
-          <div class="col-3 my-3">
+          <div class="col-3 my-3" @click="moveFollowerPage()">
             <h5 class="mb-0 text-center">{{followcnt.follower_cnt}}</h5>
             <p class="mb-0 text-center">팔로워</p>
           </div>
-          <div class="col-3 my-3">
+          <div class="col-3 my-3" @click="moveFollowingPage()">
             <h5 class="mb-0 text-center">{{followcnt.following_cnt}}</h5>
             <p class="mb-0 text-center">팔로잉</p>
           </div>
@@ -43,8 +43,14 @@ export default {
   methods: {
     editmypage(){
       this.$router.push({name:'EditMyPage'})
+    },
+    moveFollowerPage(){
+      this.$router.push('/profile/followers/' + this.$store.state.userInfo.uno);
+    },
+    moveFollowingPage(){
+      this.$router.push('/profile/followings/' + this.$store.state.userInfo.uno);
     }
-  },
+  }
 }
 </script>
 
