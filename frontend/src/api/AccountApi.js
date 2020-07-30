@@ -80,7 +80,6 @@ const AccountApi = {
     requestProfile:(data,callback,errorCallback)=>requestProfile(data,callback,errorCallback)
     , requestFollow:(data,callback,errorCallback)=>requestFollow(data,callback,errorCallback)
     , requestDeFollow:(data,callback,errorCallback)=>requestDeFollow(data,callback,errorCallback)
-    
 }
 
 export default AccountApi
