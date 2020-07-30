@@ -56,13 +56,25 @@ export default {
         , res => {
           console.log(111, res.data);
           this.feeds = [];
-          for (let i=0; i<res.list.length; i++) {
-            let data = res.list[i];
-            data.content = JSON.parse(data.content);
-            data.tag = JSON.parse(data.tag);
-            data.dibsNum = data.dibs_num;
-
-            this.feeds.push(data);
+          for (let i=0; i<res.data.data.length; i++) {
+            this.feeds.push({
+              content: JSON.parse(res.data.data[i].content),
+              tag: JSON.parse(res.data.data[i].tag),
+              ctype: res.data.data[i].ctype,
+              dibsNum: res.data.data[i].dibs_num,
+              fno: res.data.data[i].fno,
+              press_dibs: res.data.data[i].press_dibs,
+              press_like: res.data.data[i].press_like,
+              like_num: res.data.data[i].like_num,
+              profile_pic: res.data.data[i].profile_pic,
+              reply_content: res.data.data[i].reply_content,
+              reply_num: res.data.data[i].reply_num,
+              thumbnail: res.data.data[i].thumbnail,
+              uno: res.data.data[i].uno,
+              create_date: res.data.data[i].create_date,
+              reply_user_nick: res.data.data[i].reply_user_nick,
+              nick_name: res.data.data[i].nick_name,
+            });
           }
           this.isTakeFeed = Number(this.article.ctype)
         }
@@ -75,12 +87,15 @@ export default {
 
   mounted() {
     this.takeFeed()
-  },
-  created() {
-    this.takeFeed();
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });
+  },
+  created() {
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+    this.takeFeed();
   }
 }
 </script>

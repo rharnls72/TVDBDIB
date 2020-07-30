@@ -167,17 +167,17 @@ export default {
           } 
         )
       } else {
+        
         data.fno = this.fno
-        FeedApi.feedUpdate(
+
+        FeedApi.updateFeed(
           data,
-          res => {
-            this.fno = null
+          res=> {
+            console.log(res)
             this.$router.push({path:'/feed/main'})
           },
-          error => {
-            this.$router.push({name:'Errors', query: {message: error.msg}})
-          }
-        );
+          err=> console.log(err)
+          )
       }
     }
   },

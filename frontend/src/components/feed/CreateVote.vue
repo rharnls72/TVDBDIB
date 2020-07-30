@@ -104,7 +104,7 @@ export default {
           // 성공시 수행할 콜백 메서드
           , res => {
             console.log(res);
-            this.$router.push({path: '/feed/main'})
+            this.$router.push({path:'/feed/main'})
           }
           // 실패시 수행할 콜백 메서드
           , err => {
@@ -112,16 +112,17 @@ export default {
           } 
         );
       } else {
+        
         data.fno = this.fno
-        FeedApi.feedUpdate(
+
+        FeedApi.updateFeed(
           data,
-          res => {
-            this.$router.push({path:'/feed/feedDetail/'+this.fno})
+          res=> {
+            console.log(res)
+            this.$router.push({path:'/feed/main'})
           },
-          error => {
-            this.$router.push({name:'Errors', query: {message: error.msg}})
-          }
-        );
+          err=> console.log(err)
+          )
       }
     }
   },

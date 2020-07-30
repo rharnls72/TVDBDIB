@@ -91,15 +91,15 @@ export default {
         )
       } else {
         Data.fno = this.fno
-        FeedApi.feedUpdate(
+
+        FeedApi.updateFeed(
           Data,
-          res => {
-            this.$router.push({path:'/feed/feedDetail/'+this.fno})
+          res=> {
+            console.log(res)
+            this.$router.push({path:'/feed/main'})
           },
-          error => {
-            this.$router.push({name:'Errors', query: {message: error.msg}})
-          }
-        );
+          err=> console.log(err)
+          )
       }
     }
   },
