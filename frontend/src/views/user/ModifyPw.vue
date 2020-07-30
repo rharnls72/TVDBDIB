@@ -59,6 +59,7 @@
 import "../../components/css/user.scss";
 import UserApi from "../../api/UserApi";
 import PV from "password-validator";
+import GetUserApi from "@/api/GetUserApi"
 
 export default {
   created() {
@@ -71,6 +72,9 @@ export default {
       .digits()
       .has()
       .letters();
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
   },
   watch: {
     password: function(v) {

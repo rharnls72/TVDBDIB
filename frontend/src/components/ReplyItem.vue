@@ -5,12 +5,12 @@
       <!-- 댓글 내용이 없으면 -->
       <b-icon v-if="!content" icon="plus-circle" class="text-right ml-2 text-light" font-scale="1.4"></b-icon>
       <!-- 댓글 내용이 있으면 -->
-      <b-icon v-else icon="plus-circle" class="text-right ml-2 text-secondary" font-scale="1.4"></b-icon>
+      <b-icon v-else @click="pushReply" icon="plus-circle" class="text-right ml-2 text-secondary" font-scale="1.4"></b-icon>
     </div>
     <div class="mt-2 pl-2 pr-2">
       <div v-for="r in replies" :key="r.id">
-        <div>{{r.user}} {{r.contents}}</div>
-        <ReReplyItem :replies="reReplies"/>
+        <div>{{r.user}} {{r.contents}} <span class="moreView" @click="delReply(r.id)">삭제</span></div>
+        <ReReplyItem :fno="fno" :frn0="r.id" :replies="reReplies"/>
       </div>
     </div>
   </div>
@@ -37,9 +37,26 @@ export default {
         {id:1, user: 'chsmd', contents:'소통'}, 
         {id:2, user: 'chsmd', contents:'소통'},
       ],
+      k: 7
     }
   },
+  props: {
+    fno: Number,
+    // replies: Array,
+  },
   methods: {
+    pushReply() {
+      this.replies.push({
+        id: this.k,
+        user: 'chsmd',
+        contents: String(this.content)
+      })
+      this.k++
+      this.content=null
+    },
+    delReply(id) {
+      this.replies = this.replies.filter(res => res.id !== id)
+    }
   },
   components: {
     ReReplyItem,
@@ -48,5 +65,7 @@ export default {
 </script>
 
 <style>
-
+.moreView {
+  color: darkgray; 
+}
 </style>

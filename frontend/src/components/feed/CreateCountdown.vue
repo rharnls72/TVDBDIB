@@ -67,6 +67,8 @@
 
 <script>
 import FeedApi from '../../api/FeedApi'
+import header from '@/api/header.js'
+import axios from 'axios'
 
 export default {
   name: 'CreateCountdown',
@@ -83,7 +85,12 @@ export default {
       date: null,
       Time: null,
       isCalendar: true,
+      cc: null,
     }
+  },
+  props: {
+    article: Object,
+    fno: Number,
   },
   methods: {
     moveMain() {
@@ -126,12 +133,15 @@ export default {
     makeData() {
       var jsonObj = {
         content: {
+          title: this.title,
           date: this.date,
-          time: this.time,
+          time: this.Time,
         }
       }
       return JSON.stringify(jsonObj)
     },
+    catchTags() {console.log(this.tags)}
+    ,
     submitArticle() {
       let sendData = this.makeData();
 
@@ -142,22 +152,46 @@ export default {
         content: sendData,
         tag: JSON.stringify(this.tags)
       };
-
-      // Axios 요청
-      FeedApi.createFeed(
-        // 요청에 쓸 데이터 전달
-        data
-        // 성공시 수행할 콜백 메서드
-        , res => {
-          console.log(res);
-        }
-        // 실패시 수행할 콜백 메서드
-        , err => {
-          console.log(err);
-        } 
-      );
+      
+      if (this.fno === null) {
+        // Axios 요청
+        FeedApi.createFeed(
+          // 요청에 쓸 데이터 전달
+          data
+          // 성공시 수행할 콜백 메서드
+          , res => {
+            console.log(res);
+            this.$router.push({path:'/feed/feedDetail/'+this.fno})
+          }
+          // 실패시 수행할 콜백 메서드
+          , err => {
+            console.log(err);
+          } 
+        )
+      } else {
+        data.fno = this.fno
+        axios.put('http://localhost:9000/feed/update', data, header())
+          .then(res => {
+            console.log(res)
+            this.fno = null
+            this.$router.push({path:'/feed/main'})
+          })
+          .catch(err => console.log(err))
+      }
     }
   },
+  watch: {
+    tags: function(n, o) {this.catchTags}
+  },
+  mounted() {
+    if(this.article !== null) {
+      this.title = this.article.content.content.title
+      this.date = this.article.content.content.date
+      this.Time = this.article.content.content.time
+      this.tags = this.article.tag
+      this.submitDateTime()
+    }
+  }
 }
 </script>
 
