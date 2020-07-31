@@ -38,7 +38,7 @@ export default {
   },
   methods:{
     movePage(user){
-        this.$router.push('/profile/' + user.uno);
+        this.$router.push('/profile/' + user.nick_name);
     },
 
     unfollow(user){
