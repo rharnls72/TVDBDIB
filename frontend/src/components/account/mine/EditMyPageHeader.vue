@@ -37,7 +37,7 @@ export default {
     editprofile(){
       if(JSON.stringify(this.info) == JSON.stringify(this.$store.state.userInfo)){
         this.makeToast("변경사항이 없습니다.", "warning");
-      }else if(this.valid){
+      }else if(this.is_valid.is_valid=='is-valid'){
         AccountApi.requestModifyProfile(
           this.info,
           res => {
