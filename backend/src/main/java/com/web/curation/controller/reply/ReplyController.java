@@ -103,7 +103,7 @@ public class ReplyController {
         final BasicResponse result = new BasicResponse();
 
         // req 에 유저 번호 정보 넣기
-        // replyReq.setUno(((User) httpReq.getAttribute("User")).getUno());
+        replyReq.setUno(((User) httpReq.getAttribute("User")).getUno());
 
         // start point 계산(limit)
         replyReq.setNum((replyReq.getNum() - 1) * 20);

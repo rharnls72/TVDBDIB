@@ -1,7 +1,6 @@
 <template>
   <div>
     <OtherPageHeader :info="info"/>
-    <h1>다른 프로필</h1>
     <OtherPageInformation :info="info" :followcnt="followcnt"/>
     <Footer />
   </div>

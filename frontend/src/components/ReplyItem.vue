@@ -8,9 +8,11 @@
       <b-icon v-else @click="pushReply" icon="plus-circle" class="text-right ml-2 text-secondary" font-scale="1.4"></b-icon>
     </div>
     <div class="mt-2 pl-2 pr-2">
-      <div v-for="r in replies" :key="r.id">
-        <div>{{r.user}} {{r.contents}} <span class="moreView" @click="delReply(r.id)">삭제</span></div>
-        <ReReplyItem :fno="fno" :frn0="r.id" :replies="reReplies"/>
+      <div v-for="r in replies" :key="r.no">
+        <div>{{r.writer_nick_name}} {{r.content}}
+          <!-- <span class="moreView" @click="delReply(r.no)">삭제</span> -->
+        </div>
+        <!-- <ReReplyItem :fno="fno" :frno="r.no"/> -->
       </div>
     </div>
   </div>
@@ -38,9 +40,22 @@ export default {
     pushReply() {
       this.replies.push({
         id: this.k,
-        user: this.$store.state.userInfo.nick_name,
-        contents: String(this.content)
+        writer_nick_name: this.$store.state.userInfo.nick_name,
+        content: String(this.content)
       })
+
+      FeedApi.createReply(
+        {
+          no: this.fno,
+          content: this.content
+        }
+        , res => {
+          console.log(res.data);
+        }
+        , err => {
+          console.log(err.msg);
+        }
+      );
       this.k++
       this.content=null
     },
@@ -49,7 +64,7 @@ export default {
     }
   },
   components: {
-    ReReplyItem,
+    // ReReplyItem,
   },
   created() {
     GetUserApi.getUser(res => {
@@ -58,12 +73,14 @@ export default {
     FeedApi.readReply(
       { 
         no: this.fno,
-        num: 3,
-        uno: this.nuo
+        num: 1
       }
-      , res => console.log(res)
+      , res => {
+        console.log(res);
+        this.replies = res.data.data;
+      }
       , err => console.log(err)
-    )
+    );
   }
 }
 </script>

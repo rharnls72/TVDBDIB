@@ -39,6 +39,7 @@
 <script>
 import defaultProfile from "@/assets/images/profile_default.png";
 import http from '@/api/http-common.js';
+import header from "@/api/header.js"
 //import commentcss from "@/components/css/feed/comment-list.scss";
 
 export default {
@@ -63,7 +64,7 @@ export default {
     // 클릭한 알림의 상태를 '읽음' 으로 바꾼다
     checkAlert(alert){
       if (alert.read == 0){
-        http.put('/alert/read/' + alert.ano)
+        http.put('/alert/read/' + alert.ano, header())
           .then(res => {
             // 페이지 리로드하지 않고 누른 아이템의 상태만 바꾸자.
               let delete_index = this.$props.alerts.findIndex(x => x.ano == alert.ano);
@@ -85,7 +86,7 @@ export default {
         http.post('/following/user/add', {
             follower: alert.subject_no,
             following: this.$store.state.userInfo.uno
-        })
+        }, header())
         .then(res => {
           this.sendDelete(alert);
           this.makeToast("팔로우 신청을 승인했습니다.", "primary");
@@ -94,7 +95,7 @@ export default {
      },
 
      sendDelete(alert){
-          http.delete('/followrequest/delete/' + alert.cno)
+          http.delete('/followrequest/delete/' + alert.cno, header())
           .then(res => {
               let delete_index = this.$props.alerts.findIndex(x => x.ano == alert.ano);
               this.$props.alerts.splice(delete_index, 1);
