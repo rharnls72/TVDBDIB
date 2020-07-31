@@ -2,8 +2,7 @@
   <div class="feed newsfeed">
     <IndexCurationHeader />
     <div class="wrapB">
-      <h1>뉴스피드</h1>
-      <div v-for="d in feeds" :key="d.fno">
+      <div class="myfeed" v-for="d in feeds" :key="d.fno">
         <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
         <feedCountdownItem v-if="d.ctype===2" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
         <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
@@ -88,3 +87,8 @@ export default {
 }
 </script>
 
+<style scoped>
+  .myfeed {
+    padding-top: 70px;
+  }
+</style>
