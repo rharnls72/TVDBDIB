@@ -20,6 +20,7 @@ export default {
   name: "ReReplyItem",
   props: {
     fno: Number,
+    frno: Number
   },
   data() {
     return {
@@ -46,7 +47,7 @@ export default {
     }
   },
   mounted() {
-    this.reply = JSON.parse(JSON.stringify(this.replies))
+    // this.reply = JSON.parse(JSON.stringify(this.replies))
   }
 }
 </script>

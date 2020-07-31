@@ -247,7 +247,7 @@ const readReply = (data,callback,errorCallback) => {
             }
             else {
                 if(res.data.status) {
-                    callback();
+                    callback(res);
                 }
                 else {
                     let error = {msg : res.data.msg};
