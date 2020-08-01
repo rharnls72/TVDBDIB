@@ -28,8 +28,6 @@ DROP VIEW IF EXISTS `episode_reply_view`;
 DROP VIEW IF EXISTS `program_reply_view`;
 DROP VIEW IF EXISTS `feed_reply_view`;
 
-DROP VIEW IF EXISTS `feed_view`;
-
 DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
@@ -315,27 +313,22 @@ CREATE VIEW `episode_reply_view` AS
         er.parent_reply AS `parent_reply`,
         er.content AS `content`,
         er.write_date AS `write_date`,
+        er.hide AS `hide`,
         writer.uno AS `writer_uno`,
         writer.nick_name AS `writer_nick_name`,
         writer.profile_pic AS `writer_profile_pic`,
-        IFNULL(l.like_num, 0) AS `like_num`,
-        IFNULL(p.reply_num, 0) AS `reply_num`
+        (
+            SELECT
+                COUNT(erl.lno)
+            FROM
+                `episode_reply_like` erl
+            WHERE
+                erl.erno = er.erno
+        )   AS `like_num`
     FROM
         `episode_reply` er
             JOIN
-        `user` writer ON er.uno = writer.uno
-            LEFT OUTER JOIN
-        (SELECT 
-            `erno`, COUNT(*) AS `like_num`
-        FROM
-            `episode_reply_like`
-        GROUP BY `erno`) l ON er.erno = l.erno
-            LEFT OUTER JOIN
-        (SELECT 
-            `parent_reply` AS `erno`, COUNT(*) AS `reply_num`
-        FROM
-            `episode_reply`
-        GROUP BY `parent_reply`) p ON er.erno = p.erno;
+        `user` writer ON er.uno = writer.uno;
 
 CREATE VIEW `program_reply_view` AS
     SELECT 
@@ -344,27 +337,22 @@ CREATE VIEW `program_reply_view` AS
         pr.parent_reply AS `parent_reply`,
         pr.content AS `content`,
         pr.write_date AS `write_date`,
+        pr.hide AS `hide`,
         writer.uno AS `writer_uno`,
         writer.nick_name AS `writer_nick_name`,
         writer.profile_pic AS `writer_profile_pic`,
-        IFNULL(l.like_num, 0) AS `like_num`,
-        IFNULL(p.reply_num, 0) AS `reply_num`
+        (
+            SELECT
+                COUNT(prl.lno)
+            FROM
+                `program_reply_like` prl
+            WHERE
+                prl.prno = pr.prno
+        )   AS `like_num`
     FROM
         `program_reply` pr
             JOIN
-        `user` writer ON pr.uno = writer.uno
-            LEFT OUTER JOIN
-        (SELECT 
-            `prno`, COUNT(*) AS `like_num`
-        FROM
-            `program_reply_like`
-        GROUP BY `prno`) l ON pr.prno = l.prno
-            LEFT OUTER JOIN
-        (SELECT 
-            `parent_reply` AS `prno`, COUNT(*) AS `reply_num`
-        FROM
-            `program_reply`
-        GROUP BY `parent_reply`) p ON pr.prno = p.prno;
+        `user` writer ON pr.uno = writer.uno;
 
 CREATE VIEW `feed_reply_view` AS
     SELECT 
@@ -373,56 +361,19 @@ CREATE VIEW `feed_reply_view` AS
         fr.parent_reply AS `parent_reply`,
         fr.content AS `content`,
         fr.write_date AS `write_date`,
+        fr.hide AS `hide`,
         writer.uno AS `writer_uno`,
         writer.nick_name AS `writer_nick_name`,
         writer.profile_pic AS `writer_profile_pic`,
-        IFNULL(l.like_num, 0) AS `like_num`,
-        IFNULL(p.reply_num, 0) AS `reply_num`
+        (
+            SELECT
+                COUNT(frl.lno)
+            FROM
+                `feed_reply_like` frl
+            WHERE
+                frl.frno = fr.frno
+        )   AS `like_num`
     FROM
         `feed_reply` fr
             JOIN
-        `user` writer ON fr.uno = writer.uno
-            LEFT OUTER JOIN
-        (SELECT 
-            `frno`, COUNT(*) AS `like_num`
-        FROM
-            `feed_reply_like`
-        GROUP BY `frno`) l ON fr.frno = l.frno
-            LEFT OUTER JOIN
-        (SELECT 
-            `parent_reply` AS `frno`, COUNT(*) AS `reply_num`
-        FROM
-            `feed_reply`
-        GROUP BY `parent_reply`) p ON fr.frno = p.frno;
-
-CREATE VIEW `feed_view` AS
-    SELECT 
-        f.fno AS `fno`,
-        f.uno AS `uno`,
-        f.pno AS `pno`,
-        f.eno AS `eno`,
-        f.create_date AS `create_date`,
-        f.content AS `content`,
-        f.ctype AS `ctype`,
-        f.thumbnail AS `thumbnail`,
-        f.tag AS `tag`,
-        u.nick_name AS `nick_name`,
-        u.profile_pic AS `profile_pic`,
-        IFNULL(r.reply_num, 0) AS `reply_num`,
-        IFNULL(l.like_num, 0) AS `like_num`
-    FROM
-        `feed` f
-            JOIN
-        `user` u ON f.uno = u.uno
-            LEFT OUTER JOIN
-        (SELECT 
-            `fno`, COUNT(*) AS `reply_num`
-        FROM
-            `feed_reply`
-        GROUP BY `fno`) r ON f.fno = r.fno
-            LEFT OUTER JOIN
-        (SELECT 
-            `fno`, COUNT(*) AS `like_num`
-        FROM
-            `feed_like`
-        GROUP BY `fno`) l ON f.fno = l.fno;
+        `user` writer ON fr.uno = writer.uno;
