@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiOperation;
 public class DibsController {
     
     @Autowired
-    DibsDao dao;
+    private DibsDao dao;
 
     // Create
     @PostMapping("/dibs/feed/create")
