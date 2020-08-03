@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class FeedRequest {
     private int uno;
     private int num;
+    private int target_uno;
 
     public void setUno(int uno) {
         this.uno = uno;
@@ -22,5 +23,13 @@ public class FeedRequest {
     }
     public int getNum() {
         return num;
+    }
+
+    public int getTarget_uno() {
+        return this.target_uno;
+    }
+
+    public void setTarget_uno(int target_uno) {
+        this.target_uno = target_uno;
     }
 }

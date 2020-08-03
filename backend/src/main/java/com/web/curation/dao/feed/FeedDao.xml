@@ -120,16 +120,23 @@
                 FROM
                     `feed`
                 WHERE
-                    `uno` IN (
-                        SELECT
-                            `following`
-                        FROM
-                            `user_follow`
-                        WHERE
-                            `follower` = #{uno}
-                    )
-                    OR
-                    `uno` = #{uno}
+                    <choose>
+                        <when test="target_uno == 0">
+                        `uno` IN (
+                            SELECT
+                                `following`
+                            FROM
+                                `user_follow`
+                            WHERE
+                                `follower` = #{uno}
+                        )
+                        OR
+                        `uno` = #{uno}
+                        </when>
+                        <otherwise>
+                        `uno` = #{target_uno}
+                        </otherwise>
+                    </choose>
                 ORDER BY `fno` DESC
                 LIMIT ${num} , 20
             ) t
@@ -138,15 +145,6 @@
                 JOIN
             `user` u ON f.uno = u.uno
         ORDER BY `fno` DESC
-    </select>
-
-    <select id="getFeedDetail" resultType="Feed">
-        select
-            *
-        from
-            feed
-        where
-            fno = #{value}
     </select>
 
     <select id="getFeedCount" resultType="int">
