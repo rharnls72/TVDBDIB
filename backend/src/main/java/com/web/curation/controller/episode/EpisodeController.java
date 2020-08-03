@@ -6,11 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,6 @@ import com.web.curation.model.BasicResponse;
 import com.web.curation.model.episode.EpisodeDB;
 import com.web.curation.model.episode.EpisodeResponse;
 import com.web.curation.model.program.Program;
-import com.web.curation.model.user.User;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -49,7 +46,7 @@ import io.swagger.annotations.ApiOperation;
 public class EpisodeController {
 
     @Autowired
-    EpisodeDao dao;
+    EpisodeDao episodeDao;
     
     @Autowired
     FollowingDao followdao;
@@ -65,7 +62,7 @@ public class EpisodeController {
         final BasicResponse result = new BasicResponse();
 
         // 공유 수 증가
-        int n = dao.increaseShare(req.getEno());
+        int n = episodeDao.increaseShare(req.getEno());
 
         // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
         if(n != 1) {
@@ -80,57 +77,6 @@ public class EpisodeController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // 에피소드 찜
-    @PostMapping("/episode/dibs/add")
-    @ApiOperation(value = "에피소드 찜 추가")
-    public Object addDibs(@RequestBody EpisodeDB req, HttpServletRequest httpReq) {
-        // 반환할 응답 객체
-        final BasicResponse result = new BasicResponse();
-
-        req.setUno(((User) httpReq.getAttribute("User")).getUno());
-
-        // 에피소드 찜
-        int n = dao.addEpisodeDibs(req);
-
-        // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
-        if(n != 1) {
-            result.status = false;
-            result.msg = "Insert 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        // 완료
-        result.status = true;
-        result.msg = "success";
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    // 에피소드 찜 해제
-    @DeleteMapping("/episode/dibs/delete/{eno}")
-    @ApiOperation(value = "에피소드 찜 삭제")
-    public Object deleteDibs(@PathVariable("eno") int eno, HttpServletRequest httpReq) {
-        // 반환할 응답 객체
-        final BasicResponse result = new BasicResponse();
-
-        EpisodeDB req = new EpisodeDB();
-        req.setEno(eno);
-        req.setUno(((User) httpReq.getAttribute("User")).getUno());
-
-        // 에피소드 찜 삭제
-        int n = dao.deleteEpisodeDibs(req);
-
-        // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
-        if(n != 1) {
-            result.status = false;
-            result.msg = "Delete 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        // 완료
-        result.status = true;
-        result.msg = "success";
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
 
     /* 이 아래로 TMDB API 이용하는 파트 */
     @GetMapping("/episode/following/{uno}")
@@ -218,18 +164,18 @@ public class EpisodeController {
         // + 추가정보(좋아요 수, 댓글 수 등) 구하기
         for(EpisodeResponse episode : episodeList) {
             // DB 에 존재하는지 확인
-            int n = dao.checkDataExist(episode);
+            int n = episodeDao.checkDataExist(episode);
             
             // DB 에 존재하지 않으면 추가
             if(n == 0) {
-                dao.addNewEpisode(episode);
+                episodeDao.addNewEpisode(episode);
             }
             
             // 각 에피소드 정보에 유저 번호 추가하기
             episode.setUno(uno);
 
             // 좋아요 수, 댓글 수 등 정보 구하기
-            episode.setAdditionalData(dao.getLikeReplyInfo(episode));
+            episode.setAdditionalData(episodeDao.getLikeReplyInfo(episode));
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         // Collections.sort(episodeList, new Comparator<Episode2>() {
@@ -361,7 +307,7 @@ public class EpisodeController {
         e.setUno(uno);
 
         // 좋아요 수, 댓글 수 등 정보 구하기
-        e.setAdditionalData(dao.getLikeReplyInfo(e));
+        e.setAdditionalData(episodeDao.getLikeReplyInfo(e));
         //////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // 에피소드 를 포함한 응답 객체 반환

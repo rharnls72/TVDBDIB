@@ -270,16 +270,66 @@ const readReply = (data,callback,errorCallback) => {
         });
 }
 
+const createDibs = (data,callback,errorCallback) => {
+    http.post('/dibs/feed/create', data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+}
+
+const deleteDibs = (data,callback,errorCallback) => {
+    http.delete('/dibs/feed/delete/' + data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+}
+
 const FeedApi = {
     createFeed:(data,callback,errorCallback)=>createFeed(data,callback,errorCallback)
     , getFeedList:(data,callback, errorCallback)=>getFeedList(data, callback, errorCallback)
     , updateFeed:(data,callback,errorCallback)=>updateFeed(data,callback,errorCallback)
     , deleteFeed:(data,callback,errorCallback)=>deleteFeed(data,callback,errorCallback)
+
     , deleteFeedLike:(data,callback,errorCallback)=>deleteFeedLike(data,callback,errorCallback)
     , createFeedLike:(data,callback,errorCallback)=>createFeedLike(data,callback,errorCallback)
-    , feedDetail:(data,callback, errorCallback)=>feedDetail(data, callback, errorCallback)
+
     , createReply:(data,callback, errorCallback)=>createReply(data, callback, errorCallback)
     , readReply:(data,callback, errorCallback)=>readReply(data,callback, errorCallback)
+
+    , createDibs:(data,callback, errorCallback)=>createDibs(data,callback, errorCallback)
+    , deleteDibs:(data,callback, errorCallback)=>deleteDibs(data,callback, errorCallback)
 }
 
 export default FeedApi
