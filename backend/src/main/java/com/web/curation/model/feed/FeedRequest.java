@@ -11,6 +11,7 @@ public class FeedRequest {
     private int uno;
     private int num;
     private int target_uno;
+    private int is_dibs;
 
     public void setUno(int uno) {
         this.uno = uno;
@@ -31,5 +32,13 @@ public class FeedRequest {
 
     public void setTarget_uno(int target_uno) {
         this.target_uno = target_uno;
+    }
+
+    public int getIs_dibs() {
+        return this.is_dibs;
+    }
+
+    public void setIs_dibs(int is_dibs) {
+        this.is_dibs = is_dibs;
     }
 }
