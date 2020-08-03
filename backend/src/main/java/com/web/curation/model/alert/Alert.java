@@ -20,7 +20,7 @@ public class Alert {
     private int atype;
     private String picture;
     private String subject_name;
-    private String subject_no;
+    private int subject_no;
 
     public String getPicture() {
         return this.picture;
@@ -38,13 +38,7 @@ public class Alert {
         this.subject_name = subject_name;
     }
 
-    public String getSubject_no() {
-        return this.subject_no;
-    }
 
-    public void setSubject_no(String subject_no) {
-        this.subject_no = subject_no;
-    }
 
     // 확인 유무
     private boolean read;
@@ -85,5 +79,13 @@ public class Alert {
     }
     public boolean getRead() {
         return read;
+    }
+
+    public int getSubject_no() {
+        return subject_no;
+    }
+
+    public void setSubject_no(int subject_no) {
+        this.subject_no = subject_no;
     }
 }
