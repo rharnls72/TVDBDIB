@@ -38,6 +38,7 @@ public class EpisodeResponse {
 
 	private int share_num;
 	private int dibs_num;
+	private int is_dibs;
 
 	public int getPno() {
 		return this.pno;
@@ -216,6 +217,14 @@ public class EpisodeResponse {
 
 	public void setDibs_num(int dibs_num) {
 		this.dibs_num = dibs_num;
+	}
+
+	public int getIs_dibs() {
+		return this.is_dibs;
+	}
+
+	public void setIs_dibs(int is_dibs) {
+		this.is_dibs = is_dibs;
 	}
 
 	public void setAdditionalData(EpisodeDB episode) {
