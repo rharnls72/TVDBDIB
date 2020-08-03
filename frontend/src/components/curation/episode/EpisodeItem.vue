@@ -38,7 +38,7 @@
           <button class="h6 mr-1">
             <b-icon-chat></b-icon-chat>
           </button>
-          0
+          {{curation.reply_num}}
         </div>
         <!-- 스크랩 -->
         <div class="mr-3">
@@ -79,6 +79,7 @@
       </div>
       <div v-else>
         <p>{{ curation.summary }}</p>
+        <p><span style="text-decoration: bold;">{{curation.reply_user_nick}} </span> <span>{{curation.reply_content}}</span></p>
       </div>
     </div>
     <!-- 추후에 댓글 연결!~ -->
@@ -96,6 +97,7 @@
 import defaultImage from "../../../assets/images/img-placeholder.png";
 import defaultProfile from "../../../assets/images/profile_default.png";
 import ReplyItem from '../../ReplyItem.vue'
+import CurationApi from '@/api/CurationApi.js'
 
 export default {
   name: 'EpisodeItem',
@@ -112,7 +114,6 @@ export default {
   },
   props: {
     curation: Object,
-    id: Number,
   },
   components: {
     ReplyItem,
@@ -125,9 +126,23 @@ export default {
       this.likeIcon = !this.likeIcon
       if (this.likeIcon) {
         this.likeCount ++
+        CurationApi.createEpisodeLike(
+          {
+            tno: this.curation.eno,
+          }
+          , res => console.log(res)
+          , err => console.log(err)
+        )
       }
       else {
         this.likeCount --
+        CurationApi.deleteEpisodeLike(
+          {
+            tno: this.curation.eno,
+          }
+          , res => console.log(res)
+          , err => console.log(err)
+        )
       }
       // console.log(this.likeIcon)
     },
@@ -141,6 +156,13 @@ export default {
       }
       // console.log(this.scrapIcon)
     },
+  },
+  created() {
+    this.likeIcon = this.curation.press_like
+    if (!this.curation.dibs_num) {this.scrapCount = 0}
+    else {this.scrapCount = this.dibs_num.dibs_num}
+    if (!this.curation.like_num) {this.likeCount = 0}
+    else {this.likeCount = this.curation.like_num}
   },
 };
 </script>
