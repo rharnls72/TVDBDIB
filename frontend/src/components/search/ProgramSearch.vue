@@ -1,8 +1,9 @@
 <template>
-    <b-nav justified class="myheader">
+<div>
+    <b-nav justified class="myheader" >
       <b-input-group class="align-items-center m-2 mysearchbar">
         <div class="input-group-prepend">
-          <div class="input-group-text py-0" style="border: 0px; background-color: #eee;">
+          <div @click="searchIcon()" class="input-group-text py-0" style="border: 0px; background-color: #eee;">
             <b-icon-search></b-icon-search>
           </div>
         </div>
@@ -23,18 +24,26 @@
         />
       </b-input-group>
     </b-nav>
+
+    <ResultItems :programs="programs_result"/>
+</div>
+
 </template>
 
 <script>
 import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 import SearchApi from '@/api/SearchApi.js';
+import tmdbApi from '@/api/tmdbApi.js';
 import axios from "axios";
+import ResultItems from "@/components/search/ProgramSearchResult.vue";
 
 export default {
+
   data() {
     return {
       word: "",
       programs: [],
+      programs_result: []
       //search_history: [],
       //selectedUser: {},
     }
@@ -48,13 +57,21 @@ export default {
   
   methods: {
     getProgramList(newWord) {
-        let base_url = "https://api.themoviedb.org/3/";
-        let api_key = "1436d388221956af7b6cd27a6a7ec9d8";
-
-        axios.get(base_url + "search/tv?query=" + newWord + "&api_key=" + api_key + "&language=ko")
+        axios.get(tmdbApi.BASE_URL + "search/tv?query=" + newWord + "&api_key=" + tmdbApi.API_KEY + "&language=ko")
             .then(res => {
                 console.log(res);
                 this.programs = res.data.results;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    },
+
+    searchIcon(){
+        axios.get(tmdbApi.BASE_URL + "search/tv?query=" + this.word + "&api_key=" + tmdbApi.API_KEY + "&language=ko")
+            .then(res => {
+                console.log(res);
+                this.programs_result = res.data.results;
             })
             .catch(error => {
                 console.log(error);
@@ -63,10 +80,18 @@ export default {
   },
   components: {
     //SearchApi,
-    VueBootstrapTypeahead
+    VueBootstrapTypeahead,
+    ResultItems
   }
 }
 </script>
 <style scoped>
-
+  .myheader {
+    background-color: #eee;
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    z-index: 1;
+    position: sticky;
+  }
 </style>
