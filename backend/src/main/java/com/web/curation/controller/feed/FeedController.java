@@ -98,29 +98,6 @@ public class FeedController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/feed/detail/{fno}")
-    @ApiOperation(value = "피드 상세 정보 조회")
-    public Object getFeedDetail(@PathVariable("fno") int fno) {
-        // 반환할 응답 객체
-        final BasicResponse result = new BasicResponse();
-
-        // 피드 조회
-        Feed feed = dao.getFeedDetail(fno);
-
-        // feed 가 null 이면 조회에 실패한 것
-        if(feed == null) {
-            result.status = false;
-            result.msg = "피드 상세 정보 조회에 실패했습니다.(" + fno + ")";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        // 여기까지 문제 없이 내려왔으면 성공적으로 피드 상세정보 조회가 완료된 것
-        result.status = true;
-        result.msg = "success";
-        result.data = feed;
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
     @GetMapping("/test/feedcnt/{uno}")
     @ApiOperation(value = "작성한 피드 수 조회(API 로 호출 안하는 메서드)")
     public Object getFeedCount(@PathVariable("uno") int uno) {
