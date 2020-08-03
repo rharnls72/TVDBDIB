@@ -8,20 +8,17 @@
       <b-icon v-else @click="pushReReply" icon="plus-circle" class="text-right ml-2 text-secondary" font-scale="1.4"></b-icon>
     </div>
     <div class="pl-2 my-1" v-for="r in reply" :key="r.id">
-      {{r.user}} {{r.contents}} <span class="moreView" @click="delReReply(r.id)">삭제</span>
+      {{r.writer_nick_name}} {{r.content}} <span class="moreView" @click="delReReply(r.id)">삭제</span>
     </div>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import CurationApi from "@/api/CurationApi.js"
+import FeedApi from "@/api/FeedApi.js"
 
 export default {
   name: "ReReplyItem",
-  props: {
-    fno: Number,
-    frno: Number
-  },
   data() {
     return {
       content: null,
@@ -29,8 +26,10 @@ export default {
       k: 1
     }
   },
-  computed: {
-    ...mapState(['userInfo'])
+  props: {
+    section: String,
+    parentNo: Number,
+    eno: Number,
   },
   methods: {
     pushReReply() {
@@ -39,6 +38,16 @@ export default {
         user: this.$store.state.userInfo.nick_name,
         contents: String(this.content)
       })
+
+      CurationApi.createEpisodeReply({
+        no: this.eno,
+        parent_reply: this.parentNo,
+        content: this.content,
+      }
+      , res => console.log(res)
+      , err => console.log(err)
+      )
+
       this.k++
       this.content=null
     },
@@ -47,7 +56,18 @@ export default {
     }
   },
   mounted() {
-    // this.reply = JSON.parse(JSON.stringify(this.replies))
+    if (this.section === "episode") {
+      CurationApi.readReReply({
+        no: this.parentNo,
+        num: 1
+      }
+      , res => {
+        console.log("대대수", res)
+        this.reply = res.data.data
+      }
+      , err => console.log(err)
+      )
+    }
   }
 }
 </script>

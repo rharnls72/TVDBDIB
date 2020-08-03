@@ -12,7 +12,7 @@
         <div>{{r.writer_nick_name}} {{r.content}}
           <!-- <span class="moreView" @click="delReply(r.no)">삭제</span> -->
         </div>
-        <!-- <ReReplyItem :fno="fno" :frno="r.no"/> -->
+        <ReReplyItem :parentNo="r.no" :eno="eno" :section="'episode'"/>
       </div>
     </div>
   </div>
@@ -22,6 +22,7 @@
 import ReReplyItem from "@/components/ReReplyItem.vue"
 import GetUserApi from "@/api/GetUserApi.js"
 import FeedApi from "@/api/FeedApi.js"
+import CurationApi from "@/api/CurationApi.js"
 
 export default {
   name: "ReplyItem",
@@ -34,7 +35,7 @@ export default {
   },
   props: {
     fno: Number,
-    uno: Number,
+    eno: Number,
   },
   methods: {
     pushReply() {
@@ -44,18 +45,30 @@ export default {
         content: String(this.content)
       })
 
-      FeedApi.createReply(
-        {
-          no: this.fno,
-          content: this.content
-        }
-        , res => {
-          console.log(res.data);
-        }
-        , err => {
-          console.log(err.msg);
-        }
-      );
+      this.$emit("addReply")
+
+      if (!this.fno === false) {
+        FeedApi.createReply(
+          {
+            no: this.fno,
+            content: this.content
+          }
+          , res => {
+            console.log(res.data);
+          }
+          , err => {
+            console.log(err.msg);
+          })
+      } else if (!this.eno === false) {
+        CurationApi.createEpisodeReply(
+          {
+            no: this.eno,
+            content: this.content
+          }
+          , res => console.log(res)
+          , err => console.log(err)
+        )
+      }
       this.k++
       this.content=null
     },
@@ -64,23 +77,37 @@ export default {
     }
   },
   components: {
-    // ReReplyItem,
+    ReReplyItem,
   },
   created() {
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });
-    FeedApi.readReply(
-      { 
-        no: this.fno,
-        num: 1
-      }
-      , res => {
-        console.log(res);
-        this.replies = res.data.data;
-      }
-      , err => console.log(err)
-    );
+    if (!this.fno === false) {
+      FeedApi.readReply(
+        { 
+          no: this.fno,
+          num: 1
+        }
+        , res => {
+          console.log(res);
+          this.replies = res.data.data;
+        }
+        , err => console.log(err)
+      )
+    } else if (!this.eno === false) {
+      CurationApi.readReply(
+        { 
+          no: this.eno,
+          num: 1
+        }
+        , res => {
+          console.log(res);
+          this.replies = res.data.data;
+        }
+        , err => console.log(err)
+      )
+    }
   }
 }
 </script>
