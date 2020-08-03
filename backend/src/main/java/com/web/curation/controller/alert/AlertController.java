@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,38 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.DocumentReference;
+// [START fs_include_dependencies]
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.FirestoreOptions;
+// [END fs_include_dependencies]
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteResult;
+import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
+import java.util.Map;
+import com.google.firebase.cloud.FirestoreClient;
+
+
+import com.google.api.core.SettableApiFuture;
+import com.google.cloud.firestore.DocumentChange;
+import com.google.cloud.firestore.DocumentChange.Type;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.EventListener;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.FirestoreException;
+import com.google.cloud.firestore.ListenerRegistration;
+import com.google.cloud.firestore.Query;
+import com.google.cloud.firestore.QuerySnapshot;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;
+
+
+
 @ApiResponses(
     value = {
         @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
@@ -35,7 +68,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin(origins = { "*" })
 @RestController
 public class AlertController {
-
+    private static final long TIMEOUT_SECONDS = 5;
     @Autowired
     AlertDao dao;
     
@@ -43,6 +76,10 @@ public class AlertController {
     @PostMapping("/alert/create")
     @ApiOperation(value = "새 알림 생성")
     public Object createNewAlert(@RequestBody Alert alert) {
+
+        Firestore db = FirestoreClient.getFirestore();
+        
+
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
 
@@ -61,6 +98,94 @@ public class AlertController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    @GetMapping("/test/alert3")
+    @ApiOperation(value = "알림 테스트3")
+    public List<Alert> addAlert(){
+        List<Alert> alist = new ArrayList<>();
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+
+            ApiFuture<QuerySnapshot> query = db.collection("alert").get();
+            // ...
+            // query.get() blocks on response
+            QuerySnapshot querySnapshot = query.get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+            
+            for (QueryDocumentSnapshot document : documents) {
+                alist.add(document.toObject(Alert.class));
+                // System.out.println("alert: " + document.getId());
+                // System.out.println("name: " + document.getString("subject_name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return alist;
+    }
+
+    @GetMapping("/test/alert")
+    @ApiOperation(value = "알림 테스트")
+    public List<Alert> getAlertDetail(){
+        List<Alert> alist = new ArrayList<>();
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+
+            ApiFuture<QuerySnapshot> query = db.collection("alert").get();
+            // ...
+            // query.get() blocks on response
+            QuerySnapshot querySnapshot = query.get();
+            List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
+            
+            for (QueryDocumentSnapshot document : documents) {
+                alist.add(document.toObject(Alert.class));
+                // System.out.println("alert: " + document.getId());
+                // System.out.println("name: " + document.getString("subject_name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return alist;
+    }
+
+    @GetMapping("/test/alert2")
+    @ApiOperation(value = "알림 테스트2")
+    public Map<String, Object> listenToDocument() throws Exception {
+        try {
+            final SettableApiFuture<Map<String, Object>> future = SettableApiFuture.create();
+    
+            // [START listen_to_document]
+            DocumentReference docRef = db.collection("alert").document("2scBDBt3W8GBCcrREkVY");
+            docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirestoreException e) {
+                if (e != null) {
+                System.err.println("Listen failed: " + e);
+                return;
+                }
+        
+                if (snapshot != null && snapshot.exists()) {
+                System.out.println("Current data: " + snapshot.getData());
+                } else {
+                System.out.print("Current data: null");
+                }
+                // [START_EXCLUDE silent]
+                if (!future.isDone()) {
+                future.set(snapshot.getData());
+                }
+                // [END_EXCLUDE]
+            }
+            });
+            // [END listen_to_document]
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+      }
+
+
 
     // Read
     @GetMapping("/alert/list/{uno}")
