@@ -79,11 +79,11 @@
       </div>
       <div v-else>
         <p>{{ curation.summary }}</p>
-        <p><span style="text-decoration: bold;">{{curation.reply_user_nick}} </span> <span>{{curation.reply_content}}</span></p>
       </div>
     </div>
+    <p><span style="text-decoration: bold;">{{curation.reply_user_nick}} </span> <span>{{curation.reply_content}}</span></p>
     <!-- 추후에 댓글 연결!~ -->
-    <ReplyItem />
+    <ReplyItem :eno="curation.eno" @addReply="addReplyCount"/>
     <!-- <div class="content">
       <p>댓글이야 댓글 댓글!~</p>
       <p class="more">댓글 1개</p>
@@ -110,6 +110,7 @@ export default {
       scrapIcon: false,
       likeCount: 0,
       scrapCount: 0,
+      reply_num: null,
     };
   },
   props: {
@@ -168,6 +169,7 @@ export default {
       }
       // console.log(this.scrapIcon)
     },
+    addReplyCount() {this.curation.reply_num++}
   },
   created() {
     this.likeIcon = this.curation.press_like;
@@ -176,6 +178,7 @@ export default {
     else {this.scrapCount = this.curation.dibs_num}
     if (!this.curation.like_num) {this.likeCount = 0}
     else {this.likeCount = this.curation.like_num}
+    if (this.curation.summery<=30) {this.isStretch=true}
   },
 };
 </script>
