@@ -247,6 +247,36 @@ const createReply = (data,callback,errorCallback) => {
         });
 }
 
+const deleteReply = (data,callback,errorCallback) => {
+    http.post('/reply/feed/delete', data, header())
+        .then(res => {
+            console.log("createReply - then start");
+            if(res == null) {
+                let error = {msg : '댓글 생성: 알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                console.log(res.data);
+                if(res.data.status) {
+                    console.log('before callback()');
+                    callback(res);
+                    console.log('after callback()');
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+            console.log("createReply - then end");
+        })
+        .catch(err => {
+            console.log("createReply - catch start");
+            err.msg = '댓글 생성: 서버 요청에서 오류 발생';
+            errorCallback(err);
+            console.log("createReply - catch end");
+        });
+}
+
 const readReply = (data,callback,errorCallback) => {
     http.post('/reply/feed/read', data, header())
         .then(res => {
@@ -316,6 +346,29 @@ const deleteDibs = (data,callback,errorCallback) => {
         });
 }
 
+const readReReply = (data,callback,errorCallback) => {
+    http.post('/rereply/feed/read/', data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+}
+
 const FeedApi = {
     createFeed:(data,callback,errorCallback)=>createFeed(data,callback,errorCallback)
     , getFeedList:(data,callback, errorCallback)=>getFeedList(data, callback, errorCallback)
@@ -326,7 +379,9 @@ const FeedApi = {
     , createFeedLike:(data,callback,errorCallback)=>createFeedLike(data,callback,errorCallback)
 
     , createReply:(data,callback, errorCallback)=>createReply(data, callback, errorCallback)
+    , deleteReply:(data,callback,errorCallback)=>deleteReply(data,callback,errorCallback)
     , readReply:(data,callback, errorCallback)=>readReply(data,callback, errorCallback)
+    , readReReply:(data,callback,errorCallback)=>readReReply(data,callback,errorCallback)
 
     , createDibs:(data,callback, errorCallback)=>createDibs(data,callback, errorCallback)
     , deleteDibs:(data,callback, errorCallback)=>deleteDibs(data,callback, errorCallback)
