@@ -130,11 +130,40 @@ const getHistoryList = (data,callback,errorCallback) => {
         });
 }
 
+const getTagList = (data,callback,errorCallback) => {
+    // 전체 태그 리스트 조회 (피드 검색 시 자동완성 용도).
+    http.get('/search/taglist', header())
+    .then(res => {
+        if(res == null) {
+            let error = {msg : '알 수 없는 오류 발생'};
+            errorCallback(error);
+        }
+        // 서버에서 처리되어 데이터가 제대로 넘어왔을 때
+        else {
+            // 성공
+            if(res.data.status) {
+                callback(res);
+            }
+            // 실패
+            else {
+                let error = {msg : res.data.msg};
+                errorCallback(error);
+            }
+        }
+    })
+    .catch(err => {
+        err.msg = '서버 요청에서 오류 발생';
+        errorCallback(err);
+    });
+
+}
+
 const SearchApi = {
     getUserList:(data,callback, errorCallback)=>getUserList(data, callback, errorCallback)
     , getAllUser:(data,callback, errorCallback)=>getAllUser(data, callback, errorCallback)
     , addHistory:(data,callback, errorCallback)=>addHistory(data, callback, errorCallback)
     , getHistoryList:(data,callback, errorCallback)=>getHistoryList(data, callback, errorCallback)
+    , getTagList: (data,callback, errorCallback)=>getTagList(data, callback, errorCallback)
 }
 
 export default SearchApi

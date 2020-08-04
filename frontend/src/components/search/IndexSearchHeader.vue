@@ -8,8 +8,10 @@
       <b-tab @click="changeState(4)" title="피드" title-link-class="text-secondary"></b-tab>
     </b-tabs>
 
+    <!-- 선택한 탭번호에 따라 하위 컴포넌트 출력 -->
     <UserSearch v-if="tabState == 2" />
     <ProgramSearch v-if="tabState == 3" />
+    <FeedSearch v-if="tabState == 4" />
 
   </div>
 </template>
@@ -17,6 +19,7 @@
 <script>
 import UserSearch from '@/components/search/UserSearch.vue';
 import ProgramSearch from '@/components/search/ProgramSearch.vue';
+import FeedSearch from '@/components/search/FeedSearch.vue';
 
 export default {
   name: 'IndexSearchHeader',
@@ -33,7 +36,8 @@ export default {
   },
   components: {
     UserSearch,
-    ProgramSearch
+    ProgramSearch,
+    FeedSearch
   }
 }
 </script>
