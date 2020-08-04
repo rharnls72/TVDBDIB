@@ -85,6 +85,7 @@ export default {
       res => {
         this.curations = res.list;
         this.makeCurations();
+        console.log(this.curations)
       },
       error => {
         this.$router.push({name:'Errors', query: {message: error.msg}})
