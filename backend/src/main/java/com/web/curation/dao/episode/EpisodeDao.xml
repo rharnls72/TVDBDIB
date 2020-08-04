@@ -20,18 +20,6 @@
         )
     </insert>
 
-    <insert id="addEpisodeDibs">
-        insert into
-            episode_dibs(
-                `eno`
-                , `uno`
-            )
-        values(
-            #{eno}
-            , #{uno}
-        )
-    </insert>
-
     <!-- Read -->
     <select id="checkDataExist" resultType="int">
         select
@@ -49,6 +37,9 @@
     <select id="getLikeReplyInfo" resultType="EpisodeDB">
         select
             e.eno as `eno`
+            , e.pno as `pno`
+            , e.season as `season`
+            , e.episode as `episode`
             , e.share_num as `share_num`
             , (
                 select
@@ -107,15 +98,39 @@
                     ed.uno = #{uno}
             ) > 0, true, false) as `press_dibs`
         from
-            `episode` e
-        where
-            `pno` = #{pno}
-            and
-            `season` = #{season}
-            and
-            `episode` = #{episode}
+            <choose>
+                <when test="is_dibs == 0">
+                    `episode` e
+                </when>
+                <otherwise>
+                    (
+                        SELECT
+                            `eno`
+                            , `dno`
+                        FROM
+                            `episode_dibs`
+                        WHERE
+                            `uno` = #{uno}
+                        ORDER BY `dno` DESC
+                        LIMIT ${num}, 20
+                    ) d
+                        JOIN
+                    `episode` e ON d.eno = e.eno
+                </otherwise>
+            </choose>
+        <if test="is_dibs == 0">
+            where
+                `pno` = #{pno}
+                and
+                `season` = #{season}
+                and
+                `episode` = #{episode}
+        </if>
+        <if test="is_dibs != 0">
+            ORDER BY d.dno DESC
+        </if>
     </select>
-                
+
     <!-- Update -->
     <update id="increaseShare">
         update
@@ -132,15 +147,6 @@
             `episode`
         where
             `eno` = #{value}
-    </delete>
-
-    <delete id="deleteEpisodeDibs">
-        delete from
-            `episode_dibs`
-        where
-            `eno` = #{eno}
-            and
-            `uno` = #{uno}
     </delete>
 
 </mapper>

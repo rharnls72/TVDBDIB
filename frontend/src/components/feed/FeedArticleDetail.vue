@@ -125,18 +125,19 @@ export default {
   },
   methods: {
     pushReply() {
+      let data={
+        no: this.article.fno
+        , content: this.additionReply
+      };
       FeedApi.createReply(
-        {
-          no: this.article.fno,
-          content: this.additionReply,
-          writer_uno: 1,
-        },
+        data,
         res => {
-            
-          },
-          error => {
-            this.$router.push({name:'Errors', query: {message: error.msg}})
-          }
+          console.log('Create reply success!!');
+        },
+        error => {
+          console.log('Create reply error!!');
+          this.$router.push({name:'Errors', query: {message: error.msg}})
+        }
       );
       
     },
