@@ -6,6 +6,7 @@
       <feedCountdownItem v-if="feed.ctype===2" :article="feed" :fno="feed.fno"/>
       <feedVoteItem v-if="feed.ctype===3" :article="feed" :fno="feed.fno"/> -->
       <div class="col-6 mythumbnail">
+        <!-- <FeedImage /> -->
         <h1 class="text-center m-0">썸네일</h1>
         <h1 class="text-center m-0">이미지</h1>
       </div>
@@ -20,12 +21,17 @@
 <script>
 import { mapState } from "vuex";
 
+// import FeedImage from '../../../components/feed/FeedImage.vue'
+
 // import feedArticleItem from '@/components/feed/feedArticleItem.vue'
 // import feedCountdownItem from '@/components/feed/feedCountdownItem.vue'
 // import feedVoteItem from '@/components/feed/feedVoteItem.vue'
 
 export default {
   name: 'WrittenFeed',
+  // components: {
+  //   FeedImage,
+  // },
   props: {
     feeds: Array,
   },
