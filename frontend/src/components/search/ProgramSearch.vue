@@ -26,6 +26,8 @@
     </b-nav>
 
     <ResultItems :programs="programs_result"/>
+    <infinite-loading v-if="loading_complete" @infinite="infiniteHandler"></infinite-loading>
+
 </div>
 
 </template>
@@ -36,6 +38,7 @@ import SearchApi from '@/api/SearchApi.js';
 import tmdbApi from '@/api/tmdbApi.js';
 import axios from "axios";
 import ResultItems from "@/components/search/ProgramSearchResult.vue";
+import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
 
@@ -43,7 +46,10 @@ export default {
     return {
       word: "",
       programs: [],
-      programs_result: []
+      programs_result: [],
+      total_pages: 0,
+      current_page: 0,
+      loading_complete: false
       //search_history: [],
       //selectedUser: {},
     }
@@ -56,6 +62,29 @@ export default {
   },
   
   methods: {
+    infiniteHandler($state) {
+      setTimeout(() => {
+        if (this.loading_complete == true && this.current_page < this.total_pages){
+          this.toNextPage();
+        }
+        $state.loaded();
+      }, 1000);
+    },
+
+    toNextPage(){
+      this.loading_complete = false;
+      this.current_page++;
+        axios.get(tmdbApi.BASE_URL + "search/tv?query=" + this.word + "&api_key=" + tmdbApi.API_KEY + "&page=" + this.current_page + "&language=ko")
+            .then(res => {
+                console.log(res);
+                this.programs_result = this.programs_result.concat(res.data.results);
+                this.loading_complete = true;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    },
+
     getProgramList(newWord) {
         axios.get(tmdbApi.BASE_URL + "search/tv?query=" + newWord + "&api_key=" + tmdbApi.API_KEY + "&language=ko")
             .then(res => {
@@ -72,6 +101,9 @@ export default {
             .then(res => {
                 console.log(res);
                 this.programs_result = res.data.results;
+                this.total_pages = res.data.total_pages;
+                this.current_page = 1;
+                this.loading_complete = true;
             })
             .catch(error => {
                 console.log(error);
@@ -81,14 +113,14 @@ export default {
   components: {
     //SearchApi,
     VueBootstrapTypeahead,
-    ResultItems
+    ResultItems,
+    InfiniteLoading,
   }
 }
 </script>
 <style scoped>
   .myheader {
     background-color: #eee;
-    position: fixed;
     width: 100%;
     height: 50px;
     z-index: 1;

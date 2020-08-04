@@ -45,5 +45,6 @@ export default {
 <style scoped>
   .mytabs {
     padding-top: 10px;
+    width: 100%;
   }
 </style>
