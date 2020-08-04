@@ -53,8 +53,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
+import javax.swing.text.Document;
 
-
+import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 
 @ApiResponses(
     value = {
@@ -99,16 +102,72 @@ public class AlertController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
-    @GetMapping("/test/alert3")
-    @ApiOperation(value = "알림 테스트3")
-    public List<Alert> addAlert(){
+    @GetMapping("/test/alert/add")
+    @ApiOperation(value = "알림 테스트 - 추가")
+    public String addAlert(){
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            Alert alert = new Alert();
+            alert.setAno(1);
+            ApiFuture<WriteResult> apiFuture = db.collection("alert").document(alert.getAno()+"").set(alert);
+            return apiFuture.get().getUpdateTime().toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "null";
+    }
+    @GetMapping("/test/alert/detail")
+    @ApiOperation(value = "알림 테스트 - 상세")
+    public Alert getAlertDetail(){
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            DocumentReference documentReference = db.collection("alert").document("1");
+            ApiFuture<DocumentSnapshot> apiFuture = documentReference.get();
+            DocumentSnapshot documentSnapshot = apiFuture.get();
+            Alert alert = null;
+            if(documentSnapshot.exists()){
+                alert = documentSnapshot.toObject(Alert.class);
+                return alert;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    @GetMapping("/test/alert/update")
+    @ApiOperation(value = "알림 테스트 - 수정")
+    public String updateAlert(){
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            Alert alert = new Alert();
+            alert.setAno(2);
+            ApiFuture<WriteResult> apiFuture = db.collection("alert").document("1").set(alert);
+            return apiFuture.get().getUpdateTime().toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "null";
+    }
+    @GetMapping("/test/alert/delete")
+    @ApiOperation(value = "알림 테스트 - 삭제")
+    public String deleteAlert(){
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            ApiFuture<WriteResult> apiFuture = db.collection("alert").document("1").delete();
+            return "성공";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "null";
+    }
+    @GetMapping("/test/alert/list")
+    @ApiOperation(value = "알림 테스트 - 리스트")
+    public List<Alert> getAlertList(){
         List<Alert> alist = new ArrayList<>();
         try {
             Firestore db = FirestoreClient.getFirestore();
-
             ApiFuture<QuerySnapshot> query = db.collection("alert").get();
-            // ...
-            // query.get() blocks on response
             QuerySnapshot querySnapshot = query.get();
             List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
             
@@ -120,20 +179,15 @@ public class AlertController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
         return alist;
     }
-
-    @GetMapping("/test/alert")
-    @ApiOperation(value = "알림 테스트")
-    public List<Alert> getAlertDetail(){
+    @GetMapping("/test/alert/where")
+    @ApiOperation(value = "알림 테스트 - 리스트, 조건")
+    public List<Alert> getAlertWhere(){
         List<Alert> alist = new ArrayList<>();
         try {
             Firestore db = FirestoreClient.getFirestore();
-
-            ApiFuture<QuerySnapshot> query = db.collection("alert").get();
-            // ...
-            // query.get() blocks on response
+            ApiFuture<QuerySnapshot> query = db.collection("alert").whereEqualTo("ano", 1).get();
             QuerySnapshot querySnapshot = query.get();
             List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
             
@@ -145,16 +199,15 @@ public class AlertController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
         return alist;
     }
 
-    @GetMapping("/test/alert2")
+    @GetMapping("/test/alert/listen")
     @ApiOperation(value = "알림 테스트2")
     public Map<String, Object> listenToDocument() throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+        final SettableApiFuture<Map<String, Object>> future = SettableApiFuture.create();
         try {
-            final SettableApiFuture<Map<String, Object>> future = SettableApiFuture.create();
-    
             // [START listen_to_document]
             DocumentReference docRef = db.collection("alert").document("2scBDBt3W8GBCcrREkVY");
             docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -182,10 +235,8 @@ public class AlertController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        return future.get(5, TimeUnit.SECONDS);
       }
-
-
 
     // Read
     @GetMapping("/alert/list/{uno}")
