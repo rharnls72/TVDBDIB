@@ -3,7 +3,7 @@
     <MyPageHeader :info="info"/>
     <div class="container mycontainer">
       <MyPageInformation :info="info" :followcnt="followcnt"/>
-      <MyPageTab />
+      <MyPageTab :info="info"/>
     </div>
     <Footer />
   </div>
