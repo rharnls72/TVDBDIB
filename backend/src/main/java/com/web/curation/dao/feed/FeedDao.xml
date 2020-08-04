@@ -154,6 +154,7 @@
                     <otherwise>
                         SELECT
                             `fno`
+                            , `dno`
                         FROM
                             `feed_dibs`
                         WHERE
@@ -167,7 +168,14 @@
             `feed` f ON t.fno = f.fno
                 JOIN
             `user` u ON f.uno = u.uno
-        ORDER BY `fno` DESC
+        <choose>
+            <when test="is_dibs == 0">
+                ORDER BY `fno` DESC
+            </when>
+            <otherwise>
+                ORDER BY t.dno DESC
+            </otherwise>
+        </choose>
     </select>
 
     <select id="getFeedCount" resultType="int">
