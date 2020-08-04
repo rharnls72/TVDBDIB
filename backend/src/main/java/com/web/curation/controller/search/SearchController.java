@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.web.curation.dao.search.SearchDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.feed.Feed;
+import com.web.curation.model.feed.Tag;
 import com.web.curation.model.search.SearchRequest;
 import com.web.curation.model.user.User;
 
@@ -143,9 +144,9 @@ public class SearchController {
 
     @GetMapping("/search/taglist")
     @ApiOperation(value = "피드 목록 검색")
-    public Object searchByTagList(@RequestParam(required = true) final String str){
+    public Object searchByTagList(){
         //태그 목록 조회 -> 태그 디비 만들기
-        List<Feed> list = null;
+        List<Tag> list = searchDao.searchTagList();
         final BasicResponse result = new BasicResponse();
         result.status = true;
         result.msg = "success";

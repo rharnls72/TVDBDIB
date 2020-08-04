@@ -9,6 +9,12 @@
         from user
         where nick_name like CONCAT('%', #{value}, '%')
     </select>
+
+    <select id="searchTagList" resultType="Tag">
+        select * 
+        from tag;
+    </select>
+
     <select id="searchByFeedTag" resultType="Feed">
         select *
         from feed
