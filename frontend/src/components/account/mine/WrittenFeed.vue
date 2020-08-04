@@ -7,7 +7,9 @@
 <script>
 export default {
   name: 'WrittenFeed',
-  
+  props: {
+    feeds: Array,
+  }
 }
 </script>
 

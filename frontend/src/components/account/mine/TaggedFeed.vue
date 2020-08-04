@@ -7,7 +7,9 @@
 <script>
 export default {
   name: 'TaggedFeed',
-  
+  props: {
+    feeds: Array,
+  }
 }
 </script>
 
