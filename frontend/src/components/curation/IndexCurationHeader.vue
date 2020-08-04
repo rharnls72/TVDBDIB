@@ -39,7 +39,7 @@ export default {
         , num: 1
       };
 
-      http.post('/feed/list', data, header())
+      http.post('/episode/dibs/list', data, header())
         .then(res => {
             if(res == null) console.log("res == null");
             else            console.log(res.data);

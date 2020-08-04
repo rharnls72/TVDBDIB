@@ -113,11 +113,61 @@ const createEpisodeLike = (data,callback,errorCallback) => {
         });
 }
 
+const createEpisodeDibs = (data,callback,errorCallback) => {
+    http.post('/dibs/episode/create', data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+}
+
+const deleteEpisodeDibs = (data,callback,errorCallback) => {
+    http.delete('/dibs/episode/delete/' + data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+}
+
 const CurationApi = {
     requestEpisode:(callback,errorCallback)=>requestEpisode(callback,errorCallback)
     , requestEpisodeDetail:(data,callback,errorCallback)=>requestEpisodeDetail(data,callback,errorCallback)
+
     , createEpisodeLike:(data,callback,errorCallback)=>createEpisodeLike(data,callback,errorCallback)
     , deleteEpisodeLike:(data,callback,errorCallback)=>deleteEpisodeLike(data,callback,errorCallback)
+
+    , createEpisodeDibs:(data,callback,errorCallback)=>createEpisodeDibs(data,callback,errorCallback)
+    , deleteEpisodeDibs:(data,callback,errorCallback)=>deleteEpisodeDibs(data,callback,errorCallback)
 }
 
 export default CurationApi

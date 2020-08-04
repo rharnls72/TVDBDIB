@@ -1,5 +1,7 @@
 package com.web.curation.dao.episode;
 
+import java.util.List;
+
 import com.web.curation.model.episode.EpisodeDB;
 import com.web.curation.model.episode.EpisodeResponse;
 
@@ -14,7 +16,7 @@ public interface EpisodeDao {
 
     // Read
     int checkDataExist(EpisodeResponse episode);
-    EpisodeDB getLikeReplyInfo(EpisodeResponse episode);
+    List<EpisodeDB> getLikeReplyInfo(EpisodeResponse episode);
 
     // Update
     int increaseShare(int eno);
