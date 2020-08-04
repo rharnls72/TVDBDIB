@@ -113,7 +113,7 @@ export default {
   }
 }
 </script>
-
+ 
 <style>
 .moreView {
   color: darkgray; 
