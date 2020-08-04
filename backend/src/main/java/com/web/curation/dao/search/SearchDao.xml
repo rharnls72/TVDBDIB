@@ -16,9 +16,91 @@
     </select>
 
     <select id="searchByFeedTag" resultType="Feed">
-        select *
-        from feed
-        where tag like CONCAT('"', #{value}, '"')
+        SELECT
+            f.fno               AS `fno`
+            , f.uno             AS `uno`
+            , f.pno             AS `pno`
+            , f.eno             AS `eno`
+            , f.create_date     AS `create_date`
+            , f.content         AS `content`
+            , f.ctype           AS `ctype`
+            , f.thumbnail       AS `thumbnail`
+            , f.tag             AS `tag`
+            , u.nick_name       AS `nick_name`
+            , u.profile_pic     AS `profile_pic`
+            , (
+                SELECT
+                    COUNT(fr.frno)
+                FROM
+                    `feed_reply` fr
+                WHERE
+                    fr.fno = f.fno
+            )   AS `reply_num`
+            , (
+                SELECT
+                    CONCAT(`writer_nick_name`, ':', `content`)
+                FROM
+                    `feed_reply_view` frv
+                WHERE
+                    frv.parent_reply IS NULL
+                    AND
+                    frv.fno = f.fno
+                ORDER BY frv.like_num DESC
+                LIMIT 1
+            ) AS `reply_content`
+            , (
+                SELECT
+                    COUNT(fl.lno)
+                FROM
+                    `feed_like` fl
+                WHERE
+                    fl.fno = f.fno
+            )   AS `like_num`
+            , IF((
+                SELECT
+                    COUNT(fl.lno)
+                FROM
+                    `feed_like` fl
+                WHERE
+                    fl.fno = f.fno
+                    AND
+                    fl.uno = #{uno}
+            ) > 0, true, false)   AS `press_like`
+            , (
+                SELECT
+                    COUNT(fd.dno)
+                FROM
+                    `feed_dibs` fd
+                WHERE
+                    fd.fno = f.fno
+            ) AS `dibs_num`
+            , IF((
+                SELECT
+                    COUNT(fd.dno)
+                FROM
+                    `feed_dibs` fd
+                WHERE
+                    fd.fno = f.fno
+                    AND
+                    fd.uno = #{uno}
+            ) > 0, true, false) AS `press_dibs`
+        FROM
+            (
+                SELECT
+                    `fno`
+                FROM
+                    `feed`
+                WHERE
+                    `tag` like CONCAT('%"', #{str}, '"%')
+                -- ORDER BY `fno` DESC
+                -- LIMIT ${num} , 20
+            ) t
+                JOIN
+            `feed` f ON t.fno = f.fno
+                JOIN
+            `user` u ON f.uno = u.uno
+        ORDER BY `fno` DESC
+
     </select>
 
     <select id="getAllUser" resultType="User">

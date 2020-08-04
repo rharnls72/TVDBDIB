@@ -24,7 +24,7 @@
       </b-input-group>
     </b-nav>
 
-    <ResultItems :feeds="feeds_result"/>
+    <ResultItems :feeds_result="feeds_result"/>
 </div>
 
 </template>
@@ -38,6 +38,7 @@ export default {
 
   data() {
     return {
+      requestCount: 1,
       word: "",
       tags: [],
       feeds_result: []
@@ -59,13 +60,42 @@ export default {
         , res => {
             console.log(res);
             this.tags = res.data.data;
-            
         }
         , err => {
             console.log(err);
         }
         );
     },
+
+    searchIcon(){
+        // 맨앞에 # 붙여서 검색했을 경우 알아서 빼주기
+        if (this.word.startsWith("#"))
+            this.word = this.word.substring(1);
+
+        SearchApi.searchByTag(
+        {
+            word: this.word,
+            requestCount : this.requestCount
+        }
+        , res => {
+            this.feeds_result = res.data.data;
+
+          for (let i=0; i<this.feeds_result.length; i++) {
+            this.feeds_result[i].content = JSON.parse(this.feeds_result[i].content)
+            this.feeds_result[i].tag = JSON.parse(this.feeds_result[i].tag)
+          }
+
+          this.requestCount++
+          console.log(this.feeds_result);
+          setTimeout(()=>{}, 1000)
+        }
+        , err => {
+            console.log(err);
+        }
+        );
+    },
+
+    removeFeed(fno) {this.feeds = this.feeds.filter(res => res.fno!==fno)}
 
   },
   components: {

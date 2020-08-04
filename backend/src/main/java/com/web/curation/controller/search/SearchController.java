@@ -1,5 +1,6 @@
 package com.web.curation.controller.search;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -156,8 +157,19 @@ public class SearchController {
 
     @GetMapping("/search/feed")
     @ApiOperation(value = "피드 태그 검색")
-    public Object searchByFeedTag(@RequestParam(required = true) final String str){
-        List<Feed> list = searchDao.searchByFeedTag(str);
+    public Object searchByFeedTag(@RequestParam(required = true) final String str, 
+                                    @RequestParam(required = true) final int startnum,
+                                    HttpServletRequest request){
+
+        System.out.println(str + " " + startnum);
+        
+        // 피드 타임라인 볼 때 유저번호랑, 몇번 피드부터 불러올지 (무한스크롤 때문?) 알아야 함
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("uno", ((User)request.getAttribute("User")).getUno());
+        map.put("num", startnum);
+        map.put("str", str);
+
+        List<Feed> list = searchDao.searchByFeedTag(map);
         final BasicResponse result = new BasicResponse();
         result.status = true;
         result.msg = "success";
