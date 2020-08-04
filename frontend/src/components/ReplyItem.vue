@@ -12,7 +12,7 @@
         <div>{{r.writer_nick_name}} {{r.content}}
           <!-- <span class="moreView" @click="delReply(r.no)">삭제</span> -->
         </div>
-        <ReReplyItem :parentNo="r.no" :eno="eno" :section="'episode'"/>
+        <ReReplyItem :parentNo="r.no" :eno="eno" :addfun="addfun" :delfun="delfun" :section="'episode'"/>
       </div>
     </div>
   </div>
@@ -31,6 +31,9 @@ export default {
       content: null,
       replies: [],
       num: null,
+      addfun: null,
+      delfun: null,
+      readfun: null,
     }
   },
   props: {
@@ -90,11 +93,12 @@ export default {
           num: 1
         }
         , res => {
-          console.log(res);
           this.replies = res.data.data;
         }
         , err => console.log(err)
       )
+      this.addfun = FeedApi.createReply
+      this.delfun = FeedApi.deleteReply
     } else if (!this.eno === false) {
       CurationApi.readReply(
         { 
@@ -102,11 +106,12 @@ export default {
           num: 1
         }
         , res => {
-          console.log(res);
           this.replies = res.data.data;
         }
         , err => console.log(err)
       )
+      this.addfun = CurationApi.createEpisodeReply
+      this.delfun = CurationApi.deleteEpisodeReply
     }
   }
 }
