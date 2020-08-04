@@ -53,6 +53,8 @@ export default {
         }
       }
       
+      console.log(this.addData)
+
       ReplyApi.addReply(
         this.addData
       , this.addfun
