@@ -1,8 +1,9 @@
 <template>
+<div>
     <b-nav justified class="myheader">
-      <b-input-group @click="searchIcon" class="align-items-center m-2 mysearchbar">
+      <b-input-group class="align-items-center m-2 mysearchbar">
         <div class="input-group-prepend">
-          <div class="input-group-text py-0" style="border: 0px; background-color: #eee;">
+          <div @click="searchIcon" class="input-group-text py-0" style="border: 0px; background-color: #eee;">
             <b-icon-search></b-icon-search>
           </div>
         </div>
@@ -21,6 +22,7 @@
             https://github.com/alexurquhart/vue-bootstrap-typeahead
          -->
 
+<!-- @hit="selectedUser = $event" -->
         <vue-bootstrap-typeahead
           :data="users"
           v-model="word"
@@ -29,17 +31,22 @@
           :serializer="u => u.nick_name"
           :minMatchingChars='1'
           placeholder="type a username"
-          @hit="selectedUser = $event"
+          
           ref="searchInput"
           style="height: auto; width: 80%; border: 0px; background-color: #eee;"
         />
       </b-input-group>
     </b-nav>
+
+    <ResultItems :users_result="users_result"/>
+</div>
+
 </template>
 
 <script>
 import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 import SearchApi from '@/api/SearchApi.js';
+import ResultItems from "@/components/search/UserSearchResult.vue";
 
 export default {
     name: 'UserSearch',
@@ -48,8 +55,8 @@ export default {
       tabState: 3,
       word: "",
       users: [],
+      users_result: [],
       search_history: [],
-
       selectedUser: {}
     }
   },
@@ -57,6 +64,7 @@ export default {
     // 모든 유저 정보를 받아와도 크기가 많이 안클거같은데
     // 아니면 이거 안쓰고 아래 watch 에 주석 지워서 
     // 매 글자 입력마다 목록 새로 가져와도 되고
+    
     SearchApi.getAllUser(
       'NoData'
       , res => {
@@ -79,6 +87,7 @@ export default {
         console.log(err);
       }
     );
+
   },
   watch: {
     word(newWord) {
@@ -103,7 +112,15 @@ export default {
   },
   methods: {
     searchIcon(){
-      // this.$refs.searchInput.focus();
+      SearchApi.getUserList(
+        this.word,
+        res => {
+          this.users_result = res.data.data;
+        },
+        err => {
+          console.log(err);
+        }
+      );
     },
     // 탭을 클릭하면 해당 탭을 활성화
     moveTab(name) {
@@ -124,7 +141,8 @@ export default {
   },
   components: {
     //SearchApi,
-    VueBootstrapTypeahead
+    VueBootstrapTypeahead,
+    ResultItems
   }
 }
 </script>
@@ -135,6 +153,7 @@ export default {
     width: 100%;
     height: 50px;
     z-index: 1;
+    position: sticky;
   }
   .mysearchbar {
     border: 1px solid lightgray;
