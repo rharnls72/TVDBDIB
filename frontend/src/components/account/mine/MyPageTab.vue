@@ -33,6 +33,7 @@ export default {
         target_uno: this.info.uno
       };
 
+      console.log(this.info)
       console.log(data)
 
       FeedApi.getFeedList(
@@ -62,8 +63,10 @@ export default {
   props: {
     info: Object,
   },
-  created() {
-    this.takeFeed()
+  watch: {
+    info() {
+      this.takeFeed()
+    }
   },
 }
 </script>
