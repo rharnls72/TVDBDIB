@@ -6,6 +6,8 @@
       </b-tab>
       <b-tab title="태그된" title-link-class="text-secondary">
         <TaggedFeed :feeds="writtenFeeds" class="col-12 row" />
+        <!-- 아직 사람 태그 기능이 없어서 writtenFeeds 로직으로 채워놓음 -->
+        <!-- <TaggedFeed :feeds="taggedFeeds" class="col-12 row" /> -->
       </b-tab>
     </b-tabs>
   </div>
