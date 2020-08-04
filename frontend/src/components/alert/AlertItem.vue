@@ -9,11 +9,9 @@
           <!-- 이미지 바인딩 어떻게...? 잘 안된다 -->
             <img class="my-auto col-3 col-sm-3" src="@/assets/images/profile_default.png" @click="movePage(alert)">
             <span class="alert-content my-auto col-6 col-sm-6">
-              <p v-if='alert.atype == 1'>{{alert.subject_name}}님이 팔로우 요청을 보냈습니다.</p>
-              <p v-if='alert.atype == 2'>{{alert.subject_name}}님이 내 글에 좋아요를 표시했습니다.</p>
-              <p v-if='alert.atype == 3'>{{alert.subject_name}}님이 내 글에 댓글을 달았습니다.</p>
-              <p v-if='alert.atype == 4'>{{alert.subject_name}}님이 글에서 나를 언급했습니다.</p>
-              <p v-if='alert.atype == 5'>{{alert.subject_name}}님의 팔로우 요청</p>
+              <p v-if='alert.atype == 1'>{{alert.subject_name}}님이 내 <span v-if='alert.ctype != 1'>댓</span>글에 좋아요를 표시했습니다.</p>
+              <p v-if='alert.atype == 2'>{{alert.subject_name}}님이 내 <span v-if='alert.ctype != 1'>댓</span>글에 댓글을 달았습니다.</p>
+              <p v-if='alert.atype == 3'>{{alert.subject_name}}님의 <span v-if='alert.ctype != 1'>댓</span>글에서 나를 언급했습니다.</p>
             </span>
             <span class="float-right my-auto col-3 col-sm-3 removeBtn" type="button">
                 <b-icon-box-arrow-in-up-right  @click="movePage(alert)" font-scale="1.5" class="float-right" v-if="alert.atype < 5"></b-icon-box-arrow-in-up-right>
