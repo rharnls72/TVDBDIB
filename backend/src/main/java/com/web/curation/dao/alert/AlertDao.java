@@ -6,6 +6,7 @@ import com.web.curation.model.alert.Alert;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 @Repository
@@ -15,7 +16,7 @@ public interface AlertDao {
 
     // Read
     List<Alert> getAlertList(int uno);
-    int getWriterUno(String ctype, String col, int cno);
+    int getWriterUno(@Param("ctype") String ctype,@Param("col") String col, int cno);
     // Update
     int setReadAllAlert(int uno);
     int setReadAlert(int ano);
