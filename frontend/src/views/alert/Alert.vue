@@ -23,6 +23,7 @@ import AlertHeader from '@/components/alert/AlertHeader.vue';
 import AlertItem from '@/components/alert/AlertItem.vue';
 import GetUserApi from "@/api/GetUserApi"
 import header from "@/api/header.js"
+import db from '@/api/firebaseInit'
 export default {
   name: 'AlertTest',
    components: {
@@ -63,13 +64,22 @@ export default {
     let uno = this.$store.state.userInfo.uno;
     console.log(this.$store.state.userInfo);
     // 알림 가져오기.
-      http.get('/alert/list/' + uno, header())
-        .then(res => {
-          console.log(res);
-          this.generals = res.data.data;
-          this.alerts = this.generals;
-        })
-        .catch(err => console.error(err))
+
+    db.collection("alert").where("uno", "==", uno)
+      .onSnapshot(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          this.generals.push(doc.data());
+        });
+        this.alerts = this.generals;
+      });
+
+      // http.get('/alert/list/' + uno, header())
+      //   .then(res => {
+      //     console.log(res);
+      //     this.generals = res.data.data;
+      //     this.alerts = this.generals;
+      //   })
+      //   .catch(err => console.error(err))
 
       // 팔로우 요청 가져오기.
       http.get('/followrequest/list/' + uno, header())

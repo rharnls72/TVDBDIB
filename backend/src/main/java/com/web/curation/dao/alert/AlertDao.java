@@ -15,7 +15,7 @@ public interface AlertDao {
 
     // Read
     List<Alert> getAlertList(int uno);
-
+    int getWriterUno(String ctype, String col, int cno);
     // Update
     int setReadAllAlert(int uno);
     int setReadAlert(int ano);
