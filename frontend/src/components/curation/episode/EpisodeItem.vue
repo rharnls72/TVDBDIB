@@ -150,19 +150,32 @@ export default {
     touchScrapIcon() {
       this.scrapIcon = !this.scrapIcon
       if (this.scrapIcon) {
-        this.scrapCount ++
+        this.scrapCount ++;
+
+        CurationApi.createEpisodeDibs(
+          {tno: this.curation.eno}
+          , res => console.log(res)
+          , err => console.log(err)
+        );
       }
       else {
-        this.scrapCount --
+        this.scrapCount --;
+
+        CurationApi.deleteEpisodeDibs(
+          this.curation.eno
+          , res => console.log(res)
+          , err => console.log(err)
+        );
       }
       // console.log(this.scrapIcon)
     },
     addReplyCount() {this.curation.reply_num++}
   },
   created() {
-    this.likeIcon = this.curation.press_like
+    this.likeIcon = this.curation.press_like;
+    this.scrapIcon = this.curation.press_dibs;
     if (!this.curation.dibs_num) {this.scrapCount = 0}
-    else {this.scrapCount = this.dibs_num.dibs_num}
+    else {this.scrapCount = this.curation.dibs_num}
     if (!this.curation.like_num) {this.likeCount = 0}
     else {this.likeCount = this.curation.like_num}
     if (this.curation.summery<=30) {this.isStretch=true}

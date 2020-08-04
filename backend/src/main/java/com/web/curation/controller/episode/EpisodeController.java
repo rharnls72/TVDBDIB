@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,9 +28,11 @@ import com.web.curation.model.BasicResponse;
 import com.web.curation.model.episode.EpisodeDB;
 import com.web.curation.model.episode.EpisodeResponse;
 import com.web.curation.model.program.Program;
+import com.web.curation.model.user.User;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @ApiResponses(
@@ -175,7 +178,7 @@ public class EpisodeController {
             episode.setUno(uno);
 
             // 좋아요 수, 댓글 수 등 정보 구하기
-            episode.setAdditionalData(episodeDao.getLikeReplyInfo(episode));
+            episode.setAdditionalData((episodeDao.getLikeReplyInfo(episode)).get(0));
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         // Collections.sort(episodeList, new Comparator<Episode2>() {
@@ -261,15 +264,8 @@ public class EpisodeController {
         return e;
     }
 
-    @GetMapping("/episode/{pno}/{season}/{epno}")
-    @ApiOperation(value = "에피소드 상세정보 조회")
-    public Object getEpisodeDetailFromAPI(@PathVariable("pno") int pno, @PathVariable("season") int season,
-                                                                        @PathVariable("epno") int epno, HttpServletRequest req) {
-        final BasicResponse result = new BasicResponse();
-
-        // 여기선 응답 상태코드 없이 결과만 반환?
-        // final BasicResponse result = new BasicResponse();
-        
+    // 아래 찜한 에피소드 목록 가져오기에서도 쓰기위해 에피소드 상세정보 조회 함수 따로 뺐어요
+    private EpisodeResponse getEpisodeDetailFunc(int pno, int season, int epno) {
         RestTemplate restTemplate = new RestTemplate();
                                                                             
         // 일단 프로그램 (시즌 말고 그보다 더 상위인 프로그램) 정보가 필요하다. 프로그램 이름은 띄워줘야 하잖아...
@@ -294,20 +290,27 @@ public class EpisodeController {
 
         JSONObject detail = episodes.optJSONObject(epno-1); // episodes 배열 중에서 찾는 에피소드 번호에 해당하는 부분만 있음 된다.
         EpisodeResponse e = episodeSetter(program, epno, detail, " "); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
+        
+        return e;
+    }
 
-        ///
-        // 가져오는 Episode 수 만큼 DB 쿼리 최대 3번 최소 2번 요청...
-        ///
+    @GetMapping("/episode/{pno}/{season}/{epno}")
+    @ApiOperation(value = "에피소드 상세정보 조회")
+    public Object getEpisodeDetailFromAPI(@PathVariable("pno") int pno, @PathVariable("season") int season,
+                                                                        @PathVariable("epno") int epno, HttpServletRequest req) {
+        final BasicResponse result = new BasicResponse();
+        
+        EpisodeResponse e = getEpisodeDetailFunc(pno, season, epno);
+
         /////////////////////////////////////////////////////////////////////////////////////////////////// 정상작동할까요?
         // 에피소드에 대해 추가정보(좋아요 수, 댓글 수 등) 구하기
         // 각 에피소드 정보에 유저 번호 추가하기
-        int uno = 1;
-        // int uno = ((User) req.getAttribute("User")).getUno();
+        int uno = ((User) req.getAttribute("User")).getUno();
 
         e.setUno(uno);
 
         // 좋아요 수, 댓글 수 등 정보 구하기
-        e.setAdditionalData(episodeDao.getLikeReplyInfo(e));
+        e.setAdditionalData((episodeDao.getLikeReplyInfo(e)).get(0));
         //////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // 에피소드 를 포함한 응답 객체 반환
@@ -317,5 +320,44 @@ public class EpisodeController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
+    @PostMapping("/episode/dibs/list")
+    @ApiOperation(value = "찜한 에피소드 목록 조회")
+    Object getEpisodeDibsList(@RequestBody EpisodeResponse req, HttpServletRequest httpReq) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
 
+        // 찜한 에피소드 조회를 위한 유저 번호와 요청 수 정보 가져오기
+        int uno = ((User) httpReq.getAttribute("User")).getUno();
+        req.setUno(uno);
+        req.setNum((req.getNum() - 1) * 20);
+
+        // 찜한 에피소드 목록 조회
+        List<EpisodeDB> list = episodeDao.getLikeReplyInfo(req);
+
+        // list 있는 내용을 토대로 EpisodeResponseList 만들기
+        List<EpisodeResponse> response = new ArrayList<>();
+
+        // 찜한 에피소드들에 대해 반복
+        for(EpisodeDB ep : list) {
+            // 찜한 에피소드의 프로그램 번호, 시즌 번호, 에피소드 번호 빼기
+            int pno = ep.getPno();
+            int season = ep.getSeason();
+            int epno = ep.getEpisode();
+
+            // 그 정보들로 API 요청을 통해 에피소드 상세정보 가져오기
+            EpisodeResponse epiInfo = getEpisodeDetailFunc(pno, season, epno);
+
+            // 에피소드 상세정보에 댓글, 좋아요 등의 정보 붙이기
+            epiInfo.setAdditionalData(ep);
+
+            // 반환할 리스트에 추가
+            response.add(epiInfo);
+        }
+
+        // 완료
+        result.status = true;
+        result.msg = "success";
+        result.data = response;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
