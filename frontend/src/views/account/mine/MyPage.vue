@@ -1,7 +1,10 @@
 <template>
   <div>
     <MyPageHeader :info="info"/>
-    <MyPageInformation :info="info" :followcnt="followcnt"/>
+    <div class="container mycontainer">
+      <MyPageInformation :info="info" :followcnt="followcnt"/>
+      <MyPageTab :info="info"/>
+    </div>
     <Footer />
   </div>
 </template>
@@ -9,6 +12,7 @@
 <script>
 import MyPageHeader from '@/components/account/mine/MyPageHeader.vue'
 import MyPageInformation from '@/components/account/mine/MyPageInformation.vue'
+import MyPageTab from '@/components/account/mine/MyPageTab.vue'
 import Footer from '@/components/common/custom/Footer.vue'
 import AccountApi from "@/api/AccountApi";
 import GetUserApi from "@/api/GetUserApi"
@@ -24,6 +28,7 @@ export default {
   components: {
     MyPageHeader,
     MyPageInformation,
+    MyPageTab,
     Footer,
   },
   methods: {
@@ -54,6 +59,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .mycontainer {
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
 </style>

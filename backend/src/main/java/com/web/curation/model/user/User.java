@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import org.springframework.util.ResourceUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -88,6 +92,29 @@ public class User {
     }
 
     public void setProfile_pic(String profile_pic) {
+        this.profile_pic = profile_pic;
+
+        // 파일 경로로 된 profile_pic 이 들어왔다면
+        // 이미지 데이터로 바꿔주기
+        if(profile_pic != null && profile_pic.charAt(6) == '\\') {
+            try {
+                File file = ResourceUtils.getFile("classpath:application.properties");
+                String pre_path = file.getAbsolutePath().split("application.properties")[0];
+                String full_path = pre_path + profile_pic;
+                file = new File(full_path);
+
+                FileInputStream fis = new FileInputStream(file);
+                byte[] bytes = fis.readAllBytes();
+                fis.close();
+
+                this.profile_pic = new String(bytes);
+            } catch (Exception e) {
+                System.out.println("유저 프로필 데이터 로딩 실패: " + e.getMessage());
+            }
+        }
+    }
+
+    public void setProfile_pic_without_convert(String profile_pic) {
         this.profile_pic = profile_pic;
     }
 
