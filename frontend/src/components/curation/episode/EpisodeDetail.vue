@@ -1,0 +1,77 @@
+<template>
+  <div class="feed newsfeed">
+    <IndexCurationHeader />
+    <div class="wrapB">
+      <div class="myfeed">
+        <EpisodeItem :curation="article" :detail="true"/>
+        <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno"/>
+      </div>
+    </div>
+    <Footer />
+  </div>
+</template>
+
+<script>
+import EpisodeItem from "@/components/curation/episode/EpisodeItem.vue"
+import ReplyItem from "@/components/ReplyItem.vue"
+import Footer from '@/components/common/custom/Footer.vue';
+import IndexCurationHeader from '@/components/curation/IndexCurationHeader.vue'
+
+import CurationApi from "@/api/CurationApi.js"
+import GetUserApi from "@/api/GetUserApi.js"
+
+export default {
+  name: "EpisodeDetail",
+  components: {
+    EpisodeItem,
+    ReplyItem,
+    IndexCurationHeader,
+    Footer
+  },
+  data() {
+    return {
+      article: null
+    }
+  },
+  methods: {
+    delReply(res) {
+      console.log(res)
+      this.article.reply_num -= res
+    },
+    delReReply() {
+      this.article.reply_num --
+    },
+    addReplyCount() {
+      this.article.reply_num ++
+    }
+  },
+  created() {
+
+    GetUserApi.getUser(res => {
+      this.$store.commit('addUserInfo', res.user);
+    });
+
+    CurationApi.requestEpisodeDetail({
+      pno: this.$route.params.pno,
+      season: this.$route.params.season,
+      episode: this.$route.params.episode
+    }
+    , res=> {
+      console.log(res)
+      this.article = res.list
+    }
+    , err=> console.log(err))
+  }
+}
+</script>
+
+<style>
+.feed-item {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.newsfeed {
+  margin-bottom: 100px;
+}
+</style>

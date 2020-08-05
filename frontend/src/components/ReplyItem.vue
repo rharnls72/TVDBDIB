@@ -1,18 +1,21 @@
 <template>
-  <div class="feed-item pb-0 mb-0" style="border-bottom: none;">
+  <div class="feed-item pb-0 mb-5" style="border-bottom: none;">
     <div class="d-flex justify-align-between align-items-center mt-2">
-      <b-form-input type="text" class="m-0 rounded-pill" v-model="content" placeholder="내용 입력!!!"></b-form-input>
+      <b-form-input type="text" class="m-0 rounded-pill" v-model="content" placeholder="댓글 입력!!!"></b-form-input>
       <!-- 댓글 내용이 없으면 -->
       <b-icon v-if="!content" icon="plus-circle" class="text-right ml-2 text-light" font-scale="1.4"></b-icon>
       <!-- 댓글 내용이 있으면 -->
       <b-icon v-else @click="pushReply" icon="plus-circle" class="text-right ml-2 text-secondary" font-scale="1.4"></b-icon>
     </div>
     <div class="mt-2 pl-2 pr-2">
-      <div v-for="r in replies" :key="r.no">
-        <div>{{r.writer_nick_name}} {{r.content}}
-          <!-- <span class="moreView" @click="delReply(r.no)">삭제</span> -->
+      <div v-for="(re, idx) in replies" :key="re.no">
+        <div>{{re.writer_nick_name}} {{re.content}}
+          <span
+            @click="changeIsStretch(idx)"
+            v-if="!re.isStretch" 
+            class="moreView ml-1 mr-1">댓글 작성</span> <span v-if="re.writer_uno === uno" class="moreView ml-1" @click="delReply(re)">삭제</span>
         </div>
-        <ReReplyItem :parentNo="r.no" :fno="fno" :eno="eno" :addfun="addfun" :delfun="delfun" :section="section"/>
+        <ReReplyItem @addReply="addCount" @completeReply="changeIsStretch(idx)" @delReReply="delReReply(idx)" :isStretch="re.isStretch" :parentNo="re.no" :fno="fno" :eno="eno" :addfun="addfun" :delfun="delfun" :section="section"/>
       </div>
     </div>
   </div>
@@ -36,6 +39,7 @@ export default {
       delfun: null,
       readfun: null,
       section: null,
+      uno: null,
     }
   },
   props: {
@@ -43,6 +47,9 @@ export default {
     eno: Number,
   },
   methods: {
+    addCount() {
+      this.$emit('addReply')
+    },
     pushReply() {
 
       if (!this.eno===false) {
@@ -72,9 +79,13 @@ export default {
             this.addData
             , res => {
               this.replies = res.data.data
+              for (let i=0; i<this.replies.length; i++) {
+                this.replies[i].isStretch = false
+              }
             }
             , err=>console.log(err)
           )
+          this.addCount()
         }
         , err=>console.log(err)
         )
@@ -84,16 +95,48 @@ export default {
 
       this.content=null
     },
-    delReply(id) {
-      this.replies = this.replies.filter(res => res.id !== id)
+    delReply(re) {
+      this.delfun(
+        {
+          no: re.no
+        }
+        , res => {
+          this.$emit("delReply", Number(re.reply_num)+1)
+          this.replies = this.replies.filter(res => res.no !== re.no)
+          this.replies = this.replies.foreach(res => res.isStretch = false)
+        }
+        , err => console.log(err)
+      )
+    },
+    addReReply(idx) {
+      this.replies[idx].reply_num ++
+    },
+    changeIsStretch(idx) {
+      const temp = this.replies[idx]
+      temp.isStretch = !temp.isStretch
+      this.replies.splice(idx, 1, temp)
+      console.log(this.replies)
+      if (!this.replies[idx].isStretch) {
+        this.addReReply(idx)
+      }
+    },
+    delReReply(idx) {
+      this.replies[idx].reply_num--
+      this.$emit("delReReply")
     }
   },
   components: {
     ReReplyItem,
   },
-  created() {
+  watch: {
+    replies: function(e, n) {
+      console.log(this.replies)
+    }
+  },
+  mounted() {
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
+      this.uno = this.$store.state.userInfo.uno
     });
     if (!this.fno === false) {
       FeedApi.readReply(
@@ -103,6 +146,10 @@ export default {
         }
         , res => {
           this.replies = res.data.data;
+          for (let i=0; i<this.replies.length; i++) {
+            this.replies[i].isStretch = false
+          }
+          console.log(this.replies)
         }
         , err => console.log(err)
       )
@@ -118,6 +165,10 @@ export default {
         }
         , res => {
           this.replies = res.data.data;
+          for (let i=0; i<this.replies.length; i++) {
+            this.replies[i].isStretch = false
+          }
+          console.log(this.replies)
         }
         , err => console.log(err)
       )
