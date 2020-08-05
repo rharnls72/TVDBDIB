@@ -65,6 +65,7 @@ export default {
 
     // 알림 가져오기.
     db.collection("alert").where("uno", "==", uno)
+    // .orderBy("time", "desc")
       .onSnapshot(this.getAlerts);
 
       // http.get('/alert/list/' + uno, header())
