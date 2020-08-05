@@ -3,48 +3,19 @@ package com.web.curation.controller.alert;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.alert.Alert;
 import com.web.curation.service.FirebaseDao;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.google.api.core.ApiFuture;
-
-// [START fs_include_dependencies]
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.FirestoreOptions;
-// [END fs_include_dependencies]
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.WriteResult;
-import com.google.common.collect.ImmutableMap;
-import java.util.HashMap;
-import java.util.Map;
-import com.google.firebase.cloud.FirestoreClient;
-
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import javax.annotation.Nullable;
-import javax.swing.text.Document;
 
 
 @ApiResponses(
