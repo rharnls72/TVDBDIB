@@ -38,7 +38,9 @@
       </b-input-group>
     </b-nav>
 
-    <ResultItems :users_result="users_result"/>
+    <ResultItems :users_result="part_users_result"/>
+    <infinite-loading v-if="loading_complete && !isEndPoint" @infinite="infiniteHandler"></infinite-loading>
+
 </div>
 
 </template>
@@ -47,17 +49,22 @@
 import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 import SearchApi from '@/api/SearchApi.js';
 import ResultItems from "@/components/search/UserSearchResult.vue";
+import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
     name: 'UserSearch',
   data() {
     return {
-      tabState: 3,
+      startPoint: 0,
+      interval: 20,
       word: "",
       users: [],
       users_result: [],
+      part_users_result: [],
       search_history: [],
-      selectedUser: {}
+      selectedUser: {},
+      loading_complete: false,
+      isEndPoint: false
     }
   },
   created() {
@@ -116,6 +123,8 @@ export default {
         this.word,
         res => {
           this.users_result = res.data.data;
+          setTimeout(()=>{}, 1000)
+          this.toNextPage();
         },
         err => {
           console.log(err);
@@ -137,12 +146,38 @@ export default {
           console.log(err);
         }
       );
-    }
+    },
+
+    infiniteHandler($state) {
+      setTimeout(() => {
+        if (this.loading_complete == true){
+          this.toNextPage();
+        }
+        $state.loaded();
+      }, 1000);
+    },
+
+    toNextPage() {
+      let temp = []
+      for (let i = this.startPoint; i < this.startPoint + this.interval; i++) {
+        if (i >= this.users_result.length){
+            this.isEndPoint = true;
+            break;
+        }
+        temp.push(this.users_result[i])
+      }
+      this.part_users_result = this.part_users_result.concat(temp);
+      this.startPoint += this.interval;
+      this.loading_complete = true;
+      //console.log(this.part_users_result);
+    },
+
   },
   components: {
     //SearchApi,
     VueBootstrapTypeahead,
-    ResultItems
+    ResultItems,
+    InfiniteLoading
   }
 }
 </script>
