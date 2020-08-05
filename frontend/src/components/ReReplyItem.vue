@@ -1,15 +1,22 @@
 <template>
   <div class="pl-4 mt-2">
-    <div class="d-flex justify-align-between align-items-center">
-      <b-form-input type="text" class="m-0 rounded-pill" v-model="content" placeholder="내용 입력!!!"></b-form-input>
+
+    <div v-if="isStretch" class="d-flex justify-align-between align-items-center">
+      <b-form-input type="text" class="m-0 rounded-pill" v-model="content" placeholder="댓글 입력!!!"></b-form-input>
             <!-- 댓글 내용이 없으면 -->
       <b-icon v-if="!content" icon="plus-circle" class="text-right ml-2 text-light" font-scale="1.4"></b-icon>
-      <!-- 댓글 내용이 있으면 -->
+            <!-- 댓글 내용이 있으면 -->
       <b-icon v-else @click="pushReReply" icon="plus-circle" class="text-right ml-2 text-secondary" font-scale="1.4"></b-icon>
     </div>
-    <div class="pl-2 my-1" v-for="r in reply" :key="r.no">
-      {{r.writer_nick_name}} {{r.content}} <span class="moreView" @click="delReReply(r.no)">삭제</span>
+
+    <div v-if="!moreView && !!reply.length" class="d-flex mb-2">
+      <span class="mr-2">댓글 {{reply.length}} 개</span><span @click="changeMoreView" class="moreView">더 보기</span>
     </div>
+
+    <div v-else class="pl-2 my-1" v-for="r in reply" :key="r.no">
+      {{r.writer_nick_name}} {{r.content}} <span class="moreView" v-if="r.writer_uno === $store.state.userInfo.uno" @click="delReReply(r.no)">삭제</span>
+    </div>
+
   </div>
 </template>
 
@@ -26,6 +33,7 @@ export default {
       reply: [],
       addData: null,
       readfun: null,
+      moreView: false,
     }
   },
   props: {
@@ -35,6 +43,7 @@ export default {
     fno: Number,
     addfun: Function,
     delfun: Function,
+    isStretch: Boolean,
   },
   methods: {
     pushReReply() {
@@ -69,11 +78,13 @@ export default {
         }
         , err=>console.log(err)
         )
+        this.$emit('addReply')
       }
       , err=>console.log(err)
       )
 
       this.content=null
+      this.$emit("completeReply")
     },
     delReReply(no) {
       this.delfun(
@@ -82,19 +93,27 @@ export default {
         }
         , res => {
           this.reply = this.reply.filter(res => res.no !== no)
+          this.$emit("delReReply")
         }
         , err => console.log(err)
       )
+    },
+    changeMoreView() {
+      this.moreView = true
     }
   },
-  mounted() {
+  watch: {
+    isStretch: function(e, n) {
+      console.log(this.isStretch)
+    }
+  },
+  created() {
     if (this.section === "episode") {
       CurationApi.readReReply({
         no: this.parentNo,
         num: 1
       }
       , res => {
-        console.log(res)
         this.reply = res.data.data
       }
       , err => console.log(err)
@@ -112,6 +131,9 @@ export default {
       )
       this.readfun = FeedApi.readReReply
     }
+  },
+  updated() {
+    console.log(this.isStretch)
   }
 }
 </script>
@@ -119,5 +141,8 @@ export default {
 <style>
 .moreView {
   color: darkgray; 
+}
+.tap {
+  white-space: pre;
 }
 </style>

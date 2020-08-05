@@ -23,7 +23,7 @@ const requestEpisode = (callback,errorCallback) => {
     });
 }
 const requestEpisodeDetail = (data, callback,errorCallback) => {
-    http.get('/episode', {params: {id: data.id}}, header())
+    http.get(`/episode/${data.pno}/${data.season}/${data.episode}`, header())
     .then(res => {
         if(res == null) {
             let error = {msg : '알 수 없는 오류 발생'};
