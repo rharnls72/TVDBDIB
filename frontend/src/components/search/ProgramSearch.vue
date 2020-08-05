@@ -26,6 +26,7 @@
     </b-nav>
 
     <ResultItems :programs="programs_result"/>
+    <!-- v-if를 넣어서 처음 페이지 띄웠을 때 (검색버튼 안 눌렀을 때) 는 동작 안하게 함 -->
     <infinite-loading v-if="loading_complete" @infinite="infiniteHandler"></infinite-loading>
 
 </div>

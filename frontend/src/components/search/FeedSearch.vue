@@ -24,7 +24,8 @@
       </b-input-group>
     </b-nav>
 
-    <ResultItems :feeds_result="feeds_result"/>
+    <ResultItems :feeds_result="part_feeds_result"/>
+    <infinite-loading v-if="loading_complete && !isEndPoint" @infinite="infiniteHandler"></infinite-loading>
 </div>
 
 </template>
@@ -33,17 +34,20 @@
 import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 import SearchApi from '@/api/SearchApi.js';
 import ResultItems from "@/components/search/FeedSearchResult.vue";
+import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
 
   data() {
     return {
-      requestCount: 1,
+      startPoint: 0,
+      interval: 5,
       word: "",
       tags: [],
-      feeds_result: []
-      //search_history: [],
-      //selectedUser: {},
+      total_feeds_result: [],
+      part_feeds_result: [],
+      loading_complete: false,
+      isEndPoint: false // 끝까지 도달했으면 더이상 무한스크롤 돌아가는거 안 보이게
     }
   },
   
@@ -54,6 +58,7 @@ export default {
   },
   
   methods: {
+
     getTagList(newWord) {
         SearchApi.getTagList(
         newWord
@@ -75,19 +80,20 @@ export default {
         SearchApi.searchByTag(
         {
             word: this.word,
-            requestCount : this.requestCount
+            requestCount : 0
         }
         , res => {
-            this.feeds_result = res.data.data;
+            this.total_feeds_result = res.data.data;
 
-          for (let i=0; i<this.feeds_result.length; i++) {
-            this.feeds_result[i].content = JSON.parse(this.feeds_result[i].content)
-            this.feeds_result[i].tag = JSON.parse(this.feeds_result[i].tag)
+          for (let i=0; i<this.total_feeds_result.length; i++) {
+            this.total_feeds_result[i].content = JSON.parse(this.total_feeds_result[i].content)
+            this.total_feeds_result[i].tag = JSON.parse(this.total_feeds_result[i].tag)
           }
 
-          this.requestCount++
-          console.log(this.feeds_result);
+          console.log(this.total_feeds_result);
           setTimeout(()=>{}, 1000)
+
+          this.toNextPage();
         }
         , err => {
             console.log(err);
@@ -95,13 +101,35 @@ export default {
         );
     },
 
-    removeFeed(fno) {this.feeds = this.feeds.filter(res => res.fno!==fno)}
+    infiniteHandler($state) {
+      setTimeout(() => {
+        if (this.loading_complete == true){
+          this.toNextPage();
+        }
+        $state.loaded();
+      }, 1000);
+    },
+
+    toNextPage() {
+      let temp = []
+      for (let i = this.startPoint; i < this.startPoint + this.interval; i++) {
+        if (i >= this.total_feeds_result.length){
+            this.isEndPoint = true;
+            break;
+        }
+        temp.push(this.total_feeds_result[i])
+      }
+      this.part_feeds_result = this.part_feeds_result.concat(temp);
+      this.startPoint += this.interval;
+      this.loading_complete = true;
+    },
 
   },
   components: {
     //SearchApi,
     VueBootstrapTypeahead,
-    ResultItems
+    ResultItems,
+    InfiniteLoading
   }
 }
 </script>
