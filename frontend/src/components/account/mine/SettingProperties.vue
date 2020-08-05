@@ -37,7 +37,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   .myfeed {
     padding-top: 50px;
   }

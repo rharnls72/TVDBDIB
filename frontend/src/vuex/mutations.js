@@ -11,9 +11,5 @@ export default {
 
     addLoginEmail(state, email) {
         state.loginEmail = email;
-    },
-
-    changeState(state, tabNumber) {
-        state.tabState = tabNumber
-    },
+    }
 }

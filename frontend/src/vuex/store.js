@@ -13,8 +13,6 @@ const state = {
 
     loginEmail: "",
     updateFeed: null,
-
-    tabState: 3,
 }
 
 export default new Vuex.Store({
