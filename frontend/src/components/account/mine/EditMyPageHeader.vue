@@ -38,6 +38,7 @@ export default {
       if(JSON.stringify(this.info) == JSON.stringify(this.$store.state.userInfo)){
         this.makeToast("변경사항이 없습니다.", "warning");
       }else if(this.is_valid.is_valid=='is-valid'){
+        console.log(this.info.profile_pic);
         AccountApi.requestModifyProfile(
           this.info,
           res => {
@@ -45,6 +46,7 @@ export default {
               this.$store.commit('addUserInfo', res.user);
               localStorage.setItem('tvility', JSON.stringify(res.user));
               this.makeToast("변경되었습니다.", "primary");
+              console.log(this.info.profile_pic);
             }else{
               this.makeToast("변경에 실패했습니다.", "danger")
             }

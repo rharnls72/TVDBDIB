@@ -31,6 +31,7 @@ import MyPage from './views/account/mine/MyPage.vue'
 import EditMyPage from './views/account/mine/EditMyPage.vue'
 
 import Setting from './views/account/mine/Setting.vue'
+import IndexScrap from './views/account/mine/IndexScrap.vue'
 
 import OtherPage from './views/account/your/OtherPage.vue'
 
@@ -188,5 +189,10 @@ export default [
         path: '/setting',
         name: 'Setting',
         component: Setting
+    },
+    {
+        path: '/scrap',
+        name: 'IndexScrap',
+        component: IndexScrap
     },
 ]
