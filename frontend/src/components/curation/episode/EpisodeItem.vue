@@ -38,7 +38,7 @@
           <button class="h6 mr-1">
             <b-icon-chat></b-icon-chat>
           </button>
-          0
+          {{curation.reply_num}}
         </div>
         <!-- 스크랩 -->
         <div class="mr-3">
@@ -81,8 +81,9 @@
         <p>{{ curation.summary }}</p>
       </div>
     </div>
+    <p><span style="text-decoration: bold;">{{curation.reply_user_nick}} </span> <span>{{curation.reply_content}}</span></p>
     <!-- 추후에 댓글 연결!~ -->
-    <ReplyItem />
+    <ReplyItem :eno="curation.eno" @addReply="addReplyCount"/>
     <!-- <div class="content">
       <p>댓글이야 댓글 댓글!~</p>
       <p class="more">댓글 1개</p>
@@ -96,6 +97,7 @@
 import defaultImage from "../../../assets/images/img-placeholder.png";
 import defaultProfile from "../../../assets/images/profile_default.png";
 import ReplyItem from '../../ReplyItem.vue'
+import CurationApi from '@/api/CurationApi.js'
 
 export default {
   name: 'EpisodeItem',
@@ -108,11 +110,11 @@ export default {
       scrapIcon: false,
       likeCount: 0,
       scrapCount: 0,
+      reply_num: null,
     };
   },
   props: {
     curation: Object,
-    id: Number,
   },
   components: {
     ReplyItem,
@@ -125,22 +127,58 @@ export default {
       this.likeIcon = !this.likeIcon
       if (this.likeIcon) {
         this.likeCount ++
+        CurationApi.createEpisodeLike(
+          {
+            tno: this.curation.eno,
+          }
+          , res => console.log(res)
+          , err => console.log(err)
+        )
       }
       else {
         this.likeCount --
+        CurationApi.deleteEpisodeLike(
+          {
+            tno: this.curation.eno,
+          }
+          , res => console.log(res)
+          , err => console.log(err)
+        )
       }
       // console.log(this.likeIcon)
     },
     touchScrapIcon() {
       this.scrapIcon = !this.scrapIcon
       if (this.scrapIcon) {
-        this.scrapCount ++
+        this.scrapCount ++;
+
+        CurationApi.createEpisodeDibs(
+          {tno: this.curation.eno}
+          , res => console.log(res)
+          , err => console.log(err)
+        );
       }
       else {
-        this.scrapCount --
+        this.scrapCount --;
+
+        CurationApi.deleteEpisodeDibs(
+          this.curation.eno
+          , res => console.log(res)
+          , err => console.log(err)
+        );
       }
       // console.log(this.scrapIcon)
     },
+    addReplyCount() {this.curation.reply_num++}
+  },
+  created() {
+    this.likeIcon = this.curation.press_like;
+    this.scrapIcon = this.curation.press_dibs;
+    if (!this.curation.dibs_num) {this.scrapCount = 0}
+    else {this.scrapCount = this.curation.dibs_num}
+    if (!this.curation.like_num) {this.likeCount = 0}
+    else {this.likeCount = this.curation.like_num}
+    if (this.curation.summery<=30) {this.isStretch=true}
   },
 };
 </script>

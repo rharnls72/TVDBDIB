@@ -150,9 +150,19 @@ export default {
       this.scrapIcon = !this.scrapIcon
       if (this.scrapIcon) {
         this.scrapNum ++
+        FeedApi.createDibs(
+          {tno: this.fno}
+          , res => console.log(res)
+          , err => console.log(err)
+        );
       }
       else {
         this.scrapNum --
+        FeedApi.deleteDibs(
+          this.fno
+          , res => console.log(res)
+          , err => console.log(err)
+        );
       }
       // console.log(this.scrapIcon)
     },
@@ -183,8 +193,8 @@ export default {
     this.reply_user_nick = this.article.reply_user_nick
     this.nick_name = this.article.nick_name
     this.reply_content = this.article.reply_content
-    if (!this.article.dibsNum) {this.scrapNum = 0}
-    else {this.scrapNum = this.article.dibsNum}
+    if (!this.article.dibs_num) {this.scrapNum = 0}
+    else {this.scrapNum = this.article.dibs_num}
     this.create_date = this.article.create_date
     if (!this.article.like_num) {this.like_num = 0}
     else {this.like_num = this.article.like_num}

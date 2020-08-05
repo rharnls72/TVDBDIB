@@ -1,7 +1,7 @@
 <template>
-  <div class="feed newsfeed myfeed">
+  <div class="feed newsfeed pt-0">
     <div class="wrapB">
-      <div class="container mt-3">
+      <!-- <div class="container mt-3"> -->
         <div class="row p-0">
           <img class="col-3 p-0 mb-3" :src="defaultProfile" alt="default-image">
           <div class="col-3 my-3">
@@ -21,7 +21,7 @@
         <p class="row p-0">
           <button class="col-12 mybutton p-0 text-dark" @click="editmypage">프로필 수정</button>
         </p>
-      </div>
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -54,7 +54,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .introduce {
     line-height: 1.5em;
   }
@@ -63,8 +63,5 @@ export default {
     box-shadow: none;
     border: 1px solid lightgray;
     border-radius: 0.25rem;
-  }
-  .myfeed {
-    padding-top: 50px;
   }
 </style>

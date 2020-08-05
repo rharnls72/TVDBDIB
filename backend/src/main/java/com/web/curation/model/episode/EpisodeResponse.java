@@ -38,6 +38,11 @@ public class EpisodeResponse {
 
 	private int share_num;
 	private int dibs_num;
+	private boolean press_dibs;
+
+	private int is_dibs;
+
+	private int num; // 요청 수
 
 	public int getPno() {
 		return this.pno;
@@ -189,9 +194,11 @@ public class EpisodeResponse {
 	}
 
 	public void setReply_content(String reply_content) {
-		String[] strs = reply_content.split(":");
-        this.reply_user_nick = strs[0];
-        this.reply_content = strs[1];
+		if(reply_content != null) {
+			String[] strs = reply_content.split(":");
+			this.reply_user_nick = strs[0];
+			this.reply_content = strs[1];
+		}
 	}
 
 	public String getReply_user_nick() {
@@ -218,13 +225,45 @@ public class EpisodeResponse {
 		this.dibs_num = dibs_num;
 	}
 
+	public boolean isPress_dibs() {
+		return this.press_dibs;
+	}
+
+	public void setPress_dibs(boolean press_dibs) {
+		this.press_dibs = press_dibs;
+	}
+
+	public int getIs_dibs() {
+		return this.is_dibs;
+	}
+
+	public void setIs_dibs(int is_dibs) {
+		this.is_dibs = is_dibs;
+	}
+
+	public int getNum() {
+		return this.num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
+	}
+
 	public void setAdditionalData(EpisodeDB episode) {
 		eno = episode.getEno();
+		pno = episode.getPno();
+		season = episode.getSeason();
+		this.episode = episode.getEpisode();
+
 		like_num = episode.getLike_num();
 		press_like = episode.isPress_like();
+
 		reply_num = episode.getReply_num();
-		reply_content = episode.getReply_content();
-		share_num = episode.getShare_num();
+		this.setReply_content(episode.getReply_content());
+		
 		dibs_num = episode.getDibs_num();
+		press_dibs = episode.isPress_dibs();
+		
+		share_num = episode.getShare_num();
 	}
 }

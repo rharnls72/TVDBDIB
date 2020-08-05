@@ -65,7 +65,6 @@ export default {
     submitArticle() {
       let sendData = this.makeData();
 
-      console.log(this.$store.state.isUser)
       // createFeed 요청에 줄 데이터 목록
       // uno 는 토큰을 통해 사용하기위해 제거
       let Data = {
@@ -81,12 +80,12 @@ export default {
           Data
           // 성공시 수행할 콜백 메서드
           , res => {
-            console.log(res);
+            console.log('createFeed Success: ' + res);
             this.$router.push({path: '/feed/main'})
           }
           // 실패시 수행할 콜백 메서드
           , err => {
-            console.log(err);
+            console.log('createFeed Error: ' + err);
           } 
         )
       } else {
