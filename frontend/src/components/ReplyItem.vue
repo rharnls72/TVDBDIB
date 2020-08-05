@@ -12,7 +12,7 @@
         <div>{{r.writer_nick_name}} {{r.content}}
           <!-- <span class="moreView" @click="delReply(r.no)">삭제</span> -->
         </div>
-        <!-- <ReReplyItem :fno="fno" :frno="r.no"/> -->
+        <ReReplyItem :parentNo="r.no" :fno="fno" :eno="eno" :addfun="addfun" :delfun="delfun" :section="section"/>
       </div>
     </div>
   </div>
@@ -22,6 +22,8 @@
 import ReReplyItem from "@/components/ReReplyItem.vue"
 import GetUserApi from "@/api/GetUserApi.js"
 import FeedApi from "@/api/FeedApi.js"
+import CurationApi from "@/api/CurationApi.js"
+import ReplyApi from "@/api/ReplyApi.js"
 
 export default {
   name: "ReplyItem",
@@ -30,33 +32,56 @@ export default {
       content: null,
       replies: [],
       num: null,
+      addfun: null,
+      delfun: null,
+      readfun: null,
+      section: null,
     }
   },
   props: {
     fno: Number,
-    uno: Number,
+    eno: Number,
   },
   methods: {
     pushReply() {
-      this.replies.push({
-        id: this.k,
-        writer_nick_name: this.$store.state.userInfo.nick_name,
-        content: String(this.content)
-      })
 
-      FeedApi.createReply(
-        {
+      if (!this.eno===false) {
+        this.addData = {
+          no: this.eno,
+          content: this.content,
+        }
+      } else if (!this.fno===false) {
+        this.addData = {
           no: this.fno,
-          content: this.content
+          content: this.content,
         }
-        , res => {
-          console.log(res.data);
+      }
+
+      ReplyApi.addReply(
+        this.addData
+      , this.addfun
+      , res=>{
+        console.log(res)
+        this.readfun({
+          num: 1
         }
-        , err => {
-          console.log(err.msg);
+        , res=>{
+          delete this.addData.content
+          this.addData.num = 1
+          this.readfun( 
+            this.addData
+            , res => {
+              this.replies = res.data.data
+            }
+            , err=>console.log(err)
+          )
         }
-      );
-      this.k++
+        , err=>console.log(err)
+        )
+      }
+      , err=>console.log(err)
+      )
+
       this.content=null
     },
     delReply(id) {
@@ -64,23 +89,43 @@ export default {
     }
   },
   components: {
-    // ReReplyItem,
+    ReReplyItem,
   },
   created() {
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });
-    FeedApi.readReply(
-      { 
-        no: this.fno,
-        num: 1
-      }
-      , res => {
-        console.log(res);
-        this.replies = res.data.data;
-      }
-      , err => console.log(err)
-    );
+    if (!this.fno === false) {
+      FeedApi.readReply(
+        { 
+          no: this.fno,
+          num: 1
+        }
+        , res => {
+          this.replies = res.data.data;
+        }
+        , err => console.log(err)
+      )
+      this.addfun = FeedApi.createReply
+      this.delfun = FeedApi.deleteReply
+      this.readfun = FeedApi.readReply
+      this.section = "feed"
+    } else if (!this.eno === false) {
+      CurationApi.readReply(
+        { 
+          no: this.eno,
+          num: 1
+        }
+        , res => {
+          this.replies = res.data.data;
+        }
+        , err => console.log(err)
+      )
+      this.addfun = CurationApi.createEpisodeReply
+      this.delfun = CurationApi.deleteEpisodeReply
+      this.readfun = CurationApi.readReply
+      this.section = "episode"
+    }
   }
 }
 </script>
