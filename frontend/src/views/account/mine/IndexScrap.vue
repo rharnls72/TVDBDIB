@@ -2,6 +2,7 @@
   <div>
     <IndexScrapHeader />
     <div class="container mycontainer">
+      <!-- <Scrapped v-for="writtenFeed in writtenFeeds" :key="writtenFeed.fno" :feed="writtenFeed" class="col-12 row"/> -->
       <Scrapped />
     </div>
     <Footer />
