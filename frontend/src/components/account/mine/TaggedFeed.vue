@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 m-0 p-0">
-    <div v-for="feed in feeds" :key="feed.fno" class="col-12 row m-0 px-0 py-2 align-items-center">
+    <div class="col-12 row m-0 px-0 py-2 align-items-center">
       <!-- {{ feed }} -->
       <div class="col-6 mythumbnail">
         <!-- <FeedImage /> -->
@@ -23,7 +23,7 @@ import { mapState } from "vuex";
 export default {
   name: 'TaggedFeed',
   props: {
-    feeds: Array,
+    feed: Object,
   },
   // components: {
   //   FeedImage,
