@@ -62,16 +62,10 @@ export default {
     });
     
     let uno = this.$store.state.userInfo.uno;
-    console.log(this.$store.state.userInfo);
-    // 알림 가져오기.
 
+    // 알림 가져오기.
     db.collection("alert").where("uno", "==", uno)
-      .onSnapshot(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-          this.generals.push(doc.data());
-        });
-        this.alerts = this.generals;
-      });
+      .onSnapshot(this.getAlerts);
 
       // http.get('/alert/list/' + uno, header())
       //   .then(res => {
@@ -84,7 +78,7 @@ export default {
       // 팔로우 요청 가져오기.
       http.get('/followrequest/list/' + uno, header())
         .then(res => {
-          console.log(res);
+          // console.log(res);
           let requests = res.data.data;
           for (let i=0; i<requests.length; i++){
             let request = {};
@@ -112,6 +106,14 @@ export default {
         this.tabIndex = 1; // AlertItem에서 이 함수 호출됐을 때 이 코드로 인해 탭 전환이 됨.
         this.alerts = this.follow_requests;
       }
+    },
+    getAlerts(querySnapshot) {
+        let temp = [];
+        querySnapshot.forEach(function(doc) {
+          temp.push(doc.data());
+        });
+        this.generals = temp;
+        this.alerts = this.generals;
     }
   }
 

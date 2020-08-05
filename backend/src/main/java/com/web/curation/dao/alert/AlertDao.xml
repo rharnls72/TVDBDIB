@@ -77,9 +77,9 @@
 
     <select id="getWriterUno" resultType="int">
         select uno
-        from #{ctype}
+        from ${ctype}
         where 
-            #{col} = #{cno}
+            ${col} = #{cno}
     </select>
 
     <select id="getInfoByFeedLike" resultType="Alert">

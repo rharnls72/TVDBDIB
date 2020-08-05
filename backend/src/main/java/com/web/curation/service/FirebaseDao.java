@@ -11,20 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.WriteResult;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.DocumentSnapshot;
 
-
-import com.google.api.core.SettableApiFuture;
-import com.google.cloud.firestore.DocumentChange;
-import com.google.cloud.firestore.DocumentChange.Type;
-import com.google.cloud.firestore.EventListener;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.FirestoreException;
-import com.google.cloud.firestore.ListenerRegistration;
-import com.google.cloud.firestore.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.google.cloud.firestore.DocumentReference;
 
@@ -51,10 +41,12 @@ public class FirebaseDao {
                 result = dao.getWriterUno("episode_reply", "erno", alert.getCno());
             }
             alert.setUno(result);
+            System.out.println(alert.getSubject_no());
             Alert newAlert = dao.getInfoByUser(alert.getSubject_no());
-            alert.setPicture(newAlert.getPicture());
+            // if(newAlert.getPicture()!=null)
+                // alert.setPicture(newAlert.getPicture());
             alert.setSubject_name(newAlert.getSubject_name());
-
+            System.out.println("성공");
             DocumentReference addedDocRef = db.collection("alert").document();
             alert.setAno(addedDocRef.getId());
             addedDocRef.set(alert);

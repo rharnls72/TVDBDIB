@@ -1,8 +1,6 @@
 package com.web.curation.controller.like;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -99,7 +97,7 @@ public class LikeController {
     @ApiOperation(value = "피드 좋아요 추가")
     public Object addFeedLike(@RequestBody Like like, HttpServletRequest httpReq) {
         Alert alert = new Alert();
-        alert.setSubject_no(like.getUno());
+        alert.setSubject_no(((User) httpReq.getAttribute("User")).getUno());
         // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
         alert.setAtype(1);
         // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
