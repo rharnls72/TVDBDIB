@@ -65,7 +65,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .feed-item {
   border-bottom: none;
   padding-bottom: 0;

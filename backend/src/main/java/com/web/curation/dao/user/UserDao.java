@@ -23,6 +23,7 @@ public interface UserDao {
     int checkNickName(String nick_name);
 
     int addNewUser(SignupRequest request);
+    int addNewUserWithSocial(User user);
 
     int modifyPassword(User user);
     int modifyProfile(User user);
