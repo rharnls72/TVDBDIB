@@ -25,6 +25,8 @@ import EpisodeDetail from './components/curation/episode/EpisodeDetail.vue'
 import MyPage from './views/account/mine/MyPage.vue'
 import EditMyPage from './views/account/mine/EditMyPage.vue'
 
+import FeedMiniTab from './components/feed/FeedMiniTab.vue'
+
 import Setting from './views/account/mine/Setting.vue'
 import IndexScrap from './views/account/mine/IndexScrap.vue'
 
@@ -172,6 +174,11 @@ export default [
         path: '/setting',
         name: 'Setting',
         component: Setting
+    },
+    {
+        path: '/feed/miniTap',
+        name: 'FeedMiniTab',
+        component: FeedMiniTab
     },
     {
         path: '/scrap',

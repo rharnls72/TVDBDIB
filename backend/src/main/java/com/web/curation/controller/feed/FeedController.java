@@ -98,6 +98,27 @@ public class FeedController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/feed/detail/{fno}")
+    @ApiOperation(value = "피드 상세 조회")
+    public Object getFeedDetail(@PathVariable("fno") int fno, HttpServletRequest request) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        // 유저 정보 가져와서 그 번호를 feedRequest 에 넣기
+        FeedRequest feedRequest = new FeedRequest();
+        feedRequest.setUno(((User)request.getAttribute("User")).getUno());
+        feedRequest.setNum(fno);
+
+        // 피드 조회
+        Feed feed = dao.getFeedDetail(feedRequest);
+
+        // 조회된 피드 목록 반환
+        result.status = true;
+        result.msg = "success";
+        result.data = feed;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @GetMapping("/test/feedcnt/{uno}")
     @ApiOperation(value = "작성한 피드 수 조회(API 로 호출 안하는 메서드)")
     public Object getFeedCount(@PathVariable("uno") int uno) {

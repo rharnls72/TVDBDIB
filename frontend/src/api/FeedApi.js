@@ -65,7 +65,7 @@ const getFeedList = (data,callback,errorCallback) => {
 }
 
 const feedDetail = (data,callback,errorCallback) => {
-    http.get('/feed/detail/'+String(data.id), header())
+    http.get('/feed/detail/' + data, header())
     .then(res => {
         console.log(res)
         if(res == null) {
@@ -73,7 +73,7 @@ const feedDetail = (data,callback,errorCallback) => {
             errorCallback(error);
         }else {
             if(res.data.status) {
-                callback({list: res.data.data});
+                callback({feed: res.data.data});
             }
             else {
                 let error = {msg : res.data.msg};
