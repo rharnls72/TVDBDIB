@@ -51,7 +51,7 @@ import { mapState } from "vuex";
 export default {
   name: 'WrittenFeed',
   props: {
-    feed: Object,
+    feed: null,
   },
   // components: {
   //   FeedImage,
