@@ -36,6 +36,7 @@ Vue.use(IconsPlugin)
 Vue.use(VueHtml2Canvas)
 
 const router = new VueRouter({
+    mode: 'history',
     routes,
 });
 
