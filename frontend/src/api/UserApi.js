@@ -77,10 +77,7 @@ const requestJoinEmail = (data,callback,errorCallback) => {
     console.log(data);
 
     //백앤드와 가입하기 통신하는 부분
-    http.post('/account/sendjoinEmail', {
-        nick_name: data.nick_name
-            , email: data.email
-        })
+    http.post('/account/sendjoinEmail', data)
         .then(res => {
             if(res == null) {
                 let error = {msg : '알 수 없는 오류 발생'};

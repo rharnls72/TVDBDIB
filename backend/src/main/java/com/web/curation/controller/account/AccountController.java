@@ -178,11 +178,10 @@ public class AccountController {
 
     @PostMapping("/account/sendjoinEmail")
     @ApiOperation(value = "가입메일 재전송하기")
-    public Object sendjoinEmail(@RequestParam(required = true) final String email,
-            @RequestParam(required = true) final String nick_name) {
+    public Object sendjoinEmail(@RequestBody SignupRequest request) {
 
         final BasicResponse result = new BasicResponse();
-        mailConfig.sendJoinMail(sender, email, nick_name);
+        mailConfig.sendJoinMail(sender, request.getEmail(), request.getNick_name());
         result.status = true;
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
