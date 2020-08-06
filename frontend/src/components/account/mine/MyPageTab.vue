@@ -2,7 +2,7 @@
   <div class="p-0">
     <b-tabs class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
       <b-tab title="내가 쓴" title-link-class="text-secondary" active>
-        <WrittenFeed :feeds="writtenFeeds" class="col-12 row" />
+        <WrittenFeed v-for="feed in writtenFeeds" :key="feed.fno" :feed="feed" class="col-12 row" />
       </b-tab>
       <b-tab title="태그된" title-link-class="text-secondary">
         <TaggedFeed :feeds="writtenFeeds" class="col-12 row" />

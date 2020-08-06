@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 m-0 p-0">
-    <div v-for="feed in feeds" :key="feed.fno" @click="moveDetail(feed.fno)" class="col-12 row m-0 px-0 py-2 align-items-center">
+    <div @click="moveDetail(feed.fno)" class="col-12 row m-0 px-0 py-2 align-items-center">
       <!-- {{ feed }} -->
       <!-- <feedArticleItem v-if="feed.ctype===1" :article="feed" :fno="feed.fno"/>
       <feedCountdownItem v-if="feed.ctype===2" :article="feed" :fno="feed.fno"/>
@@ -61,7 +61,7 @@ export default {
   //   FeedImage,
   // },
   props: {
-    feeds: Array,
+    feed: null,
   },
   // components: { 
   //   feedArticleItem, 
