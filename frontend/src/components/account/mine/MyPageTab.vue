@@ -5,7 +5,9 @@
         <WrittenFeed v-for="feed in writtenFeeds" :key="feed.fno" :feed="feed" class="col-12 row" />
       </b-tab>
       <b-tab title="태그된" title-link-class="text-secondary">
-        <TaggedFeed :feeds="writtenFeeds" class="col-12 row" />
+        <TaggedFeed v-for="writtenFeed in writtenFeeds" :key="writtenFeed.fno" :feed="writtenFeed" class="col-12 row"/>
+        <!-- 아직 사람 태그 기능이 없어서 writtenFeeds 로직으로 채워놓음 -->
+        <!-- <TaggedFeed v-for="taggedFeed in taggedFeeds" :key="taggedFeed.fno" :feed="taggedFeed" class="col-12 row"/> -->
       </b-tab>
     </b-tabs>
   </div>
