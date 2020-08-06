@@ -68,7 +68,7 @@ public class FollowingController {
         alert.setSubject_no(uf.getFollower());
         // 알림 타입(4: 팔로우 요청)
         alert.setAtype(4);
-        alert.setRead(false);
+        alert.setRead(true);
         alert.setTime(LocalDateTime.now());
         alertService.addFollowing(alert);
 
