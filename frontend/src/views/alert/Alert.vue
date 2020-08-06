@@ -64,35 +64,13 @@ export default {
     let uno = this.$store.state.userInfo.uno;
 
     // 알림 가져오기.
-    db.collection("alert").where("uno", "==", uno)
-    // .orderBy("time", "desc")
+    db.collection("alert").where("uno", "==", uno)//.orderBy("time", "desc")
       .onSnapshot(this.getAlerts);
 
-      // http.get('/alert/list/' + uno, header())
-      //   .then(res => {
-      //     console.log(res);
-      //     this.generals = res.data.data;
-      //     this.alerts = this.generals;
-      //   })
-      //   .catch(err => console.error(err))
-
       // 팔로우 요청 가져오기.
-      http.get('/followrequest/list/' + uno, header())
-        .then(res => {
-          // console.log(res);
-          let requests = res.data.data;
-          for (let i=0; i<requests.length; i++){
-            let request = {};
-            request.atype = 5;
-            request.cno = requests[i].fno;
-            request.picture = requests[i].user.profile_pic;
-            request.read = 1;
-            request.subject_name = requests[i].user.nick_name;
-            request.subject_no = requests[i].follower;
-            this.follow_requests.push(request);
-          }
-        })
-        .catch(err => console.error(err))
+      db.collection("follow_request").where("uno", "==", uno)//.orderBy("time", "desc")
+      .onSnapshot(this.getFollowings);
+
   },
 
   methods: {
@@ -109,13 +87,35 @@ export default {
       }
     },
     getAlerts(querySnapshot) {
+        // this.makeToast("알림이 왔습니다.", "primary");
         let temp = [];
         querySnapshot.forEach(function(doc) {
           temp.push(doc.data());
         });
         this.generals = temp;
-        this.alerts = this.generals;
-    }
+        if(this.tabIndex == 0)
+          this.alerts = this.generals;
+    },
+    getFollowings(querySnapshot){
+      // this.makeToast("알림이 왔습니다.", "primary");
+        let temp = [];
+        querySnapshot.forEach(function(doc) {
+          temp.push(doc.data());
+        });
+        this.follow_requests = temp;
+        console.log(temp);
+        if(this.tabIndex == 1)
+          this.alerts = this.follow_requests;
+    },
+    makeToast(message, variant){
+        this.$bvToast.toast(message, {
+          title: '알림',
+          toaster: "b-toaster-bottom-right",
+          variant: variant,
+          autoHideDelay: 3000,
+          appendToast: false
+        })
+     }
   }
 
 /*
