@@ -45,15 +45,23 @@
         :class="{disabled : !isSubmit}"
       >로그인</button>
 
-      <!-- <div class="sns-login">
+      <div class="sns-login">
         <div class="text">
-          <p>SNS 간편 로그인</p>
+          <p>SNS 로그인</p>
           <div class="bar"></div>
         </div>
 
-        <kakaoLogin :component="component" />
-        <GoogleLogin :component="component" />
-      </div> -->
+        <button type="button" @click="doKakaoLogin">
+          <img :src="kakaoButton" alt="Kakao login button"/>
+        </button>
+        <!-- <GoogleLogin :component="component" /> -->
+        <!-- <GoogleLogin
+          :params="params"
+          :renderParams="renderParams"
+          :onSuccess="onSuccess"
+          :onFailure="onFailure"></GoogleLogin> -->
+
+      </div>
       <div class="add-option mt-3">
         <div class="text">
           <p>혹시</p>
@@ -78,11 +86,14 @@ import PV from "password-validator";
 import * as EmailValidator from "email-validator";
 // import KakaoLogin from "../../components/user/snsLogin/Kakao.vue";
 // import GoogleLogin from "../../components/user/snsLogin/Google.vue";
+// import GoogleLogin from "vue-google-login";
 import UserApi from "../../api/UserApi";
 import LoginHeader from '../../components/user/custom/LoginHeader.vue'
 import teamImage from '../../assets/images/custom/team-img.jpg'
+import kakaoButton from '@/assets/images/kakao_login_medium_narrow.png';
 
 import GetUserApi from "@/api/GetUserApi"
+import KakaoApi from "@/api/KakaoApi.js";
 
 export default {
   name: 'Login',
@@ -97,9 +108,9 @@ export default {
       // 비동기 요청이 완료되었을 때 store 에 유저 정보가 있는지 확인해야함(여기에 위치해야함)
       if(this.$store.state.isAutoLogin)  this.$router.push({name:'IndexCuration'});
     });
-    
+      
     this.component = this;
-
+  
     this.passwordSchema
       .is()
       .min(8)
@@ -109,7 +120,7 @@ export default {
       .digits()
       .has()
       .letters();
-    
+      
     this.email = this.$store.state.loginEmail;
   },
   watch: {
@@ -191,6 +202,10 @@ export default {
         );
       }
     }
+    , doKakaoLogin() {
+      console.log('Kakao login start');
+      KakaoApi.Login();
+    }
   },
   data: () => {
     return {
@@ -205,6 +220,8 @@ export default {
       isSubmit: false,
       component: this,
       teamImage,
+
+      kakaoButton
     };
   }
 };

@@ -65,7 +65,7 @@ const getFeedList = (data,callback,errorCallback) => {
 }
 
 const feedDetail = (data,callback,errorCallback) => {
-    http.get('/feed/detail/'+String(data.id), header())
+    http.get('/feed/detail/' + data, header())
     .then(res => {
         console.log(res)
         if(res == null) {
@@ -73,7 +73,7 @@ const feedDetail = (data,callback,errorCallback) => {
             errorCallback(error);
         }else {
             if(res.data.status) {
-                callback({list: res.data.data});
+                callback({feed: res.data.data});
             }
             else {
                 let error = {msg : res.data.msg};
@@ -157,6 +157,8 @@ const deleteFeedLike = (data,callback,errorCallback) => {
     // 성공 : call back 호출
     // 실패 :  errorCallback 호출
 
+    console.log(data)
+
     http.post('/like/feed/delete', data, header())
         .then(res => {
             // 서버에서 정상적으로 처리되었으면 res 가 null 이 될 수 없음
@@ -189,6 +191,8 @@ const createFeedLike = (data,callback,errorCallback) => {
     // 피드 좋아요 생성
     // 성공 : call back 호출
     // 실패 :  errorCallback 호출
+
+    console.log(data)
 
     http.post('/like/feed/create', data, header())
         .then(res => {
@@ -374,6 +378,7 @@ const FeedApi = {
     , getFeedList:(data,callback, errorCallback)=>getFeedList(data, callback, errorCallback)
     , updateFeed:(data,callback,errorCallback)=>updateFeed(data,callback,errorCallback)
     , deleteFeed:(data,callback,errorCallback)=>deleteFeed(data,callback,errorCallback)
+    , feedDetail:(data,callback,errorCallback)=>feedDetail(data,callback,errorCallback)
 
     , deleteFeedLike:(data,callback,errorCallback)=>deleteFeedLike(data,callback,errorCallback)
     , createFeedLike:(data,callback,errorCallback)=>createFeedLike(data,callback,errorCallback)

@@ -16,6 +16,7 @@ public interface FeedDao {
     
     // Read
     List<Feed> getFeedList(FeedRequest feedRequest);
+    Feed getFeedDetail(FeedRequest feedRequest);
     int getFeedCount(int uno);
 
     // Update
