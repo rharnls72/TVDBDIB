@@ -80,10 +80,12 @@
     </div>
     <div class="wrap mt-2">
       <span v-for="tag in article.tag" :key="tag" class="tag">#{{tag}} </span><br>
-      <span v-if="!!article.reply_num" class="moreView">댓글 {{article.reply_num}}개</span><br>
+      <span v-if="!!article.reply_num && !detail" class="moreView">댓글 {{article.reply_num}}개</span><br>
     </div>
-    <span class="font-weight-bold">{{article.reply_user_nick}} </span>{{article.reply_content}}<br>
-    <span v-if="!detail" class="moreView">댓글 남기기</span>
+    <div v-if="!detail">
+      <span class="font-weight-bold">{{article.reply_user_nick}} </span>{{article.reply_content}}<br>
+      <span @click="moveDetail" class="moreView">댓글 남기기</span>
+    </div>
   </div>
     <!---->
     <!---->
@@ -192,17 +194,18 @@ export default {
       },
       updateFeed() {
         this.$router.push({ path:'/feed/create/2/'+this.article.fno })
-      }
-    },
-    watch: {
-      article: function(n, o) {
-        console.log(this.article)
-        this.submitDateTime()
+      },
+      moveDetail() {
+        this.$router.push({path: `/feed/detail/${this.article.fno}`})
       }
     },
     created() {
       if (!this.article.dibs_num) {this.scrapNum = 0}
       if (!this.article.like_num) {this.like_num = 0}
+    },
+    mounted() {
+      console.log(this.article)
+      this.submitDateTime()
     }
   }
 </script>
