@@ -6,7 +6,7 @@
         <b-icon-plus-circle class="text-dark"></b-icon-plus-circle>
       </button>
     </b-nav-item>
-    <b-nav-item class="d-flex justify-content-center">
+    <b-nav-item class="d-flex justify-content-center" @click="test"> <!-- 여기에 test 이벤트 바인딩해서 아직 구현되지 않은 기능 테스트 해봤음 -->
       <p class="text-dark mb-0"><strong>TVility</strong></p>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-end">
@@ -19,6 +19,11 @@
 </template>
 
 <script>
+//////////// 테스트용 임포트 //////////////////
+import http from "@/api/http-common.js";
+import header from "@/api/header.js"
+//////////////////////////////////////////////
+
 export default {
   name: 'IndexCuarationHeader',
   methods: {
@@ -26,6 +31,23 @@ export default {
     createFeed() {
       this.$router.push({name: 'CreateFeed'})
     },
+
+    // 테스트용 메서드
+    test() {
+      let data = {
+        is_dibs: 1
+        , num: 1
+      };
+
+      http.post('/episode/dibs/list', data, header())
+        .then(res => {
+            if(res == null) console.log("res == null");
+            else            console.log(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   },
 }
 </script>

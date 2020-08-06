@@ -75,9 +75,11 @@ public class Program {
     }
 
     public void setReply_content(String reply_content) {
-        String[] strs = reply_content.split(":");
-        this.reply_user_nick = strs[0];
-        this.reply_content = strs[1];
+        if(reply_content != null) {
+            String[] strs = reply_content.split(":");
+            this.reply_user_nick = strs[0];
+            this.reply_content = strs[1];
+        }
     }
 
     public String getReply_user_nick() {
@@ -92,7 +94,8 @@ public class Program {
         like_num = res.like_num;
         press_like = res.press_like;
         reply_num = res.reply_num;
-        reply_content = res.reply_content;
+
+        this.setReply_content(res.reply_content);
     }
 
     public String getPname() {

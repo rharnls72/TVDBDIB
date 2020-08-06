@@ -139,9 +139,11 @@ public class Feed {
     }
 
     public void setReply_content(String reply_content) {
-        String[] strs = reply_content.split(":");
-        this.reply_user_nick = strs[0];
-        this.reply_content = strs[1];
+        if(reply_content != null) {
+            String[] strs = reply_content.split(":");
+            this.reply_user_nick = strs[0];
+            this.reply_content = strs[1];
+        }
     }
 
     public int getDibs_num() {

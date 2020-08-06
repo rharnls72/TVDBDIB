@@ -159,7 +159,10 @@ export default {
           // 성공시 수행할 콜백 메서드
           , res => {
             console.log(res);
-            this.$router.push({path:'/feed/feedDetail/'+this.fno})
+            // this.$router.push({path:'/feed/feedDetail/'+this.fno})
+            // 투표랑 article 은 피드 메인으로 보내는데 왜 이건 피드 디테일로 보내?
+            // 피드 목록 줄때 각 피드별로 필요한 정보는 모두 가져와서 피드 비동기 요청은 따로 필요가 없음
+            this.$router.push({path: '/feed/main'})
           }
           // 실패시 수행할 콜백 메서드
           , err => {
