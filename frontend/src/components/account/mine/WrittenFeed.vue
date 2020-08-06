@@ -2,9 +2,6 @@
   <div class="col-12 m-0 p-0">
     <div v-for="feed in feeds" :key="feed.fno" @click="moveDetail(feed.fno)" class="col-12 row m-0 px-0 py-2 align-items-center">
       <!-- {{ feed }} -->
-      <!-- <feedArticleItem v-if="feed.ctype===1" :article="feed" :fno="feed.fno"/>
-      <feedCountdownItem v-if="feed.ctype===2" :article="feed" :fno="feed.fno"/>
-      <feedVoteItem v-if="feed.ctype===3" :article="feed" :fno="feed.fno"/> -->
       <div class="col-6 mythumbnail">
         <!-- <FeedImage /> -->
         <div v-if="feed.ctype===1" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center">
@@ -51,22 +48,13 @@ import { mapState } from "vuex";
 
 // import FeedImage from '../../../components/feed/FeedImage.vue'
 
-// import feedArticleItem from '@/components/feed/feedArticleItem.vue'
-// import feedCountdownItem from '@/components/feed/feedCountdownItem.vue'
-// import feedVoteItem from '@/components/feed/feedVoteItem.vue'
-
 export default {
   name: 'WrittenFeed',
+  props: {
+    feed: Object,
+  },
   // components: {
   //   FeedImage,
-  // },
-  props: {
-    feeds: Array,
-  },
-  // components: { 
-  //   feedArticleItem, 
-  //   feedCountdownItem, 
-  //   feedVoteItem,
   // },
   methods: {
     moveDetail(key) {

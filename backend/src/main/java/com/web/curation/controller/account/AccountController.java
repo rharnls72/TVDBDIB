@@ -29,17 +29,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.security.MessageDigest;
 
-@ApiResponses(
-    value = {
-        @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
+@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
         @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-        @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class)
-    }
-)
+        @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
 // http://localhost:3000
 @CrossOrigin(origins = { "*" })
@@ -62,7 +61,7 @@ public class AccountController {
     @GetMapping("/account/login")
     @ApiOperation(value = "로그인")
     public Object login(@RequestParam(required = true) final String email,
-            @RequestParam(required = true) final String password){
+            @RequestParam(required = true) final String password) {
 
         // 이메일과 비밀번호로 유저 찾아보고 있으면 User 객체 반환
         // 없으면 Null 이 반환
@@ -80,23 +79,32 @@ public class AccountController {
 
         ResponseEntity<BasicResponse> response = null;
 
+        String save_profile_pic = "";
         // 존재하는 유저면 로그인 성공
         if (user != null) {
             final BasicResponse result = new BasicResponse();
-            
-            if(user.isIs_certification()){
+
+            if (user.isIs_certification()) {
                 // 성공했다는 응답 객체 준비하기
                 // 응답 으로 유저 객체와 토큰 둘 다 제공
+
+                // 토큰 주기 전에 profile_pic 부터 좀 어떻게 해줘야함 ㅠ
+                save_profile_pic = user.getProfile_pic();
+                user.setProfile_pic(null);
+
                 HashMap<String, Object> responseData = new HashMap<>();
                 responseData.put("user", user);
                 responseData.put("token", jwtService.makeToken(user));
+
+                // 토큰 만들었으면 profile_pic 리스토어
+                user.setProfile_pic(save_profile_pic);
 
                 result.status = true;
                 result.msg = "success";
                 result.data = responseData;
                 response = new ResponseEntity<>(result, HttpStatus.OK);
                 System.out.println("Login 성공 !");
-            }else{
+            } else {
                 result.status = false;
                 result.msg = "이메일 인증을 완료해주세요.";
                 response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -124,7 +132,7 @@ public class AccountController {
 
         // 먼저 이메일 중복 확인 해보기
         User user = userDao.getUserByEmail(request.getEmail());
-        if(user != null) {
+        if (user != null) {
             final BasicResponse result = new BasicResponse();
             result.status = false;
             result.msg = "이메일 중복";
@@ -133,7 +141,7 @@ public class AccountController {
 
         // 닉네임도 중복 확인 해보기
         user = userDao.getUserByNickName(request.getNick_name());
-        if(user != null) {
+        if (user != null) {
             final BasicResponse result = new BasicResponse();
             result.status = false;
             result.msg = "닉네임 중복";
@@ -154,7 +162,7 @@ public class AccountController {
         final BasicResponse result = new BasicResponse();
 
         // 단 하나의 수정이 일어났다면 가입 된거
-        if(n == 1) {
+        if (n == 1) {
             result.status = true;
             result.msg = "success";
             mailConfig.sendJoinMail(sender, request.getEmail(), request.getNick_name());
@@ -167,17 +175,18 @@ public class AccountController {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
     @PostMapping("/account/sendjoinEmail")
     @ApiOperation(value = "가입메일 재전송하기")
-    public Object sendjoinEmail(@RequestParam(required = true) final String email, 
-                    @RequestParam(required = true) final String nick_name) {
+    public Object sendjoinEmail(@RequestBody SignupRequest request) {
 
         final BasicResponse result = new BasicResponse();
-        mailConfig.sendJoinMail(sender, email, nick_name);
+        mailConfig.sendJoinMail(sender, request.getEmail(), request.getNick_name());
         result.status = true;
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
     @PutMapping("/account/modifypw")
     @ApiOperation(value = "비밀번호 변경")
     public Object modifyPassword(@RequestBody Map<String, Object> req) {
@@ -199,11 +208,11 @@ public class AccountController {
             result.msg = "비밀번호 암호화 실패";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
-        
+
         int n = userDao.checkPassword(user);
 
         // 반환 값이 1이 아니면 오류가 발생한거(비밀번호 불일치)
-        if(n != 1) {
+        if (n != 1) {
             result.status = false;
             result.msg = "비밀번호가 일치하지 않습니다. (" + n + ")";
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -220,7 +229,7 @@ public class AccountController {
         n = userDao.modifyPassword(user);
 
         // 반환 값이 1이 아니면 오류 발생(수정 실패)
-        if(n != 1) {
+        if (n != 1) {
             result.status = false;
             result.msg = "비밀번호 변경 실패. (" + n + ")";
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -250,11 +259,11 @@ public class AccountController {
             result.msg = "비밀번호 암호화 실패";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
-        
+
         int n = userDao.modifyPassword(user);
 
         // 반환 값이 1이 아니면 오류 발생(수정 실패)
-        if(n != 1) {
+        if (n != 1) {
             result.status = false;
             result.msg = "비밀번호 변경 실패. (" + n + ")";
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -265,14 +274,15 @@ public class AccountController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
     @GetMapping("/account/emailconfirm")
     @ApiOperation(value = "이메일 인증")
     public Object emailconfirm(@RequestParam(required = true) final String email) {
         // 결과 반환에 쓰일 객체
         final BasicResponse result = new BasicResponse();
         int n = userDao.emailConfirm(email);
-        
-        if(n != 1) {
+
+        if (n != 1) {
             result.status = false;
             result.msg = "이메일 인증 실패";
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -284,18 +294,19 @@ public class AccountController {
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }
+
     @GetMapping("/account/findemail")
     @ApiOperation(value = "이메일 찾기")
     public Object findEmail(@RequestParam(required = true) final String email) {
         // 결과 반환에 쓰일 객체
         final BasicResponse result = new BasicResponse();
         User user = userDao.getUserByEmail(email);
-        
+
         // 반환 값이 1이 아니면 오류가 발생한거(비밀번호 불일치)
-        if(user == null) {
+        if (user == null) {
             result.status = false;
             return new ResponseEntity<>(result, HttpStatus.OK);
-        }else{
+        } else {
             result.status = true;
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
@@ -307,7 +318,7 @@ public class AccountController {
     public Object findPassword(@RequestParam(required = true) final String email) {
         final BasicResponse result = new BasicResponse();
         User user = userDao.getUserByEmail(email);
-        if(user == null) {
+        if (user == null) {
             result.status = false;
             result.msg = "이메일 찾기 실패";
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -320,9 +331,10 @@ public class AccountController {
     @GetMapping("/account/checkNick")
     @ApiOperation(value = "닉네임 확인")
     public Object checkNick(@RequestParam(required = true) final String nick_name,
-                    @RequestParam(required = true) final String new_nick_name) {
+            @RequestParam(required = true) final String new_nick_name) {
         final BasicResponse result = new BasicResponse();
-        if(new_nick_name.equals("") || (!nick_name.equals(new_nick_name) && userDao.checkNickName(new_nick_name) == 1)) {
+        if (new_nick_name.equals("")
+                || (!nick_name.equals(new_nick_name) && userDao.checkNickName(new_nick_name) == 1)) {
             result.status = false;
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
@@ -335,6 +347,24 @@ public class AccountController {
     public Object modifyProfile(@RequestBody User user) {
         final BasicResponse result = new BasicResponse();
 
+        try {
+            File file = ResourceUtils.getFile("classpath:application.properties");
+            String pre_path = file.getAbsolutePath().split("application.properties")[0];
+            String post_path = "static\\user_profile\\" + user.getUno() + "-pic";
+            String full_path = pre_path + post_path;
+            file = new File(full_path);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(user.getProfile_pic().getBytes());
+            fos.close();
+
+            user.setProfile_pic_without_convert(post_path);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            result.status = false;
+            result.msg = "프로필 사진 저장 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        
         int n = userDao.modifyProfile(user);
         if(n != 1) {
             result.status = false;

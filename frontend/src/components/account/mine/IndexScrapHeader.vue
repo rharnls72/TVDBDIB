@@ -6,7 +6,7 @@
       </button>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-center">
-      <p class="text-dark mb-0"><strong>설정</strong></p>
+      <p class="text-dark mb-0"><strong>스크랩</strong></p>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-end">
       <b-icon-blank></b-icon-blank>
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: 'SettingHeader',
+  name: 'IndexScrapHeader',
   methods: {
     backpage(){
       this.$router.go(-1);

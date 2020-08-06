@@ -8,8 +8,8 @@
         <h1 class="text-center m-0">이미지</h1>
       </div>
       <div class="col-6">
-        <p class="m-0">{{ feed.content.title }}</p>
-        <p class="m-0">{{ feed.content.content }}</p>
+        <p class="m-0">제목</p>
+        <p class="m-0">내용</p>
       </div>
     </div>
   </div>
@@ -21,10 +21,10 @@ import { mapState } from "vuex";
 // import FeedImage from '../../../components/feed/FeedImage.vue'
 
 export default {
-  name: 'TaggedFeed',
-  props: {
-    feed: Object,
-  },
+  name: 'Scrapped',
+  // props: {
+  //   feed: Object,
+  // },
   // components: {
   //   FeedImage,
   // },

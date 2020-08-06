@@ -13,7 +13,6 @@
         {{email}}
       </h1>
       <button
-        class="btn-bottom"
         @click="ReFindPw"
       >메일이 도착하지 않았나요?</button>
       <button
