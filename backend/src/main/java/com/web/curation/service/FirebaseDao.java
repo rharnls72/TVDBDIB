@@ -2,7 +2,6 @@ package com.web.curation.service;
 
 import com.web.curation.dao.alert.AlertDao;
 import com.web.curation.model.alert.Alert;
-import com.web.curation.model.following.FollowRequest;
 
 import org.springframework.stereotype.Service;
 
@@ -15,6 +14,7 @@ import java.util.List;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteResult;
 import com.google.cloud.firestore.DocumentSnapshot;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +75,17 @@ public class FirebaseDao {
         }
         return false;
     }
+    //팔로우 요청삭제
+    public boolean deleteFollowing(String ano){
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            db.collection("follow_request").document(ano).delete();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     //상세
     public Alert getAlertDetail(String ano){
         try {
@@ -123,7 +134,8 @@ public class FirebaseDao {
     public boolean deleteAlert(String ano){
         try {
             Firestore db = FirestoreClient.getFirestore();
-            db.collection("alert").document(ano).delete();
+            ApiFuture<WriteResult> writeResult = db.collection("alert").document(ano).delete();
+            System.out.println("Update time : " + writeResult.get().getUpdateTime());
             return true;
         } catch (Exception e) {
             e.printStackTrace();
