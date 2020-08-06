@@ -10,7 +10,6 @@
         혹시 확인해 보셨나요?
       </h1>
       <button
-        class="btn-bottom"
         @click="tofindPw"
       >응 없어. 다시보내</button>
       <button
