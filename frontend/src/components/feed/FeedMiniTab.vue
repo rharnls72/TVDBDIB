@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-for="feed in feeds" :key="feed.fno" class="d-flex feed-thumnail-list">
+      <!-- 여기가 썸네일 부분 feed-thumbnail 에서 width로 크기 조절 가능 %로 단위 설정해야함 -->
       <div class="feed-thumbnail d-flex flex-column justify-content-between">
         <div v-if="feed.ctype===1" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center">
           <div>{{feed.content.title}}</div>
@@ -15,6 +16,7 @@
           <div></div>
         </div>
       </div>
+      <!-- 여기가 썸네일 설명 부분 content 에서 css 손보기 가능 -->
       <div class="content d-flex justify-content-center align-items-center">
         <div v-if="feed.ctype===1">
           <div>Article</div>
@@ -38,7 +40,7 @@ import FeedApi from "@/api/FeedApi.js"
 import GetUserApi from "@/api/GetUserApi.js"
 
 export default {
-  name: 'FeedArticleMiniTab.vue',
+  name: 'FeedMiniTab.vue',
   data() {
     return {
       feeds: null,
@@ -82,7 +84,7 @@ export default {
 <style>
 .feed-thumbnail-list {
   width: 100%;
-  border-bottom: solid black;
+  border-bottom: 1px solid black;
 }
 .feed-thumbnail {
   width: 25%;

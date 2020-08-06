@@ -25,7 +25,7 @@ import EpisodeDetail from './components/curation/episode/EpisodeDetail.vue'
 import MyPage from './views/account/mine/MyPage.vue'
 import EditMyPage from './views/account/mine/EditMyPage.vue'
 
-import FeedArticleMiniTab from './components/feed/FeedArticleMiniTab.vue'
+import FeedMiniTab from './components/feed/FeedMiniTab.vue'
 
 import Setting from './views/account/mine/Setting.vue'
 
@@ -168,7 +168,7 @@ export default [
     },
     {
         path: '/feed/miniTap',
-        name: 'FeedArticleMiniTab',
-        component: FeedArticleMiniTab
+        name: 'FeedMiniTab',
+        component: FeedMiniTab
     }
 ]
