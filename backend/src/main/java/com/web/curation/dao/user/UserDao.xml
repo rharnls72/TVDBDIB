@@ -58,6 +58,22 @@
         )
     </insert>
 
+    <insert id="addNewUserWithSocial">
+        insert into
+            user(
+                email
+                , nick_name
+                , is_certification
+                , password
+            )
+        values(
+            #{email}
+            , #{nick_name}
+            , true
+            , 0
+        )
+    </insert>
+
     <update id="modifyPassword">
         update user
         set password = #{password}

@@ -35,6 +35,9 @@ import OtherPage from './views/account/your/OtherPage.vue'
 import ViewFollowings from './views/account/ViewFollowings.vue'
 import ViewFollowers from './views/account/ViewFollowers.vue'
 import AlertTest from './views/alert/AlertTest.vue'
+
+import KakaoLogin from './views/user/KakaoLogin.vue';
+
 export default [
 
     {
@@ -182,4 +185,9 @@ export default [
         name: 'IndexScrap',
         component: IndexScrap
     },
+    {
+        path: '/oauth/kakao',
+        name: 'KakaoLogin',
+        component: KakaoLogin
+    }
 ]
