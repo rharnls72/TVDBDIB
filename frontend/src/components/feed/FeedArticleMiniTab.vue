@@ -1,8 +1,33 @@
 <template>
   <div>
-    <div v-for="feed in feeds" :key="feed.fno" class="feed-thumbnail">
-      <div class="feed-thumbnail-item d-flex justify-content-center align-items-center text-center">
-        <span v-for="(tag, idx) in feed.tag" :key="idx">#{{tag}}</span>
+    <div v-for="feed in feeds" :key="feed.fno" class="d-flex feed-thumnail-list">
+      <div class="feed-thumbnail d-flex flex-column justify-content-between">
+        <div v-if="feed.ctype===1" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center">
+          <div>{{feed.content.title}}</div>
+          <div v-for="(tag, idx) in feed.tag" :key="idx">#{{tag}}</div>
+        </div>
+        <div v-if="feed.ctype===2" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center">
+          <div>{{feed.content.content.title}}</div>
+          <div>{{feed.content.content.date}}</div>
+          <div>{{feed.content.content.time}}</div>
+        </div>
+        <div v-if="feed.ctype===3" class="feed-thumbnail-item d-flex justify-content-center align-items-center text-center">
+          <div></div>
+        </div>
+      </div>
+      <div class="content d-flex justify-content-center align-items-center">
+        <div v-if="feed.ctype===1">
+          <div>Article</div>
+          <div>{{feed.content.title}}</div>
+        </div>
+        <div v-if="feed.ctype===2">
+          <div>Countdown</div>
+          <div>{{feed.content.content.title}}</div>
+        </div>
+        <div v-if="feed.ctype===3">
+          <div>Vote</div>
+          <div>{{feed.content.content.title}}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -55,10 +80,13 @@ export default {
 </script>
 
 <style>
+.feed-thumbnail-list {
+  width: 100%;
+  border-bottom: solid black;
+}
 .feed-thumbnail {
   width: 25%;
-  margin-left: 5%;
-  margin-top: 5%;
+  margin: 5%;
   position:relative;
 }
 .feed-thumbnail:after {
@@ -68,9 +96,17 @@ export default {
   padding-bottom:100%;
 }
 .feed-thumbnail-item {
-  font-size: 0.1rem;
+  font-size: 0.75rem;
   position:absolute;
   width:100%;
   height:100%;
+};
+.content {
+  margin-top: 5%;
+  margin-left: 5%;
+  font-size: 1rem;
+  width: 100%;
+  /* position:absolute;
+  right: 0; */
 }
 </style>
