@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -93,7 +94,7 @@ public class AlertController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PutMapping("/alert/read/{ano}")
+    @GetMapping("/alert/read/{ano}")
     @ApiOperation(value = "알림 읽음 처리")
     public Object setReadAlert(@PathVariable String ano) {
         // 반환할 응답 객체

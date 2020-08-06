@@ -2,6 +2,8 @@ package com.web.curation.service;
 
 import com.web.curation.dao.alert.AlertDao;
 import com.web.curation.model.alert.Alert;
+import com.web.curation.model.following.FollowRequest;
+
 import org.springframework.stereotype.Service;
 
 import com.google.cloud.firestore.Firestore;
@@ -41,13 +43,30 @@ public class FirebaseDao {
                 result = dao.getWriterUno("episode_reply", "erno", alert.getCno());
             }
             alert.setUno(result);
-            System.out.println(alert.getSubject_no());
             Alert newAlert = dao.getInfoByUser(alert.getSubject_no());
-            // if(newAlert.getPicture()!=null)
-                // alert.setPicture(newAlert.getPicture());
+            if(newAlert.getPicture()!=null)
+                alert.setPicture(newAlert.getPicture());
             alert.setSubject_name(newAlert.getSubject_name());
-            System.out.println("성공");
+
             DocumentReference addedDocRef = db.collection("alert").document();
+            alert.setAno(addedDocRef.getId());
+            addedDocRef.set(alert);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    //팔로우 요청 추가
+    public boolean addFollowing(Alert alert){
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            Alert newAlert = dao.getInfoByUser(alert.getSubject_no());
+            if(newAlert.getPicture()!=null)
+                alert.setPicture(newAlert.getPicture());
+            alert.setSubject_name(newAlert.getSubject_name());
+            
+            DocumentReference addedDocRef = db.collection("follow_request").document();
             alert.setAno(addedDocRef.getId());
             addedDocRef.set(alert);
             return true;
