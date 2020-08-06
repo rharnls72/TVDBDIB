@@ -131,11 +131,6 @@ export default [
         component: AlertTest
     },
     {
-        path: '/feed/feedItem',
-        name: 'FeedItem',
-        component: FeedItem
-    },
-    {
         path: '/feed/detail/:fno',
         name: 'FeedDetail',
         component: feedDetail
