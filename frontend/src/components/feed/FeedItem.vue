@@ -2,125 +2,184 @@
   <div class="feed-item">
     <div class="top">
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
-      <div class="user-info">
+      <div class="user-info mb-2">
         <div class="user-name">
-          <button>SSAFY</button>
+          <button>{{article.nick_name}}</button>
         </div>
-        <p class="date">9시간 후</p>
+        <p class="date">{{createAfter}} 시간 전</p>
       </div>
-      <div class="content">
-        <p>이 글은 아주 좋습니다.</p>
-      </div>
-    </div>
-    <div class="feed-card">
-      <div class="d-flex justify-content-center align-items-center">
-        <p class="p-4">
-          아무것도 하기 싫다...
-          더더욱 아무것도 하기 싫다.ㅎㅎㅎ
-        </p>
-      </div>
-      <div class="contentsWrap">
-        <h4 class="title">사용자경험(UX)을 이해하는 팀원이 되기 위하여 - 사용자에게 '기본적인' UX를 선사하기 위해 우리 모두 알아야할 사실들</h4>
-        <div class="wrap">
-          <div class="url">
-            <a href="https://brunch.co.kr/@@63JW/25">https://brunch.co.kr/@@63JW/25</a>
-          </div>
-          <p class="date">2020.06.18</p>
+      <div class="content d-flex flex-comlumn justify-content-between align-items-center my-2">
+        <div>{{article.content.title}}</div>
+        <div v-if="!!this.$store.state.userInfo && this.$store.state.userInfo.uno === article.uno">
+          <span @click="updateFeed">수정</span>   <span @click="delFeed">삭제</span>
         </div>
       </div>
     </div>
+    <FeedArticleThumbnail v-if="article.ctype === 1" :article="article"/>
+    <FeedCountdownThumbnail v-if="article.ctype === 2" :article="article"/>
+    <FeedVoteThumbnail v-if="article.ctype === 3" :article="article"/>
     <!---->
-    <div class="btn-group wrap">
-      <div class="like likeScrap">
-        <svg
-          class="svg-inline--fa fa-heart fa-w-16 icon full"
-          aria-hidden="true"
-          data-prefix="fas"
-          data-icon="heart"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-          data-fa-i2svg
-        >
-          <path
-            fill="currentColor"
-            d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"
-          />
-        </svg>
-        <!-- <i class="fas fa-heart icon full"></i> -->
-        <svg
-          class="svg-inline--fa fa-heart fa-w-16 icon empty"
-          aria-hidden="true"
-          data-prefix="far"
-          data-icon="heart"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-          data-fa-i2svg
-        >
-          <path
-            fill="currentColor"
-            d="M458.4 64.3C400.6 15.7 311.3 23 256 79.3 200.7 23 111.4 15.6 53.6 64.3-21.6 127.6-10.6 230.8 43 285.5l175.4 178.7c10 10.2 23.4 15.9 37.6 15.9 14.3 0 27.6-5.6 37.6-15.8L469 285.6c53.5-54.7 64.7-157.9-10.6-221.3zm-23.6 187.5L259.4 430.5c-2.4 2.4-4.4 2.4-6.8 0L77.2 251.8c-36.5-37.2-43.9-107.6 7.3-150.7 38.9-32.7 98.9-27.8 136.5 10.5l35 35.7 35-35.7c37.8-38.5 97.8-43.2 136.5-10.6 51.1 43.1 43.5 113.9 7.3 150.8z"
-          />
-        </svg>
-        <!-- <i class="far fa-heart icon empty"></i> -->
-        0
+    <div class="btn-group wrap justify-content-between" style="margin: 15px 0 0 0;">
+      <div>
+        <!-- 좋아요 -->
+        <div class="mr-3">
+          <button class="h6 mr-1" @click="touchLikeIcon">
+            <b-icon-heart v-if="!article.press_like"></b-icon-heart>
+            <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
+          </button>
+          {{article.like_num}}
+        </div>
+        <!-- 댓글 -->
+        <div class="mr-3">
+          <button class="h6 mr-1">
+            <b-icon-chat></b-icon-chat>
+          </button>
+          {{article.reply_num}}
+        </div>
+        <!-- 스크랩 -->
+        <div class="mr-3">
+          <button class="h6 mr-1" @click="touchScrapIcon">
+            <b-icon-bookmark v-if="!article.press_dibs"></b-icon-bookmark>
+            <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
+          </button>
+          {{article.dibs_num}} 
+          <!-- 스크랩 카운트 -->
+        </div>
+        <!---->
       </div>
-      <div class="comment">
-        <svg
-          class="svg-inline--fa fa-comment-alt fa-w-16 icon"
-          aria-hidden="true"
-          data-prefix="far"
-          data-icon="comment-alt"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-          data-fa-i2svg
-        >
-          <path
-            fill="currentColor"
-            d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm16 352c0 8.8-7.2 16-16 16H288l-12.8 9.6L208 428v-60H64c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h384c8.8 0 16 7.2 16 16v288z"
-          />
-        </svg>
-        <!-- <i class="far fa-comment-alt icon"></i> -->
-        0
-      </div>
-      <!---->
-      <div class="share">
-        <svg
-          class="svg-inline--fa fa-share-alt fa-w-14 icon"
-          aria-hidden="true"
-          data-prefix="fas"
-          data-icon="share-alt"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512"
-          data-fa-i2svg
-        >
-          <path
-            fill="currentColor"
-            d="M352 320c-22.608 0-43.387 7.819-59.79 20.895l-102.486-64.054a96.551 96.551 0 0 0 0-41.683l102.486-64.054C308.613 184.181 329.392 192 352 192c53.019 0 96-42.981 96-96S405.019 0 352 0s-96 42.981-96 96c0 7.158.79 14.13 2.276 20.841L155.79 180.895C139.387 167.819 118.608 160 96 160c-53.019 0-96 42.981-96 96s42.981 96 96 96c22.608 0 43.387-7.819 59.79-20.895l102.486 64.054A96.301 96.301 0 0 0 256 416c0 53.019 42.981 96 96 96s96-42.981 96-96-42.981-96-96-96z"
-          />
-        </svg>
+      <div class="mr-1">
+        <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
+        <div>
+          <button class="h5">
+            <b-icon-reply></b-icon-reply>
+          </button>
+        </div>
       </div>
     </div>
-    <!---->
-    <!---->
+    <div>
+      <span class="font-weight-bold">좋아요 {{article.like_num}}명</span>
+    </div>
+    <div class="wrap mt-2">
+      <div v-if="article.ctype===1"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.content}}<br></div>
+      <div v-if="article.ctype===2"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.content.title}}<br></div>
+      <div v-if="article.ctype===3"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.title}}<br></div>
+    </div>
+    <div class="wrap mt-2">
+      <span v-for="tag in article.tag" :key="tag" class="tag">#{{tag}} </span><br>
+      <span v-if="!!article.reply_num && !detail" class="moreView">댓글 {{article.reply_num}}개</span><br>
+    </div>
+    <div v-if="!detail">
+      <span class="font-weight-bold">{{article.reply_user_nick}} </span>{{article.reply_content}}<br>
+      <span @click="moveDetail" class="moreView">댓글 남기기</span>
+    </div>
   </div>
 </template>
 
 <script>
 import defaultImage from "../../assets/images/img-placeholder.png";
 import defaultProfile from "../../assets/images/profile_default.png";
+
+import FeedApi from "@/api/FeedApi.js"
+
+import FeedArticleThumbnail from "@/components/feed/feedThumbnail/FeedArticleThumbnail.vue"
+import FeedCountdownThumbnail from "@/components/feed/feedThumbnail/FeedCountdownThumbnail.vue"
+import FeedVoteThumbnail from "@/components/feed/feedThumbnail/FeedVoteThumbnail.vue"
+
 export default {
+  name: 'FeedItem',
   data: () => {
-    return { defaultImage, defaultProfile };
+    return { 
+      defaultImage, defaultProfile,
+      isLong: true,
+    };
   },
+  components: {
+    FeedArticleThumbnail,
+    FeedCountdownThumbnail,
+    FeedVoteThumbnail
+  },
+  computed: {
+    createAfter() {
+      const today = new Date()
+      return parseInt((today-new Date(this.article.create_date)) / (1000*60*60))
+    }
+  },
+  props:{
+    article: Object,
+    fno: Number,
+    detail: Boolean,
+  },
+  methods: {
+    touchLikeIcon() {
+      this.article.press_like = !this.article.press_like
+      if (this.article.press_like) {
+        this.article.like_num ++
+        FeedApi.createFeedLike(
+          { tno: this.article.fno }
+          , res => console.log(res)
+          , err => console.log(err))
+      }
+      else {
+        this.article.like_num --
+        FeedApi.deleteFeedLike(
+          { tno: this.article.fno }
+          , res => console.log(res)
+          , err => console.log(err))
+      }
+    },
+    touchScrapIcon() {
+      this.article.press_dibs = !this.article.press_dibs
+      if (this.article.press_dibs) {
+        this.article.dibs_num ++
+        FeedApi.createDibs(
+          {tno: this.article.fno}
+          , res => console.log(res)
+          , err => console.log(err)
+        );
+      }
+      else {
+        this.article.dibs_num --
+        FeedApi.deleteDibs(
+          this.article.fno
+          , res => console.log(res)
+          , err => console.log(err)
+        );
+      }
+    },
+    delFeed() {
+      FeedApi.deleteFeed(
+          this.article.fno,
+          res=> {
+            console.log(res)
+            this.$emit('deleteItem', this.article.fno)
+          },
+          err=> console.log(err)
+        )
+    },
+    updateFeed() {
+      this.$router.push({ path:`/feed/create/${this.article.ctype}/${this.article.fno}` })
+    },
+    moveDetail() {
+      this.$router.push({path: `/feed/detail/${this.article.fno}`})
+    }
+  },
+  created() {
+    if (!this.article.dibs_num) {this.article.dibs_num = 0}
+    if (!this.article.like_num) {this.article.like_num = 0}
+  }
 };
 </script>
 
 <style scoped>
-/* .content {
- border-bottom: 1px solid gray;
-} */
+.moreView {
+  color: darkgray; 
+}
+.tag {
+  color:deepskyblue;
+}
+.mythumbnail {
+  background-color: beige;
+  width: 100v;
+  height: 55v;
+}
 </style>
