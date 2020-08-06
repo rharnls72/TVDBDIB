@@ -178,6 +178,94 @@
         </choose>
     </select>
 
+    <select id="getFeedDetail" resultType="Feed">
+        SELECT
+            f.fno               AS `fno`
+            , f.uno             AS `uno`
+            , f.pno             AS `pno`
+            , f.eno             AS `eno`
+            , f.create_date     AS `create_date`
+            , f.content         AS `content`
+            , f.ctype           AS `ctype`
+            , f.thumbnail       AS `thumbnail`
+            , f.tag             AS `tag`
+            , u.nick_name       AS `nick_name`
+            , u.profile_pic     AS `profile_pic`
+            <!-- Number of reply -->
+            , (
+                SELECT
+                    COUNT(fr.frno)
+                FROM
+                    `feed_reply` fr
+                WHERE
+                    fr.fno = f.fno
+            )   AS `reply_num`
+            <!-- Nick name and content of first reply -->
+            , (
+                SELECT
+                    CONCAT(`writer_nick_name`, ':', `content`)
+                FROM
+                    `feed_reply_view` frv
+                WHERE
+                    frv.parent_reply IS NULL
+                    AND
+                    frv.fno = f.fno
+                ORDER BY frv.like_num DESC
+                LIMIT 1
+            ) AS `reply_content`
+            <!-- Number of like -->
+            , (
+                SELECT
+                    COUNT(fl.lno)
+                FROM
+                    `feed_like` fl
+                WHERE
+                    fl.fno = f.fno
+            )   AS `like_num`
+            <!-- Is press a like button on this feed? -->
+            , IF((
+                SELECT
+                    COUNT(fl.lno)
+                FROM
+                    `feed_like` fl
+                WHERE
+                    fl.fno = f.fno
+                    AND
+                    fl.uno = #{uno}
+            ) > 0, true, false)   AS `press_like`
+            <!-- Number of dibs -->
+            , (
+                SELECT
+                    COUNT(fd.dno)
+                FROM
+                    `feed_dibs` fd
+                WHERE
+                    fd.fno = f.fno
+            ) AS `dibs_num`
+            <!-- Is press a dibs button on this feed? -->
+            , IF((
+                SELECT
+                    COUNT(fd.dno)
+                FROM
+                    `feed_dibs` fd
+                WHERE
+                    fd.fno = f.fno
+                    AND
+                    fd.uno = #{uno}
+            ) > 0, true, false) AS `press_dibs`
+        FROM
+            (
+                SELECT
+                    *
+                FROM
+                    `feed`
+                WHERE
+                    `fno` = #{num}
+            ) f
+                JOIN
+            `user` u ON f.uno = u.uno
+    </select>
+
     <select id="getFeedCount" resultType="int">
         select
             count(`fno`)
