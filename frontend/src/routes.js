@@ -173,6 +173,11 @@ export default [
         component: Setting
     },
     {
+        path: '/feed/miniTap',
+        name: 'FeedMiniTab',
+        component: FeedMiniTab
+    },
+    {
         path: '/scrap',
         name: 'IndexScrap',
         component: IndexScrap

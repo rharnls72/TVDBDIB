@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 m-0 p-0">
-    <div @click="moveDetail(feed.fno)" class="col-12 row m-0 px-0 py-2 align-items-center">
+    <div v-for="feed in feeds" :key="feed.fno" @click="moveDetail(feed.fno)" class="col-12 row m-0 px-0 py-2 align-items-center">
       <!-- {{ feed }} -->
       <div class="col-6 mythumbnail">
         <!-- <FeedImage /> -->
