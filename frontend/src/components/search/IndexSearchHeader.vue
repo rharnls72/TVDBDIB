@@ -1,156 +1,50 @@
 <template>
   <div>
-    <b-nav justified class="myheader">
-      <b-input-group @click="searchIcon" class="align-items-center m-2 mysearchbar">
-        <div class="input-group-prepend">
-          <div class="input-group-text py-0" style="border: 0px; background-color: #eee;">
-            <b-icon-search></b-icon-search>
-          </div>
-        </div>
-        
-        <!-- <b-form-input
-          type="search"
-          placeholder="검색"
-          ref="searchInput"
-          v-model="word"
-          class="p-0"
-          style="height: auto; border: 0px; background-color: #eee;">
-        </b-form-input> -->
-       
-       <!-- 이 컴포넌트 쓰면 목록 내에서 AutoComplete 가 되는데
-            css 를 어떻게 줘야하지
-            https://github.com/alexurquhart/vue-bootstrap-typeahead
-         -->
-        <vue-bootstrap-typeahead
-          :data="users"
-          v-model="word"
-          size="sm"
-          textVariant="red"
-          :serializer="u => u.nick_name"
-          :minMatchingChars='1'
-          placeholder="Type a nick_name..."
-          @hit="selectedUser = $event"
-          ref="searchInput"
-          style="height: auto; width: 80%; border: 0px; background-color: #eee;"
-        />
-      </b-input-group>
-    </b-nav>
+    <!-- b-tabs에 v-model: tabState를 주면 0부터로 동작 -->
     <b-tabs class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
-      <b-tab title="인기" title-link-class="text-secondary" active></b-tab>
-      <b-tab title="계정" title-link-class="text-secondary"></b-tab>
-      <b-tab title="큐레이션" title-link-class="text-secondary"></b-tab>
-      <b-tab title="피드" title-link-class="text-secondary"></b-tab>
+      <b-tab @click="changeState(1)" title="인기" title-link-class="text-secondary" active></b-tab>
+      <b-tab @click="changeState(2)" title="계정" title-link-class="text-secondary"></b-tab>
+      <b-tab @click="changeState(3)" title="큐레이션" title-link-class="text-secondary"></b-tab>
+      <b-tab @click="changeState(4)" title="피드" title-link-class="text-secondary"></b-tab>
     </b-tabs>
+
+    <!-- 선택한 탭번호에 따라 하위 컴포넌트 출력 -->
+    <UserSearch v-if="tabState == 2" />
+    <ProgramSearch v-if="tabState == 3" />
+    <FeedSearch v-if="tabState == 4" />
+
   </div>
 </template>
 
 <script>
-import SearchApi from '@/api/SearchApi.js';
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
+import UserSearch from '@/components/search/UserSearch.vue';
+import ProgramSearch from '@/components/search/ProgramSearch.vue';
+import FeedSearch from '@/components/search/FeedSearch.vue';
 
 export default {
   name: 'IndexSearchHeader',
   data() {
     return {
-      tabState: 3,
-      word: "",
-      users: [],
-      search_history: [],
-
-      selectedUser: {}
-    }
-  },
-  created() {
-    // 모든 유저 정보를 받아와도 크기가 많이 안클거같은데
-    // 아니면 이거 안쓰고 아래 watch 에 주석 지워서 
-    // 매 글자 입력마다 목록 새로 가져와도 되고
-    SearchApi.getAllUser(
-      'NoData'
-      , res => {
-        this.users = res.data.data;
-        console.log(this.users);
-      }
-      , err => {
-        console.log(err);
-      }
-    );
-
-    // 유저 히스토리 가져오기
-    SearchApi.getHistoryList(
-      "noData"
-      , res => {
-        this.search_history = res.data.data;
-        console.log(this.search_history);
-      }
-      , err => {
-        console.log(err);
-      }
-    );
-  },
-  watch: {
-    word(newWord) {
-      // this.getUserList(newWord);
-    },
-    selectedUser(newUser) {
-      console.log(newUser);
-      let data = {
-        search_uno : newUser.uno
-      };
-      SearchApi.addHistory(
-        data
-        , res => {
-          console.log("Add History Success!!");
-        }
-        , err => {
-          console.log(err);
-        }
-      );
-      this.$router.push("/profile/" + newUser.nick_name);
+      tabState: 1
     }
   },
   methods: {
-    searchIcon(){
-      // this.$refs.searchInput.focus();
-    },
-    // 탭을 클릭하면 해당 탭을 활성화
     changeState(tabNumber) {
       this.tabState = tabNumber
+      console.log(this.tabState);
     },
-    moveTab(name) {
-      this.$router.push({name: name})
-    },
-    getUserList(newWord) {
-      SearchApi.getUserList(
-        newWord,
-        res => {
-          console.log(res.data.data);
-          this.users = res.data.data;
-        },
-        err => {
-          console.log(err);
-        }
-      );
-    }
   },
   components: {
-    VueBootstrapTypeahead
+    UserSearch,
+    ProgramSearch,
+    FeedSearch
   }
 }
 </script>
 
-<style>
-  .myheader {
-    background-color: #eee;
-    position: fixed;
-    width: 100%;
-    height: 50px;
-    z-index: 1;
-  }
-  .mysearchbar {
-    border: 1px solid lightgray;
-    border-radius: 0.25rem;
-  }
+<style scoped>
   .mytabs {
-    padding-top: 50px;
+    padding-top: 10px;
+    width: 100%;
   }
 </style>

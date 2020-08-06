@@ -18,6 +18,8 @@ DROP TABLE IF EXISTS `alert`;
 DROP TABLE IF EXISTS `episode_dibs`;
 DROP TABLE IF EXISTS `feed_dibs`;
 
+DROP TABLE IF EXISTS `tag`;
+
 DROP TABLE IF EXISTS `feed`;
 DROP TABLE IF EXISTS `episode`;
 DROP TABLE IF EXISTS `program`;
@@ -108,6 +110,12 @@ CREATE TABLE `feed` (
     FOREIGN KEY (`eno`)
         REFERENCES `episode` (`eno`)
         ON DELETE CASCADE
+);
+
+CREATE TABLE `tag`(
+    `tno` INT AUTO_INCREMENT,
+    `name` VARCHAR(50), 
+    PRIMARY KEY (`tno`)
 );
 
 CREATE TABLE `episode_dibs` (
