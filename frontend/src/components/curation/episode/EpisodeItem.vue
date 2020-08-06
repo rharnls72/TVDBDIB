@@ -85,7 +85,7 @@
       <p><span style="text-decoration: bold;">{{curation.reply_user_nick}} </span> <span>{{curation.reply_content}}</span></p>
       <p><span v-if="!!curation.reply_num" class="more">댓글 {{curation.reply_num}} 개</span></p>
       <!-- 추후에 댓글 연결!~ -->
-      <p><span v-if="!detail" class="more">댓글 남기기</span></p>
+      <p><span v-if="!detail" class="more" @click="moveDetail">댓글 남기기</span></p>
     </div>
     <!-- <div class="content">
       <p>댓글이야 댓글 댓글!~</p>
@@ -166,7 +166,10 @@ export default {
       }
       // console.log(this.scrapIcon)
     },
-    addReplyCount() {this.curation.reply_num++}
+    addReplyCount() {this.curation.reply_num++},
+    moveDetail() {
+      this.$router.push({path:`/episode/detail/${this.curation.pno}/${this.curation.season}/${this.curation.episode}`})
+    }
   },
   mounted() {
     this.likeIcon = this.curation.press_like;

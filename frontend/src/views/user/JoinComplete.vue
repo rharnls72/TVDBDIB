@@ -23,7 +23,8 @@
         </div>
         <div class="wrap">
           <p>이메일이 발송되지 않았나요?</p>
-          <router-link to="#" @click="onJoinEmail" class="btn--text">인증 메일 재발송</router-link>
+          <a href="javascript:void(0);" @click="onJoinEmail" class="btn--text">인증 메일 재발송</a>
+          <!-- <router-link to="#" @click="onJoinEmail" class="btn--text">인증 메일 재발송</router-link> -->
         </div>
       </div>
 
@@ -51,24 +52,30 @@ export default {
         this.$router.push("/");
     },
     onJoinEmail() {
-      if (this.isSubmit) {
-        let { nick_name, email} = this;
+      let { nick_name, email} = this;
         let data = {
           nick_name,
           email
         };
-
         UserApi.requestJoinEmail(
           data,
           res => {
-            // 재전송 완료
+            this.makeToast("인증메일이 재전송 되었습니다.", "primary");
           },
           error => {
-            this.$router.push({name:'Errors', query: {message: error.msg}})
+            this.makeToast(error.msg, "danger");
           }
         );
-      }
-    }
+    },
+    makeToast(message, variant){
+        this.$bvToast.toast(message, {
+          title: '알림',
+          toaster: "b-toaster-bottom-right",
+          variant: variant,
+          autoHideDelay: 3000,
+          appendToast: false
+        })
+     }
   },
 };
 </script>

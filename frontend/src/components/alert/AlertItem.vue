@@ -40,7 +40,6 @@ import defaultProfile from "@/assets/images/profile_default.png";
 import http from '@/api/http-common.js';
 import header from "@/api/header.js"
 //import commentcss from "@/components/css/feed/comment-list.scss";
-
 export default {
   name: 'AlertItem',
   data: () => {
@@ -75,29 +74,26 @@ export default {
     },
     // 팔로우 거절
     followRequestDelete(alert){
-      this.sendDelete(alert);
-      this.makeToast("팔로우 신청을 거절했습니다.", "warning");
-     },
-    // 팔로우 수락
-     followAccept(alert){
-       console.log(alert.subject_no);
-       console.log(this.$store.state.userInfo.uno);
-        http.post('/following/user/add', {
+      http.post('/following/user/cancel', {
             follower: alert.subject_no,
             following: this.$store.state.userInfo.uno
         }, header())
         .then(res => {
           this.sendDelete(alert);
-          this.makeToast("팔로우 신청을 승인했습니다.", "primary");
+          this.makeToast("팔로우 신청을 거절했습니다.", "warning");
         })
         .catch(err => this.makeToast(err, "danger"))
      },
+    // 팔로우 수락
+     followAccept(alert){
+       this.sendDelete(alert);
+        this.makeToast("팔로우 신청을 승인했습니다.", "primary");
+     },
 
      sendDelete(alert){
-          http.delete('/followrequest/delete/' + alert.cno, header())
+       console.log(alert.ano);
+          http.delete('/alert/deletefollow/' + alert.ano, header())
           .then(res => {
-              let delete_index = this.$props.alerts.findIndex(x => x.ano == alert.ano);
-              this.$props.alerts.splice(delete_index, 1);
           })
           .catch(err => this.makeToast(err, "danger"))
      },
