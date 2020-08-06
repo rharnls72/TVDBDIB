@@ -208,6 +208,9 @@ public class AccountController {
         int n = userDao.addNewUserWithSocial(user);
         final BasicResponse result = new BasicResponse();
 
+        // Why errer bb
+        System.out.println(user);
+
         // 단 하나의 수정이 일어났다면 가입 된거
         if (n == 1) {
             result.status = true;
