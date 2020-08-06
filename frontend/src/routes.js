@@ -32,7 +32,7 @@ import OtherPage from './views/account/your/OtherPage.vue'
 
 import ViewFollowings from './views/account/ViewFollowings.vue'
 import ViewFollowers from './views/account/ViewFollowers.vue'
-
+import AlertTest from './views/alert/AlertTest.vue'
 export default [
 
     {
@@ -121,9 +121,19 @@ export default [
         component: CreateFeed
     },
     {
-        path: '/alert/test',
+        path: '/alert/main',
         name: 'Alert',
         component: Alert
+    },
+    {
+        path: '/alert/test',
+        name: 'AlertTest',
+        component: AlertTest
+    },
+    {
+        path: '/feed/feedItem',
+        name: 'FeedItem',
+        component: FeedItem
     },
     {
         path: '/feed/detail/:fno',
