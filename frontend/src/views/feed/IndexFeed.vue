@@ -1,7 +1,7 @@
 <template>
-  <div class="feed newsfeed">
+  <div class="feed newsfeed" style="margin-bottom: 100px;">
     <IndexCurationHeader />
-    <div class="wrapB">
+    <div class="wrapB mb-4">
       <div class="myfeed" v-for="d in feeds" :key="d.fno">
         <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
         <feedCountdownItem v-if="d.ctype===2" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
@@ -90,5 +90,6 @@ export default {
 <style scoped>
   .myfeed {
     padding-top: 70px;
+    margin-bottom: 10px;
   }
 </style>

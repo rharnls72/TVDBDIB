@@ -20,8 +20,7 @@
 
 <script>
 //////////// 테스트용 임포트 //////////////////
-import http from "@/api/http-common.js";
-import header from "@/api/header.js"
+import Api from "@/api/FeedApi.js";
 //////////////////////////////////////////////
 
 export default {
@@ -39,14 +38,11 @@ export default {
         , num: 1
       };
 
-      http.post('/episode/dibs/list', data, header())
-        .then(res => {
-            if(res == null) console.log("res == null");
-            else            console.log(res.data);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      Api.feedDetail(
+        3
+        , res => console.log(res)
+        , err => console.log(err)
+      )
     }
   },
 }
