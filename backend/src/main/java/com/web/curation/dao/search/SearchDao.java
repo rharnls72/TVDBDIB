@@ -1,8 +1,10 @@
 package com.web.curation.dao.search;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.web.curation.model.feed.Feed;
+import com.web.curation.model.feed.Tag;
 import com.web.curation.model.search.SearchRequest;
 import com.web.curation.model.user.User;
 
@@ -19,5 +21,6 @@ public interface SearchDao {
    int deleteHistory(SearchRequest req);
    int deleteAllHistory(int uno);
    
-   List<Feed> searchByFeedTag(String str);
+   List<Tag> searchTagList();
+   List<Feed> searchByFeedTag(HashMap<String, Object> map);
 }
