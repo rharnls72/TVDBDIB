@@ -34,8 +34,8 @@ export default {
         my_nick_name : this.$store.state.userInfo.nick_name,
         other_nick_name: this.$route.params.nick_name
       };
-      if(data.my_nick_name == data.other_nick_name)
-        this.$router.push({name: 'MyPage'});
+      // if(data.my_nick_name == data.other_nick_name)
+        // this.$router.push({name: 'MyPage'});
     AccountApi.requestProfile(
       data,
       res => {

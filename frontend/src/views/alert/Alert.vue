@@ -104,7 +104,6 @@ export default {
           temp.push(doc.data());
         });
         this.follow_requests = temp;
-        console.log(temp);
         if(this.tabIndex == 1)
           this.alerts = this.follow_requests;
     },
