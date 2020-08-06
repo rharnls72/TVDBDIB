@@ -1,6 +1,7 @@
 <template>
   <div id="app" class="columns">
     <AlertHeader />
+    <h1>알림</h1>
     <div>
       <!-- tabIndex라는 값을 v-model 이용해서 제어해서 탭 이동을 구현. 하위 b-tab에서 class만 바꾸는 걸로는 안 됐다 -->
     <b-tabs v-model="tabIndex" class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
@@ -64,11 +65,11 @@ export default {
     let uno = this.$store.state.userInfo.uno;
 
     // 알림 가져오기.
-    db.collection("alert").where("uno", "==", uno)//.orderBy("time", "desc")
+    db.collection("alert").where("uno", "==", uno).orderBy("time", "desc")
       .onSnapshot(this.getAlerts);
 
       // 팔로우 요청 가져오기.
-      db.collection("follow_request").where("uno", "==", uno)//.orderBy("time", "desc")
+      db.collection("follow_request").where("uno", "==", uno).orderBy("time", "desc")
       .onSnapshot(this.getFollowings);
 
   },
