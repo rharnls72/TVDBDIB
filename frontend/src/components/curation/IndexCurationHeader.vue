@@ -12,7 +12,7 @@
     <b-nav-item class="d-flex justify-content-end">
       <!-- 메시지 -->
       <button>
-        <b-icon-chat-dots class="text-dark"></b-icon-chat-dots>
+        <b-icon-chat-dots class="text-dark" @click="message"></b-icon-chat-dots>
       </button>
     </b-nav-item>
   </b-nav>
@@ -47,6 +47,9 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    message(){
+      this.$router.push({name: 'MessageList'});
     }
   },
 }

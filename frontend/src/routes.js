@@ -33,6 +33,7 @@ import OtherPage from './views/account/your/OtherPage.vue'
 import ViewFollowings from './views/account/ViewFollowings.vue'
 import ViewFollowers from './views/account/ViewFollowers.vue'
 import AlertTest from './views/alert/AlertTest.vue'
+import MessageList from './views/message/MessageList.vue'
 export default [
 
     {
@@ -174,5 +175,10 @@ export default [
         path: '/scrap',
         name: 'IndexScrap',
         component: IndexScrap
+    },
+    {
+        path: '/message/main',
+        name: 'MessageList',
+        component: MessageList
     },
 ]
