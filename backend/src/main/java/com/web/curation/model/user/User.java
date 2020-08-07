@@ -96,12 +96,11 @@ public class User {
 
         // 파일 경로로 된 profile_pic 이 들어왔다면
         // 이미지 데이터로 바꿔주기
-        if(profile_pic != null && profile_pic.charAt(6) == '\\') {
+        if(profile_pic != null && profile_pic.charAt(0) == '/') {
             try {
-                File file = ResourceUtils.getFile("classpath:application.properties");
-                String pre_path = file.getAbsolutePath().split("application.properties")[0];
+                String pre_path = "/tvility";
                 String full_path = pre_path + profile_pic;
-                file = new File(full_path);
+                File file = new File(full_path);
 
                 FileInputStream fis = new FileInputStream(file);
                 byte[] bytes = fis.readAllBytes();

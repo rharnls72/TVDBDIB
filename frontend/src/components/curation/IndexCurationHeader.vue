@@ -12,7 +12,7 @@
     <b-nav-item class="d-flex justify-content-end">
       <!-- 메시지 -->
       <button>
-        <b-icon-chat-dots class="text-dark"></b-icon-chat-dots>
+        <b-icon-chat-dots class="text-dark" @click="message"></b-icon-chat-dots>
       </button>
     </b-nav-item>
   </b-nav>
@@ -22,7 +22,8 @@
 //////////// 테스트용 임포트 //////////////////
 import Api from "@/api/FeedApi.js";
 //////////////////////////////////////////////
-
+import http from "@/api/http-common.js";
+import header from "@/api/header.js"
 export default {
   name: 'IndexCuarationHeader',
   methods: {
@@ -38,11 +39,17 @@ export default {
         , num: 1
       };
 
-      Api.feedDetail(
-        3
-        , res => console.log(res)
-        , err => console.log(err)
-      )
+      http.post('/episode/dibs/list', data, header())
+        .then(res => {
+            if(res == null) console.log("res == null");
+            else            console.log(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    message(){
+      this.$router.push({name: 'MessageList'});
     }
   },
 }
