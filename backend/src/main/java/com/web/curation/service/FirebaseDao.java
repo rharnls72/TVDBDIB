@@ -2,7 +2,6 @@ package com.web.curation.service;
 
 import com.web.curation.dao.alert.AlertDao;
 import com.web.curation.model.alert.Alert;
-import com.web.curation.model.following.FollowRequest;
 
 import org.springframework.stereotype.Service;
 

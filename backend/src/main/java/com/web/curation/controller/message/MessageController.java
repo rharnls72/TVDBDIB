@@ -13,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
 
+import com.web.curation.dao.message.MessageDao;
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.message.ChatRoom;
+import com.web.curation.model.user.User;
 import com.web.curation.service.FirebaseDao;
+import com.web.curation.service.MessageService;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -37,26 +39,44 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin(origins = { "*" })
 @RestController
 public class MessageController {
-    
+    @Autowired
+    MessageDao messageDao;
+    @Autowired
+    MessageService messageService;
 
     @PostMapping("/message/userinfo")
     @ApiOperation(value = "유저 정보 가져오기")
-    public Object setReadAllAlert(@RequestBody List<ChatRoom> roomlist) {
+    public Object getUserInfo(@RequestBody List<Integer> unolist) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
+        List<User> userlist = null;
+        if(unolist.size()>0){
+            userlist =  messageDao.getUserInfo(unolist);
+            if(userlist.size()==0) {
+                result.status = false;
+                result.msg = "유저 목록 조회 실패";
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        }
 
-        System.out.println();
+        result.status = true;
+        result.data = userlist;
+        result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @DeleteMapping("/message/delete/chatroom/{cno}")
+    @ApiOperation(value = "채팅룸 제거")
+    public Object deleteChatroom(@PathVariable("cno") String cno) {
+        final BasicResponse result = new BasicResponse();
 
-        // if(!firebase.setReadAllAlert(uno)) {
-        //     result.status = false;
-        //     result.msg = "알림 읽음 처리 실패";
-        //     return new ResponseEntity<>(result, HttpStatus.OK);
-        // }
+        if(!messageService.deleteChatroom(cno)) {
+            result.status = false;
+            result.msg = "채팅룸 삭제 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
-        // 알림 읽음 처리 완료
         result.status = true;
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 }
