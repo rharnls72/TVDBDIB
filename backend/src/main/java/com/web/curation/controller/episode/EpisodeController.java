@@ -32,7 +32,6 @@ import com.web.curation.model.user.User;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @ApiResponses(

@@ -25,6 +25,8 @@ import EpisodeDetail from './components/curation/episode/EpisodeDetail.vue'
 import MyPage from './views/account/mine/MyPage.vue'
 import EditMyPage from './views/account/mine/EditMyPage.vue'
 
+import FeedMiniTab from './components/feed/FeedMiniTab.vue'
+
 import Setting from './views/account/mine/Setting.vue'
 import IndexScrap from './views/account/mine/IndexScrap.vue'
 
@@ -33,7 +35,13 @@ import OtherPage from './views/account/your/OtherPage.vue'
 import ViewFollowings from './views/account/ViewFollowings.vue'
 import ViewFollowers from './views/account/ViewFollowers.vue'
 import AlertTest from './views/alert/AlertTest.vue'
+
 import MessageList from './views/message/MessageList.vue'
+
+
+import KakaoLogin from './views/user/KakaoLogin.vue';
+
+
 export default [
 
     {
@@ -172,13 +180,24 @@ export default [
         component: Setting
     },
     {
+        path: '/feed/miniTap',
+        name: 'FeedMiniTab',
+        component: FeedMiniTab
+    },
+    {
         path: '/scrap',
         name: 'IndexScrap',
         component: IndexScrap
     },
     {
+
         path: '/message/main',
         name: 'MessageList',
         component: MessageList
     },
+    {
+        path: '/oauth/kakao',
+        name: 'KakaoLogin',
+        component: KakaoLogin
+    }
 ]

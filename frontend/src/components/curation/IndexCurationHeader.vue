@@ -20,8 +20,7 @@
 
 <script>
 //////////// 테스트용 임포트 //////////////////
-import http from "@/api/http-common.js";
-import header from "@/api/header.js"
+import Api from "@/api/FeedApi.js";
 //////////////////////////////////////////////
 
 export default {
