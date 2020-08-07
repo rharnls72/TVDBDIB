@@ -24,4 +24,4 @@ sudo docker run --name $BACK_DOCKER --network="host" -v tvility:/tvility -d $BAC
 cd ../frontend
 pwd
 sudo docker build -t $FRONT_IMG .
-sudo docker run --name $FRONT_DOCKER -p 80:8100 -d $FRONT_IMG
+sudo docker run --name $FRONT_DOCKER -p 80:80 -d $FRONT_IMG

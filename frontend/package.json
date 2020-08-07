@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --host 0.0.0.0 --disableHostCheck true",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --host 0.0.0.0 --disableHostCheck true",
     "lint": "vue-cli-service lint",
     "test": "jest",
     "test:unit": "jest --no-cache"
