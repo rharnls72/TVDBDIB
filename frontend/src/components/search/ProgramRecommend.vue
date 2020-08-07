@@ -1,7 +1,7 @@
 <template>
 <div>
     <h4>취향 저격 프로그램</h4>
-    <ResultItems :programs="trending_programs"/>
+    <ResultItems :programs="tasty_programs"/>
     <h4>요즘 뜨는 프로그램</h4>
     <ResultItems :programs="trending_programs"/>
     <h4>새로 나온 프로그램</h4>
@@ -21,6 +21,7 @@ export default {
 
   data() {
     return {
+      tasty_programs: [],
       trending_programs: [],
       new_programs: []
     }
@@ -32,6 +33,18 @@ export default {
   
   methods: {
     getProgramList() {
+
+        RecommendApi.getTastyProgram(
+          "noData"
+          , res => {
+            this.tasty_programs = res.data.data;
+            console.log(this.tasty_programs);   
+          }
+          , err => {
+            console.log(err);
+          }
+        );
+
         RecommendApi.getTrendingProgram(
           "noData"
           , res => {

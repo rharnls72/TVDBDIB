@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -36,7 +35,7 @@ public class PearsonCFTest {
 
         List<Program> programList = new ArrayList<Program>();
 
-        for (int page=1; page<=5; page++){
+        for (int page=1; page<=50; page++){
 
             ResponseEntity<String> re = 
             restTemplate.getForEntity(BASE_URL + "trending/tv/day?page=" + page + "&api_key=" + API_KEY, String.class);
@@ -62,21 +61,20 @@ public class PearsonCFTest {
 
         os.write("userId, programId, rating\n");
 
-        for (int i=1; i<=100; i++){
+        for (int i=1; i<=1000; i++){
             for (int j=0; j<programList.size(); j++){
                 int isSkip = r.nextInt(3);
-                if (isSkip >= 1) continue;
+                if (isSkip >= 2) continue;
 
-                String line = i + "," + programList.get(j).getPno() + "," + r.nextInt(4) + ".0f";
+                String line = i + "," + programList.get(j).getPno() + "," + (r.nextInt(4) + 1) + ".0";
                 os.write(line + "\n");
             }
         }
 
         os.close();
-        
 
         long login_user_id = 5;
-        int user_size = 100;
+        int user_size = 1000;
 
         // joinery로 데이터 읽기.
         DataFrame df = DataFrame.readCsv(new FileInputStream("testData.csv"));
@@ -143,11 +141,11 @@ public class PearsonCFTest {
             }
         });
          
-        for(Integer key : keySetList) {
+        /*for(Integer key : keySetList) {
             System.out.println(String.format("Key : %s, Value : %s", key, cor_list.get(key)));
-        }
+        }*/
 
-        int nearest_N = 5;
+        int nearest_N = 10;
         ArrayList<Double> means = new ArrayList<Double>();
         double mymean = getMean(main_row);
 
@@ -158,6 +156,7 @@ public class PearsonCFTest {
         }
 
         Object[] program_ids = df_pivoted.columns().toArray();
+        ArrayList<Long> recommend = new ArrayList<Long>();
 
         // 비슷한 유저 N명의 평점정보를 기반으로 내가 아직 안본 프로그램에 대한 평점 예측
         for (int i=1; i<colsize; i++){
@@ -177,8 +176,14 @@ public class PearsonCFTest {
                 k = 1/k;
                 double rating = mymean + (k * sigma);
                 System.out.println("프로그램 " + program_ids[i] + "에 대한 내 평점 예측: " + rating);
+                if (rating >= mymean){
+                    recommend.add((Long)program_ids[i]);
+                }
             }
         }
+
+        System.out.println("추천 결과: ");
+        System.out.println(recommend);
 
     }
 
