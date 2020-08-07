@@ -150,9 +150,17 @@
     		<artifactId>jaxb-runtime</artifactId>
     		<version>2.3.2</version>
 		</dependency>
+
+		<!-- firestore -->
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>6.15.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
+		<finalName>TvilityBack</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

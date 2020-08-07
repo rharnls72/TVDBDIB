@@ -75,6 +75,13 @@
             uno = #{value}
     </select>
 
+    <select id="getWriterUno" resultType="int">
+        select uno
+        from ${ctype}
+        where 
+            ${col} = #{cno}
+    </select>
+
     <select id="getInfoByFeedLike" resultType="Alert">
         select user.profile_pic as picture, user.nick_name as subject_name, feed.fno as subject_no
         from user, feed

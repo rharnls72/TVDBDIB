@@ -99,7 +99,6 @@ const requestFindNick = (data,callback,errorCallback) => {
 
 }
 const requestModifyProfile = (data,callback,errorCallback) => {
-    console.log(data);
     http.put('/account/modifyprofile', data, header())
         .then(res => {
             if(res == null) {

@@ -9,16 +9,15 @@
           <!-- 이미지 바인딩 어떻게...? 잘 안된다 -->
             <img class="my-auto col-3 col-sm-3" src="@/assets/images/profile_default.png" @click="movePage(alert)">
             <span class="alert-content my-auto col-6 col-sm-6">
-              <p v-if='alert.atype == 1'>{{alert.subject_name}}님이 팔로우 요청을 보냈습니다.</p>
-              <p v-if='alert.atype == 2'>{{alert.subject_name}}님이 내 글에 좋아요를 표시했습니다.</p>
-              <p v-if='alert.atype == 3'>{{alert.subject_name}}님이 내 글에 댓글을 달았습니다.</p>
-              <p v-if='alert.atype == 4'>{{alert.subject_name}}님이 글에서 나를 언급했습니다.</p>
-              <p v-if='alert.atype == 5'>{{alert.subject_name}}님의 팔로우 요청</p>
+              <p v-if='alert.atype == 1'>{{alert.subject_name}}님이 내 <span v-if='alert.ctype != 1'>댓</span>글에 좋아요를 표시했습니다.</p>
+              <p v-if='alert.atype == 2'>{{alert.subject_name}}님이 내 <span v-if='alert.ctype != 1'>댓</span>글에 댓글을 달았습니다.</p>
+              <p v-if='alert.atype == 3'>{{alert.subject_name}}님의 <span v-if='alert.ctype != 1'>댓</span>글에서 나를 언급했습니다.</p>
+              <p v-if='alert.atype == 4'>{{alert.subject_name}}님의 팔로우 요청</p>
             </span>
             <span class="float-right my-auto col-3 col-sm-3 removeBtn" type="button">
-                <b-icon-box-arrow-in-up-right  @click="movePage(alert)" font-scale="1.5" class="float-right" v-if="alert.atype < 5"></b-icon-box-arrow-in-up-right>
-                <button @click="followRequestDelete(alert)" class="col-6 col-sm-6 btn btn-danger btn-sm" v-if="alert.atype == 5">거절</button>
-                <button @click="followAccept(alert)" class="float-right col-6 col-sm-6 btn btn-primary btn-sm" v-if="alert.atype == 5">승인</button>
+                <b-icon-box-arrow-in-up-right  @click="movePage(alert)" font-scale="1.5" class="float-right" v-if="alert.atype < 4"></b-icon-box-arrow-in-up-right>
+                <button @click="followRequestDelete(alert)" class="col-6 col-sm-6 btn btn-danger btn-sm" v-if="alert.atype == 4">거절</button>
+                <button @click="followAccept(alert)" class="float-right col-6 col-sm-6 btn btn-primary btn-sm" v-if="alert.atype == 4">승인</button>
             </span>
         </div>
 <!--
@@ -64,7 +63,7 @@ export default {
     // 클릭한 알림의 상태를 '읽음' 으로 바꾼다
     checkAlert(alert){
       if (alert.read == 0){
-        http.put('/alert/read/' + alert.ano, header())
+        http.get('/alert/read/' + alert.ano, header())
           .then(res => {
             // 페이지 리로드하지 않고 누른 아이템의 상태만 바꾸자.
               let delete_index = this.$props.alerts.findIndex(x => x.ano == alert.ano);
@@ -74,12 +73,12 @@ export default {
           .catch(err => this.makeToast(err, "danger"))
       }
     },
-    // 팔로우 거절 = follow_request에서만 삭제.
+    // 팔로우 거절
     followRequestDelete(alert){
       this.sendDelete(alert);
       this.makeToast("팔로우 신청을 거절했습니다.", "warning");
      },
-    // 팔로우 수락 = user_follow 테이블에 팔로우 데이터 추가, follow_request에서는 삭제.
+    // 팔로우 수락
      followAccept(alert){
        console.log(alert.subject_no);
        console.log(this.$store.state.userInfo.uno);

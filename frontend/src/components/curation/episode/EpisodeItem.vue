@@ -28,25 +28,25 @@
         <!-- 좋아요 -->
         <div class="mr-3">
           <button class="h6 mr-1" @click="touchLikeIcon">
-            <b-icon-heart v-if="!likeIcon"></b-icon-heart>
+            <b-icon-heart v-if="!curation.press_like"></b-icon-heart>
             <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
           </button>
-          {{ likeCount }}
+          {{ curation.like_num }}
         </div>
         <!-- 댓글 -->
         <div class="mr-3">
           <button class="h6 mr-1">
             <b-icon-chat></b-icon-chat>
           </button>
-          0
+          {{curation.reply_num}}
         </div>
         <!-- 스크랩 -->
         <div class="mr-3">
           <button class="h6 mr-1" @click="touchScrapIcon">
-            <b-icon-bookmark v-if="!scrapIcon"></b-icon-bookmark>
+            <b-icon-bookmark v-if="!curation.press_dibs"></b-icon-bookmark>
             <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
-          {{ scrapCount }}
+          {{ curation.dibs_num }}
         </div>
         <!---->
       </div>
@@ -81,8 +81,12 @@
         <p>{{ curation.summary }}</p>
       </div>
     </div>
-    <!-- 추후에 댓글 연결!~ -->
-    <ReplyItem />
+    <div v-if="!detail" class="content">
+      <p><span style="text-decoration: bold;">{{curation.reply_user_nick}} </span> <span>{{curation.reply_content}}</span></p>
+      <p><span v-if="!!curation.reply_num" class="more">댓글 {{curation.reply_num}} 개</span></p>
+      <!-- 추후에 댓글 연결!~ -->
+      <p><span v-if="!detail" class="more" @click="moveDetail">댓글 남기기</span></p>
+    </div>
     <!-- <div class="content">
       <p>댓글이야 댓글 댓글!~</p>
       <p class="more">댓글 1개</p>
@@ -95,7 +99,7 @@
 <script>
 import defaultImage from "../../../assets/images/img-placeholder.png";
 import defaultProfile from "../../../assets/images/profile_default.png";
-import ReplyItem from '../../ReplyItem.vue'
+import CurationApi from '@/api/CurationApi.js'
 
 export default {
   name: 'EpisodeItem',
@@ -104,43 +108,75 @@ export default {
       defaultImage,
       defaultProfile,
       isStretch: false,
-      likeIcon: false,
-      scrapIcon: false,
-      likeCount: 0,
-      scrapCount: 0,
     };
   },
   props: {
     curation: Object,
-    id: Number,
+    detail: Boolean,
   },
   components: {
-    ReplyItem,
   },
   methods: {
     readMore() {
       this.isStretch = !this.isStretch
     },
     touchLikeIcon() {
-      this.likeIcon = !this.likeIcon
-      if (this.likeIcon) {
-        this.likeCount ++
+      this.curation.press_like = !this.curation.press_like
+      if (this.curation.press_like) {
+        this.curation.like_num ++
+        CurationApi.createEpisodeLike(
+          {
+            tno: this.curation.eno,
+          }
+          , res => console.log(res)
+          , err => console.log(err)
+        )
       }
       else {
-        this.likeCount --
+        this.curation.like_num --
+        CurationApi.deleteEpisodeLike(
+          {
+            tno: this.curation.eno,
+          }
+          , res => console.log(res)
+          , err => console.log(err)
+        )
       }
       // console.log(this.likeIcon)
     },
     touchScrapIcon() {
-      this.scrapIcon = !this.scrapIcon
-      if (this.scrapIcon) {
-        this.scrapCount ++
+      this.curation.press_dibs = !this.curation.press_dibs
+      if (this.curation.press_dibs) {
+        this.curation.dibs_num ++;
+
+        CurationApi.createEpisodeDibs(
+          {tno: this.curation.eno}
+          , res => console.log(res)
+          , err => console.log(err)
+        );
       }
       else {
-        this.scrapCount --
+        this.curation.dibs_num --;
+
+        CurationApi.deleteEpisodeDibs(
+          this.curation.eno
+          , res => console.log(res)
+          , err => console.log(err)
+        );
       }
       // console.log(this.scrapIcon)
     },
+    addReplyCount() {this.curation.reply_num++},
+    moveDetail() {
+      this.$router.push({path:`/episode/detail/${this.curation.pno}/${this.curation.season}/${this.curation.episode}`})
+    }
+  },
+  mounted() {
+    this.likeIcon = this.curation.press_like;
+    this.scrapIcon = this.curation.press_dibs;
+    if (!this.curation.dibs_num) {this.curation.dibs_num = 0}
+    if (!this.curation.like_num) {this.curation.like_num = 0}
+    if (this.curation.summery<=30) {this.isStretch=true}
   },
 };
 </script>

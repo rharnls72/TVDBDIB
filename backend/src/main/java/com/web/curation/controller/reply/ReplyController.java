@@ -1,5 +1,6 @@
 package com.web.curation.controller.reply;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,9 +10,11 @@ import com.web.curation.dao.reply.FeedReplyDao;
 import com.web.curation.dao.reply.ProgramReplyDao;
 import com.web.curation.dao.reply.ReplyDao;
 import com.web.curation.model.BasicResponse;
+import com.web.curation.model.alert.Alert;
 import com.web.curation.model.reply.Reply;
 import com.web.curation.model.reply.ReplyRequest;
 import com.web.curation.model.user.User;
+import com.web.curation.service.FirebaseDao;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -44,7 +47,8 @@ public class ReplyController {
     private FeedReplyDao    feedReplyDao;
     @Autowired
     private ProgramReplyDao programReplyDao;
-
+    @Autowired
+    private FirebaseDao alertService;
     ////////////////////////////////////////////////////////////////////
     ///////////////////////////// Create ///////////////////////////////
     ////////////////////////////////////////////////////////////////////
@@ -80,18 +84,61 @@ public class ReplyController {
     @PostMapping("/reply/program/create")
     @ApiOperation(value = "프로그램 댓글 추가")
     public Object createProgramReply(@RequestBody Reply reply, HttpServletRequest httpReq) {
+        if(reply.getParent_reply() != 0){
+            Alert alert = new Alert();
+            alert.setSubject_no(((User) httpReq.getAttribute("User")).getUno());
+            // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
+            alert.setAtype(2);
+            // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+            alert.setCtype(3);
+            alert.setCno(reply.getParent_reply());
+            alert.setRead(false);
+            alert.setTime(LocalDateTime.now());
+            alertService.addAlert(alert);
+        }
         return createReply(reply, httpReq, programReplyDao, (param_reply, dao) -> dao.createReply(param_reply));
     }
 
     @PostMapping("/reply/episode/create")
     @ApiOperation(value = "에피소드 댓글 추가")
     public Object createEpisodeReply(@RequestBody Reply reply, HttpServletRequest httpReq) {
+        if(reply.getParent_reply() != 0){
+            Alert alert = new Alert();
+            alert.setSubject_no(((User) httpReq.getAttribute("User")).getUno());
+            // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
+            alert.setAtype(2);
+            // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+            alert.setCtype(4);
+            alert.setCno(reply.getParent_reply());
+            alert.setRead(false);
+            alert.setTime(LocalDateTime.now());
+            alertService.addAlert(alert);
+        }
+        
         return createReply(reply, httpReq, episodeReplyDao, (param_reply, dao) -> dao.createReply(param_reply));
     }
 
     @PostMapping("/reply/feed/create")
     @ApiOperation(value = "피드 댓글 추가")
     public Object createFeedReply(@RequestBody Reply reply, HttpServletRequest httpReq) {
+        Alert alert = new Alert();
+        alert.setSubject_no(((User) httpReq.getAttribute("User")).getUno());
+        if(reply.getParent_reply() != 0){
+            // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
+            alert.setAtype(2);
+            // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+            alert.setCtype(2);
+            alert.setCno(reply.getParent_reply());
+        }else{
+            // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
+            alert.setAtype(2);
+            // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+            alert.setCtype(1);
+            alert.setCno(reply.getNo());
+        }
+        alert.setRead(false);
+        alert.setTime(LocalDateTime.now());
+        alertService.addAlert(alert);
         return createReply(reply, httpReq, feedReplyDao, (param_reply, dao) -> dao.createReply(param_reply));
     }
 
