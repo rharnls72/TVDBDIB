@@ -36,7 +36,11 @@ import ViewFollowings from './views/account/ViewFollowings.vue'
 import ViewFollowers from './views/account/ViewFollowers.vue'
 import AlertTest from './views/alert/AlertTest.vue'
 
+import MessageList from './views/message/MessageList.vue'
+
+
 import KakaoLogin from './views/user/KakaoLogin.vue';
+
 
 export default [
 
@@ -184,6 +188,12 @@ export default [
         path: '/scrap',
         name: 'IndexScrap',
         component: IndexScrap
+    },
+    {
+
+        path: '/message/main',
+        name: 'MessageList',
+        component: MessageList
     },
     {
         path: '/oauth/kakao',
