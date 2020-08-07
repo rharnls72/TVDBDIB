@@ -246,10 +246,12 @@ export default {
 
 <style scoped>
   .myuser {
-    margin-bottom: 50px;
+    background-color: #f8e8f2;
   }
   .myfeed {
     padding-top: 70px;
+    padding-bottom: 50px;
+    background-color: white;
   }
   .myfeedcard {
     width: 100%;
@@ -273,6 +275,7 @@ export default {
   }
   .mylogo {
     height: 100%;
+    width: 33px
   }
   .mylink {
     font-weight: 600;
