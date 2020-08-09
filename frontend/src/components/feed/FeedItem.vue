@@ -49,6 +49,11 @@
         <!---->
       </div>
       <div class="mr-1" v-if="article.ctype !== 4">
+        <div class="mr-2">
+          <button class="h5">
+            <b-icon-pencil @click="createShare"></b-icon-pencil>
+          </button>
+        </div>
         <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
         <div>
           <button class="h5">
@@ -114,6 +119,9 @@ export default {
     detail: Boolean,
   },
   methods: {
+    createShare() {
+      this.$router.push({path: `/createShare/0/${this.article.fno}`})
+    },
     touchLikeIcon() {
       this.article.press_like = !this.article.press_like
       if (this.article.press_like) {
