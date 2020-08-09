@@ -1,200 +1,120 @@
 <template>
-  <div class="user join wrapC" id="article">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <b-icon @click="moveMain" icon="chevron-left" font-scale="1.5"></b-icon>
-      <b-icon @click="submitShare" icon="check-square" font-scale="1.4"></b-icon>
-    </div>
-    <div class="wrapB container">
-      <b-list-group style="border-radius: 20px;">
-        
-        <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
-        <b-list-group-item><b-form-input type="text" class="m-0 rounded-pill" v-model="content" placeholder="내용 입력!!!"></b-form-input></b-list-group-item>
-        
-        <b-list-group-item><b-form-tags
-              input-id="tags-remove-on-delete"
-              :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
-              v-model="value"
-              separator=" "
-              placeholder="태그 입력!!"
-              remove-on-delete
-              no-add-on-enter
-              class="mb-2"
-              style="outline:none !important"
-            ></b-form-tags></b-list-group-item>
+  <div>
+    <!-- 헤더 -->
+    <CreateHeader @submit="submitShare"/>
 
-      </b-list-group>
+    <div class="px-5">
+      
+      <!-- 공유글 작성 -->
+      <ShareForm @CreateArticle="makeSubmitData"/>
+
+      <!-- 공유될 글 표기 -->
+      <div class="feed-item mt-3">
+        <FeedArticleThumbnail v-if="article.ctype === 1" :article="article"/>
+        <FeedCountdownThumbnail v-if="article.ctype === 2" :article="article"/>
+        <FeedVoteThumbnail v-if="article.ctype === 3" :article="article"/>
+      </div>
+
     </div>
+
   </div>
 </template>
 
 <script>
-import FeedApi from '../../api/FeedApi.js'
+import FeedApi from '@/api/FeedApi.js'
+import Curation from '@/api/CurationApi.js'
+
+import CreateHeader from '@/components/feed/feedComponents/CreateHeader.vue'
+import ShareForm from '@/components/feed/feedComponents/ShareForm.vue'
+import FeedArticleThumbnail from '@/components/feed/feedThumbnail/FeedArticleThumbnail.vue'
+import FeedCountdownThumbnail from '@/components/feed/feedThumbnail/FeedCountdownThumbnail.vue'
+import FeedVoteThumbnail from '@/components/feed/feedThumbnail/FeedVoteThumbnail.vue'
+
 import GetUserApi from "@/api/GetUserApi.js"
 
 export default {
   name: 'CreateShare',
   data() {
     return {
-      title: null,
-      content: null,
-      value: [],
+      article: null,
+      submitData: null,
     }
   },
-  props: {
-    article: Object,
-    fno: Number,
-    shareFno: Number,
+  components: {
+    CreateHeader,
+    ShareForm,
+    FeedArticleThumbnail,
+    FeedCountdownThumbnail,
+    FeedVoteThumbnail,
   },
   methods: {
     moveMain() {
       console.log(1)
       this.$router.push('/feed/main')
     },
-    makeData() {
-      var jsonObj = {
-        title: this.title,
-        content: this.content,
-        fno: this.fno,
-      }
-      return JSON.stringify(jsonObj)
+    
+    makeSubmitData(res) {
+      res.content.article = this.article
+      res.content = JSON.stringify(res.content)
+      this.submitData = res
     },
+
     submitShare() {
-      let sendData = this.makeData();
-
-      // createFeed 요청에 줄 데이터 목록
-      // uno 는 토큰을 통해 사용하기위해 제거
-      let Data = {
-        ctype: 4,
-        content: sendData,
-        tag: JSON.stringify(this.value)
-      };
-
+      
       // Axios 요청
-      if (this.fno === null) {
-        FeedApi.createFeed(
-          // 요청에 쓸 데이터 전달
-          Data
-          // 성공시 수행할 콜백 메서드
-          , res => {
-            console.log('createFeed Success: ' + res);
-            this.$router.push({path: '/feed/main'})
-          }
-          // 실패시 수행할 콜백 메서드
-          , err => {
-            console.log('createFeed Error: ' + err);
-          } 
-        )
-      } else {
-        Data.fno = this.fno
-
-        FeedApi.updateFeed(
-          Data,
-          res=> {
-            console.log(res)
-            this.$router.push({path:'/feed/main'})
-          },
-          err=> console.log(err)
-          )
-      }
-    }
-  },
-  mounted() {
-    console.log(this.fno)
-    if (this.article !== null) {
-      console.log(this.article.content)
-      const data = this.article
-      console.log(data)
-      this.title = data.content.title
-      this.content = data.content.content
-      this.value = this.article.tag
-      console.log(this.title, this.content, this.value)
-    } else {
-      this.title = null
-      this.content = null
-      this.value = []
-    }
+      FeedApi.createFeed(
+        // 요청에 쓸 데이터 전달
+        this.submitData
+        // 성공시 수행할 콜백 메서드
+        , res => {
+          console.log('createFeed Success: ' + res);
+          this.$router.push({path: '/feed/main'})
+        }
+        // 실패시 수행할 콜백 메서드
+        , err => {
+          console.log('createFeed Error: ' + err);
+        } 
+      )
+    },
+      
   },
   created() {
+    
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });
+
+    if (this.$route.params.type === "0") {
+      FeedApi.feedDetail(
+        this.$route.params.no
+        , res => {
+          this.article = res.feed
+          this.article.content = JSON.parse(this.article.content)
+          this.article.tag = JSON.parse(this.article.tag)
+          console.log(this.article)
+        }
+        , err => console.log(err)
+      )
+    } else {
+      Curation.requestEpisodeDetail({
+        pno: this.$route.params.pno,
+        season: this.$route.params.season,
+        eno: this.$route.params.no,
+      }
+      , res => {
+        console.log(res)
+        this.article = res.data
+      }
+      , err => console.log(err)
+      )
+    }
   }
 }
 </script>
 
 <style scoped>
-
-input[id=article-title]::placeholder {
-  color: white;
+.feed-item {
+  border-bottom: none;
+  border-top: none;
 }
-
-input[type=text], select, textarea{
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  resize: vertical;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-button {
-  background-color: #4CAF50;
-  width: 100%;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  float: right;
-}
-
-.disable-button {
-  background-color: gray;
-  text-align: center;
-  width: 100%;
-  color: black;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  float: right;
-}
-
-/* .container {
-  border-radius: 5px;
-  background-color: #f2f2f2;
-  padding: 20px;
-} */
-
-.col-25 {
-  float: left;
-  width: 25%;
-  margin-top: 6px;
-}
-
-.col-75 {
-  float: left;
-  width: 75%;
-  margin-top: 6px;
-}
-
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-span {
-  margin: 1px;
-}
-
-@media screen and (max-width: 600px) {
-  .col-25, .col-75, input[type=submit] {
-    width: 100%;
-    margin-top: 0;
-  }
-}
-
 </style>
