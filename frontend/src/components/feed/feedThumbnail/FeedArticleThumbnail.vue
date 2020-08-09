@@ -27,7 +27,7 @@ export default {
 <style scoped>
 .mythumbnail {
   background-color: beige;
-  width: 100v;
-  height: 55v;
+  width: 100%;
+  height: 55%;
 }
 </style>

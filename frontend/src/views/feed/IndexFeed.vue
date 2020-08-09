@@ -2,11 +2,11 @@
   <div class="feed newsfeed" style="margin-bottom: 100px;">
     <IndexCurationHeader />
     <div class="wrapB mb-4">
-      <div class="myfeed" v-for="d in feeds" :key="d.fno">
+      <div class="myfeed" v-for="feed in feeds" :key="feed.fno">
         <!-- <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
         <feedCountdownItem v-if="d.ctype===2" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
         <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/> -->
-        <FeedItem :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
+        <FeedItem :article="feed" :fno="feed.fno" @deleteItem="removeFeed"/>
       </div>
     </div>
     <Footer/>

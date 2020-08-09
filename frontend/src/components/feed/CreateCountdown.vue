@@ -130,8 +130,8 @@ export default {
     },
     makeData() {
       var jsonObj = {
+        title: this.title,
         content: {
-          title: this.title,
           date: this.date,
           time: this.Time,
         }
