@@ -34,6 +34,9 @@ export default {
       tag: null,
     }
   },
+  props: {
+    article: Object,
+  },
   methods: {
     addTag(event) {
       event.preventDefault()
@@ -63,6 +66,12 @@ export default {
   },
   updated() {
     this.$emit('CreateArticle', this.makeData)
+  },
+  mounted() {
+    if (this.article !== null) {
+      this.content = this.article.content.content
+      this.tags = this.article.tag
+    }
   }
 }
 </script>

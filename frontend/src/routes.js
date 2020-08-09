@@ -124,6 +124,11 @@ export default [
         component: CreateFeed
     },
     {
+        path: '/feed/edit/:fno',
+        name: 'EditFeedShare',
+        component: CreateShare
+    },
+    {
         path: '/alert/main',
         name: 'Alert',
         component: Alert

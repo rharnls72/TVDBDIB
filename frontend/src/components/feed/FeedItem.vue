@@ -169,7 +169,11 @@ export default {
         )
     },
     updateFeed() {
-      this.$router.push({ path:`/feed/create/${this.article.ctype}/${this.article.fno}` })
+      if (this.article.ctype < 4) {
+        this.$router.push({ path:`/feed/create/${this.article.ctype}/${this.article.fno}` })
+      } else if (this.article.ctype === 4) {
+        this.$router.push({ path:`/feed/edit/${this.article.fno}`})
+      }
     },
     moveDetail() {
       this.$router.push({path: `/feed/detail/${this.article.fno}`})
