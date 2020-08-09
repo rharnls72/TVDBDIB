@@ -18,6 +18,7 @@
     <FeedArticleThumbnail v-if="article.ctype === 1" :article="article"/>
     <FeedCountdownThumbnail v-if="article.ctype === 2" :article="article"/>
     <FeedVoteThumbnail v-if="article.ctype === 3" :article="article"/>
+    <FeedShareThumbnail v-if="article.ctype === 4" :article="article"/>
     <!---->
     <div class="btn-group wrap justify-content-between" style="margin: 15px 0 0 0;">
       <div>
@@ -47,7 +48,7 @@
         </div>
         <!---->
       </div>
-      <div class="mr-1">
+      <div class="mr-1" v-if="article.ctype !== 4">
         <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
         <div>
           <button class="h5">
@@ -61,8 +62,9 @@
     </div>
     <div class="wrap mt-2">
       <div v-if="article.ctype===1"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.content}}<br></div>
-      <div v-if="article.ctype===2"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.content.title}}<br></div>
+      <div v-if="article.ctype===2"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.title}}<br></div>
       <div v-if="article.ctype===3"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.title}}<br></div>
+      <div v-if="article.ctype===4"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.content}}<br></div>
     </div>
     <div class="wrap mt-2">
       <span v-for="tag in article.tag" :key="tag" class="tag">#{{tag}} </span><br>
@@ -84,6 +86,7 @@ import FeedApi from "@/api/FeedApi.js"
 import FeedArticleThumbnail from "@/components/feed/feedThumbnail/FeedArticleThumbnail.vue"
 import FeedCountdownThumbnail from "@/components/feed/feedThumbnail/FeedCountdownThumbnail.vue"
 import FeedVoteThumbnail from "@/components/feed/feedThumbnail/FeedVoteThumbnail.vue"
+import FeedShareThumbnail from "@/components/feed/feedThumbnail/FeedShareThumbnail.vue"
 
 export default {
   name: 'FeedItem',
@@ -96,7 +99,8 @@ export default {
   components: {
     FeedArticleThumbnail,
     FeedCountdownThumbnail,
-    FeedVoteThumbnail
+    FeedVoteThumbnail,
+    FeedShareThumbnail
   },
   computed: {
     createAfter() {
