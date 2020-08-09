@@ -11,17 +11,16 @@
         <p class="date">{{ curation.broadcast_date }} 방송</p>
       </div>
     </div>
-    <div class="feed-card">
+    <!-- <div class="feed-card">
       <div v-if="curation.thumbnail != 'https://image.tmdb.org/t/p/w500'"><img class="mythumbnail" :src="curation.thumbnail" alt="thumbnail-image"></div>
       <div v-else><img class="mythumbnail" :src="defaultImage" alt="default-image"></div>
       <div class="contentsWrap">
         <div class="d-flex justify-content-between">
           <h4 class="title">[{{ curation.pname }}] {{ curation.episode }}화</h4>
-          <!-- 에피소드에는 장르가 없다,, -->
-          <!-- <p class="date">{{ curation.genre }}</p> -->
         </div>
       </div>
-    </div>
+    </div> -->
+    <EpisodeThumbnail :curation="curation"/>
     <!---->
     <div class="btn-group wrap justify-content-between">
       <div>
@@ -52,11 +51,11 @@
       </div>
       <div class="mr-1">
         <!-- 우리가 생각한 공유 (해당 게시물에 대한 글 바로 작성) -->
-        <!-- <div class="mr-2">
+        <div class="mr-2">
           <button class="h5">
-            <b-icon-pencil></b-icon-pencil>
+            <b-icon-pencil @click="createShare"></b-icon-pencil>
           </button>
-        </div> -->
+        </div>
         <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
         <div>
           <button class="h5">
@@ -87,12 +86,6 @@
       <!-- 추후에 댓글 연결!~ -->
       <p><span v-if="!detail" class="more" @click="moveDetail">댓글 남기기</span></p>
     </div>
-    <!-- <div class="content">
-      <p>댓글이야 댓글 댓글!~</p>
-      <p class="more">댓글 1개</p>
-    </div> -->
-    <!---->
-    <!---->
   </div>
 </template>
 
@@ -100,6 +93,7 @@
 import defaultImage from "../../../assets/images/img-placeholder.png";
 import defaultProfile from "../../../assets/images/profile_default.png";
 import CurationApi from '@/api/CurationApi.js'
+import EpisodeThumbnail from '@/components/curation/episode/EpisodeThumbnail.vue'
 
 export default {
   name: 'EpisodeItem',
@@ -115,8 +109,12 @@ export default {
     detail: Boolean,
   },
   components: {
+    EpisodeThumbnail,
   },
   methods: {
+    createShare() {
+      this.$router.push({path: `/createShare/1/${this.curation.episode}/${this.curation.pno}/${this.curation.season}`})
+    },
     readMore() {
       this.isStretch = !this.isStretch
     },
@@ -184,9 +182,5 @@ export default {
 <style scoped>
   .more {
     color: lightgray;
-  }
-  .mythumbnail {
-    width: 100%;
-    height: auto;
   }
 </style>

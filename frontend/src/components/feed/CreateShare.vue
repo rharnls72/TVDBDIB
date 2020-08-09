@@ -10,9 +10,10 @@
 
       <!-- 공유될 글 표기 -->
       <div class="feed-item mt-3">
-        <FeedArticleThumbnail v-if="article.ctype === 1" :article="article"/>
-        <FeedCountdownThumbnail v-if="article.ctype === 2" :article="article"/>
-        <FeedVoteThumbnail v-if="article.ctype === 3" :article="article"/>
+        <FeedArticleThumbnail v-if="article.ctype!==null && article.ctype === 1" :article="article"/>
+        <FeedCountdownThumbnail v-if="article.ctype!==null && article.ctype === 2" :article="article"/>
+        <FeedVoteThumbnail v-if="article.ctype!==null && article.ctype === 3" :article="article"/>
+        <EpisodeThumbnail v-if="!!article.eno" :curation="article"/>
       </div>
 
     </div>
@@ -29,6 +30,7 @@ import ShareForm from '@/components/feed/feedComponents/ShareForm.vue'
 import FeedArticleThumbnail from '@/components/feed/feedThumbnail/FeedArticleThumbnail.vue'
 import FeedCountdownThumbnail from '@/components/feed/feedThumbnail/FeedCountdownThumbnail.vue'
 import FeedVoteThumbnail from '@/components/feed/feedThumbnail/FeedVoteThumbnail.vue'
+import EpisodeThumbnail from '@/components/curation/episode/EpisodeThumbnail.vue'
 
 import GetUserApi from "@/api/GetUserApi.js"
 
@@ -46,6 +48,7 @@ export default {
     FeedArticleThumbnail,
     FeedCountdownThumbnail,
     FeedVoteThumbnail,
+    EpisodeThumbnail,
   },
   methods: {
     moveMain() {
@@ -75,6 +78,7 @@ export default {
           console.log('createFeed Error: ' + err);
         } 
       )
+
     },
       
   },
@@ -91,19 +95,17 @@ export default {
           this.article = res.feed
           this.article.content = JSON.parse(this.article.content)
           this.article.tag = JSON.parse(this.article.tag)
-          console.log(this.article)
         }
         , err => console.log(err)
       )
-    } else {
+    } else if (this.$route.params.type === "1") {
       Curation.requestEpisodeDetail({
         pno: this.$route.params.pno,
         season: this.$route.params.season,
-        eno: this.$route.params.no,
+        episode: this.$route.params.no,
       }
       , res => {
-        console.log(res)
-        this.article = res.data
+        this.article = res.list
       }
       , err => console.log(err)
       )
