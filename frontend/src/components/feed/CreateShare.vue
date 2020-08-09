@@ -6,7 +6,7 @@
     <div class="px-5">
       
       <!-- 공유글 작성 -->
-      <ShareForm @CreateArticle="makeSubmitData"/>
+      <ShareForm :article="editArticle" @CreateArticle="makeSubmitData"/>
 
       <!-- 공유될 글 표기 -->
       <div class="feed-item mt-3">
@@ -39,6 +39,7 @@ export default {
   data() {
     return {
       article: null,
+      editArticle: null,
       submitData: null,
     }
   },
@@ -63,22 +64,43 @@ export default {
     },
 
     submitShare() {
-      
-      // Axios 요청
-      FeedApi.createFeed(
-        // 요청에 쓸 데이터 전달
-        this.submitData
-        // 성공시 수행할 콜백 메서드
-        , res => {
-          console.log('createFeed Success: ' + res);
-          this.$router.push({path: '/feed/main'})
-        }
-        // 실패시 수행할 콜백 메서드
-        , err => {
-          console.log('createFeed Error: ' + err);
-        } 
-      )
 
+      if (!this.$route.params.fno) {
+        // Axios 요청
+
+        console.log(this.submitData)
+
+        FeedApi.createFeed(
+          // 요청에 쓸 데이터 전달
+          this.submitData
+          // 성공시 수행할 콜백 메서드
+          , res => {
+            console.log('createFeed Success: ' + res);
+            this.$router.push({path: '/feed/main'})
+          }
+          // 실패시 수행할 콜백 메서드
+          , err => {
+            console.log('createFeed Error: ' + err);
+          } 
+        )
+      } else {
+
+        this.submitData.fno = this.$route.params.fno
+
+        FeedApi.updateFeed(
+          // 요청에 쓸 데이터 전달
+          this.submitData
+          // 성공시 수행할 콜백 메서드
+          , res => {
+            console.log('createFeed Success: ' + res);
+            this.$router.push({path: '/feed/main'})
+          }
+          // 실패시 수행할 콜백 메서드
+          , err => {
+            console.log('createFeed Error: ' + err);
+          } 
+        )
+      }
     },
       
   },
@@ -108,6 +130,18 @@ export default {
         this.article = res.list
       }
       , err => console.log(err)
+      )
+    } else if (this.$route.params.fno !== null) {
+      FeedApi.feedDetail(
+        this.$route.params.fno
+        , res => {
+          console.log(res)
+          res.feed.content = JSON.parse(res.feed.content)
+          res.feed.tag = JSON.parse(res.feed.tag)
+          this.article = res.feed.content.article
+          this.editArticle = res.feed
+        }
+        , err => console.log(err)
       )
     }
   }
