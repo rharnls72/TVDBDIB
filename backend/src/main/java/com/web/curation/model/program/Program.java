@@ -32,6 +32,15 @@ public class Program {
 
     // Return API row result(JSON)
     private Object programDetail;
+    private Object episodeGroup;
+
+    public Object getEpisodeGroup() {
+        return this.episodeGroup;
+    }
+
+    public void setEpisodeGroup(Object episodeGroup) {
+        this.episodeGroup = episodeGroup;
+    }
 
     public Object getProgramDetail() {
         return this.programDetail;

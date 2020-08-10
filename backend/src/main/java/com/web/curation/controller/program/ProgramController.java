@@ -61,8 +61,11 @@ public class ProgramController {
         RestTemplate restTemplate = new RestTemplate();
         // 일단 프로그램 (시즌 말고 그보다 더 상위인 프로그램) 정보가 필요하다. 프로그램 이름은 띄워줘야 하잖아...
         ResponseEntity<String> re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "?api_key=" + API_KEY + "&language=ko", String.class);
-        JSONObject jsonProgramInfo = new JSONObject(re.getBody());
-        programInfo.setProgramDetail(jsonProgramInfo);
+        programInfo.setProgramDetail(re.getBody());
+
+        // 추가 정보 더 받기
+        re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/episode_groups" + "?api_key=" + API_KEY + "&language=ko", String.class);
+        programInfo.setEpisodeGroup(re.getBody());
         ////////////////////////////////////////////////////////////////////////////////////////
 
         // DB 조회 전 ProgramRequest 설정하기
