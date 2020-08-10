@@ -94,11 +94,11 @@ public class AccountController {
                 user.setProfile_pic(null);
 
                 HashMap<String, Object> responseData = new HashMap<>();
-                responseData.put("user", user);
                 responseData.put("token", jwtService.makeToken(user));
-
+                
                 // 토큰 만들었으면 profile_pic 리스토어
                 user.setProfile_pic(save_profile_pic);
+                responseData.put("user", user);
 
                 result.status = true;
                 result.msg = "success";
@@ -136,11 +136,11 @@ public class AccountController {
         user.setProfile_pic(null);
 
         HashMap<String, Object> responseData = new HashMap<>();
-        responseData.put("user", user);
         responseData.put("token", jwtService.makeToken(user));
-
+        
         // 토큰 만들었으면 profile_pic 리스토어
         user.setProfile_pic(save_profile_pic);
+        responseData.put("user", user);
 
         result.status = true;
         result.msg = "success";

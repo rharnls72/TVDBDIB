@@ -128,7 +128,24 @@ export default {
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
       // 비동기 요청이 완료되었을 때 store 에 유저 정보가 있는지 확인해야함(여기에 위치해야함)
-      if(this.$store.state.isAutoLogin)  this.$router.push({name:'IndexCuration'});
+      if(res.user && this.$store.state.userInfo.isAutoLogin) {
+        
+        // Get token(Simple login without password)
+        UserApi.loginWithSocial(
+          res.user.email
+          , res => {
+            // 로그인 완료 시 세션 저장소에 받은 토큰 정보 저장
+            sessionStorage.setItem('jwt-token', res.jwtToken);
+
+            // curation/main 페이지로 이동
+            this.$router.push({path:"/curation/main"});
+          }
+          , error => {
+            this.$router.push({name:'Errors', query: {message: error.msg}});
+          }
+        );
+      }
+        
     });
       
     this.component = this;
@@ -200,11 +217,17 @@ export default {
 
             // 로그인 완료 시 세션 저장소에 받은 토큰 정보 저장
             sessionStorage.setItem('jwt-token', res.jwtToken);
-            localStorage.setItem('tvility', JSON.stringify(res.userInfo));
+            
+            
             // 유저 정보 저장 선택 시 로컬 저장소에 유저 정보 저장
             if(this.isSave){
-              this.$store.commit('setAutoLogin', true);
+              res.userInfo.isAutoLogin = true;
+            } else {
+              res.userInfo.isAutoLogin = false;
             }
+
+            // Save the logged in user info into a local storage
+            localStorage.setItem('tvility', JSON.stringify(res.userInfo));
 
             // 로그인 정보를 vuex 에 저장
             this.$store.commit('addUserInfo', res.userInfo);
@@ -226,6 +249,7 @@ export default {
     }
     , doKakaoLogin() {
       console.log('Kakao login start');
+      this.$store.commit('addUserInfo', {isAutoLogin: this.isSave});
       KakaoApi.Login();
     }
     , doGoogleLogin() {
