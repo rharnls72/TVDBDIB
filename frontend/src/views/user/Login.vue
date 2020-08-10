@@ -56,6 +56,10 @@
        <p class="d-inline m-0">카카오 로그인</p>
       </button>
 
+      <div class="g-signin2" data-onsuccess="doGoogleLogin">
+       Google Login
+      </div>
+
       <!-- <div class="sns-login">
         <div class="text">
           <p>SNS 로그인</p>
@@ -111,6 +115,7 @@ import kakaoButton from '@/assets/images/kakao_login_medium_narrow.png';
 
 import GetUserApi from "@/api/GetUserApi"
 import KakaoApi from "@/api/KakaoApi.js";
+import GoogleApi from "@/api/GoogleApi.js";
 
 export default {
   name: 'Login',
@@ -222,6 +227,15 @@ export default {
     , doKakaoLogin() {
       console.log('Kakao login start');
       KakaoApi.Login();
+    }
+    , doGoogleLogin(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+      GoogleApi.login();
     }
   },
   data: () => {
