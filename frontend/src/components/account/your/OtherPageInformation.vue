@@ -3,7 +3,7 @@
     <div class="wrapB">
       <div class="container mt-3">
         <div class="row p-0">
-          <img class="col-3 p-0 mb-3" :src="defaultProfile" alt="default-image">
+          <img class="col-3 p-0 mb-3" :src="profile_img" alt="default-image">
           <div class="col-3 my-3">
             <h5 class="mb-0 text-center">{{followcnt.feed_cnt}}</h5>
             <p class="mb-0 text-center">게시물</p>
@@ -39,7 +39,12 @@ export default {
   },
   data() {
     return {
-      defaultProfile,
+      profile_img: defaultProfile,
+    }
+  },
+  mounted() {
+    if(info.profile_pic != null) {
+      this.profile_img = info.profile_pic;
     }
   },
   methods: {
