@@ -56,9 +56,9 @@
        <p class="d-inline m-0">카카오 로그인</p>
       </button>
 
-      <div class="g-signin2" data-onsuccess="doGoogleLogin">
-       Google Login
-      </div>
+      <button @click="doGoogleLogin" class="btn mykakaobutton mt-2 d-flex justify-content-center align-items-center">
+       <p class="d-inline m-0">Google 로그인</p>
+      </button>
 
       <!-- <div class="sns-login">
         <div class="text">
