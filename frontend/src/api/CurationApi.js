@@ -281,6 +281,29 @@ const deleteEpisodeDibs = (data,callback,errorCallback) => {
         });
 }
 
+const programDetail = (data,callback,errorCallback) => {
+    http.get('/program/detail/' + data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+}
+
 const CurationApi = {
     requestEpisode:(callback,errorCallback)=>requestEpisode(callback,errorCallback)
     , requestEpisodeDetail:(data,callback,errorCallback)=>requestEpisodeDetail(data,callback,errorCallback)
@@ -295,7 +318,7 @@ const CurationApi = {
     , createEpisodeReply:(data,callback,errorCallback)=>createEpisodeReply(data,callback,errorCallback)
     , deleteEpisodeReply:(data,callback,errorCallback)=>deleteEpisodeReply(data,callback,errorCallback)
     , readReReply:(data,callback,errorCallback)=>readReReply(data,callback,errorCallback)
-
+    , programDetail:(data,callback,errorCallback)=>programDetail(data,callback,errorCallback)
 }
 
 export default CurationApi
