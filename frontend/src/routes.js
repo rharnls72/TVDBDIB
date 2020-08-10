@@ -36,7 +36,9 @@ import ViewFollowings from './views/account/ViewFollowings.vue'
 import ViewFollowers from './views/account/ViewFollowers.vue'
 import AlertTest from './views/alert/AlertTest.vue'
 
-import MessageList from './views/message/MessageList.vue'
+import ChatList from './views/message/ChatList.vue'
+import Chatroom from './views/message/Chatroom.vue'
+import EmptyChatroom from './views/message/EmptyChatroom.vue'
 
 
 import KakaoLogin from './views/user/KakaoLogin.vue';
@@ -191,9 +193,19 @@ export default [
     },
     {
 
+        path: '/message/chatroom/:cno',
+        name: 'Chatroom',
+        component: Chatroom
+    },
+    {
         path: '/message/main',
-        name: 'MessageList',
-        component: MessageList
+        name: 'ChatList',
+        component: ChatList
+    },
+    {
+        path: '/message/new',
+        name: 'EmptyChatroom',
+        component: EmptyChatroom
     },
     {
         path: '/oauth/kakao',

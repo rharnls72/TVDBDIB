@@ -22,7 +22,8 @@
 //////////// 테스트용 임포트 //////////////////
 import Api from "@/api/FeedApi.js";
 //////////////////////////////////////////////
-
+import http from "@/api/http-common.js";
+import header from "@/api/header.js"
 export default {
   name: 'IndexCuarationHeader',
   methods: {
@@ -48,7 +49,7 @@ export default {
         });
     },
     message(){
-      this.$router.push({name: 'MessageList'});
+      this.$router.push({name: 'ChatList'});
     }
   },
 }
