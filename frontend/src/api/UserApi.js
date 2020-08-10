@@ -280,10 +280,7 @@ const loginWithSocial = (data,callback,errorCallback) => {
 
 const joinWithSocial = (data,callback,errorCallback) => {
     
-    http.post('/account/social/join', {
-            nick_name: data.nickname
-            , email: data.email
-        })
+    http.post('/account/social/join', data)
         .then(res => {
             if(res == null) {
                 let error = {msg : '알 수 없는 오류 발생'};

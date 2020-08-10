@@ -3,7 +3,7 @@
     <b-nav justified class="myheader" >
       <b-input-group class="align-items-center m-2 mysearchbar">
         <div class="input-group-prepend">
-          <div @click="searchIcon()" class="input-group-text py-0" style="border: 0px; background-color: #eee;">
+          <div @click="searchIcon()" class="input-group-text py-0" style="border: 0px; background-color: #D8BEFE;">
             <b-icon-search></b-icon-search>
           </div>
         </div>
@@ -37,7 +37,7 @@ import ResultItems from "@/components/search/FeedSearchResult.vue";
 import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
-
+  name: 'FeedSearch',
   data() {
     return {
       startPoint: 0,
@@ -135,7 +135,7 @@ export default {
 </script>
 <style scoped>
   .myheader {
-    background-color: #eee;
+    background-color: #D8BEFE;
     position: fixed;
     width: 100%;
     height: 50px;

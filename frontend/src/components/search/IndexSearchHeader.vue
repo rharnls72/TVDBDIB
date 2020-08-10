@@ -9,6 +9,7 @@
     </b-tabs>
 
     <!-- 선택한 탭번호에 따라 하위 컴포넌트 출력 -->
+    <ProgramRecommend v-if="tabState == 1" />
     <UserSearch v-if="tabState == 2" />
     <ProgramSearch v-if="tabState == 3" />
     <FeedSearch v-if="tabState == 4" />
@@ -17,6 +18,7 @@
 </template>
 
 <script>
+import ProgramRecommend from '@/components/search/ProgramRecommend.vue';
 import UserSearch from '@/components/search/UserSearch.vue';
 import ProgramSearch from '@/components/search/ProgramSearch.vue';
 import FeedSearch from '@/components/search/FeedSearch.vue';
@@ -35,6 +37,7 @@ export default {
     },
   },
   components: {
+    ProgramRecommend,
     UserSearch,
     ProgramSearch,
     FeedSearch
