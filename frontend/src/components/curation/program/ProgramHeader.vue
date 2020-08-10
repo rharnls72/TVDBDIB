@@ -7,7 +7,7 @@
       </button>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-center">
-      <p class="text-dark mb-0"><strong>ProgramPage</strong></p>
+      <p class="text-dark mb-0"><strong>{{programTitle}}</strong></p>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-end">
     </b-nav-item>
@@ -17,6 +17,9 @@
 <script>
 export default {
   name: 'ProgramHeader',
+  props: {
+    programTitle: String,
+  }
 }
 </script>
 
