@@ -40,7 +40,6 @@ import MessageList from './views/message/MessageList.vue'
 
 
 import KakaoLogin from './views/user/KakaoLogin.vue';
-import GoogleLogin from './views/user/GoogleLogin.vue';
 
 
 export default [
@@ -200,10 +199,5 @@ export default [
         path: '/oauth/kakao',
         name: 'KakaoLogin',
         component: KakaoLogin
-    },
-    {
-        path: '/oauth/google',
-        name: 'GoogleLogin',
-        component: GoogleLogin
     }
 ]
