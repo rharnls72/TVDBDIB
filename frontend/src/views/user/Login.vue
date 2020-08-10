@@ -274,7 +274,6 @@ export default {
       }
     }
     , doLogin(info) {
-      this.msg = "Do Login ...";
       console.log('Do login: ', info.email);
       UserApi.loginWithSocial(
         info.email
@@ -293,7 +292,6 @@ export default {
       )
     }
     , doJoin(info) {
-      this.msg = "Do Join ...";
       console.log('Do join(info)');
       console.log(info);
       let data = {
