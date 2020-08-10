@@ -231,7 +231,11 @@ export default {
     , doGoogleLogin(googleUser) {
       this.$gAuth.signIn()
         .then(GoogleUser => {
-          console.log('GoogleUser', googleUser);
+          let profile = googleUser.getBasicProfile();
+
+          console.log('ID: ', profile.getId());
+          console.log('Name: ', profile.getName());
+          console.log('Email: ', profile.getEmail());
         })
         .catch(error => {
           this.$router.push({name:'Errors', query: {message: "Google social login fail"}});
