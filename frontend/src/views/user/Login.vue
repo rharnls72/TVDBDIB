@@ -228,10 +228,10 @@ export default {
       console.log('Kakao login start');
       KakaoApi.Login();
     }
-    , doGoogleLogin(googleUser) {
+    , doGoogleLogin() {
       this.$gAuth.signIn()
         .then(GoogleUser => {
-          let profile = googleUser.getBasicProfile();
+          let profile = GoogleUser.getBasicProfile();
 
           console.log('ID: ', profile.getId());
           console.log('Name: ', profile.getName());
