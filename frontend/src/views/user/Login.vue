@@ -233,13 +233,84 @@ export default {
         .then(GoogleUser => {
           let profile = GoogleUser.getBasicProfile();
 
-          console.log('ID: ', profile.getId());
-          console.log('Name: ', profile.getName());
-          console.log('Email: ', profile.getEmail());
+          let info = {
+            email: profile.getEmail()
+            , nickname: profile.getName()
+          };
+
+          console.log('Google Profile: ', info);
+          this.googleJoinOrLogin(info);
         })
         .catch(error => {
           this.$router.push({name:'Errors', query: {message: "Google social login fail"}});
         });
+    }
+    , googleJoinOrLogin(info) {
+      // Email exist
+      if(info.email && info.nickname) {
+        // Check if user
+        UserApi.requestFindEmail(
+          {email: info.email}
+          , res => {
+            // User exists => Login
+            if(res.isEmail==true) {
+              this.doLogin(info);
+            }
+            // User not exists => Join
+            else {
+              this.doJoin(info);
+            }
+          }
+          , err => {
+            this.$router.push({name:'Errors', query: {message: err.msg}});
+          }
+        );
+      }
+      // Do not join(or login)
+      else {
+        // Go to error page(Require email)
+        // And go main(login) page, not the back page
+        this.$router.push({name:'Errors', query: {message: "email not exists"}});
+      }
+    }
+    , doLogin(info) {
+      this.msg = "Do Login ...";
+      console.log('Do login: ', info.email);
+      UserApi.loginWithSocial(
+        info.email
+        , res => {
+          // 로그인 완료 시 세션 저장소에 받은 토큰 정보 저장
+          sessionStorage.setItem('jwt-token', res.jwtToken);
+          // 로그인 정보를 vuex 에 저장
+          this.$store.commit('addUserInfo', res.userInfo);
+
+          // curation/main 페이지로 이동
+          this.$router.push({path:"/curation/main"});
+        }
+        , error => {
+          this.$router.push({name:'Errors', query: {message: error.msg}});
+        }
+      )
+    }
+    , doJoin(info) {
+      this.msg = "Do Join ...";
+      console.log('Do join(info)');
+      console.log(info);
+      let data = {
+        nick_name: info.nickname,
+        email: info.email
+      };
+      console.log('Do join(data)');
+      console.log(data);
+      UserApi.joinWithSocial(
+        data
+        , res => {
+            this.doLogin(info);
+        }
+        , error => {
+          this.$router.push({name:'Errors', query: {message: error.msg}});
+        }
+      )
     }
   },
   data: () => {
