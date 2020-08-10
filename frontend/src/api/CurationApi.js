@@ -2,7 +2,7 @@ import http from "./http-common.js";
 import header from "@/api/header.js"
 
 const requestEpisode = (callback,errorCallback) => {
-    http.get('/episode/following/1', header())
+    http.get('/episode/following', header())
     .then(res => {
         if(res == null) {
             let error = {msg : '알 수 없는 오류 발생'};
