@@ -187,19 +187,32 @@ export default {
     },
 
     async detailSearchForPeople(name, pic, id){
-        axios.get(tmdbApi.BASE_URL + "person/" + id + "/tv_credits?api_key=" + tmdbApi.API_KEY + "&language=ko")
+
+        let item = {};
+        axios.get(tmdbApi.BASE_URL + "person/" + id + "?api_key=" + tmdbApi.API_KEY + "&language=ko")
             .then(res => {
-                console.log(res);
-                let item = {};
-                item.id = id;
-                item.people_name = name;
-                item.profile_path = pic;
-                item.programs = res.data.cast;
-                this.result.push(item);
+                  item.birthday = res.data.birthday;
+                  if (res.data.also_known_as != null)
+                    item.also_known_as = res.data.also_known_as[0];
+
+                  axios.get(tmdbApi.BASE_URL + "person/" + id + "/tv_credits?api_key=" + tmdbApi.API_KEY + "&language=ko")
+                  .then(res => {
+                      console.log(res);
+                      item.id = id;
+                      item.people_name = name;
+                      item.profile_path = pic;
+                      item.programs = res.data.cast;
+                      this.result.push(item);
+                  })
+                  .catch(error => {
+                      console.log(error);
+                  });
             })
             .catch(error => {
                 console.log(error);
             });
+
+
     }
 
 
