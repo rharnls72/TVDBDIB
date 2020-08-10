@@ -36,6 +36,9 @@ import OtherPage from './views/account/your/OtherPage.vue'
 import ViewFollowings from './views/account/ViewFollowings.vue'
 import ViewFollowers from './views/account/ViewFollowers.vue'
 import AlertTest from './views/alert/AlertTest.vue'
+
+import ProgramPage from '@/views/curation/ProgramPage.vue'
+
 export default [
 
     {
@@ -192,5 +195,10 @@ export default [
         path: '/createShare/:type/:no/:pno?/:season?',
         name: 'CreateShare',
         component: CreateShare
+    },
+    {
+        path: '/program/:pno',
+        name: 'ProgramPage',
+        component: ProgramPage
     },
 ]
