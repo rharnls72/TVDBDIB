@@ -41,8 +41,8 @@ export default {
     }
   },
   mounted() {
-    if(info.profile_pic != null) {
-      this.profile_img = info.profile_pic;
+    if(this.info.profile_pic != null) {
+      this.profile_img = this.info.profile_pic;
     }
   },
   methods: {
