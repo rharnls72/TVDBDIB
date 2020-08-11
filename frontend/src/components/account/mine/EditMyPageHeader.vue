@@ -70,9 +70,9 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .myheader {
-    background-color: #eee;
+    background-color: #D8BEFE;
     position: fixed;
     width: 100%;
     height: 50px;

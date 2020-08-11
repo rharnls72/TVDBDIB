@@ -81,69 +81,101 @@ public class EpisodeController {
 
 
     /* 이 아래로 TMDB API 이용하는 파트 */
-    @GetMapping("/episode/following/{uno}")
+    @GetMapping("/episode/following")
     @ApiOperation(value = "팔로우중인 프로그램의 에피소드 목록을 최신순으로 조회")
-    public Object getEpisodeListFromAPI(@PathVariable("uno") int uno, HttpServletRequest req) {
+    public Object getEpisodeListFromAPI(HttpServletRequest req) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
         RestTemplate restTemplate = new RestTemplate();
 
-        // 나중엔 토큰에서 유저 번호를 뽑아 써야함
-        // int uno = ((User) req.getAttribute("User")).getUno();
+        // 토큰에서 유저 번호를 뽑아 써야함
+        Object obj = req.getAttribute("User");
+        if(obj == null) {
+            result.status = false;
+            result.msg = "토큰에서 유저정보가 추출되지 않았습니다.";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        int uno = ((User) obj).getUno();
 
         // 팔로우중인 프로그램 리스트 조회
         //List<Program> programList = followdao.getProgramFollowings(uno);
 
-        // 아직 팔로우 데이터가 없으므로 일단 임시로 프로그램 리스트도 TMDB에서 추천해주는거 들고오는 걸로
-        ResponseEntity<String> re = 
-        restTemplate.getForEntity(BASE_URL + "discover/tv?first_air_date_year=2020&sort_by=popularity.desc&api_key=" + API_KEY + "&language=ko",
-        String.class);
-        JSONObject recommended_program = new JSONObject(re.getBody());
-        JSONArray programs = recommended_program.optJSONArray("results");
+        // Step 1: 아직 팔로우 데이터가 없으므로 일단 임시로 프로그램 리스트도 TMDB에서 추천해주는거 들고오는 걸로
+        ResponseEntity<String> re = null;
+        JSONArray programs = null;
         List<Program> programList = new ArrayList<Program>();
+        try {
+            re = restTemplate.getForEntity(BASE_URL + "discover/tv?first_air_date_year=2020&sort_by=popularity.desc&api_key=" + API_KEY + "&language=ko",
+                                            String.class);
+            JSONObject recommended_program = new JSONObject(re.getBody());
+            programs = recommended_program.optJSONArray("results");
+        } catch (Exception e) {
+            result.status = false;
+            result.msg = "Step 1 - 예외 발생 : " + e.getMessage();
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
-        // 각 프로그램에 대한 객체 만들어서 기본 정보 몇 개만 세팅한 다음 programList에 삽입
-        for (int i=1; i<=programs.length(); i++){
-            Program p = new Program();
-            JSONObject programJson = programs.optJSONObject(i-1);
-            int id = programJson.optInt("id");
-            String name = programJson.optString("name");
-            int season = 1;
-            String thumbnail = programJson.optString("backdrop_path");
-            p.setPno(id);
-            p.setPname(name);
-            p.setSeason(season);
-            if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
-            programList.add(p);
+
+        // Step 2: 각 프로그램에 대한 객체 만들어서 기본 정보 몇 개만 세팅한 다음 programList에 삽입
+        try {
+            for (int i=1; i<=programs.length(); i++){
+                Program p = new Program();
+                JSONObject programJson = programs.optJSONObject(i-1);
+                int id = programJson.optInt("id");
+                String name = programJson.optString("name");
+                int season = 1;
+                String thumbnail = programJson.optString("backdrop_path");
+                p.setPno(id);
+                p.setPname(name);
+                p.setSeason(season);
+                if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
+                programList.add(p);
+            }
+        } catch (Exception e) {
+            result.status = false;
+            result.msg = "Step 2 - 예외 발생 : " + e.getMessage();
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
         List<EpisodeResponse> episodeList = new ArrayList<EpisodeResponse>();
-        // 팔로우중인 프로그램 각각에 대하여 에피소드 목록 조회 (TMDB API)
-        for (Program program: programList){
-            int pno = program.getPno();
-            int season = program.getSeason();
 
-            // 프로그램 ID와 시즌 번호로 API 요청
-            re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY + "&language=ko", String.class);
-            JSONObject programInfo = new JSONObject(re.getBody());
-            JSONArray episodes = programInfo.optJSONArray("episodes");
-
-            re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY, String.class);
-            JSONObject programInfo_eng = new JSONObject(re.getBody());
-            JSONArray episodes_eng = programInfo_eng.optJSONArray("episodes");
-
-            program.setSeason_name(programInfo.optString("name"));
-
-            // 결과 데이터 중 episodes Array의 각 요소에 접근하여 episode 정보 추출
-            for (int i=1; i<=episodes.length(); i++){
-                JSONObject detail = episodes.optJSONObject(i-1);
-                String overview_eng = episodes_eng.optJSONObject(i-1).optString("overview");
-                EpisodeResponse e = episodeSetter(program, i, detail, overview_eng); // 'detail' 을 파싱하여 Episode 객체 세팅해서 리턴해주는 메서드
-                
-                if (e.getBroadcast_date() != null)
-                    episodeList.add(e);
-                //System.out.println(e.getBroadcast_date());
+        // Step 3: 팔로우중인 프로그램 각각에 대하여 에피소드 목록 조회 (TMDB API)
+        try {
+            for (Program program: programList){
+                int pno = program.getPno();
+                int season = program.getSeason();
+    
+                // 프로그램 ID와 시즌 번호로 API 요청
+                re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY + "&language=ko", String.class);
+                JSONObject programInfo = new JSONObject(re.getBody());
+                JSONArray episodes = programInfo.optJSONArray("episodes");
+    
+                re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY, String.class);
+                JSONObject programInfo_eng = new JSONObject(re.getBody());
+                JSONArray episodes_eng = programInfo_eng.optJSONArray("episodes");
+    
+                program.setSeason_name(programInfo.optString("name"));
+    
+                // 결과 데이터 중 episodes Array의 각 요소에 접근하여 episode 정보 추출
+                int len = episodes.length();
+                if(len > episodes_eng.length()) {
+                    System.out.println("episodes 길이와 episodes_eng 길이가 달라요.  " + len + " :: " + episodes_eng.length());
+                    len = episodes_eng.length();
+                }
+                for (int i=1; i<=len; i++){
+                    JSONObject detail = episodes.optJSONObject(i-1);
+                    String overview_eng = episodes_eng.optJSONObject(i-1).optString("overview");
+                    EpisodeResponse e = episodeSetter(program, i, detail, overview_eng); // 'detail' 을 파싱하여 Episode 객체 세팅해서 리턴해주는 메서드
+                    
+                    if (e.getBroadcast_date() != null)
+                        episodeList.add(e);
+                    //System.out.println(e.getBroadcast_date());
+                }
             }
+        } catch (Exception e) {
+            result.status = false;
+            result.msg = "Step 3 - 예외 발생 : " + e.getMessage();
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
         // 추출한 episode들을 최신순 정렬

@@ -41,7 +41,7 @@
     <select id="checkNickName" resultType="int">
         select count(*)
         from user
-        where nick_name = #{nick_name}
+        where BINARY nick_name = #{nick_name}
     </select>
 
     <insert id="addNewUser">
@@ -70,7 +70,7 @@
             #{email}
             , #{nick_name}
             , true
-            , 0
+            , "0"
         )
     </insert>
 

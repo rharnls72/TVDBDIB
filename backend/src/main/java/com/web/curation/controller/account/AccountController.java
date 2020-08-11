@@ -152,26 +152,8 @@ public class AccountController {
     @PostMapping("/account/signup")
     @ApiOperation(value = "가입하기")
     public Object signup(@Valid @RequestBody SignupRequest request) {
-        // 이메일, 닉네임 중복처리 필수
+        // 이메일, 닉네임 중복처리 필수 => 프론트에서 했서요
         // 회원가입단을 생성해 보세요.
-
-        // 먼저 이메일 중복 확인 해보기
-        User user = userDao.getUserByEmail(request.getEmail());
-        if (user != null) {
-            final BasicResponse result = new BasicResponse();
-            result.status = false;
-            result.msg = "이메일 중복";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        // 닉네임도 중복 확인 해보기
-        user = userDao.getUserByNickName(request.getNick_name());
-        if (user != null) {
-            final BasicResponse result = new BasicResponse();
-            result.status = false;
-            result.msg = "닉네임 중복";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
         try {
             request.setPassword(SHA256(request.getPassword()));
         } catch (Exception e) {
@@ -207,6 +189,9 @@ public class AccountController {
         // 이메일이 중복되지 않았다면 회원가입 진행
         int n = userDao.addNewUserWithSocial(user);
         final BasicResponse result = new BasicResponse();
+
+        // Why errer bb
+        System.out.println(user);
 
         // 단 하나의 수정이 일어났다면 가입 된거
         if (n == 1) {
@@ -394,11 +379,10 @@ public class AccountController {
         final BasicResponse result = new BasicResponse();
 
         try {
-            File file = ResourceUtils.getFile("classpath:application.properties");
-            String pre_path = file.getAbsolutePath().split("application.properties")[0];
-            String post_path = "static\\user_profile\\" + user.getUno() + "-pic";
+            String pre_path = "/tvility";
+            String post_path = "/" + user.getUno() + ".profile_pic";
             String full_path = pre_path + post_path;
-            file = new File(full_path);
+            File file = new File(full_path);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(user.getProfile_pic().getBytes());
             fos.close();

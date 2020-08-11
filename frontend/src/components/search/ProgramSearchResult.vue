@@ -37,7 +37,6 @@ export default {
 
 <style scoped>
 ul {
-  z-index: 1;
   padding-top: 0px; /* 검색창을 sticky로 고정시키니까 이걸 다시 0으로 해도 됐다. 50이었는데... */
 }
 </style>
