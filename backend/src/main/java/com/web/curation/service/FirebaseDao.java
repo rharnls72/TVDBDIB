@@ -2,6 +2,7 @@ package com.web.curation.service;
 
 import com.web.curation.dao.alert.AlertDao;
 import com.web.curation.model.alert.Alert;
+import com.web.curation.model.following.UserFollowing;
 
 import org.springframework.stereotype.Service;
 
@@ -58,17 +59,29 @@ public class FirebaseDao {
         return false;
     }
     //팔로우 요청 추가
-    public boolean addFollowing(Alert alert){
+    public String addFollowing(Alert alert){
         try {
-            Firestore db = FirestoreClient.getFirestore();
             Alert newAlert = dao.getInfoByUser(alert.getSubject_no());
             if(newAlert.getPicture()!=null)
                 alert.setPicture(newAlert.getPicture());
             alert.setSubject_name(newAlert.getSubject_name());
-            
+
+            Firestore db = FirestoreClient.getFirestore();
             DocumentReference addedDocRef = db.collection("follow_request").document();
             alert.setAno(addedDocRef.getId());
             addedDocRef.set(alert);
+            return alert.getAno();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    //팔로우 요청 취소
+    public boolean cancelFollowing(UserFollowing uf){
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            String id = db.collection("follow_request").whereEqualTo("subject_no", uf.getFollower()).whereEqualTo("uno", uf.getFollowing()).get().get().getDocuments().get(0).getId();
+            db.collection("follow_request").document(id).delete();
             return true;
         } catch (Exception e) {
             e.printStackTrace();

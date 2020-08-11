@@ -5,14 +5,14 @@
           <li v-for="(room) in rooms" v-bind:key="room.cno" 
           class="shadow" type="button">
 
-        <div class="form-group row" style="width: 100%;">
+        <div class="form-group row" style="width: 100%;" @click="movePage(room)">
           <!-- 이미지 바인딩 어떻게...? 잘 안된다 -->
-            <img class="my-auto col-3 col-sm-3" src="@/assets/images/profile_default.png" @click="movePage(room)">
+            <img class="my-auto col-3 col-sm-3" src="@/assets/images/profile_default.png">
             <span class="user-content my-auto col-6 col-sm-6">
-              {{room.mainUser.nick_name}}
+              {{room.mainUser.nick_name}}<span v-if="room.other.length>1">님 외 {{room.other.length-1}}명</span>
             </span>
             <span class="float-right my-auto col-3 col-sm-3 removeBtn" type="button">
-                <button @click="deleteChat(room)" class="float-right btn btn-danger btn-sm">삭제</button>
+                <button @click.stop.prevent="deleteChat(room)" class="float-right btn btn-danger btn-sm">삭제</button>
             </span>
         </div>
         </li>
@@ -34,10 +34,11 @@ export default {
     rooms: Array
   },
   methods:{
-    movePage(user){
-        this.$router.push('/profile/' + user.nick_name);
+    movePage(room){
+        this.$router.push({path: '/message/chatroom/' + room.cno, query: {room: room}});
     },
-    deleteChat(room){
+    deleteChat(room, event){
+      // event.stopPropagation();
       MessageApi.deleteChatroom( room.cno,
           res => {
             

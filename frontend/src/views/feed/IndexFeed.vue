@@ -1,11 +1,12 @@
 <template>
   <div class="feed newsfeed">
     <IndexCurationHeader />
-    <div class="wrapB">
-      <div class="myfeed" v-for="d in feeds" :key="d.fno">
-        <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
+    <div class="wrapB mb-4">
+      <div class="myfeed" v-for="feed in feeds" :key="feed.fno">
+        <!-- <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
         <feedCountdownItem v-if="d.ctype===2" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
-        <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
+        <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/> -->
+        <FeedItem :article="feed" :fno="feed.fno" @deleteItem="removeFeed"/>
       </div>
     </div>
     <Footer/>
@@ -18,9 +19,11 @@ import { mapState } from "vuex";
 import "../../components/css/feed/feed-item.scss";
 import "../../components/css/feed/newsfeed.scss";
 
-import feedArticleItem from "@/components/feed/feedArticleItem.vue";
-import feedCountdownItem from "@/components/feed/feedCountdownItem.vue";
-import feedVoteItem from "@/components/feed/feedVoteItem.vue";
+// import feedArticleItem from "@/components/feed/feedArticleItem.vue";
+// import feedCountdownItem from "@/components/feed/feedCountdownItem.vue";
+// import feedVoteItem from "@/components/feed/feedVoteItem.vue";
+
+import FeedItem from "@/components/feed/FeedItem.vue"
 
 import FeedApi from "@/api/FeedApi.js";
 
@@ -37,9 +40,10 @@ export default {
   },
 
   components: { 
-    feedArticleItem, 
-    feedCountdownItem, 
-    feedVoteItem,
+    // feedArticleItem, 
+    // feedCountdownItem, 
+    // feedVoteItem,
+    FeedItem,
     IndexCurationHeader,
     Footer,
   },
@@ -74,9 +78,6 @@ export default {
 
   mounted() {
     this.takeFeed()
-    GetUserApi.getUser(res => {
-      this.$store.commit('addUserInfo', res.user);
-    });
   },
   created() {
     GetUserApi.getUser(res => {

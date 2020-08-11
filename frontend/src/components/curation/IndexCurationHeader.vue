@@ -56,7 +56,7 @@ export default {
         });
     },
     message(){
-      this.$router.push({name: 'MessageList'});
+      this.$router.push({name: 'ChatList'});
     }
   },
 }

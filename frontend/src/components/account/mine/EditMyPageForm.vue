@@ -90,7 +90,7 @@ export default {
     this.bio = this.$store.state.userInfo.bio;
     this.profile_pic = this.$store.state.userInfo.profile_pic;
     if(this.profile_pic != null) {
-      console.log(this.profile_pic);
+      // console.log(this.profile_pic);
       this.imageData = this.profile_pic;
     }
   },
