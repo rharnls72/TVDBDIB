@@ -4,9 +4,10 @@
     <IndexCurationHeader />
     <div class="wrapB">
       <div class="myfeed">
-        <feedArticleItem v-if="article.ctype === 1" :article="article" :detail="true"/>
+        <!-- <feedArticleItem v-if="article.ctype === 1" :article="article" :detail="true"/>
         <feedVoteItem v-if="article.ctype === 3" :article="article" :detail="true"/>
-        <feedCountdownItem v-if="article.ctype === 2" :article="article" :detail="true"/>
+        <feedCountdownItem v-if="article.ctype === 2" :article="article" :detail="true"/> -->
+        <FeedItem :article="article" :detail="true"/>
         <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno" :fno="article.fno"/>
       </div>
     </div>
@@ -15,9 +16,11 @@
 </template>
 
 <script>
-import feedArticleItem from "@/components/feed/feedArticleItem.vue"
-import feedVoteItem from "@/components/feed/feedVoteItem.vue"
-import feedCountdownItem from "@/components/feed/feedCountdownItem.vue"
+// import feedArticleItem from "@/components/feed/feedArticleItem.vue"
+// import feedVoteItem from "@/components/feed/feedVoteItem.vue"
+// import feedCountdownItem from "@/components/feed/feedCountdownItem.vue"
+
+import FeedItem from "@/components/feed/FeedItem.vue"
 
 import ReplyItem from "@/components/ReplyItem.vue"
 import Footer from '@/components/common/custom/Footer.vue';
@@ -29,9 +32,10 @@ import GetUserApi from "@/api/GetUserApi.js"
 export default {
   name: 'FeedDetail',
   components: {
-    feedArticleItem,
-    feedVoteItem,
-    feedCountdownItem,
+    // feedArticleItem,
+    // feedVoteItem,
+    // feedCountdownItem,
+    FeedItem,
     ReplyItem,
     IndexCurationHeader,
     Footer

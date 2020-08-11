@@ -7,7 +7,7 @@
       </button>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-center" @click="test"> <!-- 여기에 test 이벤트 바인딩해서 아직 구현되지 않은 기능 테스트 해봤음 -->
-      <p class="text-dark mb-0"><strong>TVility</strong></p>
+      <img class="mylogo mb-0\" :src="HeaderLogo" alt="header-logo">
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-end">
       <!-- 메시지 -->
@@ -24,8 +24,15 @@ import Api from "@/api/FeedApi.js";
 //////////////////////////////////////////////
 import http from "@/api/http-common.js";
 import header from "@/api/header.js"
+import HeaderLogo from '../../assets/images/custom/header-logo.png'
+
 export default {
   name: 'IndexCuarationHeader',
+  data() {
+    return {
+      HeaderLogo,
+    }
+  },
   methods: {
     // 피드 작성 페이지로 이동
     createFeed() {
@@ -49,18 +56,21 @@ export default {
         });
     },
     message(){
-      this.$router.push({name: 'MessageList'});
+      this.$router.push({name: 'ChatList'});
     }
   },
 }
 </script>
 
-<style>
+<style scoped>
   .myheader {
-    background-color: #eee;
+    background-color: #D8BEFE;
     position: fixed;
     width: 100%;
     height: 50px;
     z-index: 1;
+  }
+  .mylogo {
+    height: 35px;
   }
 </style>
