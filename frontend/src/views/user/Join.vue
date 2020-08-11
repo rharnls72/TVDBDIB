@@ -97,16 +97,16 @@ export default {
   },
   watch: {
     nick_name: function(v) {
-      this.checkForm();
+      this.checkNick();
     },
     password: function(v) {
-      this.checkForm();
+      this.checkPasswd();
     },
     passwordConfirm: function(v) {
-      this.checkForm();
+      this.checkPasswdConfirm();
     },
     email: function(v) {
-      this.checkForm();
+      this.checkEmail();
     },
     // isTerm: function(v) {
     //   this.checkForm();
@@ -129,11 +129,15 @@ export default {
               // Valid
               this.error.email = false;
             }
+
+            this.checkForm();
           },
-          err => {
-            console.log('Join-checkEmail() Error', err.msg);
+          error => {
+            this.$router.push({ name: "Errors", query: { message: error.msg } });
           }
         );
+      } else {
+        this.checkForm();
       }
     },
     checkNick() {
@@ -148,20 +152,33 @@ export default {
         this.error.nick_name = "닉네임은 20Byte를 넘지 않아야 합니다.";
       else this.error.nick_name = false;
 
-      if(this.error.nick_name == false) {
+      if(this.nick_name.length > 0 && this.error.nick_name == false) {
         AccountApi.requestFindNick(
-
+          {
+            nick_name: "ThisIsNickNameForTestVeryVeryLongNickName",
+            new_nick_name: this.nick_name,
+          },
+          (res) => {
+            if (res.isNick) {
+              this.error.nick_name = false;
+            } else {
+              this.error.nick_name = "사용 할 수 없는 닉네임 입니다.(중복)";
+            }
+            
+            this.checkForm();
+          },
+          (error) => {
+            this.$router.push({ name: "Errors", query: { message: error.msg } });
+          }
         );
+      } else if(this.nick_name.length == 0) {
+        this.error.nick_name = "가입하기 위해 닉네임은 꼭 필요합니다.";
+        this.checkForm();
+      } else {
+        this.checkForm();
       }
     },
     checkPasswd() {
-
-    },
-    checkPasswdConfirm() {
-
-    },
-    checkForm() {
-
       if (
         this.password.length >= 0 &&
         !this.passwordSchema.validate(this.password)
@@ -169,12 +186,16 @@ export default {
         this.error.password = "비밀번호는 영문, 숫자 포함 8자리 이상이어야 합니다.";
       else this.error.password = false;
 
+      this.checkForm();
+    },
+    checkPasswdConfirm() {
       if(this.password != this.passwordConfirm)
         this.error.passwordConfirm = "비밀번호가 일치하지 않습니다.";
       else this.error.passwordConfirm = false;
 
-      // this.error.term = !this.isTerm;
-
+      this.checkForm();
+    },
+    checkForm() {
       let isSubmit = true;
       Object.values(this.error).map(v => {
         if (v) isSubmit = false;
@@ -226,10 +247,10 @@ export default {
       passwordSchema: new PV(),
 
       error: {
-        email: false,
-        password: false,
-        passwordConfirm: false,
-        nick_name: false,
+        email: "이메일을 입력해주세요",
+        password: "비밀번호를 입력해주세요",
+        passwordConfirm: "비밀번호를 확인해주세요",
+        nick_name: "닉네임을 입력해주세요",
         term: false
       },
 
