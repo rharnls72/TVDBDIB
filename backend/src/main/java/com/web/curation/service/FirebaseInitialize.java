@@ -15,6 +15,7 @@ public class FirebaseInitialize {
     public void initialize(){
         try {
             FileInputStream serviceAccount = new FileInputStream("/tvility/serviceAccountKey.json");
+            // FileInputStream serviceAccount = new FileInputStream("./serviceAccountKey.json");
 
             FirebaseOptions options = new FirebaseOptions.Builder()
             .setCredentials(GoogleCredentials.fromStream(serviceAccount))

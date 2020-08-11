@@ -1,5 +1,5 @@
 <template>
-    <b-nav justified class="myfooter py-1">
+    <b-nav justified class="myfooter pt-1">
       <!-- 1. 피드 -->
       <b-nav-item @click="changeState(1), moveTab('FeedMain')">
         <b-icon-people-fill v-if="this.$store.state.tabState == 1" class="text-dark"></b-icon-people-fill>
@@ -46,9 +46,10 @@ export default {
 
 <style>
   .myfooter {
-    background-color: #eee;
+    background-color: #D8BEFE;
     position: fixed;
     bottom: -5px;
     width: 100%;
+    height: 50px;
   }
 </style>

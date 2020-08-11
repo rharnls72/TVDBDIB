@@ -41,6 +41,7 @@ export default {
     parentNo: Number,
     eno: Number,
     fno: Number,
+    pno: Number,
     addfun: Function,
     delfun: Function,
     isStretch: Boolean,
@@ -57,6 +58,12 @@ export default {
       } else if (!this.fno===false) {
         this.addData = {
           no: this.fno,
+          parent_reply: this.parentNo,
+          content: this.content,
+        }
+      } else {
+        this.addData = {
+          no: this.pno,
           parent_reply: this.parentNo,
           content: this.content,
         }
@@ -130,6 +137,17 @@ export default {
       , err => console.log(err)
       )
       this.readfun = FeedApi.readReReply
+    } else {
+      CurationApi.programReReplyRead({
+        no: this.parentNo,
+        num: 1
+      }
+      , res => {
+        this.reply = res.data.data
+      }
+      , err => console.log(err)
+      )
+      this.readfun = CurationApi.programReReplyRead
     }
   },
   updated() {
