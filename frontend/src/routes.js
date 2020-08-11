@@ -44,7 +44,7 @@ import EmptyChatroom from './views/message/EmptyChatroom.vue'
 
 import ProgramPage from '@/views/curation/ProgramPage.vue'
 
-import MessageList from './views/message/MessageList.vue'
+//import MessageList from './views/message/MessageList.vue'
 
 
 
