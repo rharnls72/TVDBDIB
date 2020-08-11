@@ -4,8 +4,10 @@
     <FeedCountdownThumbnail v-if="article.content.article.ctype === 2" :article="article.content.article"/>
     <FeedVoteThumbnail v-if="article.content.article.ctype === 3" :article="article.content.article"/>
     <EpisodeThumbnail v-if="!!article.content.article.eno" :curation="article.content.article"/>
+    <FeedProgramThumbnail v-else :program="article.content.article"/>
     <div v-if="article.content.article.ctype">공유된 글 보러가기...</div>
     <div v-if="article.content.article.eno">공유된 에피소드 보러가기...</div>
+    <div v-else>공유된 프로그램 보러가기...</div>
   </div>
 </template>
 
@@ -14,6 +16,7 @@ import FeedArticleThumbnail from "@/components/feed/feedThumbnail/FeedArticleThu
 import FeedCountdownThumbnail from "@/components/feed/feedThumbnail/FeedCountdownThumbnail.vue"
 import FeedVoteThumbnail from "@/components/feed/feedThumbnail/FeedVoteThumbnail.vue"
 import EpisodeThumbnail from "@/components/curation/episode/EpisodeThumbnail.vue"
+import FeedProgramThumbnail from "@/components/feed/feedThumbnail/FeedProgramThumbnail.vue"
 
 export default {
   name: 'FeedShareThumbnail',
@@ -25,6 +28,7 @@ export default {
     FeedCountdownThumbnail,
     FeedVoteThumbnail,
     EpisodeThumbnail,
+    FeedProgramThumbnail,
   },
 }
 </script>

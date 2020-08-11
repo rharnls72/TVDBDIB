@@ -62,8 +62,7 @@ export default {
   },
   methods: {
     moveMain() {
-      console.log(1)
-      this.$router.push('/feed/main')
+      this.$router.go(-1)
     },
     delItem(delId) {
       this.contents = this.contents.filter(res => {
