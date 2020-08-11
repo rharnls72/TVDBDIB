@@ -52,8 +52,7 @@ export default {
   },
   methods: {
     moveMain() {
-      console.log(1)
-      this.$router.push('/feed/main')
+      this.$router.go(-1)
     },
     makeData() {
       var jsonObj = {

@@ -208,6 +208,9 @@ public class AccountController {
         int n = userDao.addNewUserWithSocial(user);
         final BasicResponse result = new BasicResponse();
 
+        // Why errer bb
+        System.out.println(user);
+
         // 단 하나의 수정이 일어났다면 가입 된거
         if (n == 1) {
             result.status = true;
@@ -394,11 +397,10 @@ public class AccountController {
         final BasicResponse result = new BasicResponse();
 
         try {
-            File file = ResourceUtils.getFile("classpath:application.properties");
-            String pre_path = file.getAbsolutePath().split("application.properties")[0];
-            String post_path = "static\\user_profile\\" + user.getUno() + "-pic";
+            String pre_path = "/tvility";
+            String post_path = "/" + user.getUno() + ".profile_pic";
             String full_path = pre_path + post_path;
-            file = new File(full_path);
+            File file = new File(full_path);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(user.getProfile_pic().getBytes());
             fos.close();

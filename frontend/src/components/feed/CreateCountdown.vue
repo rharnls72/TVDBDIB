@@ -92,8 +92,7 @@ export default {
   },
   methods: {
     moveMain() {
-      console.log(1)
-      this.$router.push('/feed/main')
+      this.$router.go(-1)
     },
     onContext(ctx) {
       this.context = ctx
@@ -130,8 +129,8 @@ export default {
     },
     makeData() {
       var jsonObj = {
+        title: this.title,
         content: {
-          title: this.title,
           date: this.date,
           time: this.Time,
         }

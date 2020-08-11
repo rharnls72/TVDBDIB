@@ -2,8 +2,8 @@
   <div class="user mt-0 myuser" id="login">
     <LoginHeader />
     <div class="wrapC myfeed">
-      <div class="feed-card myfeedcard">
-        <div><img class="mythumbnail" :src="teamImage" alt="team-image"></div>
+      <div class="myfeedcard">
+        <img class="mythumbnail mb-2" :src="logo" alt="logo">
       </div>
       <div class="input-with-label mt-3">
         <input
@@ -33,19 +33,34 @@
         <div class="error-text" v-if="error.password">{{error.password}}</div>
       </div>
 
-      <label>
-        <input v-model="isSave" type="checkbox" id="save" />
-        <span>로그인 유지</span>
-      </label>
+      <div>
+        <label>
+          <input v-model="isSave" type="checkbox" id="save" />
+          <span>로그인 유지</span>
+        </label>
+      </div>
 
-      <button
+      <!-- <button
         class="btn btn--back btn--login"
         @click="onLogin"
         :disabled="!isSubmit"
         :class="{disabled : !isSubmit}"
-      >로그인</button>
+      >로그인</button> -->
 
-      <div class="sns-login">
+      <button @click="onLogin" :disabled="!isSubmit" :class="{disabled : !isSubmit}" class="btn mybutton mt-2 d-flex justify-content-center align-items-center">
+       <p class="d-inline m-0">로그인</p>
+      </button>
+
+      <button @click="doKakaoLogin" class="btn mykakaobutton mt-2 d-flex justify-content-center align-items-center">
+        <img class="d-inline mylogo pr-2" :src="kakaoLogo" alt="kakao-logo">
+       <p class="d-inline m-0">카카오 로그인</p>
+      </button>
+
+      <button @click="doGoogleLogin" class="btn mykakaobutton mt-2 d-flex justify-content-center align-items-center">
+       <p class="d-inline m-0">Google 로그인</p>
+      </button>
+
+      <!-- <div class="sns-login">
         <div class="text">
           <p>SNS 로그인</p>
           <div class="bar"></div>
@@ -53,16 +68,21 @@
 
         <button type="button" @click="doKakaoLogin">
           <img :src="kakaoButton" alt="Kakao login button"/>
-        </button>
+        </button> -->
         <!-- <GoogleLogin :component="component" /> -->
         <!-- <GoogleLogin
           :params="params"
           :renderParams="renderParams"
           :onSuccess="onSuccess"
           :onFailure="onFailure"></GoogleLogin> -->
+      <!-- </div> -->
 
+      <div class="d-flex justify-content-end mt-3">
+        <router-link to="/user/findPw" class="text-dark mylink mr-3">비밀번호 찾기</router-link>
+        <router-link to="/user/join" class="text-dark mylink">가입하기</router-link>
       </div>
-      <div class="add-option mt-3">
+
+      <!-- <div class="add-option mt-3">
         <div class="text">
           <p>혹시</p>
           <div class="bar"></div>
@@ -75,7 +95,7 @@
           <p>아직 회원이 아니신가요?</p>
           <router-link to="/user/join" class="btn--text">가입하기</router-link>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -89,7 +109,8 @@ import * as EmailValidator from "email-validator";
 // import GoogleLogin from "vue-google-login";
 import UserApi from "../../api/UserApi";
 import LoginHeader from '../../components/user/custom/LoginHeader.vue'
-import teamImage from '../../assets/images/custom/team-img.jpg'
+import logo from '../../assets/images/custom/logo.png'
+import kakaoLogo from '../../assets/images/custom/kakao-logo.png'
 import kakaoButton from '@/assets/images/kakao_login_medium_narrow.png';
 
 import GetUserApi from "@/api/GetUserApi"
@@ -230,6 +251,94 @@ export default {
       this.$store.commit('addUserInfo', {isAutoLogin: this.isSave});
       KakaoApi.Login();
     }
+    , doGoogleLogin() {
+      this.$gAuth.signIn()
+        .then(GoogleUser => {
+          let profile = GoogleUser.getBasicProfile();
+
+          let info = {
+            email: profile.getEmail()
+            , nickname: profile.getName()
+          };
+
+          console.log('Google Profile: ', info);
+          this.googleJoinOrLogin(info);
+        })
+        .catch(error => {
+          this.$router.push({name:'Errors', query: {message: "Google social login fail"}});
+        });
+    }
+    , googleJoinOrLogin(info) {
+      // Email exist
+      if(info.email && info.nickname) {
+        // Check if user
+        UserApi.requestFindEmail(
+          {email: info.email}
+          , res => {
+            // User exists => Login
+            if(res.isEmail==true) {
+              this.doLogin(info);
+            }
+            // User not exists => Join
+            else {
+              this.doJoin(info);
+            }
+          }
+          , err => {
+            this.$router.push({name:'Errors', query: {message: err.msg}});
+          }
+        );
+      }
+      // Do not join(or login)
+      else {
+        // Go to error page(Require email)
+        // And go main(login) page, not the back page
+        this.$router.push({name:'Errors', query: {message: "email not exists"}});
+      }
+    }
+    , doLogin(info) {
+      console.log('Do login: ', info.email);
+      UserApi.loginWithSocial(
+        info.email
+        , res => {
+          // 로그인 완료 시 세션 저장소에 받은 토큰 정보 저장
+          sessionStorage.setItem('jwt-token', res.jwtToken);
+
+          res.userInfo.isAutoLogin = this.isSave;
+
+          // 로그인 정보를 vuex 에 저장
+          this.$store.commit('addUserInfo', res.userInfo);
+
+          // Save it also a local storage
+          localStorage.setItem('tvility', JSON.stringify(res.userInfo));
+
+          // curation/main 페이지로 이동
+          this.$router.push({path:"/curation/main"});
+        }
+        , error => {
+          this.$router.push({name:'Errors', query: {message: error.msg}});
+        }
+      )
+    }
+    , doJoin(info) {
+      console.log('Do join(info)');
+      console.log(info);
+      let data = {
+        nick_name: info.nickname,
+        email: info.email
+      };
+      console.log('Do join(data)');
+      console.log(data);
+      UserApi.joinWithSocial(
+        data
+        , res => {
+            this.doLogin(info);
+        }
+        , error => {
+          this.$router.push({name:'Errors', query: {message: error.msg}});
+        }
+      )
+    }
   },
   data: () => {
     return {
@@ -243,8 +352,8 @@ export default {
       },
       isSubmit: false,
       component: this,
-      teamImage,
-
+      logo,
+      kakaoLogo,
       kakaoButton
     };
   }
@@ -253,10 +362,12 @@ export default {
 
 <style scoped>
   .myuser {
-    margin-bottom: 50px;
+    background-color: #f8e8f2;
   }
   .myfeed {
     padding-top: 70px;
+    padding-bottom: 50px;
+    background-color: white;
   }
   .myfeedcard {
     width: 100%;
@@ -265,5 +376,24 @@ export default {
   .mythumbnail {
     width: 100%;
     height: auto;
+  }
+  .mybutton {
+    width: 100%;
+    height: 40px;
+    background-color: #d8c8f8;
+    box-shadow: none;
+  }
+  .mykakaobutton {
+    width: 100%;
+    height: 40px;
+    background-color: #f7e600;
+    box-shadow: none;
+  }
+  .mylogo {
+    height: 100%;
+    width: 33px
+  }
+  .mylink {
+    font-weight: 600;
   }
 </style>
