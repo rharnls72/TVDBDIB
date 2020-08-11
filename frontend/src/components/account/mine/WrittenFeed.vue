@@ -69,9 +69,6 @@ export default {
       this.$router.push({path: `/feed/detail/${key}`})
     }
   },
-  mounted() {
-    console.log(this.feed)
-  }
 }
 </script>
 
