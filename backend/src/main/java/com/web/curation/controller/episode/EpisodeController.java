@@ -81,15 +81,15 @@ public class EpisodeController {
 
 
     /* 이 아래로 TMDB API 이용하는 파트 */
-    @GetMapping("/episode/following/{uno}")
+    @GetMapping("/episode/following")
     @ApiOperation(value = "팔로우중인 프로그램의 에피소드 목록을 최신순으로 조회")
-    public Object getEpisodeListFromAPI(@PathVariable("uno") int uno, HttpServletRequest req) {
+    public Object getEpisodeListFromAPI(HttpServletRequest req) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
         RestTemplate restTemplate = new RestTemplate();
 
-        // 나중엔 토큰에서 유저 번호를 뽑아 써야함
-        // int uno = ((User) req.getAttribute("User")).getUno();
+        // 토큰에서 유저 번호를 뽑아 써야함
+        int uno = ((User) req.getAttribute("User")).getUno();
 
         // 팔로우중인 프로그램 리스트 조회
         //List<Program> programList = followdao.getProgramFollowings(uno);

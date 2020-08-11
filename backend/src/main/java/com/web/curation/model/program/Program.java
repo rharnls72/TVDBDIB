@@ -29,6 +29,27 @@ public class Program {
     private LocalDate start_date;
     private float rating;
     private ArrayList<EpisodeResponse> episode_list;
+
+    // Return API row result(JSON)
+    private Object programDetail;
+    private Object episodeGroup;
+
+    public Object getEpisodeGroup() {
+        return this.episodeGroup;
+    }
+
+    public void setEpisodeGroup(Object episodeGroup) {
+        this.episodeGroup = episodeGroup;
+    }
+
+    public Object getProgramDetail() {
+        return this.programDetail;
+    }
+
+    public void setProgramDetail(Object programDetail) {
+        this.programDetail = programDetail;
+    }
+
     /////////////////////////////////////////////
 
     // 프로그램 정보와 함께 넘길 정보들(좋아요 수, 좋아요 여부, 댓글 수, 대표 댓글 한 개)
