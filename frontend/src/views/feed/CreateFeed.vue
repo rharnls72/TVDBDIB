@@ -65,12 +65,11 @@ export default {
     if (!this.$route.params.feedId === false) {
       this.isArticle = false
       this.fno = Number(this.$route.params.feedId)
-      console.log('??', this.$route.params.feedId)
       FeedApi.feedDetail(
-        {id: this.$route.params.feedId},
+        this.$route.params.feedId,
         res => {
           console.log(res)
-          this.article = res.list;
+          this.article = res.feed;
           this.article.content = JSON.parse(this.article.content);
           this.article.tag = JSON.parse(this.article.tag);
           this.article.dibsNum = this.article.dibs_num;

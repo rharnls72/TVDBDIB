@@ -25,6 +25,7 @@ import EpisodeDetail from './components/curation/episode/EpisodeDetail.vue'
 import MyPage from './views/account/mine/MyPage.vue'
 import EditMyPage from './views/account/mine/EditMyPage.vue'
 
+import CreateShare from "@/components/feed/CreateShare.vue"
 import FeedMiniTab from './components/feed/FeedMiniTab.vue'
 
 import Setting from './views/account/mine/Setting.vue'
@@ -36,9 +37,15 @@ import ViewFollowings from './views/account/ViewFollowings.vue'
 import ViewFollowers from './views/account/ViewFollowers.vue'
 import AlertTest from './views/alert/AlertTest.vue'
 
+
 import ChatList from './views/message/ChatList.vue'
 import Chatroom from './views/message/Chatroom.vue'
 import EmptyChatroom from './views/message/EmptyChatroom.vue'
+
+import ProgramPage from '@/views/curation/ProgramPage.vue'
+
+import MessageList from './views/message/MessageList.vue'
+
 
 
 import KakaoLogin from './views/user/KakaoLogin.vue';
@@ -132,6 +139,11 @@ export default [
         component: CreateFeed
     },
     {
+        path: '/feed/edit/:fno',
+        name: 'EditFeedShare',
+        component: CreateShare
+    },
+    {
         path: '/alert/main',
         name: 'Alert',
         component: Alert
@@ -190,6 +202,16 @@ export default [
         path: '/scrap',
         name: 'IndexScrap',
         component: IndexScrap
+    },
+    {
+        path: '/createShare/:type/:no/:pno?/:season?',
+        name: 'CreateShare',
+        component: CreateShare
+    },
+    {
+        path: '/program/:pno',
+        name: 'ProgramPage',
+        component: ProgramPage
     },
     {
 
