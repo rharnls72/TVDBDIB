@@ -73,7 +73,7 @@ export default {
       };
 
       // Axios 요청
-      if (!this.fno === false) {
+      if (this.fno === null) {
         FeedApi.createFeed(
           // 요청에 쓸 데이터 전달
           Data
