@@ -65,8 +65,15 @@ export default {
         , res => {
           // 로그인 완료 시 세션 저장소에 받은 토큰 정보 저장
           sessionStorage.setItem('jwt-token', res.jwtToken);
+
+          let isAuto = this.$store.state.userInfo.isAutoLogin;
+          res.userInfo.isAutoLogin = isAuto;
+
           // 로그인 정보를 vuex 에 저장
           this.$store.commit('addUserInfo', res.userInfo);
+
+          // Save it also a local storage
+          localStorage.setItem('tvility', JSON.stringify(res.userInfo));
 
           // curation/main 페이지로 이동
           this.$router.push({path:"/curation/main"});

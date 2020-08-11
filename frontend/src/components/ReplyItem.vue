@@ -45,6 +45,7 @@ export default {
   props: {
     fno: Number,
     eno: Number,
+    pno: Number,
   },
   methods: {
     addCount() {
@@ -60,6 +61,11 @@ export default {
       } else if (!this.fno===false) {
         this.addData = {
           no: this.fno,
+          content: this.content,
+        }
+      } else {
+        this.addData = {
+          no: this.pno,
           content: this.content,
         }
       }
@@ -176,7 +182,27 @@ export default {
       this.delfun = CurationApi.deleteEpisodeReply
       this.readfun = CurationApi.readReply
       this.section = "episode"
+    } else {
+      CurationApi.programReplyRead(
+        { 
+          no: this.pno,
+          num: 1
+        }
+        , res => {
+          this.replies = res.data.data;
+          for (let i=0; i<this.replies.length; i++) {
+            this.replies[i].isStretch = false
+          }
+          console.log(this.replies)
+        }
+        , err => console.log(err)
+      )
+      this.addfun = CurationApi.programReplyCreate
+      this.delfun = CurationApi.programReplyDelete
+      this.readfun = CurationApi.programReplyRead
+      this.section = "program"
     }
+
   }
 }
 </script>
