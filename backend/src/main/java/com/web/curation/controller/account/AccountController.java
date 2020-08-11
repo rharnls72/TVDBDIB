@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,6 +125,30 @@ public class AccountController {
         return response;
     }
 
+    @GetMapping("/account/social/login/{email}")
+    @ApiOperation(value = "Login for social")
+    public Object loginForSocial(@PathVariable String email) {
+        User user = userDao.getUserByEmail(email);
+        final BasicResponse result = new BasicResponse();
+
+        // 토큰 주기 전에 profile_pic 부터 좀 어떻게 해줘야함 ㅠ
+        String save_profile_pic = user.getProfile_pic();
+        user.setProfile_pic(null);
+
+        HashMap<String, Object> responseData = new HashMap<>();
+        responseData.put("user", user);
+        responseData.put("token", jwtService.makeToken(user));
+
+        // 토큰 만들었으면 profile_pic 리스토어
+        user.setProfile_pic(save_profile_pic);
+
+        result.status = true;
+        result.msg = "success";
+        result.data = responseData;
+        System.out.println("Social Login 성공 !");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @PostMapping("/account/signup")
     @ApiOperation(value = "가입하기")
     public Object signup(@Valid @RequestBody SignupRequest request) {
@@ -166,6 +191,30 @@ public class AccountController {
             result.status = true;
             result.msg = "success";
             mailConfig.sendJoinMail(sender, request.getEmail(), request.getNick_name());
+        }
+        // 아니면 오류가 난거
+        else {
+            result.status = false;
+            result.msg = "데이터베이스 갱신 : " + n;
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/account/social/join")
+    @ApiOperation(value = "Social join")
+    public Object joinWithSocial(@RequestBody User user) {
+        // 이메일이 중복되지 않았다면 회원가입 진행
+        int n = userDao.addNewUserWithSocial(user);
+        final BasicResponse result = new BasicResponse();
+
+        // Why errer bb
+        System.out.println(user);
+
+        // 단 하나의 수정이 일어났다면 가입 된거
+        if (n == 1) {
+            result.status = true;
+            result.msg = "success";
         }
         // 아니면 오류가 난거
         else {

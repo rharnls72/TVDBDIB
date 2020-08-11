@@ -39,6 +39,12 @@ import AlertTest from './views/alert/AlertTest.vue'
 
 import ProgramPage from '@/views/curation/ProgramPage.vue'
 
+import MessageList from './views/message/MessageList.vue'
+
+
+import KakaoLogin from './views/user/KakaoLogin.vue';
+
+
 export default [
 
     {
@@ -201,4 +207,15 @@ export default [
         name: 'ProgramPage',
         component: ProgramPage
     },
+    {
+
+        path: '/message/main',
+        name: 'MessageList',
+        component: MessageList
+    },
+    {
+        path: '/oauth/kakao',
+        name: 'KakaoLogin',
+        component: KakaoLogin
+    }
 ]
