@@ -78,6 +78,7 @@
 <script>
 import "../../components/css/user.scss";
 import UserApi from "../../api/UserApi";
+import AccountApi from "@/api/AccountApi";
 import PV from "password-validator";
 import * as EmailValidator from "email-validator";
 import LoginHeader from '../../components/user/custom/LoginHeader.vue'
@@ -112,10 +113,54 @@ export default {
     // }
   },
   methods: {
-    checkForm() {
+    checkEmail() {
       if (this.email.length >= 0 && !EmailValidator.validate(this.email))
         this.error.email = "이메일 형식이 아닙니다.";
       else this.error.email = false;
+
+      if(this.error.email == false) {
+        UserApi.requestFindEmail(
+          {email: this.email},
+          res => {
+            if(res.isEmail) {
+              // Invalid
+              this.error.email = "중복된 이메일 입니다.";
+            } else {
+              // Valid
+              this.error.email = false;
+            }
+          },
+          err => {
+            console.log('Join-checkEmail() Error', err.msg);
+          }
+        );
+      }
+    },
+    checkNick() {
+      // 빠르게 문자열의 바이트 수를 구하는 함수래요
+      function getByteLength(s){
+        let b, i, c;
+        for(b=i=0;(c=s.charCodeAt(i++)) > 0;b+=c>>11?3:c>>7?2:1);
+          return b;
+      }
+
+      if(getByteLength(this.nick_name) > 20)
+        this.error.nick_name = "닉네임은 20Byte를 넘지 않아야 합니다.";
+      else this.error.nick_name = false;
+
+      if(this.error.nick_name == false) {
+        AccountApi.requestFindNick(
+
+        );
+      }
+    },
+    checkPasswd() {
+
+    },
+    checkPasswdConfirm() {
+
+    },
+    checkForm() {
 
       if (
         this.password.length >= 0 &&
@@ -127,17 +172,6 @@ export default {
       if(this.password != this.passwordConfirm)
         this.error.passwordConfirm = "비밀번호가 일치하지 않습니다.";
       else this.error.passwordConfirm = false;
-
-      // 빠르게 문자열의 바이트 수를 구하는 함수래요
-      function getByteLength(s){
-        let b, i, c;
-        for(b=i=0;(c=s.charCodeAt(i++)) > 0;b+=c>>11?3:c>>7?2:1);
-          return b;
-      }
-
-      if(getByteLength(this.nick_name) > 20)
-        this.error.nick_name = "닉네임은 20Byte를 넘지 않아야 합니다."
-      else this.error.nick_name = false;
 
       // this.error.term = !this.isTerm;
 
