@@ -1,5 +1,5 @@
 <template>
-  <div class="feed newsfeed" style="margin-bottom: 100px;">
+  <div class="feed newsfeed">
     <IndexCurationHeader />
     <div class="wrapB mb-4">
       <div class="myfeed" v-for="feed in feeds" :key="feed.fno">
