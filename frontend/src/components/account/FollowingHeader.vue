@@ -1,5 +1,5 @@
 <template>
-  <b-nav justified class="myheader py-1 d-flex justify-content-between">
+  <b-nav justified class="myheader d-flex align-items-center">
     <b-nav-item>
       <!-- 메시지 -->
       <button>
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'IndexCuarationHeader',
+  name: 'FollowingHeader',
   methods: {
     // 피드 작성 페이지로 이동
     createFeed() {
@@ -28,11 +28,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .myheader {
-    background-color: #eee;
+    background-color: #D8BEFE;
     position: fixed;
     width: 100%;
+    height: 50px;
     z-index: 1;
   }
 </style>
