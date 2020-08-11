@@ -3,17 +3,17 @@
     <div class="wrapB">
       <div class="container mt-3">
         <div class="row p-0">
-          <img class="col-3 p-0 mb-3" :src="defaultProfile" alt="default-image">
+          <img class="col-3 p-0 mb-3" :src="profile_img" alt="default-image">
           <div class="col-3 my-3">
             <h5 class="mb-0 text-center">{{followcnt.feed_cnt}}</h5>
             <p class="mb-0 text-center">게시물</p>
           </div>
           <div class="col-3 my-3" @click="moveFollowerPage()">
-            <h5 class="mb-0 text-center">{{followcnt.follower_cnt}}</h5>
+            <h5 class="mb-0 text-center" v-html="followcnt.follower_cnt"></h5>
             <p class="mb-0 text-center">팔로워</p>
           </div>
           <div class="col-3 my-3" @click="moveFollowingPage()">
-            <h5 class="mb-0 text-center">{{followcnt.following_cnt}}</h5>
+            <h5 class="mb-0 text-center" v-html="followcnt.following_cnt"></h5>
             <p class="mb-0 text-center">팔로잉</p>
           </div>
         </div>
@@ -39,7 +39,12 @@ export default {
   },
   data() {
     return {
-      defaultProfile,
+      profile_img: defaultProfile,
+    }
+  },
+  mounted() {
+    if(this.info.profile_pic != null) {
+      this.profile_img = this.info.profile_pic;
     }
   },
   methods: {
@@ -51,7 +56,8 @@ export default {
       AccountApi.requestFollow(
         data,
         res => {
-          this.$router.go(this.$router.currentRoute);
+          this.followcnt.is_follow = 1;
+          this.followcnt.follower_cnt++;
         },
         error => {
           this.$router.push({name:'Errors', query: {message: error.msg}})
@@ -66,7 +72,8 @@ export default {
       AccountApi.requestDeFollow(
         data,
         res => {
-          this.$router.go(this.$router.currentRoute);
+          this.followcnt.is_follow = 0;
+           this.followcnt.follower_cnt--;
         },
         error => {
           this.$router.push({name:'Errors', query: {message: error.msg}})

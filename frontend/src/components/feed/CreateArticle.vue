@@ -1,5 +1,5 @@
 <template>
-  <div class="user join wrapC">
+  <div class="user join wrapC" id="article">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <b-icon @click="moveMain" icon="chevron-left" font-scale="1.5"></b-icon>
       <b-icon @click="submitArticle" icon="check-square" font-scale="1.4"></b-icon>
@@ -65,7 +65,6 @@ export default {
     submitArticle() {
       let sendData = this.makeData();
 
-      console.log(this.$store.state.isUser)
       // createFeed 요청에 줄 데이터 목록
       // uno 는 토큰을 통해 사용하기위해 제거
       let Data = {
@@ -75,18 +74,18 @@ export default {
       };
 
       // Axios 요청
-      if (this.fno === null) {
+      if (!this.fno === false) {
         FeedApi.createFeed(
           // 요청에 쓸 데이터 전달
           Data
           // 성공시 수행할 콜백 메서드
           , res => {
-            console.log(res);
+            console.log('createFeed Success: ' + res);
             this.$router.push({path: '/feed/main'})
           }
           // 실패시 수행할 콜백 메서드
           , err => {
-            console.log(err);
+            console.log('createFeed Error: ' + err);
           } 
         )
       } else {

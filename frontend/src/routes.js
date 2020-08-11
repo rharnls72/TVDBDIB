@@ -11,12 +11,7 @@ import PageNotFound from './views/PageNotFound.vue'
 import ModifyPwComplete from './views/user/ModifyPwComplete.vue'
 
 import CreateFeed from '@/views/feed/CreateFeed.vue'
-import FeedItem from '@/components/feed/FeedItem.vue'
 import feedDetail from '@/components/feed/feedDetail.vue'
-import feedArticleItem from '@/components/feed/feedArticleItem.vue'
-import feedCountdownItem from '@/components/feed/feedCountdownItem.vue'
-import feedVoteItem from '@/components/feed/feedVoteItem.vue'
-
 
 import EmailConfirm from './views/user/EmailConfirm.vue'
 import ModifyPwEmail from './views/user/ModifyPwEmail.vue'
@@ -26,16 +21,35 @@ import FindPwRe from './views/user/FindPwRe.vue'
 import IndexCuration from './views/curation/IndexCuration.vue'
 import IndexSearch from './views/search/IndexSearch.vue'
 import Alert from './views/alert/Alert.vue'
-import EpisodeDetail from './views/curation/episode/EpisodeDetail.vue'
+import EpisodeDetail from './components/curation/episode/EpisodeDetail.vue'
 import MyPage from './views/account/mine/MyPage.vue'
 import EditMyPage from './views/account/mine/EditMyPage.vue'
 
+import CreateShare from "@/components/feed/CreateShare.vue"
+import FeedMiniTab from './components/feed/FeedMiniTab.vue'
+
 import Setting from './views/account/mine/Setting.vue'
+import IndexScrap from './views/account/mine/IndexScrap.vue'
 
 import OtherPage from './views/account/your/OtherPage.vue'
 
 import ViewFollowings from './views/account/ViewFollowings.vue'
 import ViewFollowers from './views/account/ViewFollowers.vue'
+import AlertTest from './views/alert/AlertTest.vue'
+
+
+import ChatList from './views/message/ChatList.vue'
+import Chatroom from './views/message/Chatroom.vue'
+import EmptyChatroom from './views/message/EmptyChatroom.vue'
+
+import ProgramPage from '@/views/curation/ProgramPage.vue'
+
+import MessageList from './views/message/MessageList.vue'
+
+
+
+import KakaoLogin from './views/user/KakaoLogin.vue';
+
 
 export default [
 
@@ -125,37 +139,27 @@ export default [
         component: CreateFeed
     },
     {
-        path: '/alert/test',
+        path: '/feed/edit/:fno',
+        name: 'EditFeedShare',
+        component: CreateShare
+    },
+    {
+        path: '/alert/main',
         name: 'Alert',
         component: Alert
     },
     {
-        path: '/feed/feedItem',
-        name: 'FeedItem',
-        component: FeedItem
+        path: '/alert/test',
+        name: 'AlertTest',
+        component: AlertTest
     },
     {
-        path: '/feed/feedDetail/:id',
+        path: '/feed/detail/:fno',
         name: 'FeedDetail',
         component: feedDetail
     },
     {
-        path: '/feed/feedArticleItem',
-        name: 'FeedArticleItem',
-        component: feedArticleItem
-    },
-    {
-        path: '/feed/feedCountdownItem',
-        name: 'FeedCountdownItem',
-        component: feedCountdownItem
-    },
-    {
-        path: '/feed/feedVoteItem',
-        name: 'FeedVoteItem',
-        component: feedVoteItem
-    },
-    {
-        path: '/episode/:id',
+        path: '/episode/detail/:pno/:season/:episode',
         name: 'EpisodeDetail',
         component: EpisodeDetail
     },
@@ -189,4 +193,45 @@ export default [
         name: 'Setting',
         component: Setting
     },
+    {
+        path: '/feed/miniTap',
+        name: 'FeedMiniTab',
+        component: FeedMiniTab
+    },
+    {
+        path: '/scrap',
+        name: 'IndexScrap',
+        component: IndexScrap
+    },
+    {
+        path: '/createShare/:type/:no/:pno?/:season?',
+        name: 'CreateShare',
+        component: CreateShare
+    },
+    {
+        path: '/program/:pno',
+        name: 'ProgramPage',
+        component: ProgramPage
+    },
+    {
+
+        path: '/message/chatroom/:cno',
+        name: 'Chatroom',
+        component: Chatroom
+    },
+    {
+        path: '/message/main',
+        name: 'ChatList',
+        component: ChatList
+    },
+    {
+        path: '/message/new',
+        name: 'EmptyChatroom',
+        component: EmptyChatroom
+    },
+    {
+        path: '/oauth/kakao',
+        name: 'KakaoLogin',
+        component: KakaoLogin
+    }
 ]

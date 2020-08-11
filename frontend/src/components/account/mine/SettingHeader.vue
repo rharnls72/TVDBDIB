@@ -1,10 +1,10 @@
 <template>
   <b-nav justified class="myheader align-items-center">
-    <button @click="backpage()">
     <b-nav-item class="d-flex justify-content-start">
-      <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
+      <button @click="backpage()">
+        <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
+      </button>
     </b-nav-item>
-    </button>
     <b-nav-item class="d-flex justify-content-center">
       <p class="text-dark mb-0"><strong>설정</strong></p>
     </b-nav-item>
@@ -25,7 +25,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .myheader {
     background-color: #eee;
     position: fixed;

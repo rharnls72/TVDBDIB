@@ -57,6 +57,7 @@
             , f.tag             AS `tag`
             , u.nick_name       AS `nick_name`
             , u.profile_pic     AS `profile_pic`
+            <!-- Number of reply -->
             , (
                 SELECT
                     COUNT(fr.frno)
@@ -65,6 +66,7 @@
                 WHERE
                     fr.fno = f.fno
             )   AS `reply_num`
+            <!-- Nick name and content of first reply -->
             , (
                 SELECT
                     CONCAT(`writer_nick_name`, ':', `content`)
@@ -77,6 +79,7 @@
                 ORDER BY frv.like_num DESC
                 LIMIT 1
             ) AS `reply_content`
+            <!-- Number of like -->
             , (
                 SELECT
                     COUNT(fl.lno)
@@ -85,6 +88,7 @@
                 WHERE
                     fl.fno = f.fno
             )   AS `like_num`
+            <!-- Is press a like button on this feed? -->
             , IF((
                 SELECT
                     COUNT(fl.lno)
@@ -95,6 +99,7 @@
                     AND
                     fl.uno = #{uno}
             ) > 0, true, false)   AS `press_like`
+            <!-- Number of dibs -->
             , (
                 SELECT
                     COUNT(fd.dno)
@@ -103,6 +108,141 @@
                 WHERE
                     fd.fno = f.fno
             ) AS `dibs_num`
+            <!-- Is press a dibs button on this feed? -->
+            , IF((
+                SELECT
+                    COUNT(fd.dno)
+                FROM
+                    `feed_dibs` fd
+                WHERE
+                    fd.fno = f.fno
+                    AND
+                    fd.uno = #{uno}
+            ) > 0, true, false) AS `press_dibs`
+        FROM
+            (
+                <choose>
+                    <!-- Get feed list -->
+                    <when test="is_dibs == 0">
+                        SELECT
+                            `fno`
+                        FROM
+                            `feed`
+                        WHERE
+                            <choose>
+                                <!-- Get feed list -->
+                                <when test="target_uno == 0">
+                                `uno` IN (
+                                    SELECT
+                                        `following`
+                                    FROM
+                                        `user_follow`
+                                    WHERE
+                                        `follower` = #{uno}
+                                )
+                                OR
+                                `uno` = #{uno}
+                                </when>
+                                <!-- Get feed list(profile) => Feed written by target user -->
+                                <otherwise>
+                                `uno` = #{target_uno}
+                                </otherwise>
+                            </choose>
+                        ORDER BY `fno` DESC
+                    </when>
+                    <!-- Get feed list(profile) => Feed that the user pressed a dibs button -->
+                    <otherwise>
+                        SELECT
+                            `fno`
+                            , `dno`
+                        FROM
+                            `feed_dibs`
+                        WHERE
+                            `uno` = #{uno}
+                        ORDER BY `dno` DESC
+                    </otherwise>
+                </choose>
+                LIMIT ${num} , 20
+            ) t
+                JOIN
+            `feed` f ON t.fno = f.fno
+                JOIN
+            `user` u ON f.uno = u.uno
+        <choose>
+            <when test="is_dibs == 0">
+                ORDER BY `fno` DESC
+            </when>
+            <otherwise>
+                ORDER BY t.dno DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getFeedDetail" resultType="Feed">
+        SELECT
+            f.fno               AS `fno`
+            , f.uno             AS `uno`
+            , f.pno             AS `pno`
+            , f.eno             AS `eno`
+            , f.create_date     AS `create_date`
+            , f.content         AS `content`
+            , f.ctype           AS `ctype`
+            , f.thumbnail       AS `thumbnail`
+            , f.tag             AS `tag`
+            , u.nick_name       AS `nick_name`
+            , u.profile_pic     AS `profile_pic`
+            <!-- Number of reply -->
+            , (
+                SELECT
+                    COUNT(fr.frno)
+                FROM
+                    `feed_reply` fr
+                WHERE
+                    fr.fno = f.fno
+            )   AS `reply_num`
+            <!-- Nick name and content of first reply -->
+            , (
+                SELECT
+                    CONCAT(`writer_nick_name`, ':', `content`)
+                FROM
+                    `feed_reply_view` frv
+                WHERE
+                    frv.parent_reply IS NULL
+                    AND
+                    frv.fno = f.fno
+                ORDER BY frv.like_num DESC
+                LIMIT 1
+            ) AS `reply_content`
+            <!-- Number of like -->
+            , (
+                SELECT
+                    COUNT(fl.lno)
+                FROM
+                    `feed_like` fl
+                WHERE
+                    fl.fno = f.fno
+            )   AS `like_num`
+            <!-- Is press a like button on this feed? -->
+            , IF((
+                SELECT
+                    COUNT(fl.lno)
+                FROM
+                    `feed_like` fl
+                WHERE
+                    fl.fno = f.fno
+                    AND
+                    fl.uno = #{uno}
+            ) > 0, true, false)   AS `press_like`
+            <!-- Number of dibs -->
+            , (
+                SELECT
+                    COUNT(fd.dno)
+                FROM
+                    `feed_dibs` fd
+                WHERE
+                    fd.fno = f.fno
+            ) AS `dibs_num`
+            <!-- Is press a dibs button on this feed? -->
             , IF((
                 SELECT
                     COUNT(fd.dno)
@@ -116,37 +256,14 @@
         FROM
             (
                 SELECT
-                    `fno`
+                    *
                 FROM
                     `feed`
                 WHERE
-                    `uno` IN (
-                        SELECT
-                            `following`
-                        FROM
-                            `user_follow`
-                        WHERE
-                            `follower` = #{uno}
-                    )
-                    OR
-                    `uno` = #{uno}
-                ORDER BY `fno` DESC
-                LIMIT ${num} , 20
-            ) t
-                JOIN
-            `feed` f ON t.fno = f.fno
+                    `fno` = #{num}
+            ) f
                 JOIN
             `user` u ON f.uno = u.uno
-        ORDER BY `fno` DESC
-    </select>
-
-    <select id="getFeedDetail" resultType="Feed">
-        select
-            *
-        from
-            feed
-        where
-            fno = #{value}
     </select>
 
     <select id="getFeedCount" resultType="int">

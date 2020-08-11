@@ -4,24 +4,21 @@
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info mb-2">
         <div class="user-name">
-          <button>{{nick_name}}</button>
+          <button>{{article.nick_name}}</button>
         </div>
         <p class="date">{{createAfter}} 시간 전</p>
       </div>
       <div class="content d-flex flex-comlumn justify-content-between align-items-center my-2">
-        <div>{{feedTitle}}</div>
-        <div v-if="!!this.$store.state.userInfo && this.$store.state.userInfo.uno === writer_uno">
+        <div>{{article.content.title}}</div>
+        <div v-if="!!this.$store.state.userInfo && this.$store.state.userInfo.uno === article.uno">
           <span @click="updateFeed">수정</span>   <span @click="delFeed">삭제</span>
         </div>
       </div>
     </div>
     <div class="feed-card">
       <div class="mythumbnail d-flex justify-content-center align-items-center">
-        <!-- <p v-for="tag in article.tag" :key="tag" class="py-5">
-          #{{tag}}
-        </p> -->
         <div class="px-3 py-5">
-          <span v-for="tag in tags" :key="tag">
+          <span v-for="tag in article.tag" :key="tag">
             #{{tag}}
           </span>
         </div>
@@ -33,25 +30,25 @@
         <!-- 좋아요 -->
         <div class="mr-3">
           <button class="h6 mr-1" @click="touchLikeIcon">
-            <b-icon-heart v-if="!likeIcon"></b-icon-heart>
+            <b-icon-heart v-if="!article.press_like"></b-icon-heart>
             <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
           </button>
-          {{like_num}}
+          {{article.like_num}}
         </div>
         <!-- 댓글 -->
         <div class="mr-3">
           <button class="h6 mr-1">
             <b-icon-chat></b-icon-chat>
           </button>
-          {{reply_num}}
+          {{article.reply_num}}
         </div>
         <!-- 스크랩 -->
         <div class="mr-3">
           <button class="h6 mr-1" @click="touchScrapIcon">
-            <b-icon-bookmark v-if="!scrapIcon"></b-icon-bookmark>
+            <b-icon-bookmark v-if="!article.press_dibs"></b-icon-bookmark>
             <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
-          {{scrapNum}} 
+          {{article.dibs_num}} 
           <!-- 스크랩 카운트 -->
         </div>
         <!---->
@@ -66,22 +63,23 @@
       </div>
     </div>
     <div>
-      <span class="font-weight-bold">좋아요 {{like_num}}명</span>
+      <span class="font-weight-bold">좋아요 {{article.like_num}}명</span>
     </div>
     <div class="wrap mt-2">
-      <span>
-        <span class="font-weight-bold">{{nick_name}} </span>{{content}}<br>
-        <span v-for="tag in tags" :key="tag" class="tag">#{{tag}} </span><br>
-        <span v-if="!isLong" @click="changeIsLong" class="moreView">댓글 {{reply_num}}개</span>
-      </span>
-      <span class="font-weight-bold">{{reply_user_nick}} </span>{{reply_content}}
-      <ReplyItem v-if="isLong" :fno="fno"/>
+      <span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.content}}<br>
+    </div>
+    <div class="wrap mt-2">
+      <span v-for="tag in article.tag" :key="tag" class="tag">#{{tag}} </span><br>
+      <span v-if="!!article.reply_num && !detail" class="moreView">댓글 {{article.reply_num}}개</span><br>
+    </div>
+    <div v-if="!detail">
+      <span class="font-weight-bold">{{article.reply_user_nick}} </span>{{article.reply_content}}<br>
+      <span @click="moveDetail" class="moreView">댓글 남기기</span>
     </div>
   </div>
 </template>
 
 <script>
-import ReplyItem from "@/components/ReplyItem.vue"
 import defaultImage from "../../assets/images/img-placeholder.png";
 import defaultProfile from "../../assets/images/profile_default.png";
 
@@ -92,110 +90,82 @@ export default {
   data: () => {
     return { 
       defaultImage, defaultProfile,
-      content: 'ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ',
-      comment: null,
-      tags: ['소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ','소통', '맞팔', '너무', '귀엽당', 'ㅎㅎ'],
-      reply: ['wow', '너무 좋아용 ㅎㅎ'],
-      additionReply: "",
-      likeIcon: false,
-      scrapIcon: false,
-      like_num: 12,
-      reply_num: 11,
-      feedTitle: '제목제목',
-      thumbnail: 'asdfasdf',
-      writer_uno: 1,
-      scrapNum: 12,
-      create_date: 'ddddd0',
-      isLong: false,
-      reply_user_nick: [],
-      nick_name: null,
-      reply_content: null,
+      isLong: true,
     };
-  },
-  components: {
-    ReplyItem,
   },
   computed: {
     createAfter() {
       const today = new Date()
-      return parseInt((today-new Date(this.create_date)) / (1000*60*60))
+      return parseInt((today-new Date(this.article.create_date)) / (1000*60*60))
     }
   },
   props:{
     article: Object,
     fno: Number,
+    detail: Boolean,
   },
   methods: {
-    changeIsLong() {
-      this.isLong=true
-    },
     touchLikeIcon() {
-      this.likeIcon = !this.likeIcon
-      if (this.likeIcon) {
-        this.like_num ++
+      this.article.press_like = !this.article.press_like
+      if (this.article.press_like) {
+        this.article.like_num ++
         FeedApi.createFeedLike(
-          { tno: this.fno }
+          { tno: this.article.fno }
           , res => console.log(res)
           , err => console.log(err))
       }
       else {
-        this.like_num --
+        this.article.like_num --
         FeedApi.deleteFeedLike(
-          { tno: this.fno }
+          { tno: this.article.fno }
           , res => console.log(res)
           , err => console.log(err))
       }
     },
     touchScrapIcon() {
-      this.scrapIcon = !this.scrapIcon
-      if (this.scrapIcon) {
-        this.scrapNum ++
+      this.article.press_dibs = !this.article.press_dibs
+      if (this.article.press_dibs) {
+        this.article.dibs_num ++
+        FeedApi.createDibs(
+          {tno: this.article.fno}
+          , res => console.log(res)
+          , err => console.log(err)
+        );
       }
       else {
-        this.scrapNum --
+        this.article.dibs_num --
+        FeedApi.deleteDibs(
+          this.article.fno
+          , res => console.log(res)
+          , err => console.log(err)
+        );
       }
-      // console.log(this.scrapIcon)
     },
     delFeed() {
       FeedApi.deleteFeed(
-          this.fno,
+          this.article.fno,
           res=> {
             console.log(res)
-            this.$emit('deleteItem', this.fno)
+            this.$emit('deleteItem', this.article.fno)
           },
           err=> console.log(err)
         )
     },
     updateFeed() {
-      this.$router.push({ path:'/feed/create/1/' + String(this.fno) })
+      this.$router.push({ path:'/feed/create/1/' + String(this.article.fno) })
+    },
+    moveDetail() {
+      this.$router.push({path: `/feed/detail/${this.article.fno}`})
     }
   },
   created() {
-    this.feedTitle = this.article.content.title
-    this.content = this.article.content.content
-    this.tags = this.article.tag
-    this.reply = this.article.reply_content
-    this.reply_num = this.article.reply_num
-    this.thumbnail = this.article.thumbnail
-    this.writer_uno = this.article.uno
-    this.likeIcon = this.article.press_like
-    this.scrapIcon = this.article.press_dibs
-    this.reply_user_nick = this.article.reply_user_nick
-    this.nick_name = this.article.nick_name
-    this.reply_content = this.article.reply_content
-    if (!this.article.dibsNum) {this.scrapNum = 0}
-    else {this.scrapNum = this.article.dibsNum}
-    this.create_date = this.article.create_date
-    if (!this.article.like_num) {this.like_num = 0}
-    else {this.like_num = this.article.like_num}
+    if (!this.article.dibs_num) {this.article.dibs_num = 0}
+    if (!this.article.like_num) {this.article.like_num = 0}
   }
 };
 </script>
 
 <style scoped>
-/* .content {
- border-bottom: 1px solid gray;
-} */
 .moreView {
   color: darkgray; 
 }

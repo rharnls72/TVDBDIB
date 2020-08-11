@@ -8,14 +8,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
 import com.web.curation.dao.following.FollowingDao;
 import com.web.curation.model.BasicResponse;
+import com.web.curation.model.alert.Alert;
 import com.web.curation.model.program.Program;
 import com.web.curation.model.following.ProgramFollowing;
 import com.web.curation.model.user.User;
+import com.web.curation.service.FirebaseDao;
 import com.web.curation.model.following.UserFollowing;
 
 import io.swagger.annotations.ApiResponse;
@@ -39,7 +42,8 @@ public class FollowingController {
     
     @Autowired
     FollowingDao dao;
-
+    @Autowired
+    private FirebaseDao alertService;
     /*
         User Following
     */
@@ -59,6 +63,14 @@ public class FollowingController {
             result.msg = "Insert 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
+        Alert alert = new Alert();
+        alert.setUno(uf.getFollowing());
+        alert.setSubject_no(uf.getFollower());
+        // 알림 타입(4: 팔로우 요청)
+        alert.setAtype(4);
+        alert.setRead(true);
+        alert.setTime(LocalDateTime.now());
+        alertService.addFollowing(alert);
 
         // 여기까지 문제 없이 내려왔으면 성공적으로 유저 팔로잉 추가가 완료된 것
         result.status = true;
@@ -174,6 +186,7 @@ public class FollowingController {
             result.msg = "Delete 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
+        alertService.cancelFollowing(uf);
 
         // 여기까지 문제 없이 내려왔으면 성공적으로 유저 팔로잉 삭제가 완료된 것
         result.status = true;

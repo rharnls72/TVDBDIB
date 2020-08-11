@@ -1,9 +1,9 @@
 <template>
-  <div class="feed newsfeed myfeed">
+  <div class="feed newsfeed pt-0">
     <div class="wrapB">
-      <div class="container mt-3">
+      <!-- <div class="container mt-3"> -->
         <div class="row p-0">
-          <img class="col-3 p-0 mb-3" :src="defaultProfile" alt="default-image">
+          <img class="col-3 p-0 mb-3" :src="profile_img" alt="default-image">
           <div class="col-3 my-3">
             <h5 class="mb-0 text-center">{{followcnt.feed_cnt}}</h5>
             <p class="mb-0 text-center">게시물</p>
@@ -21,7 +21,7 @@
         <p class="row p-0">
           <button class="col-12 mybutton p-0 text-dark" @click="editmypage">프로필 수정</button>
         </p>
-      </div>
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -37,7 +37,12 @@ export default {
   },
   data() {
     return {
-      defaultProfile,
+      profile_img: defaultProfile,
+    }
+  },
+  mounted() {
+    if(this.info.profile_pic != null) {
+      this.profile_img = this.info.profile_pic;
     }
   },
   methods: {
@@ -54,7 +59,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .introduce {
     line-height: 1.5em;
   }
@@ -63,8 +68,5 @@ export default {
     box-shadow: none;
     border: 1px solid lightgray;
     border-radius: 0.25rem;
-  }
-  .myfeed {
-    padding-top: 50px;
   }
 </style>

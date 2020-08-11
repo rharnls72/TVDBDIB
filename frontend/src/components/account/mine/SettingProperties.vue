@@ -31,13 +31,14 @@ export default {
     logout(){
       this.$store.commit('setAutoLogin', false);
       localStorage.removeItem('tvility');
+      sessionStorage.removeItem('jwt-token');
       this.$router.push({name:'Login'})
     }
   },
 }
 </script>
 
-<style>
+<style scoped>
   .myfeed {
     padding-top: 50px;
   }
