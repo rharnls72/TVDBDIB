@@ -41,11 +41,8 @@ import AlertTest from './views/alert/AlertTest.vue'
 import ChatList from './views/message/ChatList.vue'
 import Chatroom from './views/message/Chatroom.vue'
 import EmptyChatroom from './views/message/EmptyChatroom.vue'
-
+import ChooseFollowing from './views/message/ChooseFollowing.vue'
 import ProgramPage from '@/views/curation/ProgramPage.vue'
-
-import MessageList from './views/message/MessageList.vue'
-
 
 
 import KakaoLogin from './views/user/KakaoLogin.vue';
@@ -228,6 +225,11 @@ export default [
         path: '/message/new',
         name: 'EmptyChatroom',
         component: EmptyChatroom
+    },
+    {
+        path: '/message/followlist',
+        name: 'ChooseFollowing',
+        component: ChooseFollowing
     },
     {
         path: '/oauth/kakao',

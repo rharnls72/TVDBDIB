@@ -7,13 +7,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.google.cloud.Timestamp;
 import com.web.curation.dao.message.MessageDao;
 import com.web.curation.model.BasicResponse;
+import com.web.curation.model.message.ChatRoom;
 import com.web.curation.model.message.Message;
 import com.web.curation.model.user.User;
 import com.web.curation.service.MessageService;
@@ -76,6 +81,33 @@ public class MessageController {
 
         result.status = true;
         result.data = userlist;
+        result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @PostMapping("/message/newchatroom")
+    @ApiOperation(value = "채팅룸 생성")
+    public Object createChatroom(@RequestBody ChatRoom room) {
+        final BasicResponse result = new BasicResponse();
+        room.setTime(Timestamp.now());
+        String str = messageService.createChatRoom(room);
+        if(str==null) {
+            result.status = false;
+            result.msg = "채팅룸 생성 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+        result.status = true;
+        result.data = str;
+        result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @PostMapping("/message/getroom")
+    @ApiOperation(value = "채팅룸 조회")
+    public Object getChatroom(@RequestBody ChatRoom request) {
+        final BasicResponse result = new BasicResponse();
+        ChatRoom room = messageService.getChatRoom(request.getUsersToString());
+        result.status = true;
+        result.data = room;
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
