@@ -48,16 +48,17 @@
       >로그인</button> -->
 
       <button @click="onLogin" :disabled="!isSubmit" :class="{disabled : !isSubmit}" class="btn mybutton mt-2 d-flex justify-content-center align-items-center">
-       <p class="d-inline m-0">로그인</p>
+        <p class="d-inline m-0">로그인</p>
       </button>
 
       <button @click="doKakaoLogin" class="btn mykakaobutton mt-2 d-flex justify-content-center align-items-center">
         <img class="d-inline mylogo pr-2" :src="kakaoLogo" alt="kakao-logo">
-       <p class="d-inline m-0">카카오 로그인</p>
+        <p class="d-inline m-0">카카오 로그인</p>
       </button>
 
-      <button @click="doGoogleLogin" class="btn mykakaobutton mt-2 d-flex justify-content-center align-items-center">
-       <p class="d-inline m-0">Google 로그인</p>
+      <button @click="doGoogleLogin" class="btn mygooglebutton mt-2 d-flex justify-content-center align-items-center">
+        <img class="d-inline mylogo pr-2" :src="googleLogo" alt="google-logo">
+        <p class="d-inline m-0">구글 로그인</p>
       </button>
 
       <!-- <div class="sns-login">
@@ -81,21 +82,6 @@
         <router-link to="/user/findPw" class="text-dark mylink mr-3">비밀번호 찾기</router-link>
         <router-link to="/user/join" class="text-dark mylink">가입하기</router-link>
       </div>
-
-      <!-- <div class="add-option mt-3">
-        <div class="text">
-          <p>혹시</p>
-          <div class="bar"></div>
-        </div>
-        <div class="wrap m-0">
-          <p>비밀번호를 잊으셨나요?</p>
-          <router-link to="/user/findPw" class="btn--text">비밀번호 찾기</router-link>
-        </div>
-        <div class="wrap m-0">
-          <p>아직 회원이 아니신가요?</p>
-          <router-link to="/user/join" class="btn--text">가입하기</router-link>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -111,7 +97,7 @@ import UserApi from "../../api/UserApi";
 import LoginHeader from '../../components/user/custom/LoginHeader.vue'
 import logo from '../../assets/images/custom/logo.png'
 import kakaoLogo from '../../assets/images/custom/kakao-logo.png'
-import kakaoButton from '@/assets/images/kakao_login_medium_narrow.png';
+import googleLogo from '../../assets/images/custom/google-logo.png'
 
 import GetUserApi from "@/api/GetUserApi"
 import KakaoApi from "@/api/KakaoApi.js";
@@ -354,7 +340,7 @@ export default {
       component: this,
       logo,
       kakaoLogo,
-      kakaoButton
+      googleLogo,
     };
   }
 };
@@ -389,9 +375,14 @@ export default {
     background-color: #f7e600;
     box-shadow: none;
   }
+  .mygooglebutton {
+    width: 100%;
+    height: 40px;
+    border: 1px solid lightgray;
+    box-shadow: none;
+  }
   .mylogo {
-    height: 100%;
-    width: 33px
+    height: 80%;
   }
   .mylink {
     font-weight: 600;
