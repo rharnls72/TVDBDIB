@@ -37,7 +37,12 @@ export default {
   },
   data() {
     return {
-      defaultProfile,
+      profile_img: defaultProfile,
+    }
+  },
+  mounted() {
+    if(this.info.profile_pic != null) {
+      this.profile_img = this.info.profile_pic;
     }
   },
   methods: {

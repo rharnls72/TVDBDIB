@@ -94,11 +94,11 @@ public class AccountController {
                 user.setProfile_pic(null);
 
                 HashMap<String, Object> responseData = new HashMap<>();
-                responseData.put("user", user);
                 responseData.put("token", jwtService.makeToken(user));
-
+                
                 // 토큰 만들었으면 profile_pic 리스토어
                 user.setProfile_pic(save_profile_pic);
+                responseData.put("user", user);
 
                 result.status = true;
                 result.msg = "success";
@@ -136,11 +136,11 @@ public class AccountController {
         user.setProfile_pic(null);
 
         HashMap<String, Object> responseData = new HashMap<>();
-        responseData.put("user", user);
         responseData.put("token", jwtService.makeToken(user));
-
+        
         // 토큰 만들었으면 profile_pic 리스토어
         user.setProfile_pic(save_profile_pic);
+        responseData.put("user", user);
 
         result.status = true;
         result.msg = "success";
@@ -397,11 +397,10 @@ public class AccountController {
         final BasicResponse result = new BasicResponse();
 
         try {
-            File file = ResourceUtils.getFile("classpath:application.properties");
-            String pre_path = file.getAbsolutePath().split("application.properties")[0];
-            String post_path = "static\\user_profile\\" + user.getUno() + "-pic";
+            String pre_path = "/tvility";
+            String post_path = "/" + user.getUno() + ".profile_pic";
             String full_path = pre_path + post_path;
-            file = new File(full_path);
+            File file = new File(full_path);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(user.getProfile_pic().getBytes());
             fos.close();

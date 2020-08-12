@@ -2,17 +2,17 @@
   <div class="feed-item">
       <ul> <!-- 받아온 데이터로 반복 돌리자 -->
             <!-- done == 'Y' 일때만 done 이라는 클래스를 지정 -->
-          <li v-for="(room) in rooms" v-bind:key="room.cno" 
+          <li v-for="(message) in messages" :key="message.mno" 
           class="shadow" type="button">
 
-        <div class="form-group row" style="width: 100%;" @click="movePage(room)">
+        <div class="form-group row" style="width: 100%;">
           <!-- 이미지 바인딩 어떻게...? 잘 안된다 -->
             <img class="my-auto col-3 col-sm-3" src="@/assets/images/profile_default.png">
             <span class="user-content my-auto col-6 col-sm-6">
-              {{room.mainUser.nick_name}}<span v-if="room.other.length>1">님 외 {{room.other.length-1}}명</span>
+              {{message.user.nick_name}}<br/>{{message.content}}
             </span>
             <span class="float-right my-auto col-3 col-sm-3 removeBtn" type="button">
-                <button @click.stop.prevent="deleteChat(room)" class="float-right btn btn-danger btn-sm">삭제</button>
+                <button @click.stop.prevent="deleteMessage(message)" class="float-right btn btn-danger btn-sm">삭제</button>
             </span>
         </div>
         </li>
@@ -24,22 +24,19 @@
 import defaultProfile from "@/assets/images/profile_default.png";
 import MessageApi from "@/api/MessageApi";
 export default {
-  name: 'ChatListItem',
+  name: 'MessageItem',
   data: () => {
     return {
       defaultProfile
     };
   },
   props: {
-    rooms: Array
+    messages: Array,
   },
   methods:{
-    movePage(room){
-        this.$router.push({path: '/message/chatroom/' + room.cno, query: {room: room}});
-    },
-    deleteChat(room, event){
+    deleteMessage(message){
       // event.stopPropagation();
-      MessageApi.deleteChatroom( room.cno,
+      MessageApi.deleteMessage( message.mno,
           res => {
             
           },

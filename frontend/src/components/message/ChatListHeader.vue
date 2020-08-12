@@ -1,22 +1,21 @@
 <template>
-  <b-nav justified class="myheader align-items-center">
+  <b-nav justified class="myheader py-1 d-flex justify-content-between">
     <b-nav-item class="d-flex justify-content-start">
-      <button @click="backpage()">
-        <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
+      <button @click="backpage">
+      <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
       </button>
     </b-nav-item>
-    <b-nav-item class="d-flex justify-content-center">
-      <p class="text-dark mb-0"><strong>설정</strong></p>
+    <b-nav-item>
+      <p class="text-dark mb-0"><strong>Message</strong></p>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-end">
-      <b-icon-blank></b-icon-blank>
     </b-nav-item>
   </b-nav>
 </template>
 
 <script>
 export default {
-  name: 'SettingHeader',
+  name: 'MessageHeader',
   methods: {
     backpage(){
       this.$router.go(-1);

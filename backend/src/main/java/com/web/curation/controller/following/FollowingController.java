@@ -186,6 +186,7 @@ public class FollowingController {
             result.msg = "Delete 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
+        alertService.cancelFollowing(uf);
 
         // 여기까지 문제 없이 내려왔으면 성공적으로 유저 팔로잉 삭제가 완료된 것
         result.status = true;
