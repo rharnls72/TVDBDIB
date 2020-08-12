@@ -1,77 +1,64 @@
-
-<!--
-    가입하기는 기본적인 폼만 제공됩니다
-    기능명세에 따라 개발을 진행하세요.
-    Sub PJT I에서는 UX, 디자인 등을 포함하여 백엔드를 제외하여 개발합니다.
- -->
 <template>
-  <div class="user join m-0">
+  <div class="user mt-0 myuser">
     <LoginHeader />
-    <div class="form-wrap wrapC myjoin">
-      <div class="input-with-label">
-        <input
-          v-model="nick_name"
-          v-bind:class="{error : error.nick_name, complete:!error.nick_name&&nick_name.length!==0}"
-          id="nick_name"
-          placeholder="닉네임을 입력하세요."
-          type="text"
-        />
-        <label for="nick_name" class="m-0">닉네임</label>
-        <div class="error-text" v-if="error.nick_name">{{error.nick_name}}</div>
-      </div>
-
-      <div class="input-with-label">
-        <input
-          v-model="email"
-          v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
-          id="email"
-          placeholder="이메일을 입력하세요."
-          type="text" 
-          autocapitalize="off"
+    <div class="wrapC myjoin d-flex justify-content-between">
+      <div>
+        <div class="input-with-label pb-3">
+          <input
+            v-model="nick_name"
+            v-bind:class="{error : error.nick_name, complete:!error.nick_name&&nick_name.length!==0}"
+            id="nick_name"
+            placeholder="닉네임을 입력하세요."
+            type="text"
           />
-        <label for="email">이메일</label>
-        <div class="error-text" v-if="error.email">{{error.email}}</div>
-      </div>
+          <label for="nick_name" class="m-0">닉네임</label>
+          <div class="error-text" v-if="error.nick_name">{{error.nick_name}}</div>
+        </div>
 
-      <div class="input-with-label">
-        <input
-          v-model="password"
-          v-bind:class="{error : error.password, complete:!error.password&&password.length!==0}"
-          id="password"
-          :type="passwordType"
-          placeholder="비밀번호를 입력하세요." />
-        <label for="password">비밀번호</label>
-        <div class="error-text" v-if="error.password">{{error.password}}</div>
-      </div>
+        <div class="input-with-label pb-3">
+          <input
+            v-model="email"
+            v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
+            id="email"
+            placeholder="이메일을 입력하세요."
+            type="text" 
+            autocapitalize="off"
+            />
+          <label for="email">이메일</label>
+          <div class="error-text" v-if="error.email">{{error.email}}</div>
+        </div>
 
-      <div class="input-with-label">
-        <input
-          v-model="passwordConfirm"
-          v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&passwordConfirm.length!==0}"
-          :type="passwordConfirmType"
-          id="password-confirm"
-          placeholder="비밀번호를 다시한번 입력하세요."
-        />
-        <label for="password-confirm">비밀번호 확인</label>
-        <div class="error-text" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
+        <div class="input-with-label pb-3">
+          <input
+            v-model="password"
+            v-bind:class="{error : error.password, complete:!error.password&&password.length!==0}"
+            id="password"
+            :type="passwordType"
+            placeholder="비밀번호를 입력하세요." />
+          <label for="password">비밀번호</label>
+          <div class="error-text" v-if="error.password">{{error.password}}</div>
+        </div>
+
+        <div class="input-with-label pb-3">
+          <input
+            v-model="passwordConfirm"
+            v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&passwordConfirm.length!==0}"
+            :type="passwordConfirmType"
+            id="password-confirm"
+            placeholder="비밀번호를 다시한번 입력하세요."
+          />
+          <label for="password-confirm">비밀번호 확인</label>
+          <div class="error-text" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
+        </div>
       </div>
+      <button
+        class="mybutton"
+        @click="onJoin"
+        :disabled="!isSubmit"
+        :class="{disabled : !isSubmit}">
+        가입하기
+      </button>
     </div>
-
-    <!-- <label>
-      <input v-model="isTerm" type="checkbox" id="term" />
-      <span>약관을 동의합니다.</span>
-    </label> -->
-
-    <!-- go-term CSS 적용 -->
-    <!-- <span class="go-term" @click="termPopup=true">약관보기</span> -->
-
-    <button
-      class="btn-bottom"
-      @click="onJoin"
-      :disabled="!isSubmit"
-      :class="{disabled : !isSubmit}">
-      가입하기
-    </button>
   </div>
 </template>
 
@@ -269,7 +256,20 @@ export default {
 </script>
 
 <style scoped>
+  .myuser {
+    background-color: #f8e8f2;
+  }
   .myjoin {
+    height: 100%;
     padding-top: 70px;
+    padding-bottom: 50px;
+    background-color: white;
+    flex-direction: column;
+  }
+  .mybutton {
+    width: 100%;
+    height: 40px;
+    background-color: #d8c8f8;
+    box-shadow: none;
   }
 </style>
