@@ -3,9 +3,9 @@
     <LoginHeader />
     <div class="wrapC myfeed">
       <div class="myfeedcard">
-        <img class="mythumbnail mb-2" :src="logo" alt="logo">
+        <img class="mythumbnail mb-3" :src="logo" alt="logo">
       </div>
-      <div class="input-with-label mt-3">
+      <div class="input-with-label mt-3 mb-3 myinput">
         <input
           v-model="email"
           v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
@@ -19,7 +19,7 @@
         <div class="error-text" v-if="error.email">{{error.email}}</div>
       </div>
 
-      <div class="input-with-label">
+      <div class="input-with-label mb-3 myinput">
         <input
           v-model="password"
           type="password"
@@ -33,8 +33,8 @@
         <div class="error-text" v-if="error.password">{{error.password}}</div>
       </div>
 
-      <div>
-        <label>
+      <div class="d-flex justify-content-end">
+        <label class="d-flex mb-0">
           <input v-model="isSave" type="checkbox" id="save" />
           <span>로그인 유지</span>
         </label>
@@ -47,7 +47,7 @@
         :class="{disabled : !isSubmit}"
       >로그인</button> -->
 
-      <button @click="onLogin" :disabled="!isSubmit" :class="{disabled : !isSubmit}" class="btn mybutton mt-2 d-flex justify-content-center align-items-center">
+      <button @click="onLogin" :disabled="!isSubmit" :class="{disabled : !isSubmit}" class="btn mybutton mt-3 d-flex justify-content-center align-items-center">
         <p class="d-inline m-0">로그인</p>
       </button>
 
@@ -351,6 +351,7 @@ export default {
     background-color: #f8e8f2;
   }
   .myfeed {
+    height: 100%;
     padding-top: 70px;
     padding-bottom: 50px;
     background-color: white;
@@ -383,8 +384,14 @@ export default {
   }
   .mylogo {
     height: 80%;
+    width: 30px;
   }
   .mylink {
     font-weight: 600;
+  }
+  .myinput {
+    border: 1px solid lightgray;
+    border-radius: 0.25rem;
+    border-style: none;
   }
 </style>
