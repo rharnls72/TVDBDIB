@@ -2,6 +2,9 @@ package com.web.curation.controller.recommend;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import ch.qos.logback.core.joran.conditional.ElseAction;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +24,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,10 +37,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.web.curation.dao.episode.EpisodeDao;
 import com.web.curation.dao.following.FollowingDao;
+import com.web.curation.dao.recommend.RecommendDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.episode.EpisodeDB;
 import com.web.curation.model.episode.EpisodeResponse;
 import com.web.curation.model.program.Program;
+import com.web.curation.model.recommend.RecommendData;
 import com.web.curation.model.user.User;
 
 import io.swagger.annotations.ApiResponse;
@@ -52,6 +59,11 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin(origins = { "*" })
 @RestController
 public class RecommendController {
+
+    @Autowired
+    private RecommendDao recommendDao;
+
+    static final int WATCH_HOUR = 72;
 
     static String BASE_URL = "https://api.themoviedb.org/3/";
     static String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
@@ -244,40 +256,123 @@ public class RecommendController {
         return sum / count;
     }
 
+    // time sliding - 지난 시간에 따라 점수 계산
+    private float cal_score(LocalDateTime time){
+        LocalDateTime toDate = LocalDateTime.now();
+        long gone_hours = ChronoUnit.HOURS.between(time, toDate);
+        return (float) Math.pow (WATCH_HOUR - gone_hours, 2);
+    }
+
+    // 각 좋아요, 댓글, 찜 데이터에 대해 점수 계산 메서드 호출하면서 프로그램 점수 갱신
+    private HashMap<Integer, Float> add_score(HashMap<Integer, Float> map, List<RecommendData> list, float weight){
+        for (RecommendData p: list){
+            if (map.containsKey(p.getPno())) // 이미 있으면 점수를 갱신
+                map.put(p.getPno(), map.get(p.getPno()) + cal_score(p.getCreate_date()) * weight);
+            else // 없으면 새롭게 점수 삽입
+                map.put(p.getPno(), cal_score(p.getCreate_date()) * weight);
+        }
+        return map;
+    }
+
+    private float getMean_float (List<Float> list){
+        float sum = 0;
+        for (float val: list){
+            sum += val;
+        }
+        return sum / list.size();
+    }
+	
+	private float getStddev(List<Float> list, float mean) {
+        float total = 0;
+        for (float val: list){
+            float diff = Math.abs(val - mean);
+            total += Math.pow(diff, 2);
+        }
+        float variance = total / list.size();
+		return (float) Math.sqrt(variance); // 분산의 제곱근 = 표준편차
+	}
+
+
     @GetMapping("/recommend/trending")
     @ApiOperation(value = "TMDB API로부터 요즘 뜨는 (trending) 프로그램 받아오기")
     public Object getTrendingPrograms() {
-        // 반환할 응답 객체
-        final BasicResponse result = new BasicResponse();
+
+        // DAO에서 데이터 받아오기: Program ID + 날짜 이렇게 옴
+        List<RecommendData> programLikeData = recommendDao.getProgramLike();
+        List<RecommendData> programReplyData = recommendDao.getProgramReply();
+
+        List<RecommendData> episodeDibData = recommendDao.getEpisodeDibs();
+        List<RecommendData> episodeLikeData = recommendDao.getEpisodeLike();
+        List<RecommendData> episodeReplyData = recommendDao.getEpisodeReply();
+
+        HashMap<Integer, Float> score_table = new HashMap<Integer, Float>();
+        score_table = add_score(score_table, programLikeData, 1.0f);
+        score_table = add_score(score_table, programReplyData, 1.0f);
+        score_table = add_score(score_table, episodeDibData, 0.5f);
+        score_table = add_score(score_table, episodeLikeData, 0.5f);
+        score_table = add_score(score_table, episodeReplyData, 0.5f);
+
+        // 여기까지 tvdbdib score 산출 (표준화 안된 상태)
+        // 표준화
+        // 그냥 (List) 이렇게 변환하려고 하면 에러난다. new ArrayList 하고 그 파라미터로 Collection을 주면 됨.
+        float mean = getMean_float(new ArrayList<Float>(score_table.values())); 
+        float stddev = getStddev(new ArrayList<Float>(score_table.values()), mean);
+        for (int id: score_table.keySet()){
+            float this_score = score_table.get(id);
+            float t_score = 10 * ((this_score - mean) / stddev) + 50;
+            score_table.put(id, t_score);
+        }
+
+        // 데이터 있는 프로그램들에 대해 TMDB 요청
+        ArrayList<Program> programs = new ArrayList<Program>();
         RestTemplate restTemplate = new RestTemplate();
+        ArrayList<Float> ratings = new ArrayList<Float>();
 
-        ResponseEntity<String> re = 
-        restTemplate.getForEntity(BASE_URL + "trending/tv/day?api_key=" + API_KEY, String.class);
-        JSONObject recommended_program = new JSONObject(re.getBody());
-        JSONArray programs = recommended_program.optJSONArray("results");
-        List<Program> programList = new ArrayList<Program>();
-
-        /*
-        지금은 그냥 API에서 trending 가져와서 바로 던졌지만
-        테스트 데이터 들어가면 tvdbdib 좋아요 수 등 반영해서 점수 매길 예정
-        */
-
-        // id, name, poster_path만 삽입
-        for (int i=1; i<=programs.length(); i++){
+        for (int id: score_table.keySet()){
             Program p = new Program();
-            JSONObject programJson = programs.optJSONObject(i-1);
-            int id = programJson.optInt("id");
+
+            ResponseEntity<String> re = 
+            restTemplate.getForEntity(BASE_URL + "tv/" + id + "?api_key=" + API_KEY + "&language=ko", String.class);
+            
+            JSONObject programJson = new JSONObject(re.getBody());
+            //int pid = programJson.optInt("id");
             String name = programJson.optString("name");
             String thumbnail = programJson.optString("poster_path");
+            float popularity = programJson.optFloat("popularity");
+
+            //popularity *= 100;
+            
             p.setPno(id);
             p.setPname(name);
             if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
-            programList.add(p);
+            
+            p.setRating(popularity);
+
+            ratings.add(popularity);
+            programs.add(p);
         }
 
+        mean = getMean_float(ratings); 
+        stddev = getStddev(ratings, mean);
+        for (Program p: programs){
+            float std_score = 10 * ((p.getRating() - mean) / stddev) + 50;
+            System.out.println(std_score + " " + score_table.get(p.getPno()));
+            p.setRating(std_score + score_table.get(p.getPno()));
+        }
+
+        // 점수순 정렬
+        programs.sort(new Comparator<Program>(){
+            @Override
+            public int compare(Program o1, Program o2) {
+                return Float.compare(o2.getRating(), o1.getRating());
+            }
+        });
+
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
         result.status = true;
         result.msg = "success";
-        result.data = programList;
+        result.data = programs;
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

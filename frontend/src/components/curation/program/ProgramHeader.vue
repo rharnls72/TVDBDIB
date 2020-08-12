@@ -3,7 +3,7 @@
     <b-nav-item class="d-flex justify-content-start">
       <!-- 새 글 작성 -->
       <button>
-        <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
+        <b-icon-chevron-left @click="goToBack" class="text-dark"></b-icon-chevron-left>
       </button>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-center">
@@ -19,6 +19,11 @@ export default {
   name: 'ProgramHeader',
   props: {
     programTitle: String,
+  },
+  methods: {
+    goToBack() {
+      this.$router.go(-1)
+    }
   }
 }
 </script>
