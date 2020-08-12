@@ -1,7 +1,7 @@
 <template>
   <div class="user mt-0 myuser">
     <LoginHeader />
-    <div class="wrapC myjoin d-flex justify-content-between">
+    <div class="wrapC myjoin d-flex flex-column justify-content-between">
       <div>
         <div class="input-with-label pb-3">
           <input
@@ -45,7 +45,7 @@
             v-bind:class="{error : error.passwordConfirm, complete:!error.passwordConfirm&&passwordConfirm.length!==0}"
             :type="passwordConfirmType"
             id="password-confirm"
-            placeholder="비밀번호를 다시한번 입력하세요."
+            placeholder="비밀번호를 다시 입력하세요."
           />
           <label for="password-confirm">비밀번호 확인</label>
           <div class="error-text" v-if="error.passwordConfirm">{{error.passwordConfirm}}</div>
@@ -264,7 +264,6 @@ export default {
     padding-top: 70px;
     padding-bottom: 50px;
     background-color: white;
-    flex-direction: column;
   }
   .mybutton {
     width: 100%;
