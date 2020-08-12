@@ -274,6 +274,25 @@ public class RecommendController {
         return map;
     }
 
+    private float getMean_float (List<Float> list){
+        float sum = 0;
+        for (float val: list){
+            sum += val;
+        }
+        return sum / list.size();
+    }
+	
+	private float getStddev(List<Float> list, float mean) {
+        float total = 0;
+        for (float val: list){
+            float diff = Math.abs(val - mean);
+            total += Math.pow(diff, 2);
+        }
+        float variance = total / list.size();
+		return (float) Math.sqrt(variance); // 분산의 제곱근 = 표준편차
+	}
+
+
     @GetMapping("/recommend/trending")
     @ApiOperation(value = "TMDB API로부터 요즘 뜨는 (trending) 프로그램 받아오기")
     public Object getTrendingPrograms() {
@@ -293,9 +312,22 @@ public class RecommendController {
         score_table = add_score(score_table, episodeLikeData, 0.5f);
         score_table = add_score(score_table, episodeReplyData, 0.5f);
 
+        // 여기까지 tvdbdib score 산출 (표준화 안된 상태)
+        // 표준화
+        // 그냥 (List) 이렇게 변환하려고 하면 에러난다. new ArrayList 하고 그 파라미터로 Collection을 주면 됨.
+        float mean = getMean_float(new ArrayList<Float>(score_table.values())); 
+        float stddev = getStddev(new ArrayList<Float>(score_table.values()), mean);
+        for (int id: score_table.keySet()){
+            float this_score = score_table.get(id);
+            float t_score = 10 * ((this_score - mean) / stddev) + 50;
+            score_table.put(id, t_score);
+        }
+
         // 데이터 있는 프로그램들에 대해 TMDB 요청
         ArrayList<Program> programs = new ArrayList<Program>();
         RestTemplate restTemplate = new RestTemplate();
+        ArrayList<Float> ratings = new ArrayList<Float>();
+
         for (int id: score_table.keySet()){
             Program p = new Program();
 
@@ -308,14 +340,24 @@ public class RecommendController {
             String thumbnail = programJson.optString("poster_path");
             float popularity = programJson.optFloat("popularity");
 
-            popularity *= 100;
+            //popularity *= 100;
             
             p.setPno(id);
             p.setPname(name);
             if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
-            System.out.println(popularity + " " + score_table.get(id));
-            p.setRating(popularity + score_table.get(id));
+            
+            p.setRating(popularity);
+
+            ratings.add(popularity);
             programs.add(p);
+        }
+
+        mean = getMean_float(ratings); 
+        stddev = getStddev(ratings, mean);
+        for (Program p: programs){
+            float std_score = 10 * ((p.getRating() - mean) / stddev) + 50;
+            System.out.println(std_score + " " + score_table.get(p.getPno()));
+            p.setRating(std_score + score_table.get(p.getPno()));
         }
 
         // 점수순 정렬
