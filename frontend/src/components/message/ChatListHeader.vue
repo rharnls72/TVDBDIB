@@ -9,6 +9,9 @@
       <p class="text-dark mb-0"><strong>Message</strong></p>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-end">
+      <button @click="chooseFollowing">
+      <b-icon icon="plus-circle" class="text-dark"></b-icon>
+      </button>
     </b-nav-item>
   </b-nav>
 </template>
@@ -20,6 +23,9 @@ export default {
     backpage(){
       this.$router.go(-1);
     },
+    chooseFollowing(){
+      this.$router.push({name: 'ChooseFollowing'});
+    }
   },
 }
 </script>

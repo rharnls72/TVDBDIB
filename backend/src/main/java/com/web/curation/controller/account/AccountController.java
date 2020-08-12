@@ -152,26 +152,8 @@ public class AccountController {
     @PostMapping("/account/signup")
     @ApiOperation(value = "가입하기")
     public Object signup(@Valid @RequestBody SignupRequest request) {
-        // 이메일, 닉네임 중복처리 필수
+        // 이메일, 닉네임 중복처리 필수 => 프론트에서 했서요
         // 회원가입단을 생성해 보세요.
-
-        // 먼저 이메일 중복 확인 해보기
-        User user = userDao.getUserByEmail(request.getEmail());
-        if (user != null) {
-            final BasicResponse result = new BasicResponse();
-            result.status = false;
-            result.msg = "이메일 중복";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        // 닉네임도 중복 확인 해보기
-        user = userDao.getUserByNickName(request.getNick_name());
-        if (user != null) {
-            final BasicResponse result = new BasicResponse();
-            result.status = false;
-            result.msg = "닉네임 중복";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
         try {
             request.setPassword(SHA256(request.getPassword()));
         } catch (Exception e) {
