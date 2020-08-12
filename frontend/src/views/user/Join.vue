@@ -78,6 +78,7 @@
 <script>
 import "../../components/css/user.scss";
 import UserApi from "../../api/UserApi";
+import AccountApi from "@/api/AccountApi";
 import PV from "password-validator";
 import * as EmailValidator from "email-validator";
 import LoginHeader from '../../components/user/custom/LoginHeader.vue'
@@ -96,38 +97,50 @@ export default {
   },
   watch: {
     nick_name: function(v) {
-      this.checkForm();
+      this.checkNick();
     },
     password: function(v) {
-      this.checkForm();
+      this.checkPasswd();
     },
     passwordConfirm: function(v) {
-      this.checkForm();
+      this.checkPasswdConfirm();
     },
     email: function(v) {
-      this.checkForm();
+      this.checkEmail();
     },
     // isTerm: function(v) {
     //   this.checkForm();
     // }
   },
   methods: {
-    checkForm() {
+    checkEmail() {
       if (this.email.length >= 0 && !EmailValidator.validate(this.email))
         this.error.email = "이메일 형식이 아닙니다.";
       else this.error.email = false;
 
-      if (
-        this.password.length >= 0 &&
-        !this.passwordSchema.validate(this.password)
-      )
-        this.error.password = "비밀번호는 영문, 숫자 포함 8자리 이상이어야 합니다.";
-      else this.error.password = false;
+      if(this.error.email == false) {
+        UserApi.requestFindEmail(
+          {email: this.email},
+          res => {
+            if(res.isEmail) {
+              // Invalid
+              this.error.email = "중복된 이메일 입니다.";
+            } else {
+              // Valid
+              this.error.email = false;
+            }
 
-      if(this.password != this.passwordConfirm)
-        this.error.passwordConfirm = "비밀번호가 일치하지 않습니다.";
-      else this.error.passwordConfirm = false;
-
+            this.checkForm();
+          },
+          error => {
+            this.$router.push({ name: "Errors", query: { message: error.msg } });
+          }
+        );
+      } else {
+        this.checkForm();
+      }
+    },
+    checkNick() {
       // 빠르게 문자열의 바이트 수를 구하는 함수래요
       function getByteLength(s){
         let b, i, c;
@@ -136,11 +149,53 @@ export default {
       }
 
       if(getByteLength(this.nick_name) > 20)
-        this.error.nick_name = "닉네임은 20Byte를 넘지 않아야 합니다."
+        this.error.nick_name = "닉네임은 20Byte를 넘지 않아야 합니다.";
       else this.error.nick_name = false;
 
-      // this.error.term = !this.isTerm;
+      if(this.nick_name.length > 0 && this.error.nick_name == false) {
+        AccountApi.requestFindNick(
+          {
+            nick_name: "ThisIsNickNameForTestVeryVeryLongNickName",
+            new_nick_name: this.nick_name,
+          },
+          (res) => {
+            if (res.isNick) {
+              this.error.nick_name = false;
+            } else {
+              this.error.nick_name = "사용 할 수 없는 닉네임 입니다.(중복)";
+            }
+            
+            this.checkForm();
+          },
+          (error) => {
+            this.$router.push({ name: "Errors", query: { message: error.msg } });
+          }
+        );
+      } else if(this.nick_name.length == 0) {
+        this.error.nick_name = "가입하기 위해 닉네임은 꼭 필요합니다.";
+        this.checkForm();
+      } else {
+        this.checkForm();
+      }
+    },
+    checkPasswd() {
+      if (
+        this.password.length >= 0 &&
+        !this.passwordSchema.validate(this.password)
+      )
+        this.error.password = "비밀번호는 영문, 숫자 포함 8자리 이상이어야 합니다.";
+      else this.error.password = false;
 
+      this.checkForm();
+    },
+    checkPasswdConfirm() {
+      if(this.password != this.passwordConfirm)
+        this.error.passwordConfirm = "비밀번호가 일치하지 않습니다.";
+      else this.error.passwordConfirm = false;
+
+      this.checkForm();
+    },
+    checkForm() {
       let isSubmit = true;
       Object.values(this.error).map(v => {
         if (v) isSubmit = false;
@@ -192,10 +247,10 @@ export default {
       passwordSchema: new PV(),
 
       error: {
-        email: false,
-        password: false,
-        passwordConfirm: false,
-        nick_name: false,
+        email: "이메일을 입력해주세요",
+        password: "비밀번호를 입력해주세요",
+        passwordConfirm: "비밀번호를 확인해주세요",
+        nick_name: "닉네임을 입력해주세요",
         term: false
       },
 

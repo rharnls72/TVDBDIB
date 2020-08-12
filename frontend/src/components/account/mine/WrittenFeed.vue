@@ -22,6 +22,10 @@
             </div>
           </div>
         </div>
+        <div v-if="feed.ctype===4" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center" style="padding-top:10%; padding-bottom:10%">
+          <div>{{feed.content.title}}</div>
+          <div v-for="(tag, idx) in feed.tag" :key="idx">#{{tag}}</div>
+        </div>
       </div>
       <div class="col-6">
         <div class="content d-flex align-items-center">
@@ -36,6 +40,10 @@
         <div v-if="feed.ctype===3">
           <div>Vote</div>
           <div>{{feed.content.title}}</div>
+        </div>
+        <div v-if="feed.ctype===4">
+          <div>Share</div>
+          <div>{{feed.content.content}}</div>
         </div>
       </div>
       </div>
@@ -60,7 +68,7 @@ export default {
     moveDetail(key) {
       this.$router.push({path: `/feed/detail/${key}`})
     }
-  }
+  },
 }
 </script>
 

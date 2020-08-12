@@ -56,6 +56,10 @@
        <p class="d-inline m-0">카카오 로그인</p>
       </button>
 
+      <button @click="doGoogleLogin" class="btn mykakaobutton mt-2 d-flex justify-content-center align-items-center">
+       <p class="d-inline m-0">Google 로그인</p>
+      </button>
+
       <!-- <div class="sns-login">
         <div class="text">
           <p>SNS 로그인</p>
@@ -246,6 +250,94 @@ export default {
       console.log('Kakao login start');
       this.$store.commit('addUserInfo', {isAutoLogin: this.isSave});
       KakaoApi.Login();
+    }
+    , doGoogleLogin() {
+      this.$gAuth.signIn()
+        .then(GoogleUser => {
+          let profile = GoogleUser.getBasicProfile();
+
+          let info = {
+            email: profile.getEmail()
+            , nickname: profile.getName()
+          };
+
+          console.log('Google Profile: ', info);
+          this.googleJoinOrLogin(info);
+        })
+        .catch(error => {
+          this.$router.push({name:'Errors', query: {message: "Google social login fail"}});
+        });
+    }
+    , googleJoinOrLogin(info) {
+      // Email exist
+      if(info.email && info.nickname) {
+        // Check if user
+        UserApi.requestFindEmail(
+          {email: info.email}
+          , res => {
+            // User exists => Login
+            if(res.isEmail==true) {
+              this.doLogin(info);
+            }
+            // User not exists => Join
+            else {
+              this.doJoin(info);
+            }
+          }
+          , err => {
+            this.$router.push({name:'Errors', query: {message: err.msg}});
+          }
+        );
+      }
+      // Do not join(or login)
+      else {
+        // Go to error page(Require email)
+        // And go main(login) page, not the back page
+        this.$router.push({name:'Errors', query: {message: "email not exists"}});
+      }
+    }
+    , doLogin(info) {
+      console.log('Do login: ', info.email);
+      UserApi.loginWithSocial(
+        info.email
+        , res => {
+          // 로그인 완료 시 세션 저장소에 받은 토큰 정보 저장
+          sessionStorage.setItem('jwt-token', res.jwtToken);
+
+          res.userInfo.isAutoLogin = this.isSave;
+
+          // 로그인 정보를 vuex 에 저장
+          this.$store.commit('addUserInfo', res.userInfo);
+
+          // Save it also a local storage
+          localStorage.setItem('tvility', JSON.stringify(res.userInfo));
+
+          // curation/main 페이지로 이동
+          this.$router.push({path:"/curation/main"});
+        }
+        , error => {
+          this.$router.push({name:'Errors', query: {message: error.msg}});
+        }
+      )
+    }
+    , doJoin(info) {
+      console.log('Do join(info)');
+      console.log(info);
+      let data = {
+        nick_name: info.nickname,
+        email: info.email
+      };
+      console.log('Do join(data)');
+      console.log(data);
+      UserApi.joinWithSocial(
+        data
+        , res => {
+            this.doLogin(info);
+        }
+        , error => {
+          this.$router.push({name:'Errors', query: {message: error.msg}});
+        }
+      )
     }
   },
   data: () => {
