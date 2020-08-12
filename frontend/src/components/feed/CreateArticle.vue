@@ -3,7 +3,14 @@
     <b-list-group style="border-radius: 20px;">
       
       <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
-      <b-list-group-item><b-form-input type="text" class="m-0 rounded-pill" v-model="content" placeholder="내용 입력!!!"></b-form-input></b-list-group-item>
+      <b-list-group-item>
+        <b-form-textarea
+          id="textarea"
+          v-model="content"
+          placeholder="내용 입력"
+          rows="3"
+        ></b-form-textarea>
+      </b-list-group-item>
       
       <b-list-group-item><b-form-tags
             input-id="tags-remove-on-delete"
