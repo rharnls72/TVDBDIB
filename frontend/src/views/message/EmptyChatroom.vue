@@ -2,10 +2,6 @@
   <div id="app" class="columns">
     <ChatroomHeader :room="room"/>
         <h1>채팅룸</h1>
-      <div class="wrapB">
-        <MessageItem v-if='loadComplete' :messages="messages"/>
-        
-      </div>
       <div class="feed-item messageInputArea">
           <input class="messageInput" type="text" id="messageInput" v-model="content">
           <button class="sendIcon" @click.stop.prevent="sendMessage()"><b-icon-arrow-right-circle class="text-dark">
@@ -17,7 +13,6 @@
 <script>
 import "@/components/css/user.scss";
 import ChatroomHeader from '@/components/message/ChatroomHeader.vue';
-import MessageItem from '@/components/message/MessageItem.vue';
 import GetUserApi from "@/api/GetUserApi";
 import MessageApi from "@/api/MessageApi";
 import db from '@/api/firebaseInit';
@@ -25,16 +20,13 @@ import db from '@/api/firebaseInit';
 export default {
   name: 'MessageList',
    components: {
-    MessageItem,
     ChatroomHeader,
   },
 
   data() {
     return {
       loadComplete: false,
-      messages: [],
-      userInfos: [],
-      room: {},
+      room: this.$route.params.room,
       content: '',
     }
   },
@@ -44,57 +36,31 @@ export default {
       this.$store.commit('addUserInfo', res.user);
     });
     this.loadComplete = true;
-    // MessageApi.requestUserInfo(
-    //     this.room.other,
-    //       res => {
-    //         if(res.userInfo!=null){
-    //           this.userInfos = res.userInfo;
-    //           db.collection("message").where("cno", "==", this.room.cno).orderBy("time", "asc")
-    //           .onSnapshot(this.getMessagesList);
-    //         }
-    //         this.loadComplete = true;
-    //       },
-    //       error => {
-    //         this.$router.push({name:'Errors', query: {message: error.msg}})
-    //       }
-    // );
   },
   methods: {
-    getMessagesList(querySnapshot) {
-        // this.makeToast("알림이 왔습니다.", "primary");
-        let temp = [];
-        let message = {};
-        let tempUsers = this.userInfos;
-        let me =  this.$store.state.userInfo;
-        querySnapshot.forEach(function(doc) {
-          message = doc.data();
-          if(me.uno == message.sender)
-            message.user = me;
-          else{
-            tempUsers.forEach(user => {
-              if(user.uno == message.sender)
-                message.user = user;
-            });
-          }
-          temp.push(message);
-        });
-        this.messages = temp;
-    },
     sendMessage(){
       if(this.content.length>0){
-        let data={
-          content: this.content,
-          cno: this.room.cno,
-          sender: this.$store.state.userInfo.uno,
-        }
-        MessageApi.sendMessage(
-          data,
-            res => {
-              this.content = '';
-            },
-            error => {
-              this.$router.push({name:'Errors', query: {message: error.msg}})
+        MessageApi.createChatRoom(
+          this.room,
+          res => {
+            this.room.cno = res.cno;
+            let data={
+              content: this.content,
+              cno: this.room.cno,
+              sender: this.$store.state.userInfo.uno,
             }
+            MessageApi.sendMessage(
+              data,
+                res => {},
+                error => {
+                  this.$router.push({name:'Errors', query: {message: error.msg}})
+                }
+            );
+            this.$router.push({path: '/message/chatroom/' + this.room.cno, query: {room: this.room}});
+          },
+          error => {
+            this.$router.push({name:'Errors', query: {message: error.msg}})
+          }
         );
       }
     }
