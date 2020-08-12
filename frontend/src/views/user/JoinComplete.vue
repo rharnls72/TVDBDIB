@@ -1,7 +1,7 @@
 <template>
   <div class="user mt-0 myuser" id="login">
     <LoginHeader />
-    <div class="wrapC myjoin d-flex justify-content-between">
+    <div class="wrapC myjoin d-flex flex-column justify-content-between">
       <div>
         <h1>
           <!-- 유저 닉네임, 이메일 받아서 들어가야 함 -->
@@ -26,7 +26,7 @@
         <button
           class="mybutton"
           @click="toMainPage"
-        >로그인 하러가기!</button>
+        >로그인 하러 가기!</button>
       </div>
 
     </div>
@@ -92,7 +92,6 @@ export default {
     padding-top: 70px;
     padding-bottom: 50px;
     background-color: white;
-    flex-direction: column;
   }
   .mylink {
     font-weight: 600;
