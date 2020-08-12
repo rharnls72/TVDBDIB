@@ -25,7 +25,7 @@
                 <b-nav-item href="#link-2" @click="hide">
                   <b-icon-bookmark class="text-dark d-inline"></b-icon-bookmark>
                   <b-icon-blank class="h5"></b-icon-blank>
-                  <p class="text-dark d-inline m-0">스크랩</p>
+                  <p class="text-dark d-inline m-0" @click="goToScrap">스크랩</p>
                 </b-nav-item>
               </b-nav>
             </nav>
@@ -47,6 +47,9 @@ export default {
     // editAccount() {
 
     // },
+    goToScrap() {
+      this.$router.push({path: '/scrap'})
+    },
     moveTab(name) {
       this.$router.push({name: name})
     }
@@ -54,9 +57,9 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .myheader {
-    background-color: #eee;
+    background-color: #D8BEFE;
     position: fixed;
     width: 100%;
     height: 50px;

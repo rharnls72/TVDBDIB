@@ -3,7 +3,7 @@
     <b-nav justified class="myheader">
       <b-input-group class="align-items-center m-2 mysearchbar">
         <div class="input-group-prepend">
-          <div @click="searchIcon" class="input-group-text py-0" style="border: 0px; background-color: #eee;">
+          <div @click="searchIcon" class="input-group-text py-0" style="border: 0px; background-color: #D8BEFE;">
             <b-icon-search></b-icon-search>
           </div>
         </div>
@@ -52,7 +52,7 @@ import ResultItems from "@/components/search/UserSearchResult.vue";
 import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
-    name: 'UserSearch',
+  name: 'UserSearch',
   data() {
     return {
       startPoint: 0,
@@ -183,7 +183,7 @@ export default {
 </script>
 <style scoped>
   .myheader {
-    background-color: #eee;
+    background-color: #D8BEFE;
     position: fixed;
     width: 100%;
     height: 50px;
@@ -191,7 +191,7 @@ export default {
     position: sticky;
   }
   .mysearchbar {
-    border: 1px solid lightgray;
+    border: 1px solid white;
     border-radius: 0.25rem;
   }
 </style>

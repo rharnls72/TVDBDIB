@@ -44,6 +44,9 @@ import EmptyChatroom from './views/message/EmptyChatroom.vue'
 import ChooseFollowing from './views/message/ChooseFollowing.vue'
 import ProgramPage from '@/views/curation/ProgramPage.vue'
 
+// import MessageList from './views/message/MessageList.vue'
+
+
 
 import KakaoLogin from './views/user/KakaoLogin.vue';
 

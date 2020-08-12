@@ -5,7 +5,7 @@
       <!-- 에피소드에는 포스터가 없다,, -->
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info mb-2">
-        <div class="user-name">
+        <div class="user-name" @click="goToProgramDetail">
           <button>[{{ curation.pname }}]</button>
         </div>
         <p class="date">{{ curation.broadcast_date }} 방송</p>
@@ -112,6 +112,9 @@ export default {
     EpisodeThumbnail,
   },
   methods: {
+    goToProgramDetail() {
+      this.$router.push({path:`/program/${this.curation.pno}`})
+    },
     createShare() {
       this.$router.push({path: `/createShare/1/${this.curation.episode}/${this.curation.pno}/${this.curation.season}`})
     },

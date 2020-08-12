@@ -92,8 +92,7 @@ export default {
   },
   methods: {
     moveMain() {
-      console.log(1)
-      this.$router.push('/feed/main')
+      this.$router.go(-1)
     },
     onContext(ctx) {
       this.context = ctx

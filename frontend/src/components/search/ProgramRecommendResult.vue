@@ -1,7 +1,7 @@
 <template>
     <div class="scroll-container">
         <div v-for="(program) in programs" v-bind:key="program.id" class="card">
-            <img :src='imgBaseUrl + program.poster_path' width="75rem" height="120rem" class="img-fluid" alt="poster">
+            <img :src='program.thumbnail' width="75rem" height="120rem" class="img-fluid" alt="poster">
         </div>
     </div>
 
