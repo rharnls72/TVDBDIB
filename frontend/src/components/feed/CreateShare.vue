@@ -14,6 +14,7 @@
         <FeedCountdownThumbnail v-if="article.ctype!==null && article.ctype === 2" :article="article"/>
         <FeedVoteThumbnail v-if="article.ctype!==null && article.ctype === 3" :article="article"/>
         <EpisodeThumbnail v-if="!!article.eno" :curation="article"/>
+        <FeedProgramThumbnail v-else :program="article"/>
       </div>
 
     </div>
@@ -31,6 +32,7 @@ import FeedArticleThumbnail from '@/components/feed/feedThumbnail/FeedArticleThu
 import FeedCountdownThumbnail from '@/components/feed/feedThumbnail/FeedCountdownThumbnail.vue'
 import FeedVoteThumbnail from '@/components/feed/feedThumbnail/FeedVoteThumbnail.vue'
 import EpisodeThumbnail from '@/components/curation/episode/EpisodeThumbnail.vue'
+import FeedProgramThumbnail from '@/components/feed/feedThumbnail/FeedProgramThumbnail.vue'
 
 import GetUserApi from "@/api/GetUserApi.js"
 
@@ -50,6 +52,7 @@ export default {
     FeedCountdownThumbnail,
     FeedVoteThumbnail,
     EpisodeThumbnail,
+    FeedProgramThumbnail,
   },
   methods: {
     moveMain() {
@@ -130,6 +133,17 @@ export default {
         this.article = res.list
       }
       , err => console.log(err)
+      )
+    } else if (this.$route.params.type === "2") {
+      console.log("프로그램")
+      Curation.programDetail(
+        this.$route.params.no
+        , res => {
+          console.log(res)
+          this.article = res.data.data
+          this.article.programDetail = JSON.parse(this.article.programDetail)
+        }
+        , err => console.log(err)
       )
     } else if (this.$route.params.fno !== null) {
       FeedApi.feedDetail(

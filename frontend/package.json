@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --host 0.0.0.0 --disableHostCheck true",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --host 0.0.0.0 --disableHostCheck true",
     "lint": "vue-cli-service lint",
     "test": "jest",
     "test:unit": "jest --no-cache"
@@ -29,6 +29,7 @@
     "vue": "^2.6.11",
     "vue-bootstrap-typeahead": "^0.2.6",
     "vue-google-login": "^2.0.5",
+    "vue-google-oauth2": "^1.5.5",
     "vue-html2canvas": "^0.0.4",
     "vue-infinite-loading": "^2.4.5",
     "vue-material-date-time-picker": "^0.6.0",

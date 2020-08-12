@@ -73,19 +73,48 @@ export default {
       'NoData'
       , res => {
         this.users = res.data.data;
-        console.log(this.users);
       }
       , err => {
         console.log(err);
       }
     );
     let uno = this.$store.state.userInfo.uno;
-    db.collection("chat_room").where("uno", "==", uno).orderBy("time", "desc")
+    db.collection("chat_room").where("users", "array-contains", uno).orderBy("time", "desc")
       .onSnapshot(this.getChatList);
   },
   watch: {
     selectedUser(user){
-      // this.$router.push({name:'EmptyChatroom', query: {user: user}})
+      let users = [this.$store.state.userInfo.uno, user.uno].sort();
+      let room = {
+          users: users,
+          usersToString: JSON.stringify(users),
+          mainUser: user
+        }
+      MessageApi.getChatRoom(
+        {usersToString: room.usersToString},
+        res => {
+          if(res.room==null){
+            this.$router.push({name:'EmptyChatroom', params: {room: room}})
+          }else{
+            room = res.room;
+             MessageApi.requestUserInfo(
+              [user.uno],
+                res => {
+                  if(res.userInfo!=null){
+                    room.mainUser = res.userInfo[0];
+                    this.$router.push({path: '/message/chatroom/' + room.cno, query: {room: room}})
+                  }
+                },
+                error => {
+                  this.$router.push({name:'Errors', query: {message: error.msg}})
+                }
+            );
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
     }
   },
   methods: {
@@ -117,12 +146,17 @@ export default {
     getChatList(querySnapshot) {
         // this.makeToast("알림이 왔습니다.", "primary");
         let temp = [];
-        let uno = [];
+        let unos = [];
+        let myUno = this.$store.state.userInfo.uno;
         querySnapshot.forEach(function(doc) {
           temp.push(doc.data());
-          uno.push(doc.data().other[0]);
+          if(doc.data().users[0] == myUno){
+            unos.push(doc.data().users[1]);
+          }else{
+            unos.push(doc.data().users[0]);
+          }
         });
-        this.userInfos = uno;
+        this.userInfos = unos;
         this.temprooms = temp;
         this.getUserInfo();
     },
