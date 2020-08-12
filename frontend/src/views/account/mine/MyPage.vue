@@ -80,6 +80,28 @@ export default {
       res => {
         this.info = res.info;
         this.followcnt = res.followcnt;
+
+        FeedApi.getFeedList({
+            num: 1,
+            target_uno: this.$store.state.userInfo.uno
+          }
+          , res => {
+            console.log(111, res);
+
+            this.writtenFeeds = res.list
+            for (let i=0; i<res.list.length; i++) {
+              this.writtenFeeds[i].content = JSON.parse(this.writtenFeeds[i].content)
+              this.writtenFeeds[i].tag = JSON.parse(this.writtenFeeds[i].tag)
+            }
+            this.requestCount++
+            console.log(this.writtenFeeds)
+            setTimeout(()=>{}, 1000)
+          }
+          , err => {
+            console.log(err)
+          }
+        )
+
       },
       error => {
         this.$router.push({name:'Errors', query: {message: error.msg}})
@@ -88,9 +110,11 @@ export default {
 
   },
   created() {
+    
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });
+
   },
 }
 </script>
