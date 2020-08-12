@@ -1,10 +1,10 @@
 <template>
   <div>
-    <CreateFeedHeader class="feed-header"/>
-    <div v-if="this.isArticle">
-      <CreateVote v-if="page===3" :article="article" :fno="fno"/>
-      <CreateArticle v-else-if="page===1" :article="article" :fno="fno"/>
-      <CreateCountdown v-else :article="article" :fno="fno"/>
+    <CreateFeedHeader @submitArticle="submitArticle" class="feed-header"/>
+    <div v-if="this.isArticle" class="create-feed-form row justify-content-center">
+      <CreateVote v-if="page===3" :submit="submit.vote" :article="article" :fno="fno"/>
+      <CreateArticle v-else-if="page===1" :submit="submit.article" :article="article" :fno="fno"/>
+      <CreateCountdown v-else :article="article" :submit="submit.countdown" :fno="fno"/>
     </div>
     <CreateFeedFooter class="page-btns" @changeArticle="turnArticle" @changeVote="turnVote" @changeCountdown="turnCountdown"/>
   </div>
@@ -33,12 +33,27 @@ export default {
       article: null,
       isArticle: true,
       fno: null,
+      submit: {
+        article: false,
+        countdown: false,
+        vote: false,
+      }
     }
   },
   methods: {
     turnArticle() {this.page = 1},
     turnVote() {this.page = 3},
     turnCountdown() {this.page = 2},
+    submitArticle() {
+      if (this.page === 1) {
+        this.submit.article = true
+      } else if (this.page === 2) {
+        this.submit.countdown = true
+      } else {
+        this.submit.vote = true
+      }
+      console.log(this.page)
+    }
   },
   created() {
     GetUserApi.getUser(res => {
@@ -89,5 +104,11 @@ export default {
   left: 0;
   right: 0;
   margin-bottom: 3rem;
+}
+.create-feed-form {
+  width: 100%;
+  margin-top: 20vh;
+  margin-left: 0;
+  margin-right: 0;
 }
 </style>
