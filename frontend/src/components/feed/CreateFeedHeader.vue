@@ -7,7 +7,15 @@
 
 <script>
 export default {
-  name: 'CreateFeedHeader'
+  name: 'CreateFeedHeader',
+  methods: {
+    moveMain() {
+      this.$router.go(-1)
+    },
+    submitArticle() {
+      this.$emit('submitArticle')
+    }
+  }
 }
 </script>
 
