@@ -1,7 +1,7 @@
 <template>
   <div class="feed newsfeed">
     <IndexCurationHeader />
-    <div class="wrapB mb-4">
+    <div class="wrapB">
       <div class="myfeed" v-for="feed in feeds" :key="feed.fno">
         <!-- <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
         <feedCountdownItem v-if="d.ctype===2" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
