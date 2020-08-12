@@ -1,9 +1,5 @@
 <template>
   <div class="user join wrapC" id="article">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <b-icon @click="moveMain" icon="chevron-left" font-scale="1.5"></b-icon>
-      <b-icon @click="submitArticle" icon="check-square" font-scale="1.4"></b-icon>
-    </div>
     <div class="wrapB container">
       <b-list-group style="border-radius: 20px;">
         
