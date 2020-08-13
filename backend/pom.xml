@@ -195,6 +195,13 @@
              <artifactId>openxml4j</artifactId>
              <version>1.0-beta</version>
       </dependency>
+
+	  <!-- 텐서플로우 -->
+	  <dependency>
+		<groupId>org.tensorflow</groupId>
+		<artifactId>tensorflow</artifactId>
+		<version>1.14.0</version>
+	</dependency>
       
       <!-- firestore -->
       <dependency>

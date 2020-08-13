@@ -35,7 +35,7 @@ public class PearsonCFTest {
 
         List<Program> programList = new ArrayList<Program>();
 
-        for (int page=1; page<=50; page++){
+        for (int page=1; page<=10; page++){
 
             ResponseEntity<String> re = 
             restTemplate.getForEntity(BASE_URL + "trending/tv/day?page=" + page + "&api_key=" + API_KEY, String.class);
@@ -59,12 +59,12 @@ public class PearsonCFTest {
         OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream("testData.csv"));
         Random r = new Random();
 
-        os.write("userId, programId, rating\n");
+        os.write("userId,programId,rating\n");
 
         for (int i=1; i<=1000; i++){
             for (int j=0; j<programList.size(); j++){
                 int isSkip = r.nextInt(3);
-                if (isSkip >= 2) continue;
+                if (isSkip >= 1) continue;
 
                 String line = i + "," + programList.get(j).getPno() + "," + (r.nextInt(4) + 1) + ".0";
                 os.write(line + "\n");
