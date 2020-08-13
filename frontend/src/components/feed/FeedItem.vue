@@ -1,16 +1,17 @@
 <template>
   <div class="feed-item">
     <div class="top">
-      <div class="box profile-image " style="background: #BDBDBD;">
-              <img v-if="article.profile_pic != null" class="profile" :src="article.profile_pic" :alt="profile_img">
-              <img v-else class="profile" :src="defaultProfile" :alt="profile_img">
+      <div class="box profile-image" style="background: #BDBDBD;">
+              <img v-if="article.profile_pic != null" class="profile" :src="article.profile_pic" :alt="article.profile_pic">
+              <img v-else class="profile" :src="defaultProfile" alt="">
           </div>
       <!-- <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div> -->
       <div class="user-info mb-2">
         <div class="user-name">
           <button>{{article.nick_name}}</button>
         </div>
-        <p class="date">{{createAfter}} 시간 전</p>
+        <p v-if="createAfter <= 60" class="date">{{createAfter}} 시간 전</p>
+        <p v-else class="date">{{parseInt(createAfter/60)}} 일 전</p>
       </div>
       <div class="content d-flex flex-comlumn justify-content-between align-items-center my-2">
         <div>{{article.content.title}}</div>
@@ -123,7 +124,6 @@ export default {
     detail: Boolean,
   },
   mounted() {
-    console.log(this.article)
   },
   methods: {
     createShare() {

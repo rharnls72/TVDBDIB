@@ -42,21 +42,15 @@ export default {
         target_uno: this.info.uno
       };
 
-      console.log(this.info)
-      console.log(data)
-
       FeedApi.getFeedList(
         data
         , res => {
-          console.log(111, res);
-
           this.writtenFeeds = res.list
           for (let i=0; i<res.list.length; i++) {
             this.writtenFeeds[i].content = JSON.parse(this.writtenFeeds[i].content)
             this.writtenFeeds[i].tag = JSON.parse(this.writtenFeeds[i].tag)
           }
           this.requestCount++
-          console.log(this.writtenFeeds)
           setTimeout(()=>{}, 1000)
         }
         , err => {
@@ -79,7 +73,6 @@ export default {
       data,
       res => {
         this.info = res.info;
-        console.log(this.info)
         this.followcnt = res.followcnt;
 
         FeedApi.getFeedList({
@@ -87,7 +80,6 @@ export default {
             target_uno: this.$store.state.userInfo.uno
           }
           , res => {
-            console.log(111, res);
 
             this.writtenFeeds = res.list
             for (let i=0; i<res.list.length; i++) {
@@ -95,7 +87,6 @@ export default {
               this.writtenFeeds[i].tag = JSON.parse(this.writtenFeeds[i].tag)
             }
             this.requestCount++
-            console.log(this.writtenFeeds)
             setTimeout(()=>{}, 1000)
           }
           , err => {
