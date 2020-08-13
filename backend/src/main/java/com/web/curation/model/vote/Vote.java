@@ -13,6 +13,9 @@ public class Vote {
     private int uno;
     private int pos;
 
+    private int count;
+    private int user_pos;
+
     public int getVno() {
         return this.vno;
     }
@@ -43,5 +46,21 @@ public class Vote {
 
     public void setPos(int pos) {
         this.pos = pos;
+    }
+
+    public int getCount() {
+        return this.count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getUser_pos() {
+        return this.user_pos;
+    }
+
+    public void setUser_pos(int user_pos) {
+        this.user_pos = user_pos;
     }
 }

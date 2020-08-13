@@ -32,7 +32,6 @@ public class Feed {
     private boolean press_like;
     private int dibs_num;
     private boolean press_dibs;
-    private int vote_pos;
 
     public void setFno(int fno) {
         this.fno = fno;
@@ -163,11 +162,4 @@ public class Feed {
         this.press_dibs = press_dibs;
     }
 
-    public int getVote_pos() {
-        return this.vote_pos;
-    }
-
-    public void setVote_pos(int vote_pos) {
-        this.vote_pos = vote_pos;
-    }
 }

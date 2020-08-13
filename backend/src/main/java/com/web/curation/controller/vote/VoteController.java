@@ -3,6 +3,8 @@ package com.web.curation.controller.vote;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.web.curation.dao.vote.VoteDao;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,6 +65,27 @@ public class VoteController {
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @GetMapping("/vote/read/{fno}")
+    @ApiOperation(value = "투표 정보 조회")
+    public Object readVote(@PathVariable("fno") int fno, HttpServletRequest httpReq) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        Vote vote = new Vote();
+        vote.setFno(fno);
+        // 로그인한 유저 정보 가져오기
+        vote.setUno(((User) httpReq.getAttribute("User")).getUno());
+
+        // 투표 정보 조회
+        List<Vote> list = dao.readVote(vote);
+
+        // 완료
+        result.status = true;
+        result.msg = "success";
+        result.data = list;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    } 
 
     @DeleteMapping("/vote/delete/{fno}")
     @ApiOperation(value = "투표 정보 테이블에서 제거")

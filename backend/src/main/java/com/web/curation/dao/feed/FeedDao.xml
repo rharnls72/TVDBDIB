@@ -119,17 +119,6 @@
                     AND
                     fd.uno = #{uno}
             ) > 0, true, false) AS `press_dibs`
-            <!-- Did vote on this feed? then where? -->
-            , (
-                SELECT
-                    v.pos
-                FROM
-                    `vote` v
-                WHERE
-                    v.fno = f.fno
-                    AND
-                    v.uno = #{uno}
-            ) AS `vote_pos`
         FROM
             (
                 <choose>
@@ -264,17 +253,6 @@
                     AND
                     fd.uno = #{uno}
             ) > 0, true, false) AS `press_dibs`
-            <!-- Did vote on this feed? then where? -->
-            , (
-                SELECT
-                    v.pos
-                FROM
-                    `vote` v
-                WHERE
-                    v.fno = f.fno
-                    AND
-                    v.uno = #{uno}
-            ) AS `vote_pos`
         FROM
             (
                 SELECT

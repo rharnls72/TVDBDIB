@@ -43,8 +43,8 @@ export default {
     return {
       title: null,
       contents: [
-        {id: 0, text: null, count: 0},
         {id: 1, text: null, count: 0},
+        {id: 2, text: null, count: 0},
       ],
       value: [],
       length: 2,
@@ -63,7 +63,7 @@ export default {
     },
     addItem(event) {
       this.contents.push({
-        id: this.length,
+        id: this.length + 1,
         text: null,
         count: 0,
       })
@@ -127,11 +127,11 @@ export default {
       this.contains = this.article.content.content
       this.title = this.article.content.title
       this.value = this.article.tag
-    } 
+    }
     else {
       this.contains = [
-        {id: 0, text: null, count: 0},
         {id: 1, text: null, count: 0},
+        {id: 2, text: null, count: 0},
       ]
       this.title = null
       this.value = []
