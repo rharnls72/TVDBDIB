@@ -10,7 +10,7 @@ const requestLogin = (data,callback,errorCallback) => {
     // 없으면 errorCallback 호출
 
     //백앤드와 로그인 통신하는 부분
-    http.get('/account/login?email=' + data.email + '&password=' + data.password)
+    http.post('/account/login', data)
         .then(res => {
             // 서버에서 정상적으로 처리되었으면 res 가 null 이 될 수 없음
             // 서버에서 db 쿼리 하다 오류난 경우일듯
