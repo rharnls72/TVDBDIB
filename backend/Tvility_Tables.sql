@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS `episode`;
 DROP TABLE IF EXISTS `program`;
 DROP TABLE IF EXISTS `follow_request`;
 DROP TABLE IF EXISTS `search_history`;
+DROP TABLE IF EXISTS `vote`;
 
 DROP VIEW IF EXISTS `episode_reply_view`;
 DROP VIEW IF EXISTS `program_reply_view`;
@@ -313,6 +314,20 @@ CREATE TABLE `search_history` (
         REFERENCES `user` (`uno`)
         ON DELETE CASCADE,
     FOREIGN KEY (`search_uno`)
+        REFERENCES `user` (`uno`)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE `vote` (
+    `vno` INT AUTO_INCREMENT,
+    `fno` INT,
+    `uno` INT,
+    `pos` INT,
+    PRIMARY KEY (`vno`),
+    FOREIGN KEY (`fno`)
+        REFERENCES `feed` (`fno`)
+        ON DELETE CASCADE,
+    FOREIGN KEY (`uno`)
         REFERENCES `user` (`uno`)
         ON DELETE CASCADE
 );
