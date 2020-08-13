@@ -554,6 +554,106 @@ const readScrapedEpisode = (data,callback,errorCallback) => {
 
 }
 
+const createEpisodeReplyLike = (data,callback,errorCallback) => {
+
+    http.post('/like/ereply/create', data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+
+}
+
+const deleteEpisodeReplyLike = (data,callback,errorCallback) => {
+
+    http.post('/like/ereply/delete', data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+
+}
+
+const createProgramReplyLike = (data,callback,errorCallback) => {
+
+    http.post('/like/preply/create', data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+
+}
+
+const deleteProgramReplyLike = (data,callback,errorCallback) => {
+
+    http.post('/like/preply/delete', data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+
+}
+
 const CurationApi = {
     requestEpisode:(callback,errorCallback)=>requestEpisode(callback,errorCallback)
     , requestEpisodeDetail:(data,callback,errorCallback)=>requestEpisodeDetail(data,callback,errorCallback)
@@ -579,6 +679,11 @@ const CurationApi = {
     , programDeleteLike:(data,callback,errorCallback)=>programDeleteLike(data,callback,errorCallback)
     , programCreateLike:(data,callback,errorCallback)=>programCreateLike(data,callback,errorCallback)
     , readScrapedEpisode:(data,callback,errorCallback)=>readScrapedEpisode(data,callback,errorCallback)
+
+    , createEpisodeReplyLike:(data,callback,errorCallback)=>createEpisodeReplyLike(data,callback,errorCallback)
+    , deleteEpisodeReplyLike:(data,callback,errorCallback)=>deleteEpisodeReplyLike(data,callback,errorCallback)
+    , createProgramReplyLike:(data,callback,errorCallback)=>createProgramReplyLike(data,callback,errorCallback)
+    , deleteProgramReplyLike:(data,callback,errorCallback)=>deleteProgramReplyLike(data,callback,errorCallback)
 }
 
 export default CurationApi
