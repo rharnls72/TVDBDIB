@@ -45,8 +45,6 @@ import ProgramPage from '@/views/curation/ProgramPage.vue'
 
 // import MessageList from './views/message/MessageList.vue'
 
-
-
 import KakaoLogin from './views/user/KakaoLogin.vue';
 
 

@@ -1,8 +1,7 @@
 <template>
-  <div id="app" class="columns">
+  <div>
     <AlertHeader />
-    <h1>알림</h1>
-    <div>
+    <div class="myalert">
       <!-- tabIndex라는 값을 v-model 이용해서 제어해서 탭 이동을 구현. 하위 b-tab에서 class만 바꾸는 걸로는 안 됐다 -->
     <b-tabs v-model="tabIndex" class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
       <b-tab @click="tabClick(1)" :title="'알림 (' + generals_size + ')'" title-link-class="text-secondary" active></b-tab>
@@ -190,3 +189,9 @@ export default {
   }*/
 };
 </script>
+
+<style scoped>
+  .myalert {
+    padding-top: 70px;
+  }
+</style>
