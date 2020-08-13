@@ -82,7 +82,6 @@ export default {
             pno: this.program.programDetail.id,
           }
           , res => {
-            console.log(res)
             this.$emit('checkFollowers')
           }
           , err => console.log(err)
