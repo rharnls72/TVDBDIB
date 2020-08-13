@@ -7,7 +7,7 @@
     </b-nav-item>
     <b-nav-item>
       <p class="text-dark mb-0"><strong>{{room.mainUser.nick_name}}
-        <span v-if="room.other.length>1">님 외 {{room.other.length-1}}명</span></strong></p>
+        <span v-if="room.users.length>2">님 외 {{room.users.length-2}}명</span></strong></p>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-end">
     </b-nav-item>

@@ -44,7 +44,7 @@ export default {
       this.$store.commit('addUserInfo', res.user);
     });
     MessageApi.requestUserInfo(
-        this.room.other,
+        this.room.users,
           res => {
             if(res.userInfo!=null){
               this.userInfos = res.userInfo;
@@ -67,14 +67,11 @@ export default {
         let me =  this.$store.state.userInfo;
         querySnapshot.forEach(function(doc) {
           message = doc.data();
-          if(me.uno == message.sender)
-            message.user = me;
-          else{
-            tempUsers.forEach(user => {
-              if(user.uno == message.sender)
+          tempUsers.forEach(user => {
+              if(user.uno == message.sender){
                 message.user = user;
-            });
-          }
+              }
+          });
           temp.push(message);
         });
         this.messages = temp;
