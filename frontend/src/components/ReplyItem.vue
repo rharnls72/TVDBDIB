@@ -9,7 +9,7 @@
     </div>
     <div class="mt-2 pl-2 pr-2">
       <div v-for="(re, idx) in replies" :key="re.no">
-        <div>{{re.writer_nick_name}} {{re.content}}
+        <div><strong @click="moveAccount(re)">{{re.writer_nick_name}} </strong> <span>{{re.content}} </span>
           <span
             @click="changeIsStretch(idx)"
             v-if="!re.isStretch" 
@@ -48,6 +48,13 @@ export default {
     pno: Number,
   },
   methods: {
+    moveAccount(re) {
+      if (re.writer_uno === this.$store.state.userInfo.uno) {
+        this.$router.push({path: `/mypage/main`})
+      } else {
+        this.$router.push({path:`/profile/${re.writer_nick_name}`})
+      }
+    },
     addCount() {
       this.$emit('addReply')
     },
@@ -210,5 +217,8 @@ export default {
 <style>
 .moreView {
   color: darkgray; 
+}
+.nickname {
+  font-display: bold;
 }
 </style>

@@ -14,7 +14,7 @@
     </div>
 
     <div v-else class="pl-2 my-1" v-for="r in reply" :key="r.no">
-      {{r.writer_nick_name}} {{r.content}} <span class="moreView" v-if="r.writer_uno === $store.state.userInfo.uno" @click="delReReply(r.no)">삭제</span>
+      <strong @click="moveAccount(r)">{{r.writer_nick_name}} </strong> <span>{{r.content}}</span> <span class="moreView" v-if="r.writer_uno === $store.state.userInfo.uno" @click="delReReply(r.no)">삭제</span>
     </div>
 
   </div>
@@ -47,6 +47,13 @@ export default {
     isStretch: Boolean,
   },
   methods: {
+    moveAccount(re) {
+      if (re.writer_uno === this.$store.state.userInfo.uno) {
+        this.$router.push({path: `/mypage/main`})
+      } else {
+        this.$router.push({path:`/profile/${re.writer_nick_name}`})
+      }
+    },
     pushReReply() {
 
       if (!this.eno===false) {
