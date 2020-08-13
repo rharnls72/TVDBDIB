@@ -203,6 +203,13 @@
 		  <version>6.15.0</version>
 	  </dependency>
 
+	  <!-- KOMORAN(형태소 분석기) -->
+	  <dependency>
+    	  <groupId>com.github.shin285</groupId>
+    	  <artifactId>KOMORAN</artifactId>
+    	  <version>3.3.4</version>
+  	  </dependency>
+
 	</dependencies>
 
 	<repositories>
@@ -211,6 +218,10 @@
 			<name>jcenter</name>
 			<url>https://jcenter.bintray.com</url>
 		</repository>
+		<repository>
+      		<id>jitpack.io</id>
+      		<url>https://jitpack.io</url>
+  		</repository>
 	</repositories>
 
 	<build>
