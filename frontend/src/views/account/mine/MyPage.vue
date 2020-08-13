@@ -79,6 +79,7 @@ export default {
       data,
       res => {
         this.info = res.info;
+        console.log(this.info)
         this.followcnt = res.followcnt;
 
         FeedApi.getFeedList({

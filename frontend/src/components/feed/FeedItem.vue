@@ -1,7 +1,11 @@
 <template>
   <div class="feed-item">
     <div class="top">
-      <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
+      <div class="box profile-image " style="background: #BDBDBD;">
+              <img v-if="article.profile_pic != null" class="profile" :src="article.profile_pic" :alt="profile_img">
+              <img v-else class="profile" :src="defaultProfile" :alt="profile_img">
+          </div>
+      <!-- <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div> -->
       <div class="user-info mb-2">
         <div class="user-name">
           <button>{{article.nick_name}}</button>
@@ -118,6 +122,9 @@ export default {
     fno: Number,
     detail: Boolean,
   },
+  mounted() {
+    console.log(this.article)
+  },
   methods: {
     createShare() {
       this.$router.push({path: `/createShare/0/${this.article.fno}`})
@@ -197,5 +204,16 @@ export default {
   background-color: beige;
   width: 100v;
   height: 55v;
+}
+.box {
+    width: 40px;
+    height: 40px; 
+    border-radius: 70%;
+    overflow: hidden;
+}
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 </style>
