@@ -1,42 +1,36 @@
 <template>
-  <div class="user join wrapC">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <b-icon @click="moveMain" icon="chevron-left" font-scale="1.5"></b-icon>
-      <b-icon icon="check-square" @click="submitArticle" font-scale="1.4"></b-icon>
-    </div>
-    <div class="wrapB">
-      <b-list-group class="pt-5" style="border-radius: 20px;">
-        
-        <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
-        
-        <b-list-group-item v-for="content in contents" :key="content.id">
-          <div class="row d-flex align-items-center px-3">
-            <b-form-input type="text" class="m-0 col rounded-pill" v-model="content.text" placeholder="항목 입력!!!">
-            </b-form-input>
-            <b-icon icon="dash-circle" v-if="content.id>1" @click="delItem(content.id)" class="ml-1 text-right" font-scale="1.4"></b-icon>
-          </div>
-        </b-list-group-item>
+  <div class="col-10">
+    <b-list-group style="border-radius: 20px;">
+      
+      <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
+      
+      <b-list-group-item v-for="content in contents" :key="content.id">
+        <div class="row d-flex align-items-center px-3">
+          <b-form-input type="text" class="m-0 col rounded-pill" v-model="content.text" placeholder="항목 입력!!!">
+          </b-form-input>
+          <b-icon icon="dash-circle" v-if="content.id>1" @click="delItem(content.id)" class="ml-1 text-right" font-scale="1.4"></b-icon>
+        </div>
+      </b-list-group-item>
 
-        <b-list-group-item>
-          <div class="row">
-            <b-icon icon="plus-circle" class="ml-1 col text-right" @click="addItem" font-scale="1.4"></b-icon>
-          </div>
-        </b-list-group-item>
+      <b-list-group-item>
+        <div class="row">
+          <b-icon icon="plus-circle" class="ml-1 col text-right" @click="addItem" font-scale="1.4"></b-icon>
+        </div>
+      </b-list-group-item>
 
-        <b-list-group-item><b-form-tags
-              input-id="tags-remove-on-delete"
-              :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
-              v-model="value"
-              separator=" "
-              placeholder="태그 입력!!"
-              remove-on-delete
-              no-add-on-enter
-              class="mb-2"
-              style="outline:none !important"
-            ></b-form-tags></b-list-group-item>
+      <b-list-group-item><b-form-tags
+            input-id="tags-remove-on-delete"
+            :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
+            v-model="value"
+            separator=" "
+            placeholder="태그 입력!!"
+            remove-on-delete
+            no-add-on-enter
+            class="mb-2"
+            style="outline:none !important"
+          ></b-form-tags></b-list-group-item>
 
-      </b-list-group>
-    </div>
+    </b-list-group>
   </div>
 </template>
 
@@ -59,11 +53,9 @@ export default {
   props: {
     article: Object,
     fno: Number,
+    submit: Boolean,
   },
   methods: {
-    moveMain() {
-      this.$router.go(-1)
-    },
     delItem(delId) {
       this.contents = this.contents.filter(res => {
         return res.id !== delId
@@ -123,6 +115,11 @@ export default {
           err=> console.log(err)
           )
       }
+    }
+  },
+  watch: {
+    submit: function(n, o) {
+      this.submitArticle()
     }
   },
   mounted() {
