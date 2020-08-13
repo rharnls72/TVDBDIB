@@ -16,7 +16,7 @@
             class="moreView ml-1 mr-1">댓글 작성</span>
           <span @click="touchLike(re)" v-if="!re.press_like" class="moreView">좋아요 </span> 
           <span @click="touchLike(re)" v-else class="moreView">좋아요 취소 </span> 
-          <span class="moreView" v-if="re.writer_uno === $store.state.userInfo.uno" @click="delReReply(re.no)">삭제</span>
+          <span class="moreView" v-if="re.writer_uno === $store.state.userInfo.uno" @click="delReply(re)">삭제</span>
         </div>
         <ReReplyItem 
         @addReply="addCount" 
@@ -139,12 +139,16 @@ export default {
       this.content=null
     },
     delReply(re) {
+      
+      console.log('dd', re)
+      const temp = re.reply_num
+
       this.delfun(
         {
           no: re.no
         }
         , res => {
-          this.$emit("delReply", Number(re.reply_num)+1)
+          this.$emit("delReply", Number(temp)+1)
           this.replies = this.replies.filter(res => res.no !== re.no)
           this.replies = this.replies.foreach(res => res.isStretch = false)
         }
@@ -177,10 +181,6 @@ export default {
     }
   },
   mounted() {
-    GetUserApi.getUser(res => {
-      this.$store.commit('addUserInfo', res.user);
-      this.uno = this.$store.state.userInfo.uno
-    });
     if (!this.fno === false) {
       FeedApi.readReply(
         { 
