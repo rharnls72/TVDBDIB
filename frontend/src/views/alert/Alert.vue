@@ -25,6 +25,7 @@ import AlertItem from '@/components/alert/AlertItem.vue';
 import GetUserApi from "@/api/GetUserApi"
 import header from "@/api/header.js"
 import db from '@/api/firebaseInit'
+import MessageApi from "@/api/MessageApi";
 export default {
   name: 'AlertTest',
    components: {
@@ -36,9 +37,13 @@ export default {
   data() {
     return {
       tabIndex: 0,
+      temp_alerts: [],
       alerts: [],
       generals: [],
-      follow_requests: []
+      follow_requests: [],
+      alerts_uno: [],
+      follows_uno: [],
+      userInfos: [],
   }
   },
 
@@ -79,33 +84,71 @@ export default {
       if (option == 1){
         console.log("click " + option);
         this.tabIndex = 0;
-        this.alerts = this.generals;
+        this.temp_alerts = this.generals;
+        this.userInfos = JSON.parse(JSON.stringify(this.alerts_uno));
+        this.getUserInfo();
       }
       else{
         console.log("click " + option);
         this.tabIndex = 1; // AlertItem에서 이 함수 호출됐을 때 이 코드로 인해 탭 전환이 됨.
-        this.alerts = this.follow_requests;
+        this.temp_alerts = this.follow_requests;
+        this.userInfos = JSON.parse(JSON.stringify(this.follows_uno));
+        this.getUserInfo();
       }
     },
     getAlerts(querySnapshot) {
         // this.makeToast("알림이 왔습니다.", "primary");
         let temp = [];
+        let unos = [];
         querySnapshot.forEach(function(doc) {
           temp.push(doc.data());
+          unos.push(doc.data().subject_no);
         });
         this.generals = temp;
-        if(this.tabIndex == 0)
-          this.alerts = this.generals;
+        this.alerts_uno = unos;
+        if(this.tabIndex == 0){
+          this.temp_alerts = this.generals;
+          this.userInfos = JSON.parse(JSON.stringify(this.alerts_uno));
+          this.getUserInfo();
+        }
     },
     getFollowings(querySnapshot){
       // this.makeToast("알림이 왔습니다.", "primary");
         let temp = [];
+        let unos = [];
         querySnapshot.forEach(function(doc) {
           temp.push(doc.data());
+          unos.push(doc.data().subject_no);
         });
         this.follow_requests = temp;
-        if(this.tabIndex == 1)
-          this.alerts = this.follow_requests;
+        this.follows_uno = unos;
+        if(this.tabIndex == 1){
+          this.temp_alerts = this.follow_requests;
+          this.userInfos = JSON.parse(JSON.stringify(this.follows_uno));
+          this.getUserInfo();
+        }
+    },
+    getUserInfo(){
+      MessageApi.requestUserInfo(
+        this.userInfos,
+          res => {
+            if(res.userInfo!=null){
+              let temp;
+              res.userInfo.forEach(user => {
+                temp = this.userInfos.indexOf(user.uno);
+                while(temp!= -1){
+                  this.temp_alerts[temp].user = user;
+                  this.userInfos[temp] =-1;
+                  temp = this.userInfos.indexOf(user.uno);
+                }
+              });
+            }
+            this.alerts = this.temp_alerts;
+          },
+          error => {
+            this.$router.push({name:'Errors', query: {message: error.msg}})
+          }
+      );
     },
     makeToast(message, variant){
         this.$bvToast.toast(message, {

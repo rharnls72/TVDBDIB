@@ -44,10 +44,6 @@ public class FirebaseDao {
                 result = dao.getWriterUno("episode_reply", "erno", alert.getCno());
             }
             alert.setUno(result);
-            Alert newAlert = dao.getInfoByUser(alert.getSubject_no());
-            if(newAlert.getPicture()!=null)
-                alert.setPicture(newAlert.getPicture());
-            alert.setSubject_name(newAlert.getSubject_name());
 
             DocumentReference addedDocRef = db.collection("alert").document();
             alert.setAno(addedDocRef.getId());
@@ -61,11 +57,6 @@ public class FirebaseDao {
     //팔로우 요청 추가
     public String addFollowing(Alert alert){
         try {
-            Alert newAlert = dao.getInfoByUser(alert.getSubject_no());
-            if(newAlert.getPicture()!=null)
-                alert.setPicture(newAlert.getPicture());
-            alert.setSubject_name(newAlert.getSubject_name());
-
             Firestore db = FirestoreClient.getFirestore();
             DocumentReference addedDocRef = db.collection("follow_request").document();
             alert.setAno(addedDocRef.getId());
