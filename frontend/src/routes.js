@@ -21,7 +21,6 @@ import CreateFeed from '@/views/feed/CreateFeed.vue'
 import CreateShare from "@/components/feed/CreateShare.vue"
 import FeedMain from './views/feed/IndexFeed.vue'
 import feedDetail from '@/components/feed/feedDetail.vue'
-import FeedMiniTab from './components/feed/FeedMiniTab.vue'
 
 import IndexSearch from './views/search/IndexSearch.vue'
 
@@ -151,11 +150,6 @@ export default [
         path: '/feed/detail/:fno',
         name: 'FeedDetail',
         component: feedDetail
-    },
-    {
-        path: '/feed/miniTap',
-        name: 'FeedMiniTab',
-        component: FeedMiniTab
     },
     {
         path: '/search/main',
