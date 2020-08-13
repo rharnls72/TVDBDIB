@@ -48,17 +48,17 @@
       >로그인</button> -->
 
       <button @click="onLogin" :disabled="!isSubmit" :class="{disabled : !isSubmit}" class="btn mybutton mt-3 d-flex justify-content-center align-items-center">
-        <p class="d-inline m-0">로그인</p>
+        <p class="d-inline m-0 text-dark">로그인</p>
       </button>
 
       <button @click="doKakaoLogin" class="btn mykakaobutton mt-2 d-flex justify-content-center align-items-center">
         <img class="d-inline mylogo pr-2" :src="kakaoLogo" alt="kakao-logo">
-        <p class="d-inline m-0">카카오 로그인</p>
+        <p class="d-inline m-0 text-dark">카카오 로그인</p>
       </button>
 
       <button @click="doGoogleLogin" class="btn mygooglebutton mt-2 d-flex justify-content-center align-items-center">
         <img class="d-inline mylogo pr-2" :src="googleLogo" alt="google-logo">
-        <p class="d-inline m-0">구글 로그인</p>
+        <p class="d-inline m-0 text-dark">구글 로그인</p>
       </button>
 
       <!-- <div class="sns-login">
