@@ -5,7 +5,6 @@
     @include wrap;
     min-height: 100%;
     box-sizing: border-box;
-    margin-top: 7%; // 내용이 너무 화면 상단에 붙어있는게 보기 안좋아서 좀 내림
     h1 {
         color:#000;
         font-weight: $f600;
