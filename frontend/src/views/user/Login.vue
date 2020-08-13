@@ -3,9 +3,9 @@
     <LoginHeader />
     <div class="wrapC myfeed">
       <div class="myfeedcard">
-        <img class="mythumbnail mb-2" :src="logo" alt="logo">
+        <img class="mythumbnail mb-3" :src="logo" alt="logo">
       </div>
-      <div class="input-with-label mt-3">
+      <div class="input-with-label mt-3 mb-3 myinput">
         <input
           v-model="email"
           v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
@@ -19,7 +19,7 @@
         <div class="error-text" v-if="error.email">{{error.email}}</div>
       </div>
 
-      <div class="input-with-label">
+      <div class="input-with-label mb-3 myinput">
         <input
           v-model="password"
           type="password"
@@ -33,8 +33,8 @@
         <div class="error-text" v-if="error.password">{{error.password}}</div>
       </div>
 
-      <div>
-        <label>
+      <div class="d-flex justify-content-end">
+        <label class="d-flex mb-0">
           <input v-model="isSave" type="checkbox" id="save" />
           <span>로그인 유지</span>
         </label>
@@ -47,17 +47,18 @@
         :class="{disabled : !isSubmit}"
       >로그인</button> -->
 
-      <button @click="onLogin" :disabled="!isSubmit" :class="{disabled : !isSubmit}" class="btn mybutton mt-2 d-flex justify-content-center align-items-center">
-       <p class="d-inline m-0">로그인</p>
+      <button @click="onLogin" :disabled="!isSubmit" :class="{disabled : !isSubmit}" class="btn mybutton mt-3 d-flex justify-content-center align-items-center">
+        <p class="d-inline m-0">로그인</p>
       </button>
 
       <button @click="doKakaoLogin" class="btn mykakaobutton mt-2 d-flex justify-content-center align-items-center">
         <img class="d-inline mylogo pr-2" :src="kakaoLogo" alt="kakao-logo">
-       <p class="d-inline m-0">카카오 로그인</p>
+        <p class="d-inline m-0">카카오 로그인</p>
       </button>
 
-      <button @click="doGoogleLogin" class="btn mykakaobutton mt-2 d-flex justify-content-center align-items-center">
-       <p class="d-inline m-0">Google 로그인</p>
+      <button @click="doGoogleLogin" class="btn mygooglebutton mt-2 d-flex justify-content-center align-items-center">
+        <img class="d-inline mylogo pr-2" :src="googleLogo" alt="google-logo">
+        <p class="d-inline m-0">구글 로그인</p>
       </button>
 
       <!-- <div class="sns-login">
@@ -81,21 +82,6 @@
         <router-link to="/user/findPw" class="text-dark mylink mr-3">비밀번호 찾기</router-link>
         <router-link to="/user/join" class="text-dark mylink">가입하기</router-link>
       </div>
-
-      <!-- <div class="add-option mt-3">
-        <div class="text">
-          <p>혹시</p>
-          <div class="bar"></div>
-        </div>
-        <div class="wrap m-0">
-          <p>비밀번호를 잊으셨나요?</p>
-          <router-link to="/user/findPw" class="btn--text">비밀번호 찾기</router-link>
-        </div>
-        <div class="wrap m-0">
-          <p>아직 회원이 아니신가요?</p>
-          <router-link to="/user/join" class="btn--text">가입하기</router-link>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -111,7 +97,7 @@ import UserApi from "../../api/UserApi";
 import LoginHeader from '../../components/user/custom/LoginHeader.vue'
 import logo from '../../assets/images/custom/logo.png'
 import kakaoLogo from '../../assets/images/custom/kakao-logo.png'
-import kakaoButton from '@/assets/images/kakao_login_medium_narrow.png';
+import googleLogo from '../../assets/images/custom/google-logo.png'
 
 import GetUserApi from "@/api/GetUserApi"
 import KakaoApi from "@/api/KakaoApi.js";
@@ -354,7 +340,7 @@ export default {
       component: this,
       logo,
       kakaoLogo,
-      kakaoButton
+      googleLogo,
     };
   }
 };
@@ -365,6 +351,7 @@ export default {
     background-color: #f8e8f2;
   }
   .myfeed {
+    height: 100%;
     padding-top: 70px;
     padding-bottom: 50px;
     background-color: white;
@@ -389,11 +376,22 @@ export default {
     background-color: #f7e600;
     box-shadow: none;
   }
+  .mygooglebutton {
+    width: 100%;
+    height: 40px;
+    border: 1px solid lightgray;
+    box-shadow: none;
+  }
   .mylogo {
-    height: 100%;
-    width: 33px
+    height: 80%;
+    width: 30px;
   }
   .mylink {
     font-weight: 600;
+  }
+  .myinput {
+    border: 1px solid lightgray;
+    border-radius: 0.25rem;
+    border-style: none;
   }
 </style>

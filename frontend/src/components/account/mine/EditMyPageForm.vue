@@ -1,13 +1,12 @@
 <template>
   <div class="feed newsfeed myfeed">
-    <div class="wrapB">
-      <div class="container mt-3">
-        <div class="row p-0 justify-content-center">
-          <img class="col-3 p-0 mb-0" :src="imageData" alt="default-image" />
+    <div class="wrapB content">
+        <div class="box mg_bottom">
+          <img class="profile" :src="imageData" alt="default-image" />
         </div>
-        <div class="row p-0 justify-content-center">
+        <div class="mg_bottom">
           <!-- <p class="mt-2 mb-0">사진 변경</p> -->
-          <b-form-file v-model="pic" class="mt-2 mb-0" accept="image/*" @change="changeProfilePic">사진 선택</b-form-file>
+          <b-form-file v-model="pic" class="" accept="image/*" @change="changeProfilePic">사진 선택</b-form-file>
         </div>
 
         <div class="row py-2">
@@ -50,7 +49,6 @@
             ></textarea>
           </div>
         </div>
-      </div>
     </div>
   </div>
 </template>
@@ -152,5 +150,24 @@ export default {
 <style>
 .myfeed {
   padding-top: 50px;
+}
+.mg_bottom{
+  margin: auto;
+  margin-bottom: 15px;
+}
+.content{
+  padding: 30px;
+}
+.box {
+    width: 100px;
+    height: 100px; 
+    border-radius: 70%;
+    overflow: hidden;
+    background: #BDBDBD;
+}
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 </style>

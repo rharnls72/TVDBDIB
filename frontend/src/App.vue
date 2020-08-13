@@ -9,3 +9,9 @@ export default {
   name: "app"
 };
 </script>
+
+<style scoped>
+  div {
+    height: 100%;
+  }
+</style>
