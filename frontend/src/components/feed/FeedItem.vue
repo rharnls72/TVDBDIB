@@ -6,7 +6,8 @@
         <div class="user-name">
           <button>{{article.nick_name}}</button>
         </div>
-        <p class="date">{{createAfter}} 시간 전</p>
+        <p v-if="createAfter <= 60" class="date">{{createAfter}} 시간 전</p>
+        <p v-else class="date">{{parseInt(createAfter/60)}} 일 전</p>
       </div>
       <div class="content d-flex flex-comlumn justify-content-between align-items-center my-2">
         <div>{{article.content.title}}</div>
