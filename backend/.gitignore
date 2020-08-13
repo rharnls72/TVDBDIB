@@ -4,6 +4,7 @@ target/
 !**/src/main/**
 !**/src/test/**
 .DS_Store
+testData.csv
 ### STS ###
 .apt_generated
 .classpath
@@ -30,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+testData.csv

@@ -1,29 +1,30 @@
 <template>
-  <div class="user join wrapC" id="article">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <b-icon @click="moveMain" icon="chevron-left" font-scale="1.5"></b-icon>
-      <b-icon @click="submitArticle" icon="check-square" font-scale="1.4"></b-icon>
-    </div>
-    <div class="wrapB container">
-      <b-list-group style="border-radius: 20px;">
-        
-        <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
-        <b-list-group-item><b-form-input type="text" class="m-0 rounded-pill" v-model="content" placeholder="내용 입력!!!"></b-form-input></b-list-group-item>
-        
-        <b-list-group-item><b-form-tags
-              input-id="tags-remove-on-delete"
-              :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
-              v-model="value"
-              separator=" "
-              placeholder="태그 입력!!"
-              remove-on-delete
-              no-add-on-enter
-              class="mb-2"
-              style="outline:none !important"
-            ></b-form-tags></b-list-group-item>
+  <div class="col-10">
+    <b-list-group style="border-radius: 20px;">
+      
+      <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
+      <b-list-group-item>
+        <b-form-textarea
+          id="textarea"
+          v-model="content"
+          placeholder="내용 입력"
+          rows="3"
+        ></b-form-textarea>
+      </b-list-group-item>
+      
+      <b-list-group-item><b-form-tags
+            input-id="tags-remove-on-delete"
+            :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
+            v-model="value"
+            separator=" "
+            placeholder="태그 입력!!"
+            remove-on-delete
+            no-add-on-enter
+            class="mb-2"
+            style="outline:none !important"
+          ></b-form-tags></b-list-group-item>
 
-      </b-list-group>
-    </div>
+    </b-list-group>
   </div>
 </template>
 
@@ -43,6 +44,7 @@ export default {
   props: {
     article: Object,
     fno: Number,
+    submit: Boolean,
   },
   computed: {
     ...mapState([
@@ -96,13 +98,58 @@ export default {
             console.log(res)
             this.$router.push({path:'/feed/main'})
           },
-          err=> console.log(err)
+          err=> console.log('updateFeed Error: ' + err.msg)
           )
       }
     }
+    , checkInput(event) {
+      let keyCode = event.hasOwnProperty('which') ? event.which : event.keyCode;
+
+      // 스페이스바나 엔터가 눌리면 태그 추출하기
+      if(keyCode == 13 || keyCode == 32) {
+        FeedApi.getTags(
+          {
+            content: this.content
+            , tags: JSON.stringify(this.value)
+          }
+          , res => {
+            console.log(res);
+
+            // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+            this.value = JSON.parse(res.data.data);
+          }
+          , err => {
+            console.log('getTags Error: ' + err.msg);
+          }
+        )
+      }
+    }
+    , contentFocusOut() {
+      console.log('contentFocusOut() called!!!');
+      FeedApi.getTags(
+        {
+          content: this.content
+          , tags: JSON.stringify(this.value)
+        }
+        , res => {
+          console.log(res);
+
+          // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+          this.value = JSON.parse(res.data.data);
+        }
+        , err => {
+          console.log('getTags Error: ' + err.msg);
+        }
+      )
+    }
+  },
+  watch: {
+    submit: function(n, o) {
+      this.submitArticle()
+    }
   },
   mounted() {
-    console.log(this.fno)
+    console.log('mounted() fno: ', this.fno)
     if (this.article !== null) {
       console.log(this.article.content)
       const data = this.article
@@ -116,6 +163,9 @@ export default {
       this.content = null
       this.value = []
     }
+
+    document.getElementById("textarea").addEventListener("keypress", this.checkInput);
+    document.getElementById("textarea").addEventListener("focusout", this.contentFocusOut);
   }
 }
 </script>
