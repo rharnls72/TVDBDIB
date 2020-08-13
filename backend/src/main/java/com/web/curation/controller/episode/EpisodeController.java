@@ -97,45 +97,54 @@ public class EpisodeController {
         }
         int uno = ((User) obj).getUno();
 
-        // 팔로우중인 프로그램 리스트 조회
-        //List<Program> programList = followdao.getProgramFollowings(uno);
-
-        // Step 1: 아직 팔로우 데이터가 없으므로 일단 임시로 프로그램 리스트도 TMDB에서 추천해주는거 들고오는 걸로
         ResponseEntity<String> re = null;
-        JSONArray programs = null;
-        List<Program> programList = new ArrayList<Program>();
-        try {
-            re = restTemplate.getForEntity(BASE_URL + "discover/tv?first_air_date_year=2020&sort_by=popularity.desc&api_key=" + API_KEY + "&language=ko",
-                                            String.class);
-            JSONObject recommended_program = new JSONObject(re.getBody());
-            programs = recommended_program.optJSONArray("results");
-        } catch (Exception e) {
-            result.status = false;
-            result.msg = "Step 1 - 예외 발생 : " + e.getMessage();
-            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        // 팔로우중인 프로그램 리스트 조회
+        List<Program> programList = followdao.getProgramFollowings(uno);
+        for (Program program : programList) {
+            re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(program.getPno()) + "?api_key=" + API_KEY + "&language=ko", String.class);
+            JSONObject programInfo = new JSONObject(re.getBody());
+            System.out.println(programInfo);
+            program.setPname(programInfo.optString("name"));
+            program.setSeason(programInfo.optInt("number_of_seasons"));
         }
 
+        // // Step 1: 아직 팔로우 데이터가 없으므로 일단 임시로 프로그램 리스트도 TMDB에서 추천해주는거 들고오는 걸로
+        // ResponseEntity<String> re = null;
+        // JSONArray programs = null;
+        // List<Program> programList = new ArrayList<Program>();
+        // try {
+        //     re = restTemplate.getForEntity(BASE_URL + "discover/tv?first_air_date_year=2020&sort_by=popularity.desc&api_key=" + API_KEY + "&language=ko",
+        //                                     String.class);
+        //     JSONObject recommended_program = new JSONObject(re.getBody());
+        //     programs = recommended_program.optJSONArray("results");
+        // } catch (Exception e) {
+        //     result.status = false;
+        //     result.msg = "Step 1 - 예외 발생 : " + e.getMessage();
+        //     return new ResponseEntity<>(result, HttpStatus.OK);
+        // }
 
-        // Step 2: 각 프로그램에 대한 객체 만들어서 기본 정보 몇 개만 세팅한 다음 programList에 삽입
-        try {
-            for (int i=1; i<=programs.length(); i++){
-                Program p = new Program();
-                JSONObject programJson = programs.optJSONObject(i-1);
-                int id = programJson.optInt("id");
-                String name = programJson.optString("name");
-                int season = 1;
-                String thumbnail = programJson.optString("backdrop_path");
-                p.setPno(id);
-                p.setPname(name);
-                p.setSeason(season);
-                if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
-                programList.add(p);
-            }
-        } catch (Exception e) {
-            result.status = false;
-            result.msg = "Step 2 - 예외 발생 : " + e.getMessage();
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
+
+        // // Step 2: 각 프로그램에 대한 객체 만들어서 기본 정보 몇 개만 세팅한 다음 programList에 삽입
+        // try {
+        //     for (int i=1; i<=programs.length(); i++){
+        //         Program p = new Program();
+        //         JSONObject programJson = programs.optJSONObject(i-1);
+        //         int id = programJson.optInt("id");
+        //         String name = programJson.optString("name");
+        //         int season = 1;
+        //         String thumbnail = programJson.optString("backdrop_path");
+        //         p.setPno(id);
+        //         p.setPname(name);
+        //         p.setSeason(season);
+        //         if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
+        //         programList.add(p);
+        //     }
+        // } catch (Exception e) {
+        //     result.status = false;
+        //     result.msg = "Step 2 - 예외 발생 : " + e.getMessage();
+        //     return new ResponseEntity<>(result, HttpStatus.OK);
+        // }
 
         List<EpisodeResponse> episodeList = new ArrayList<EpisodeResponse>();
 
@@ -339,6 +348,15 @@ public class EpisodeController {
         int uno = ((User) req.getAttribute("User")).getUno();
 
         e.setUno(uno);
+
+        // 좋아요 수, 댓글 수 등 정보 구하기(있다면)
+        // DB 에 존재하는지 확인
+        int n = episodeDao.checkDataExist(e);
+            
+        // DB 에 존재하지 않으면 추가
+        if(n == 0) {
+            episodeDao.addNewEpisode(e);
+        }
 
         // 좋아요 수, 댓글 수 등 정보 구하기
         e.setAdditionalData((episodeDao.getLikeReplyInfo(e)).get(0));

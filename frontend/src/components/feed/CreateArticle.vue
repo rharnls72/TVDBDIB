@@ -98,9 +98,49 @@ export default {
             console.log(res)
             this.$router.push({path:'/feed/main'})
           },
-          err=> console.log(err)
+          err=> console.log('updateFeed Error: ' + err.msg)
           )
       }
+    }
+    , checkInput(event) {
+      let keyCode = event.hasOwnProperty('which') ? event.which : event.keyCode;
+
+      // 스페이스바나 엔터가 눌리면 태그 추출하기
+      if(keyCode == 13 || keyCode == 32) {
+        FeedApi.getTags(
+          {
+            content: this.content
+            , tags: JSON.stringify(this.value)
+          }
+          , res => {
+            console.log(res);
+
+            // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+            this.value = JSON.parse(res.data.data);
+          }
+          , err => {
+            console.log('getTags Error: ' + err.msg);
+          }
+        )
+      }
+    }
+    , contentFocusOut() {
+      console.log('contentFocusOut() called!!!');
+      FeedApi.getTags(
+        {
+          content: this.content
+          , tags: JSON.stringify(this.value)
+        }
+        , res => {
+          console.log(res);
+
+          // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+          this.value = JSON.parse(res.data.data);
+        }
+        , err => {
+          console.log('getTags Error: ' + err.msg);
+        }
+      )
     }
   },
   watch: {
@@ -109,7 +149,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.fno)
+    console.log('mounted() fno: ', this.fno)
     if (this.article !== null) {
       console.log(this.article.content)
       const data = this.article
@@ -123,6 +163,9 @@ export default {
       this.content = null
       this.value = []
     }
+
+    document.getElementById("textarea").addEventListener("keypress", this.checkInput);
+    document.getElementById("textarea").addEventListener("focusout", this.contentFocusOut);
   }
 }
 </script>

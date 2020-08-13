@@ -373,6 +373,75 @@ const readReReply = (data,callback,errorCallback) => {
         });
 }
 
+const getTags = (data,callback,errorCallback) => {
+    http.post('/feed/generate/tags', data, header())
+    .then(res => {
+        if(res == null) {
+            let error = {msg : '알 수 없는 오류 발생'};
+            errorCallback(error);
+        }
+        else {
+            if(res.data.status) {
+                callback(res);
+            }
+            else {
+                let error = {msg : res.data.msg};
+                errorCallback(error);
+            }
+        }
+    })
+    .catch(err => {
+        err.msg = '태그 가져오기 - 서버 요청에서 오류 발생';
+        errorCallback(err);
+    });
+}
+
+const createReplyLike = (data,callback,errorCallback) => {
+    http.post('/like/freply/create/', data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+}
+
+const deleteReplyLike = (data,callback,errorCallback) => {
+    http.post('/like/freply/create', data, header())
+        .then(res => {
+            if(res == null) {
+                let error = {msg : '알 수 없는 오류 발생'};
+                errorCallback(error);
+            }
+            else {
+                if(res.data.status) {
+                    callback(res);
+                }
+                else {
+                    let error = {msg : res.data.msg};
+                    errorCallback(error);
+                }
+            }
+        })
+        .catch(err => {
+            err.msg = '서버 요청에서 오류 발생';
+            errorCallback(err);
+        });
+}
+
 const FeedApi = {
     createFeed:(data,callback,errorCallback)=>createFeed(data,callback,errorCallback)
     , getFeedList:(data,callback, errorCallback)=>getFeedList(data, callback, errorCallback)
@@ -390,6 +459,11 @@ const FeedApi = {
 
     , createDibs:(data,callback, errorCallback)=>createDibs(data,callback, errorCallback)
     , deleteDibs:(data,callback, errorCallback)=>deleteDibs(data,callback, errorCallback)
+    
+    , getTags:(data,callback, errorCallback)=>getTags(data,callback, errorCallback)
+
+    , createReplyLike:(data,callback,errorCallback)=>createReplyLike(data,callback,errorCallback)
+    , deleteReplyLike:(data,callback,errorCallback)=>deleteReplyLike(data,callback,errorCallback)
 }
 
 export default FeedApi

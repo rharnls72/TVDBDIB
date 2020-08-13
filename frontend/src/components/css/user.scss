@@ -78,8 +78,8 @@
     //회원가입
     &.join {
         .form-wrap {
-            @include wrap;
-            margin-bottom: 15px;
+            // @include wrap;
+            // float: none;
             span {
                 font-size: 1em;
                 position: absolute;
