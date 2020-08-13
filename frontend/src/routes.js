@@ -35,7 +35,6 @@ import OtherPage from './views/account/your/OtherPage.vue'
 
 import ViewFollowings from './views/account/ViewFollowings.vue'
 import ViewFollowers from './views/account/ViewFollowers.vue'
-import AlertTest from './views/alert/AlertTest.vue'
 
 
 import ChatList from './views/message/ChatList.vue'
@@ -145,11 +144,6 @@ export default [
         path: '/alert/main',
         name: 'Alert',
         component: Alert
-    },
-    {
-        path: '/alert/test',
-        name: 'AlertTest',
-        component: AlertTest
     },
     {
         path: '/feed/detail/:fno',

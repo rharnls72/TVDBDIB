@@ -79,6 +79,7 @@ export default {
     CurationApi.programDetail(
       this.$route.params.pno
       , res => {
+        console.log(res.data.data)
         res.data.data.programDetail = JSON.parse(res.data.data.programDetail);
         res.data.data.episodeGroup = JSON.parse(res.data.data.episodeGroup);
         this.program = res.data.data
