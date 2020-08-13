@@ -14,7 +14,10 @@
     </div>
 
     <div v-else class="pl-2 my-1" v-for="r in reply" :key="r.no">
-      <strong @click="moveAccount(r)">{{r.writer_nick_name}} </strong> <span>{{r.content}}</span> <span class="moreView" v-if="r.writer_uno === $store.state.userInfo.uno" @click="delReReply(r.no)">삭제</span>
+      <strong @click="moveAccount(r)">{{r.writer_nick_name}} </strong> <span>{{r.content}} </span> 
+      <span @click="touchLike(r)" v-if="!r.press_like" class="moreView">좋아요 </span> 
+      <span @click="touchLike(r)" v-else class="moreView">좋아요 취소 </span> 
+      <span class="moreView" v-if="r.writer_uno === $store.state.userInfo.uno" @click="delReReply(r.no)">삭제</span>
     </div>
 
   </div>
@@ -34,6 +37,7 @@ export default {
       addData: null,
       readfun: null,
       moreView: false,
+      num: null,
     }
   },
   props: {
@@ -45,6 +49,8 @@ export default {
     addfun: Function,
     delfun: Function,
     isStretch: Boolean,
+    addlike: Function,
+    dellike: Function,
   },
   methods: {
     moveAccount(re) {
@@ -52,6 +58,24 @@ export default {
         this.$router.push({path: `/mypage/main`})
       } else {
         this.$router.push({path:`/profile/${re.writer_nick_name}`})
+      }
+    },
+    touchLike(reply) {
+      reply.press_like = !reply.press_like
+      if (reply.press_like) {
+        this.addlike({
+          tno: reply.no
+        }
+        , res => console.log(res)
+        , err => console.log(err)
+        )
+      } else {
+        this.dellike({
+          tno: reply.no
+        }
+        , res => console.log(res)
+        , err => console.log(err)
+        )
       }
     },
     pushReReply() {
@@ -133,6 +157,7 @@ export default {
       , err => console.log(err)
       )
       this.readfun = CurationApi.readReReply
+      this.num = this.eno
     } else if (this.section === "feed") {
       FeedApi.readReReply({
         no: this.parentNo,
@@ -144,6 +169,7 @@ export default {
       , err => console.log(err)
       )
       this.readfun = FeedApi.readReReply
+      this.num = this.fno
     } else {
       CurationApi.programReReplyRead({
         no: this.parentNo,
@@ -155,6 +181,7 @@ export default {
       , err => console.log(err)
       )
       this.readfun = CurationApi.programReReplyRead
+      this.num = this.pno
     }
   },
   updated() {
