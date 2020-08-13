@@ -107,28 +107,9 @@
             uno = #{value}
     </select>
     <select id="getProgramFollowings" resultType="Program">
-        select
-            p.pno               as pno
-            , p.name            as name
-            , p.broadcaster     as broadcaster
-            , p.genre           as genre
-            , p.season          as season
-            , p.alias           as alias
-            , p.start_date      as start_date
-            , p.end_date        as end_date
-            , p.director        as director
-            , p.cast            as cast
-            , p.description     as description
-            , p.broadcast_time  as broadcast_time
-            , p.thumbnail       as thumbnail
-        from
-            program_follow pf
-            join
-            program p
-            on
-            pf.pno = p.pno
-        where
-            pf.uno = #{value}
+        select pno
+        from program_follow
+        where uno = #{value}
     </select>
     <select id="getProgramFollowersCount" resultType="int">
         select

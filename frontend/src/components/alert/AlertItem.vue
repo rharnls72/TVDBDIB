@@ -2,23 +2,30 @@
   <div class="feed-item">
       <ul> <!-- 받아온 데이터로 반복 돌리자 -->
             <!-- done == 'Y' 일때만 done 이라는 클래스를 지정 -->
-          <li v-for="(alert) in alerts" v-bind:key="alert.ano" 
+          <li v-for="(alert) in alerts" v-bind:key="alert.ano" style="border-radius: 10px;"
           class="shadow" v-bind:class="{done: !alert.read}" type="button" @click="checkAlert(alert)">
 
-        <div class="form-group row">
+        <div class="row listItem">
           <!-- 이미지 바인딩 어떻게...? 잘 안된다 -->
-            <img class="my-auto col-3 col-sm-3" src="@/assets/images/profile_default.png" @click="movePage(alert)">
-            <span class="alert-content my-auto col-6 col-sm-6">
-              <p v-if='alert.atype == 1'>{{alert.subject_name}}님이 내 <span v-if='alert.ctype != 1'>댓</span>글에 좋아요를 표시했습니다.</p>
-              <p v-if='alert.atype == 2'>{{alert.subject_name}}님이 내 <span v-if='alert.ctype != 1'>댓</span>글에 댓글을 달았습니다.</p>
-              <p v-if='alert.atype == 3'>{{alert.subject_name}}님의 <span v-if='alert.ctype != 1'>댓</span>글에서 나를 언급했습니다.</p>
-              <p v-if='alert.atype == 4'>{{alert.subject_name}}님의 팔로우 요청</p>
-            </span>
-            <span class="float-right my-auto col-3 col-sm-3 removeBtn" type="button">
-                <b-icon-box-arrow-in-up-right  @click="movePage(alert)" font-scale="1.5" class="float-right" v-if="alert.atype < 4"></b-icon-box-arrow-in-up-right>
-                <button @click="followRequestDelete(alert)" class="col-6 col-sm-6 btn btn-danger btn-sm" v-if="alert.atype == 4">거절</button>
-                <button @click="followAccept(alert)" class="float-right col-6 col-sm-6 btn btn-primary btn-sm" v-if="alert.atype == 4">승인</button>
-            </span>
+          <div class="box">
+            <img v-if="alert.user.profile_pic!=null" class="profile" :src="alert.user.profile_pic" @click.stop.prevent="movePage(alert)">
+            <img v-else class="profile" :src="defaultProfile" @click.stop.prevent="movePage(alert)">
+          </div>
+            <div class="message" v-if='alert.atype != 4'>
+              <div v-if='alert.atype == 1' class="inMessage"><span @click.stop.prevent="movePage(alert)">{{alert.user.nick_name}}</span>님이 내 <span v-if='alert.ctype != 1'>댓</span>글에 좋아요를 표시했습니다.</div>
+              <div v-if='alert.atype == 2' class="inMessage"><span @click.stop.prevent="movePage(alert)">{{alert.user.nick_name}}</span>님이 내 <span v-if='alert.ctype != 1'>댓</span>글에 댓글을 달았습니다.</div>
+              <div v-if='alert.atype == 3' class="inMessage"><span @click.stop.prevent="movePage(alert)">{{alert.user.nick_name}}</span>님의 <span v-if='alert.ctype != 1'>댓</span>글에서 나를 언급했습니다.</div>
+              <div v-if='alert.atype == 4' class="inMessage"><span @click.stop.prevent="movePage(alert)">{{alert.user.nick_name}}</span>님의 팔로우 요청</div>
+            </div>
+            <div class="follow" v-else>
+              <div class="inMessage"><span @click.stop.prevent="movePage(alert)">{{alert.user.nick_name}}</span>님의 팔로우 요청</div>
+            </div>
+            <div class="btnGroup" v-if="alert.atype == 4">
+              <div class="inbtnGroup">
+                <button @click="followRequestDelete(alert)" class="followbtn revert" >거절</button>
+                <button @click="followAccept(alert)" class="followbtn allow">승인</button>
+              </div>
+            </div>
         </div>
 <!--
             <div class="align-center">
@@ -50,14 +57,12 @@ export default {
   props: {
     alerts: Array
   },
+  mounted() {
+    // console.log(this.alerts)
+  },
   methods:{
     movePage(alert){
-      if (alert.atype == 1){ // 팔로우 요청일 경우 바로 오른쪽의 팔로우 요청 탭으로 이동
-        this.$parent.tabClick(2);
-      }
-      else { // 그 외의 경우 상대방 유저의 프로필페이지로 이동
-        this.$router.push('/profile/' + alert.subject_name);
-      }
+      this.$router.push('/profile/' + alert.user.nick_name);
     },
     // 클릭한 알림의 상태를 '읽음' 으로 바꾼다
     checkAlert(alert){
@@ -71,6 +76,17 @@ export default {
           })
           .catch(err => this.makeToast(err, "danger"))
       }
+      if(alert.atype==4) this.movePage(alert)
+      switch(alert.ctype){
+              case 1: case 2:
+                this.$router.push('/feed/detail/' + alert.cno);
+                break;
+              case 3:
+                this.$router.push('/program/' + alert.cno);
+                break;
+              case 4: //에피소드는 /:pno/:season/:episode 다필요..
+                this.$router.push('/profile/' + alert.cno);
+            }
     },
     // 팔로우 거절
     followRequestDelete(alert){
@@ -113,67 +129,71 @@ export default {
 </script>
 
 <style scoped>
-ul {
-  list-style-type: none;
-  padding-left: 0px;
-  margin-top: 0%;
-  text-align: left;
+.btnGroup{
+  display: table; 
+  height: 50px; 
+  width: 100px;
+  position: absolute;
+  right: 20px;
 }
-li {
-  display: flex;
-  min-height: 30px;
-  height: 70px;
-  line-height: 20px;
-  margin: 0.5rem 0;
-  padding: 0 0.5rem;
-  background: white;
-  border-radius: 3px;
+.inbtnGroup{
+  display: table-cell; 
+  vertical-align: middle;
 }
-.checkBtn {
-  line-height: 45px;
-  color: #62acde;
-  margin-right: 5px;
+.follow{
+  width: 45%;
+  height: 50px;
+  display: table;
 }
-.removeBtn {
-  color: blue;
-  padding: 0;
+.message{
+  width: 60%;
+  height: 50px;
+  display: table;
 }
-
-.list-item {
-  display: inline-block;
-  margin-right: 5px;
+.inMessage{
+  display: table-cell;
+  vertical-align: middle;
 }
-.list-move {
-  transition: transform 1s;
-}
-.list-enter-active,
-.list-leave-active {
-  transition: all 1s;
-}
-.list-enter,
-.list-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
+.listItem{
+  margin-bottom: 10px;
+  padding: 10px;
 }
 .done{
   background-color: lightgoldenrodyellow;
 }
 
-img{
-    margin-right: -5%;
-    vertical-align: middle;
-}
 .btn{
   height: 5%;
   width: 70%;
 }
 
-.alert-content{
-  padding: 0;
+.box {
+    width: 50px;
+    height: 50px; 
+    border-radius: 70%;
+    overflow: hidden;
+    margin-left: 15px;
+    margin-right: 15px;
 }
-
-p{
-  margin: 5%;
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
-
+.followbtn{
+  width: 50px;
+  height: 30px;
+  border-radius: 5px;
+  font-size: 13px;
+}
+.allow{
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: #D8BEFE;
+}
+.revert{
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  background-color: lightgoldenrodyellow;
+}
 </style>
