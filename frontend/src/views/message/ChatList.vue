@@ -174,8 +174,8 @@ export default {
                   temp = this.userInfos.indexOf(user.uno);
                 }
               });
-              this.rooms = this.temprooms;
             }
+            this.rooms = this.temprooms;
             this.loadComplete = true;
           },
           error => {

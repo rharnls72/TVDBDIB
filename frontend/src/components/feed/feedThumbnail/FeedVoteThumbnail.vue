@@ -59,7 +59,6 @@ export default {
     this.totalNumber()
   },
   created() {
-    console.log(this.article)
     this.totalNumber()
   }
 };

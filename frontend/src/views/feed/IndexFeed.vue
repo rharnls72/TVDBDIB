@@ -57,7 +57,6 @@ export default {
       FeedApi.getFeedList(
         data
         , res => {
-          console.log(111, res);
 
           this.feeds = res.list
           for (let i=0; i<res.list.length; i++) {
@@ -65,7 +64,6 @@ export default {
             this.feeds[i].tag = JSON.parse(this.feeds[i].tag)
           }
           this.requestCount++
-          console.log(this.feeds)
           setTimeout(()=>{}, 1000)
         }
         , err => {
