@@ -9,13 +9,25 @@
     </div>
     <div class="mt-2 pl-2 pr-2">
       <div v-for="(re, idx) in replies" :key="re.no">
-        <div>{{re.writer_nick_name}} {{re.content}}
+        <div><strong @click="moveAccount(re)">{{re.writer_nick_name}} </strong> <span>{{re.content}} </span>
           <span
             @click="changeIsStretch(idx)"
             v-if="!re.isStretch" 
-            class="moreView ml-1 mr-1">댓글 작성</span> <span v-if="re.writer_uno === uno" class="moreView ml-1" @click="delReply(re)">삭제</span>
+            class="moreView ml-1 mr-1">댓글 작성</span>
+          <span @click="touchLike(re)" v-if="!re.press_like" class="moreView">좋아요 </span> 
+          <span @click="touchLike(re)" v-else class="moreView">좋아요 취소 </span> 
+          <span class="moreView" v-if="re.writer_uno === $store.state.userInfo.uno" @click="delReReply(re.no)">삭제</span>
         </div>
-        <ReReplyItem @addReply="addCount" @completeReply="changeIsStretch(idx)" @delReReply="delReReply(idx)" :isStretch="re.isStretch" :parentNo="re.no" :fno="fno" :eno="eno" :addfun="addfun" :delfun="delfun" :section="section"/>
+        <ReReplyItem 
+        @addReply="addCount" 
+        @completeReply="changeIsStretch(idx)" 
+        @delReReply="delReReply(idx)" 
+        :isStretch="re.isStretch" 
+        :parentNo="re.no" 
+        :fno="fno" :eno="eno" 
+        :addfun="addfun" :delfun="delfun" :section="section"
+        :addlike="addlike" :dellike="dellike"
+        />
       </div>
     </div>
   </div>
@@ -48,6 +60,31 @@ export default {
     pno: Number,
   },
   methods: {
+    touchLike(reply) {
+      reply.press_like = !reply.press_like
+      if (reply.press_like) {
+        this.addlike({
+          tno: reply.no
+        }
+        , res => console.log(res)
+        , err => console.log(err)
+        )
+      } else {
+        this.dellike({
+          tno: reply.no
+        }
+        , res => console.log(res)
+        , err => console.log(err)
+        )
+      }
+    },
+    moveAccount(re) {
+      if (re.writer_uno === this.$store.state.userInfo.uno) {
+        this.$router.push({path: `/mypage/main`})
+      } else {
+        this.$router.push({path:`/profile/${re.writer_nick_name}`})
+      }
+    },
     addCount() {
       this.$emit('addReply')
     },
@@ -162,6 +199,9 @@ export default {
       this.addfun = FeedApi.createReply
       this.delfun = FeedApi.deleteReply
       this.readfun = FeedApi.readReply
+      this.addlike = FeedApi.createReplyLike
+      this.dellike = FeedApi.deleteReplyLike
+      this.num = this.fno
       this.section = "feed"
     } else if (!this.eno === false) {
       CurationApi.readReply(
@@ -181,6 +221,9 @@ export default {
       this.addfun = CurationApi.createEpisodeReply
       this.delfun = CurationApi.deleteEpisodeReply
       this.readfun = CurationApi.readReply
+      this.addlike = CurationApi.createEpisodeReplyLike
+      this.dellike = CurationApi.deleteEpisodeReplyLike
+      this.num = this.eno
       this.section = "episode"
     } else {
       CurationApi.programReplyRead(
@@ -200,6 +243,9 @@ export default {
       this.addfun = CurationApi.programReplyCreate
       this.delfun = CurationApi.programReplyDelete
       this.readfun = CurationApi.programReplyRead
+      this.addlike = CurationApi.createProgramReplyLike
+      this.dellike = CurationApi.deleteProgramReplyLike
+      this.num = this.pno
       this.section = "program"
     }
 
@@ -210,5 +256,8 @@ export default {
 <style>
 .moreView {
   color: darkgray; 
+}
+.nickname {
+  font-display: bold;
 }
 </style>
