@@ -2,7 +2,7 @@
   <div class="feed-item">
       <ul> <!-- 받아온 데이터로 반복 돌리자 -->
             <!-- done == 'Y' 일때만 done 이라는 클래스를 지정 -->
-          <li v-for="(alert) in alerts" v-bind:key="alert.ano" style="border-radius: 10px;"
+          <li v-for="(alert) in alerts" v-bind:key="alert.ano" style="border-radius: 10px; position: relative;"
           class="shadow" v-bind:class="{done: !alert.read}" type="button" @click="checkAlert(alert)">
 
         <div class="row listItem">
@@ -22,8 +22,8 @@
             </div>
             <div class="btnGroup" v-if="alert.atype == 4">
               <div class="inbtnGroup">
-                <button @click="followRequestDelete(alert)" class="followbtn revert" >거절</button>
-                <button @click="followAccept(alert)" class="followbtn allow">승인</button>
+                <button @click.stop.prevent="followRequestDelete(alert)" class="followbtn revert" >거절</button>
+                <button @click.stop.prevent="followAccept(alert)" class="followbtn allow">승인</button>
               </div>
             </div>
         </div>
@@ -107,7 +107,6 @@ export default {
      },
 
      sendDelete(alert){
-       console.log(alert.ano);
           http.delete('/alert/deletefollow/' + alert.ano, header())
           .then(res => {
           })
@@ -146,7 +145,7 @@ export default {
   display: table;
 }
 .message{
-  width: 60%;
+  width: 70%;
   height: 50px;
   display: table;
 }
@@ -159,7 +158,7 @@ export default {
   padding: 10px;
 }
 .done{
-  background-color: lightgoldenrodyellow;
+  background-color: #f8e8f2;
 }
 
 .btn{
@@ -194,6 +193,6 @@ export default {
 .revert{
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-  background-color: lightgoldenrodyellow;
+  background-color: #f8e8f2;
 }
 </style>

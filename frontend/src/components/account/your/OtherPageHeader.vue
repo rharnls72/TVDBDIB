@@ -1,7 +1,9 @@
 <template>
   <b-nav justified class="myheader align-items-center">
-    <b-nav-item>
-      <b-icon-blank></b-icon-blank>
+    <b-nav-item class="d-flex justify-content-start">
+      <button>
+        <b-icon-chevron-left @click="goToBack" class="text-dark"></b-icon-chevron-left>
+      </button>
     </b-nav-item>
     <b-nav-item>
       <p class="text-dark mb-0"><strong>{{ info.nick_name }}</strong></p>
@@ -20,15 +22,14 @@ export default {
     info: Object,
   },
   methods: {
-    // 계정 설정 페이지로 이동
-    // editAccount() {
-
-    // },
+    goToBack() {
+      this.$router.go(-1)
+    },
   },
 }
 </script>
 
-<style>
+<style scoped>
   .myheader {
     background-color: #D8BEFE;
     position: fixed;

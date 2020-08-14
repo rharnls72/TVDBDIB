@@ -1,6 +1,7 @@
 <template>
-  <div class="wrap components-page">
-    <div class="wrapB">
+  <div class="wrap text-center">
+    <LoginHeader />
+    <div class="wrapB myerror">
       <h1>{{message}}</h1>
       <button 
         @click="goBackpage"
@@ -11,8 +12,10 @@
 </template>
 
 <script>
+import LoginHeader from '@/components/user/custom/LoginHeader.vue'
+
 export default {
-  name: 'Error',
+  name: 'Errors',
   data() {
     return {
       message: this.$route.query.message,
@@ -22,10 +25,17 @@ export default {
     goBackpage() {
       this.$router.go(-1)
     }
+  },
+  components: {
+    LoginHeader,
   }
 }
 </script>
 
-<style>
-
+<style scoped>
+  .myerror {
+    height: 100%;
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
 </style>

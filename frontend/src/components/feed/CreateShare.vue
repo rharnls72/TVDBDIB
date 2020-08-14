@@ -3,7 +3,7 @@
     <!-- 헤더 -->
     <CreateHeader @submit="submitShare"/>
 
-    <div class="px-5">
+    <div class="px-5 myfeed">
       
       <!-- 공유글 작성 -->
       <ShareForm :article="editArticle" @CreateArticle="makeSubmitData"/>
@@ -163,8 +163,11 @@ export default {
 </script>
 
 <style scoped>
-.feed-item {
-  border-bottom: none;
-  border-top: none;
-}
+  .feed-item {
+    border-bottom: none;
+    border-top: none;
+  }
+  .myfeed {
+    padding-top: 70px;
+  }
 </style>
