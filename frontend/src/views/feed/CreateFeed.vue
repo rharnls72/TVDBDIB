@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="feed-create">
     <CreateFeedHeader @submitArticle="submitArticle" class="feed-header"/>
     <div v-if="this.isArticle" class="create-feed-form row justify-content-center">
       <CreateVote v-if="page===3" :submit="submit.vote" :article="article" :fno="fno"/>
@@ -107,8 +107,11 @@ export default {
 }
 .create-feed-form {
   width: 100%;
-  margin-top: 20vh;
+  padding-top: 20vh;
   margin-left: 0;
   margin-right: 0;
+}
+.feed-create {
+  background-color: #f8e8f2;
 }
 </style>
