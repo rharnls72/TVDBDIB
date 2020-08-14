@@ -12,17 +12,18 @@
         ></b-form-textarea>
       </b-list-group-item>
       
-      <b-list-group-item><b-form-tags
-            input-id="tags-remove-on-delete"
-            :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
-            v-model="value"
-            separator=" "
-            placeholder="태그 입력!!"
-            remove-on-delete
-            no-add-on-enter
-            class="mb-2"
-            style="outline:none !important"
-          ></b-form-tags></b-list-group-item>
+      <b-list-group-item>
+        <textarea
+        class="tag-input"
+        v-model="tag"
+        placeholder="태그를 입력하세요.
+스페이스 바를 누르면 자동으로 태그가 입력됩니다."
+        row="20"
+        @keydown.space="inputTag"
+        >
+        </textarea>
+        <b-badge v-for="(Tag, idx) in value" :key="idx">{{Tag}}<b-icon @click="delTag(Tag)" icon="x" scale="0.75"></b-icon></b-badge>
+      </b-list-group-item>
 
     </b-list-group>
   </div>
@@ -39,6 +40,7 @@ export default {
       title: null,
       content: null,
       value: [],
+      tag: null,
     }
   },
   props: {
@@ -53,6 +55,20 @@ export default {
     ])
   },
   methods: {
+    inputTag(event) {
+      event.preventDefault()
+      if (this.value.filter(res=>res=== this.tag).length === 0) {
+        this.length++
+        this.value.push(this.tag)
+        this.tag = null
+      } else {
+        console.log('태그가 중복됩니다.')
+        this.tag = null
+      }
+    },
+    delTag(t) {
+      this.value = this.value.filter(res=>res !== t)
+    },
     moveMain() {
       this.$router.go(-1)
     },
@@ -252,4 +268,18 @@ span {
 #textarea {
   resize: none;
 }
+
+.tag-input {
+  height: 100px;
+  resize: none;
+}
+
+.tag-input:focus {
+  outline: none;
+}
+
+.input-form:focus {
+  outline: none;
+}
+
 </style>
