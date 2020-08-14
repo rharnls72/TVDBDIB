@@ -2,9 +2,9 @@
   <div class="col-10">
     <b-list-group style="border-radius: 20px;">
       
-      <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
+      <b-list-group-item class="p-0 create-header"><input id="article-title" type="text" class="m-0 border-0 rounded-pill create-header-input" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
       <b-list-group-item data-toggle="modal" data-target="#exampleModal">
-        <label for="selectDate" style="font-size:10px;">Select Date</label>
+        <label for="selectDate">Select Date</label>
         <div id="selectDate" class="d-flex justify-content-center py-3">
           <div>
             <div class="time">{{value.date}}</div>
@@ -24,7 +24,7 @@
       <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-body d-flex flex-column justify-content-center">
+            <div class="modal-body d-flex flex-column justify-content-center align-items-center">
               <div v-if="isCalendar">
                 <b-calendar v-model="date" @context="onContext" locale="en-US"></b-calendar>
                 <b-row class="mt-3 d-flex justify-content-between">
@@ -199,7 +199,7 @@ export default {
 <style scoped>
 
 input[id=article-title]::placeholder {
-  color: white;
+  color: black;
 }
 
 input[type=text], select, textarea{
@@ -272,6 +272,10 @@ span {
     width: 100%;
     margin-top: 0;
   }
+}
+
+.create-header {
+  background-color: #D8BEFE;
 }
 
 </style>

@@ -2,7 +2,7 @@
   <div class="col-10">
     <b-list-group style="border-radius: 20px;">
       
-      <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
+      <b-list-group-item class="p-0 create-header"><input id="article-title" type="text" class="m-0 border-0 rounded-pill" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
       
       <b-list-group-item v-for="content in contents" :key="content.id">
         <div class="row d-flex align-items-center px-3">
@@ -43,8 +43,8 @@ export default {
     return {
       title: null,
       contents: [
-        {id: 0, text: null, count: 0},
         {id: 1, text: null, count: 0},
+        {id: 2, text: null, count: 0},
       ],
       value: [],
       length: 2,
@@ -63,7 +63,7 @@ export default {
     },
     addItem(event) {
       this.contents.push({
-        id: this.length,
+        id: this.length + 1,
         text: null,
         count: 0,
       })
@@ -127,11 +127,11 @@ export default {
       this.contains = this.article.content.content
       this.title = this.article.content.title
       this.value = this.article.tag
-    } 
+    }
     else {
       this.contains = [
-        {id: 0, text: null, count: 0},
         {id: 1, text: null, count: 0},
+        {id: 2, text: null, count: 0},
       ]
       this.title = null
       this.value = []
@@ -143,7 +143,7 @@ export default {
 <style scoped>
 
 input[id=article-title]::placeholder {
-  color: white;
+  color: black;
 }
 
 input[type=text], select, textarea{
@@ -213,6 +213,10 @@ span {
     width: 100%;
     margin-top: 0;
   }
+}
+
+.create-header {
+  background-color: #D8BEFE;
 }
 
 </style>

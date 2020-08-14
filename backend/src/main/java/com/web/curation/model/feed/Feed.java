@@ -181,4 +181,5 @@ public class Feed {
     public void setPress_dibs(boolean press_dibs) {
         this.press_dibs = press_dibs;
     }
+
 }
