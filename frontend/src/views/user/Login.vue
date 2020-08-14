@@ -247,6 +247,7 @@ export default {
       KakaoApi.Login();
     }
     , doGoogleLogin() {
+      this.$store.commit('addUserInfo', {isAutoLogin: this.isSave});
       this.$gAuth.signIn()
         .then(GoogleUser => {
           let profile = GoogleUser.getBasicProfile();
