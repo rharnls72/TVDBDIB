@@ -3,6 +3,7 @@ import Errors from './views/Errors.vue'
 
 import Login from './views/user/Login.vue'
 import KakaoLogin from './views/user/KakaoLogin.vue';
+import GoogleLogin from './views/user/GoogleLogin.vue';
 import Join from './views/user/Join.vue'
 import EmailConfirm from './views/user/EmailConfirm.vue'
 import JoinComplete from './views/user/JoinComplete.vue'
@@ -65,6 +66,11 @@ export default [
         path: '/oauth/kakao',
         name: 'KakaoLogin',
         component: KakaoLogin
+    },
+    {
+        path: '/oauth/google',
+        name: 'GoogleLogin',
+        component: GoogleLogin
     },
     {
         path : '/user/join',
