@@ -10,7 +10,7 @@
         <h3>
           <!-- 이메일 주소 파란색으로 돋보이게 표시 -->
           <p style="color:royalblue">{{email}}</p>으로 회원가입 인증 메일이 발송되었습니다. 
-          <br />이메일을 확인해 주세요.
+          <br />이메일을 확인해주세요.
         </h3>
       </div>
 
@@ -35,10 +35,8 @@
 
 <script>
 import "../../components/css/user.scss";
-
-import LoginHeader from '../../components/user/custom/LoginHeader.vue'
-
 import UserApi from "../../api/UserApi";
+import LoginHeader from '../../components/user/custom/LoginHeader.vue'
 
 export default {
   data() {

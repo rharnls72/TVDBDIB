@@ -37,7 +37,8 @@ export default {
     ReplyItem,
   },
   mounted() {
-    console.log(this.program)
+    console.log(this.episodes)
+    // this.episodes.sort((a, b) => a.-b)
   }
 }
 </script>

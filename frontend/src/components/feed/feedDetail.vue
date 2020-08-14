@@ -1,7 +1,6 @@
 <template>
-    
   <div class="feed newsfeed">
-    <IndexCurationHeader />
+    <FeedHeader />
     <div class="wrapB">
       <div class="myfeed">
         <!-- <feedArticleItem v-if="article.ctype === 1" :article="article" :detail="true"/>
@@ -24,7 +23,7 @@ import FeedItem from "@/components/feed/FeedItem.vue"
 
 import ReplyItem from "@/components/ReplyItem.vue"
 import Footer from '@/components/common/custom/Footer.vue';
-import IndexCurationHeader from '@/components/curation/IndexCurationHeader.vue'
+import FeedHeader from '@/components/feed/FeedHeader.vue'
 
 import FeedApi from "@/api/FeedApi.js"
 import GetUserApi from "@/api/GetUserApi.js"
@@ -37,7 +36,7 @@ export default {
     // feedCountdownItem,
     FeedItem,
     ReplyItem,
-    IndexCurationHeader,
+    FeedHeader,
     Footer
   },
   data() {
@@ -77,12 +76,12 @@ export default {
 </script>
 
 <style scoped>
-.feed-item {
-  border-bottom: none;
-  padding-bottom: 0;
-  margin-bottom: 0;
-}
-.newsfeed {
-  margin-bottom: 100px;
-}
+  .feed-item {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  .newsfeed {
+    margin-bottom: 100px;
+  }
 </style>
