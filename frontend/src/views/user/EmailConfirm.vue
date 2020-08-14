@@ -1,17 +1,15 @@
-
-
 <template>
   <div class="user" id="login">
-    <div class="wrapC">
-      <h1>
+    <LoginHeader />
+    <div class="wrapC myec">
+      <h1 class="text-center">
         이메일 인증이 완료되었습니다!
       </h1>
 
       <button
         class="btn-bottom"
         @click="toMainPage"
-      >로그인 하러가기!</button>
-
+      >로그인 하러 가기!</button>
     </div>
   </div>
 </template>
@@ -19,6 +17,8 @@
 <script>
 import "../../components/css/user.scss";
 import UserApi from "../../api/UserApi";
+import LoginHeader from '@/components/user/custom/LoginHeader.vue'
+
 export default {
   methods: {
     toMainPage() {
@@ -41,6 +41,17 @@ export default {
     return {
       email: ''
     }
+  },
+  components: {
+    LoginHeader,
   }
 };
 </script>
+
+<style scoped>
+  .myec {
+    height: 100%;
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
+</style>

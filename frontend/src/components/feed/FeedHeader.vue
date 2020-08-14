@@ -5,27 +5,29 @@
         <b-icon-chevron-left @click="goToBack" class="text-dark"></b-icon-chevron-left>
       </button>
     </b-nav-item>
-    <b-nav-item>
-      <p class="text-dark mb-0"><strong>{{ info.nick_name }}</strong></p>
+    <b-nav-item class="d-flex justify-content-center">
+      <img class="mylogo mb-0\" :src="HeaderLogo" alt="header-logo">
     </b-nav-item>
-    <b-nav-item>
-      <b-icon-blank></b-icon-blank>
-      <b-icon-blank></b-icon-blank>
+    <b-nav-item class="d-flex justify-content-end">
     </b-nav-item>
   </b-nav>
 </template>
 
 <script>
+import HeaderLogo from '../../assets/images/custom/header-logo.png'
+
 export default {
-  name: 'OtherPageHeader',
-  props: {
-    info: Object,
+  name: 'FeedHeader',
+  data() {
+    return{
+      HeaderLogo,
+    }
   },
   methods: {
     goToBack() {
       this.$router.go(-1)
     },
-  },
+  }
 }
 </script>
 
@@ -36,5 +38,8 @@ export default {
     width: 100%;
     height: 50px;
     z-index: 1;
+  }
+  .mylogo {
+    height: 35px;
   }
 </style>

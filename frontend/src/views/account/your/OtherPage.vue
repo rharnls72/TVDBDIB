@@ -1,7 +1,7 @@
 <template>
   <div>
     <OtherPageHeader :info="info"/>
-    <div class="container mycontainer pb-5">
+    <div class="container mycontainer">
       <OtherPageInformation :info="info" :followcnt="followcnt"/>
       <WrittenFeed v-for="feed in writtenFeeds" :key="feed.fno" :feed="feed" class="col-12 row" />
     </div>
@@ -35,7 +35,6 @@ export default {
     Footer,
   },
   methods: {
-    
     takeFeed() {
       let data = {
         num: this.requestCount,
@@ -92,6 +91,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .mycontainer {
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
 </style>

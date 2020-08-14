@@ -1,7 +1,9 @@
 <template>
-  <div class="wrap components-page">
-    <div class="wrapB">
+  <div class="wrap text-center">
+    <LoginHeader />
+    <div class="wrapB mypnf">
       <h1>Page Not Found</h1>
+      <h2>존재하지 않는 주소입니다.</h2>
       <button 
         @click="goMainPage"
         class="btn-bottom"
@@ -11,6 +13,8 @@
 </template>
 
 <script>
+import LoginHeader from '@/components/user/custom/LoginHeader.vue'
+
 export default {
   name: 'PageNotFound',
   methods: {
@@ -20,10 +24,17 @@ export default {
       // 아닌 경우, 로그인 페이지로
       this.$router.push({name: 'Login'})
     }
-  }
+  },
+  components: {
+    LoginHeader,
+  },
 }
 </script>
 
-<style>
-
+<style scoped>
+  .mypnf {
+    height: 100%;
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
 </style>
