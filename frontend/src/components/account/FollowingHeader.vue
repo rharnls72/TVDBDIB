@@ -1,8 +1,8 @@
 <template>
-  <b-nav justified class="myheader py-1 d-flex justify-content-between">
-    <b-nav-item>
-      <!-- 메시지 -->
+  <b-nav justified class="myheader d-flex align-items-center">
+    <b-nav-item class="d-flex justify-content-start">
       <button>
+        <b-icon-chevron-left @click="goToBack" class="text-dark"></b-icon-chevron-left>
       </button>
     </b-nav-item>
     <b-nav-item>
@@ -18,21 +18,21 @@
 
 <script>
 export default {
-  name: 'IndexCuarationHeader',
+  name: 'FollowingHeader',
   methods: {
-    // 피드 작성 페이지로 이동
-    createFeed() {
-      this.$router.push({name: 'CreateFeed'})
+    goToBack() {
+      this.$router.go(-1)
     },
   },
 }
 </script>
 
-<style>
+<style scoped>
   .myheader {
-    background-color: #eee;
+    background-color: #D8BEFE;
     position: fixed;
     width: 100%;
+    height: 50px;
     z-index: 1;
   }
 </style>

@@ -29,10 +29,7 @@ const requestProfile = (data,callback,errorCallback) => {
     });
 }
 const requestFollow = (data,callback,errorCallback) => {
-    http.post('/following/user/add', {
-        follower : data.follower,
-        following: data.following
-    }, header())
+    http.post('/following/user/add', data, header())
     .then(res => {
         if(res == null) {
             let error = {msg : '알 수 없는 오류 발생'};
@@ -53,10 +50,7 @@ const requestFollow = (data,callback,errorCallback) => {
     });
 }
 const requestDeFollow = (data,callback,errorCallback) => {
-    http.post('/following/user/cancel', {
-        follower : data.follower,
-        following: data.following
-    }, header())
+    http.post('/following/user/cancel', data, header())
     .then(res => {
         if(res == null) {
             let error = {msg : '알 수 없는 오류 발생'};
@@ -99,7 +93,6 @@ const requestFindNick = (data,callback,errorCallback) => {
 
 }
 const requestModifyProfile = (data,callback,errorCallback) => {
-    console.log(data);
     http.put('/account/modifyprofile', data, header())
         .then(res => {
             if(res == null) {

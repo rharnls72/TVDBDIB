@@ -3,25 +3,21 @@ package com.web.curation.controller.alert;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import com.web.curation.dao.alert.AlertDao;
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.alert.Alert;
+import com.web.curation.service.FirebaseDao;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 @ApiResponses(
     value = {
@@ -32,76 +28,12 @@ import org.springframework.web.bind.annotation.RequestBody;
     }
 )
 
+// http://localhost:3000
 @CrossOrigin(origins = { "*" })
 @RestController
 public class AlertController {
-
     @Autowired
-    AlertDao dao;
-    
-    // Create
-    @PostMapping("/alert/create")
-    @ApiOperation(value = "새 알림 생성")
-    public Object createNewAlert(@RequestBody Alert alert) {
-        // 반환할 응답 객체
-        final BasicResponse result = new BasicResponse();
-
-        // 프로그램 정보 추가
-        int n = dao.addNewAlert(alert);
-
-        // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
-        if(n != 1) {
-            result.status = false;
-            result.msg = "Insert 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        // 알림 추가 완료
-        result.status = true;
-        result.msg = "success";
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    // Read
-    @GetMapping("/alert/list/{uno}")
-    @ApiOperation(value = "알림 목록 조회")
-    public Object getAlertList(@PathVariable int uno) {
-        // 반환할 응답 객체
-        final BasicResponse result = new BasicResponse();
-
-        // 알림 목록 조회
-        List<Alert> list = dao.getAlertList(uno);
-        List<Alert> return_list = new ArrayList<Alert>();
-        
-        for (Alert alert: list){
-            Alert return_alert = new Alert();
-            switch(alert.getAtype()){
-                case 1:
-                    return_alert = dao.getInfoByUser(alert.getCno());
-                    break;
-                case 2:
-                    return_alert = dao.getInfoByFeedLike(alert.getCno());
-                    break;
-                case 3:
-                    return_alert = dao.getInfoByFeedReply(alert.getCno());
-                    break;
-                case 4:
-                    return_alert = dao.getInfoByFeed(alert.getCno());
-                    break;
-            }
-            System.out.println(return_alert.getSubject_no());
-            return_alert.setAtype(alert.getAtype());
-            return_alert.setAno(alert.getAno());
-            return_alert.setRead(alert.getRead());
-            return_list.add(return_alert);
-        }
-
-        // 알림 목록을 포함한 응답 객체 반환
-        result.status = true;
-        result.msg = "success";
-        result.data = return_list;
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+    FirebaseDao firebase;
 
     // Update
     @PutMapping("/alert/readall/{uno}")
@@ -110,28 +42,27 @@ public class AlertController {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
 
-        // 알림 읽음 처리
-        int n = dao.setReadAllAlert(uno);
+        if(!firebase.setReadAllAlert(uno)) {
+            result.status = false;
+            result.msg = "알림 읽음 처리 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
         // 알림 읽음 처리 완료
         result.status = true;
-        result.msg = "success (" + n + ")"; // 처리 된 알림 수 표시
+        result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PutMapping("/alert/read/{ano}")
+    @GetMapping("/alert/read/{ano}")
     @ApiOperation(value = "알림 읽음 처리")
-    public Object setReadAlert(@PathVariable int ano) {
+    public Object setReadAlert(@PathVariable String ano) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
 
-        // 알림 읽음 처리
-        int n = dao.setReadAlert(ano);
-
-        // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
-        if(n != 1) {
+        if(!firebase.setReadAlert(ano)) {
             result.status = false;
-            result.msg = "Update 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
+            result.msg = "알림 읽음 처리 실패";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
@@ -148,35 +79,44 @@ public class AlertController {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
 
-        // 유저의 모든 알림 삭제
-        int n = dao.deleteAllAlert(uno);
-
-        // n 이 0 이면 쿼리 수행 결과에 이상이 있는 것
-        if(n == 0) {
+        if(firebase.deleteAllAlert(uno)) {
             result.status = false;
-            result.msg = "Delete 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
+            result.msg = "알림 삭제 실패";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
-        // 모든 알림 삭제 완료
+        // 알림 삭제 완료
         result.status = true;
-        result.msg = "success (" + n + ")"; // 삭제된 알림 수 표시
+        result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping("/alert/delete/{ano}")
     @ApiOperation(value = "특정 알림 삭제")
-    public Object deleteAlert(@PathVariable int ano) {
+    public Object deleteAlert(@PathVariable String ano) {
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
 
-        // 알림 삭제
-        int n = dao.deleteAlert(ano);
-
-        // n 이 1 이 아니면 쿼리 수행 결과에 이상이 있는 것
-        if(n != 1) {
+        if(firebase.deleteAlert(ano)) {
             result.status = false;
-            result.msg = "Delete 쿼리 수행 결과에 이상이 발생했습니다.(" + n + ")";
+            result.msg = "알림 삭제 실패";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+        // 알림 삭제 완료
+        result.status = true;
+        result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @DeleteMapping("/alert/deletefollow/{ano}")
+    @ApiOperation(value = "특정 팔로우 요청 삭제")
+    public Object deleteFollowing(@PathVariable String ano) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        if(firebase.deleteFollowing(ano)) {
+            result.status = false;
+            result.msg = "알림 삭제 실패";
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
 

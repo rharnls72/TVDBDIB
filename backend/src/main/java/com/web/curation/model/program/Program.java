@@ -29,6 +29,27 @@ public class Program {
     private LocalDate start_date;
     private float rating;
     private ArrayList<EpisodeResponse> episode_list;
+
+    // Return API row result(JSON)
+    private Object programDetail;
+    private Object episodeGroup;
+
+    public Object getEpisodeGroup() {
+        return this.episodeGroup;
+    }
+
+    public void setEpisodeGroup(Object episodeGroup) {
+        this.episodeGroup = episodeGroup;
+    }
+
+    public Object getProgramDetail() {
+        return this.programDetail;
+    }
+
+    public void setProgramDetail(Object programDetail) {
+        this.programDetail = programDetail;
+    }
+
     /////////////////////////////////////////////
 
     // 프로그램 정보와 함께 넘길 정보들(좋아요 수, 좋아요 여부, 댓글 수, 대표 댓글 한 개)
@@ -75,9 +96,11 @@ public class Program {
     }
 
     public void setReply_content(String reply_content) {
-        String[] strs = reply_content.split(":");
-        this.reply_user_nick = strs[0];
-        this.reply_content = strs[1];
+        if(reply_content != null) {
+            String[] strs = reply_content.split(":");
+            this.reply_user_nick = strs[0];
+            this.reply_content = strs[1];
+        }
     }
 
     public String getReply_user_nick() {
@@ -93,6 +116,7 @@ public class Program {
         press_like = res.press_like;
         reply_num = res.reply_num;
         reply_content = res.reply_content;
+        reply_user_nick = res.reply_user_nick;
     }
 
     public String getPname() {

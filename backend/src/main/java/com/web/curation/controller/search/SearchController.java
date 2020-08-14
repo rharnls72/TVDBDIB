@@ -81,6 +81,7 @@ public class SearchController {
         int uno = ((User) request.getAttribute("User")).getUno();
         req.setUno(uno);
 
+        searchDao.deleteHistory(req);
         int n = searchDao.addHistory(req);
 
         if(n != 1) {

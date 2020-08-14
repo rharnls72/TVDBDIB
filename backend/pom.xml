@@ -150,9 +150,111 @@
     		<artifactId>jaxb-runtime</artifactId>
     		<version>2.3.2</version>
 		</dependency>
+
+		<!-- 추천 (apache mahout) -->
+		<dependency>
+			<groupId>org.apache.mahout</groupId>
+			<artifactId>mahout-core</artifactId>
+			<version>0.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>joinery</groupId>
+			<artifactId>joinery-dataframe</artifactId>
+			<version>1.9</version>
+		</dependency>
+
+		<!-- joinery에서 데이터 읽을 때 필요한 의존성: 자바로 엑셀파일 읽는 라이브러리 -->
+      <dependency>
+             <groupId>org.apache.poi</groupId>
+             <artifactId>poi</artifactId>
+             <version>3.9</version>
+      </dependency>
+      <dependency>
+             <groupId>org.apache.poi</groupId>
+             <artifactId>poi-ooxml</artifactId>
+             <version>3.9</version>
+      </dependency>
+      <dependency>
+             <groupId>org.apache.poi</groupId>
+             <artifactId>poi-ooxml-schemas</artifactId>
+             <version>3.9</version>
+      </dependency>
+      <dependency>
+             <groupId>org.apache.poi</groupId>
+             <artifactId>poi-scratchpad</artifactId>
+             <version>3.9</version>
+      </dependency>
+      <dependency>
+             <groupId>org.apache.poi</groupId>
+             <artifactId>ooxml-schemas</artifactId>
+             <version>1.1</version>
+      </dependency>
+      <dependency>
+             <groupId>org.apache.poi</groupId>
+             <artifactId>openxml4j</artifactId>
+             <version>1.0-beta</version>
+      </dependency>
+
+	  <!-- 텐서플로우 -->
+	  <dependency>
+		<groupId>org.tensorflow</groupId>
+		<artifactId>tensorflow</artifactId>
+		<version>1.14.0</version>
+	</dependency>
+      
+      <!-- firestore -->
+      <dependency>
+		  <groupId>com.google.firebase</groupId>
+		  <artifactId>firebase-admin</artifactId>
+		  <version>6.15.0</version>
+	  </dependency>
+
+	  <!-- KOMORAN(형태소 분석기) -->
+	  <dependency>
+    	  <groupId>com.github.shin285</groupId>
+    	  <artifactId>KOMORAN</artifactId>
+    	  <version>3.3.4</version>
+  	  </dependency>
+
 	</dependencies>
 
+	<repositories>
+		<repository>
+			<id>jcenter</id>
+			<name>jcenter</name>
+			<url>https://jcenter.bintray.com</url>
+		</repository>
+		<repository>
+      		<id>jitpack.io</id>
+      		<url>https://jitpack.io</url>
+  		</repository>
+	</repositories>
+
 	<build>
+		<finalName>TvilityBack</finalName>
+		<resources>  
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/application*.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<excludes>
+					<exclude>**/application*.properties</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -162,3 +264,4 @@
 	</build>
 
 </project>
+

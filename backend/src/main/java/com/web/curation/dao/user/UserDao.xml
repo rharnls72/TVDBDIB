@@ -41,7 +41,7 @@
     <select id="checkNickName" resultType="int">
         select count(*)
         from user
-        where nick_name = #{nick_name}
+        where BINARY nick_name = #{nick_name}
     </select>
 
     <insert id="addNewUser">
@@ -55,6 +55,22 @@
             #{email}
             , #{password}
             , #{nick_name}
+        )
+    </insert>
+
+    <insert id="addNewUserWithSocial">
+        insert into
+            user(
+                email
+                , nick_name
+                , is_certification
+                , password
+            )
+        values(
+            #{email}
+            , #{nick_name}
+            , true
+            , "0"
         )
     </insert>
 

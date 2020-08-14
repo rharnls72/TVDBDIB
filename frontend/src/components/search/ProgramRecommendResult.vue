@@ -1,7 +1,7 @@
 <template>
     <div class="scroll-container">
-        <div v-for="(program) in programs" v-bind:key="program.id" class="card">
-            <img :src='imgBaseUrl + program.poster_path' width="75rem" height="120rem" class="img-fluid" alt="poster">
+        <div v-for="(program) in programs" v-bind:key="program.pno" class="card"  @click="goDetail(program.pno)">
+            <img :src='program.thumbnail' width="75rem" height="120rem" class="img-fluid" alt="poster">
         </div>
     </div>
 
@@ -19,6 +19,9 @@ export default {
   },
   props: {
     programs: Array
+  },
+  mounted() {
+    console.log(this.programs)
   },
   methods:{
       goDetail(id){

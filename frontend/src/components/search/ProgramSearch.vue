@@ -3,7 +3,7 @@
     <b-nav justified class="myheader" >
       <b-input-group class="align-items-center m-2 mysearchbar">
         <div class="input-group-prepend">
-          <div @click="searchIcon()" class="input-group-text py-0" style="margin-left: -10%; border: 0px; background-color: #eee;">
+          <div @click="searchIcon()" class="input-group-text py-0" style="border: 0px; background-color: #D8BEFE;">
             <b-icon-search></b-icon-search>
           </div>
         </div>
@@ -49,7 +49,7 @@ import ResultPeople from "@/components/search/PeopleSearchResult.vue";
 import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
-
+  name: 'ProgramSearch',
   data() {
     return {
       // selectbox 관련 속성
@@ -229,7 +229,7 @@ export default {
 </script>
 <style scoped>
   .myheader {
-    background-color: #eee;
+    background-color: #D8BEFE;
     width: 100%;
     height: 50px;
     z-index: 1;

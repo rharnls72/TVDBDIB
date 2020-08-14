@@ -1,11 +1,15 @@
 package com.web.curation.controller.like;
 
+import java.time.LocalDateTime;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.web.curation.dao.like.LikeDao;
 import com.web.curation.model.BasicResponse;
+import com.web.curation.model.alert.Alert;
 import com.web.curation.model.like.Like;
 import com.web.curation.model.user.User;
+import com.web.curation.service.FirebaseDao;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -34,6 +38,8 @@ public class LikeController {
     
     @Autowired
     private LikeDao dao;
+    @Autowired
+    private FirebaseDao alertService;
 
     // Create
     // 좋아요 추가에 대해 모든 요청이 공통적으로 수행할 일
@@ -72,6 +78,16 @@ public class LikeController {
     @PostMapping("/like/preply/create")
     @ApiOperation(value = "프로그램 댓글 좋아요 추가")
     public Object addProgramReplyLike(@RequestBody Like like, HttpServletRequest httpReq) {
+        Alert alert = new Alert();
+        alert.setSubject_no(((User) httpReq.getAttribute("User")).getUno());
+        // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
+        alert.setAtype(1);
+        // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+        alert.setCtype(3);
+        alert.setCno(like.getTno());
+        alert.setRead(false);
+        alert.setTime(LocalDateTime.now());
+        alertService.addAlert(alert);
         return addLike(like, httpReq, (param_like, dao) -> dao.addProgramReplyLike(param_like));
     }
 
@@ -84,18 +100,49 @@ public class LikeController {
     @PostMapping("/like/ereply/create")
     @ApiOperation(value = "에피소드 댓글 좋아요 추가")
     public Object addEpisodeReplyLike(@RequestBody Like like, HttpServletRequest httpReq) {
+        Alert alert = new Alert();
+        alert.setSubject_no(((User) httpReq.getAttribute("User")).getUno());
+        // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
+        alert.setAtype(1);
+        // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+        alert.setCtype(4);
+        alert.setCno(like.getTno());
+        alert.setRead(false);
+        alert.setTime(LocalDateTime.now());
+        alertService.addAlert(alert);
         return addLike(like, httpReq, (param_like, dao) -> dao.addEpisodeReplyLike(param_like));
     }
 
     @PostMapping("/like/feed/create")
     @ApiOperation(value = "피드 좋아요 추가")
     public Object addFeedLike(@RequestBody Like like, HttpServletRequest httpReq) {
+        Alert alert = new Alert();
+        alert.setSubject_no(((User) httpReq.getAttribute("User")).getUno());
+        // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
+        alert.setAtype(1);
+        // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+        alert.setCtype(1);
+        alert.setCno(like.getTno());
+        alert.setRead(false);
+        alert.setTime(LocalDateTime.now());
+        alertService.addAlert(alert);
+
         return addLike(like, httpReq, (param_like, dao) -> dao.addFeedLike(param_like));
     }
 
     @PostMapping("/like/freply/create")
     @ApiOperation(value = "피드 댓글 좋아요 추가")
     public Object addFeedReplyLike(@RequestBody Like like, HttpServletRequest httpReq) {
+        Alert alert = new Alert();
+        alert.setSubject_no(((User) httpReq.getAttribute("User")).getUno());
+        // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
+        alert.setAtype(1);
+        // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+        alert.setCtype(2);
+        alert.setCno(like.getTno());
+        alert.setRead(false);
+        alert.setTime(LocalDateTime.now());
+        alertService.addAlert(alert);
         return addLike(like, httpReq, (param_like, dao) -> dao.addFeedReplyLike(param_like));
     }
 

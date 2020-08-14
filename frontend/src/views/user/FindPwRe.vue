@@ -1,22 +1,22 @@
-
-
 <template>
   <div class="user" id="login">
-    <div class="wrapC">
-      <h1>
-        어쩌면.. <br />스팸함에 들어가 있을지도 몰라요.
-      </h1>
-      <h1>
-        혹시 확인해 보셨나요?
-      </h1>
-      <button
-        class="btn-bottom"
-        @click="tofindPw"
-      >응 없어. 다시보내</button>
-      <button
-        class="btn-bottom"
-        @click="toMainPage"
-      >찾았어. 로그인하러 가자</button>
+    <LoginHeader />
+    <div class="wrapC myfpw d-flex flex-column justify-content-between">
+      <div>
+        <h1 class="text-center">
+          혹시 스팸함을 확인해 보셨나요?
+        </h1>
+      </div>
+      <div>
+        <button
+          class="mymailbutton mb-3"
+          @click="tofindPw"
+        >응 없어. 다시 보내</button>
+        <button
+          class="mybutton"
+          @click="toMainPage"
+        >찾았어. 로그인 하러 가자</button>
+      </div>
 
     </div>
   </div>
@@ -25,6 +25,8 @@
 <script>
 import "../../components/css/user.scss";
 import UserApi from "../../api/UserApi";
+import LoginHeader from '@/components/user/custom/LoginHeader.vue'
+
 export default {
   data() {
     return {
@@ -48,5 +50,30 @@ export default {
         );
     },
   },
+  components: {
+    LoginHeader,
+  }
 };
 </script>
+
+<style scoped>
+  .myfpw {
+    height: 100%;
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
+  .mymailbutton {
+    width: 100%;
+    height: 40px;
+    background-color: #f9e9f2;
+    box-shadow: none;
+    border-radius: 0.25rem;
+  }
+  .mybutton {
+    width: 100%;
+    height: 40px;
+    background-color: #d8c8f8;
+    box-shadow: none;
+    border-radius: 0.25rem;
+  }
+</style>

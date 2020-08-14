@@ -1,29 +1,30 @@
 <template>
-  <div class="user join wrapC">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <b-icon @click="moveMain" icon="chevron-left" font-scale="1.5"></b-icon>
-      <b-icon @click="submitArticle" icon="check-square" font-scale="1.4"></b-icon>
-    </div>
-    <div class="wrapB container">
-      <b-list-group style="border-radius: 20px;">
-        
-        <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
-        <b-list-group-item><b-form-input type="text" class="m-0 rounded-pill" v-model="content" placeholder="내용 입력!!!"></b-form-input></b-list-group-item>
-        
-        <b-list-group-item><b-form-tags
-              input-id="tags-remove-on-delete"
-              :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
-              v-model="value"
-              separator=" "
-              placeholder="태그 입력!!"
-              remove-on-delete
-              no-add-on-enter
-              class="mb-2"
-              style="outline:none !important"
-            ></b-form-tags></b-list-group-item>
+  <div class="col-10">
+    <b-list-group style="border-radius: 20px;">
+      
+      <b-list-group-item class="p-0 create-header"><input id="article-title" type="text" class="m-0 border-0 rounded-pill create-header-input" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
+      <b-list-group-item>
+        <b-form-textarea
+          id="textarea"
+          v-model="content"
+          placeholder="내용 입력"
+          rows="3"
+        ></b-form-textarea>
+      </b-list-group-item>
+      
+      <b-list-group-item><b-form-tags
+            input-id="tags-remove-on-delete"
+            :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
+            v-model="value"
+            separator=" "
+            placeholder="태그 입력!!"
+            remove-on-delete
+            no-add-on-enter
+            class="mb-2"
+            style="outline:none !important"
+          ></b-form-tags></b-list-group-item>
 
-      </b-list-group>
-    </div>
+    </b-list-group>
   </div>
 </template>
 
@@ -43,6 +44,7 @@ export default {
   props: {
     article: Object,
     fno: Number,
+    submit: Boolean,
   },
   computed: {
     ...mapState([
@@ -52,8 +54,7 @@ export default {
   },
   methods: {
     moveMain() {
-      console.log(1)
-      this.$router.push('/feed/main')
+      this.$router.go(-1)
     },
     makeData() {
       var jsonObj = {
@@ -65,7 +66,6 @@ export default {
     submitArticle() {
       let sendData = this.makeData();
 
-      console.log(this.$store.state.isUser)
       // createFeed 요청에 줄 데이터 목록
       // uno 는 토큰을 통해 사용하기위해 제거
       let Data = {
@@ -81,12 +81,12 @@ export default {
           Data
           // 성공시 수행할 콜백 메서드
           , res => {
-            console.log(res);
+            console.log('createFeed Success: ' + res);
             this.$router.push({path: '/feed/main'})
           }
           // 실패시 수행할 콜백 메서드
           , err => {
-            console.log(err);
+            console.log('createFeed Error: ' + err);
           } 
         )
       } else {
@@ -98,13 +98,58 @@ export default {
             console.log(res)
             this.$router.push({path:'/feed/main'})
           },
-          err=> console.log(err)
+          err=> console.log('updateFeed Error: ' + err.msg)
           )
       }
     }
+    , checkInput(event) {
+      let keyCode = event.hasOwnProperty('which') ? event.which : event.keyCode;
+
+      // 스페이스바나 엔터가 눌리면 태그 추출하기
+      if(keyCode == 13 || keyCode == 32) {
+        FeedApi.getTags(
+          {
+            content: this.content
+            , tags: JSON.stringify(this.value)
+          }
+          , res => {
+            console.log(res);
+
+            // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+            this.value = JSON.parse(res.data.data);
+          }
+          , err => {
+            console.log('getTags Error: ' + err.msg);
+          }
+        )
+      }
+    }
+    , contentFocusOut() {
+      console.log('contentFocusOut() called!!!');
+      FeedApi.getTags(
+        {
+          content: this.content
+          , tags: JSON.stringify(this.value)
+        }
+        , res => {
+          console.log(res);
+
+          // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+          this.value = JSON.parse(res.data.data);
+        }
+        , err => {
+          console.log('getTags Error: ' + err.msg);
+        }
+      )
+    }
+  },
+  watch: {
+    submit: function(n, o) {
+      this.submitArticle()
+    }
   },
   mounted() {
-    console.log(this.fno)
+    console.log('mounted() fno: ', this.fno)
     if (this.article !== null) {
       console.log(this.article.content)
       const data = this.article
@@ -118,6 +163,9 @@ export default {
       this.content = null
       this.value = []
     }
+
+    document.getElementById("textarea").addEventListener("keypress", this.checkInput);
+    document.getElementById("textarea").addEventListener("focusout", this.contentFocusOut);
   }
 }
 </script>
@@ -125,7 +173,7 @@ export default {
 <style scoped>
 
 input[id=article-title]::placeholder {
-  color: white;
+  color: black;
 }
 
 input[type=text], select, textarea{
@@ -197,4 +245,11 @@ span {
   }
 }
 
+.create-header {
+  background-color: #D8BEFE;
+}
+
+#textarea {
+  resize: none;
+}
 </style>

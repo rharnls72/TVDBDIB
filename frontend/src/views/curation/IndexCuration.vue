@@ -4,7 +4,11 @@
     <div class="wrapB">
       <div class="myfeed">
         <EpisodeItem v-for="curation in partCurations" :key="curation.key" :curation="curation"/>
-        <infinite-loading @infinite="infiniteHandler"></infinite-loading>
+        <infinite-loading v-if="!noCuration" @infinite="infiniteHandler"></infinite-loading>
+        <div v-else style="text-align: center; margin-top: 50px;"> 팔로우 중인 프로그램이 없습니다<br/>
+          좋아하는 프로그램을 찾으러 가볼까요?<br/>
+        <button type="button" class="shadow moveSearch" @click="moveSearch">찾으러 가자!</button>
+        </div>
       </div>
     </div>
     <Footer />
@@ -32,7 +36,8 @@ export default {
       startPoint: 0,
       interval: 5,
       partCurations: [],
-      loading_complete: false
+      loading_complete: false,
+      noCuration: false,
     }
   },
   props: ["keyword"],
@@ -69,12 +74,15 @@ export default {
     // 무한 스크롤 기능 구현
     infiniteHandler($state) {
       setTimeout(() => {
-        if (this.loading_complete){
+        if (this.loading_complete && !this.noCuration){
           this.makeCurations()
         }
         $state.loaded();
       }, 300);
     },
+    moveSearch(){
+      this.$router.push({name:'IndexSearch'})
+    }
   },
   // 1. 데이터 모두 다 받아오기
   created() {
@@ -84,7 +92,12 @@ export default {
     CurationApi.requestEpisode(
       res => {
         this.curations = res.list;
-        this.makeCurations();
+        if(this.curations.length>0){
+          this.makeCurations();
+        }else{
+          this.noCuration = true;
+          this.loading_complete = true;
+        }
       },
       error => {
         this.$router.push({name:'Errors', query: {message: error.msg}})
@@ -101,5 +114,13 @@ export default {
 <style scoped>
   .myfeed {
     padding-top: 70px;
+  }
+  .moveSearch{
+    margin-top: 30px;
+    width: 150px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #f8e8f2;
+    color: rgb(84, 78, 88);
   }
 </style>

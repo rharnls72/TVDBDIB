@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router';
@@ -13,6 +14,16 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import VCalendar from 'v-calendar'
+import VueHtml2Canvas from 'vue-html2canvas'
+
+// Google Social Login
+import GAuth from 'vue-google-oauth2'
+const gauthOption = {
+  clientId: '420822944998-spsnvgec0jsolelhv29ui190blc2j92t.apps.googleusercontent.com',
+  scope: 'profile email',
+  prompt: 'select_account'
+}
+Vue.use(GAuth, gauthOption)
 
 Vue.config.productionTip = false
 
@@ -31,7 +42,10 @@ Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 
+Vue.use(VueHtml2Canvas)
+
 const router = new VueRouter({
+    mode: 'history',
     routes,
 });
 

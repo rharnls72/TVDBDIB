@@ -5,7 +5,8 @@
 @import url("https://cdn.jsdelivr.net/gh/moonspam/NanumBarunGothic@1.0/nanumbarungothicsubset.css");
 
 * {
-    font-family: 'NanumBarunGothic', sans-serif;
+    // font-family: 'NanumBarunGothic', sans-serif;
+    font-family: 'InfinitySans-RegularA1';
     word-break: keep-all;
     padding: 0;
     margin: 0;
@@ -14,6 +15,7 @@
 html {
     margin: 0;
     padding: 0;
+    height: 100%;
 }
 
 body {
@@ -21,6 +23,7 @@ body {
     padding: 0;
     font-size: 14px;
     overflow-x: hidden;
+    height: 100%;
 }
 
 
@@ -139,7 +142,6 @@ textarea {
 
 .wrap {
     width: 100%;
-    float: left;
 }
 
 .wrapB {
@@ -541,11 +543,12 @@ p {
 
 .btn-bottom {
     width: calc(100% - 40px);
-    background: #000;
+    background: #d8c8f8;
     color: #fff;
-    height: 50px;
+    border-radius: 0.25rem;
+    height: 40px;
     text-align: center;
-    line-height: 50px;
+    line-height: 40px;
     font-weight: $f600;
     position: fixed;
     left: 20px;
@@ -561,7 +564,7 @@ p {
 .add-item-btn {
     @include wrap;
     display: block;
-    padding:15px 0;
+    padding: 15px 0;
     font-weight: $f600;
     text-align: left;
     transform: rotate(.1deg);
@@ -670,7 +673,7 @@ p {
         @include wrap;
         margin-bottom: 25px;
         > a {
-            float:left;
+            float: left;
             border:1px solid $grey;
             display: inline-block;
             box-sizing: border-box;
@@ -795,10 +798,12 @@ p {
 .input-with-label {
     @include wrap;
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    float: none;
     input[type="text"],
     input[type="password"] {
         @include wrap;
+        float: none;
         height: 50px;
         line-height: 1;
         padding: 2px 15px 0 105px;
@@ -1379,13 +1384,13 @@ p {
     .wrapB {
         max-width: 580px;
         width: 100%;
-        margin:0 auto;
-        padding:0;
+        margin: 0 auto;
+        padding: 0;
     }
     .wrapC {
         max-width: 580px;
         width: 100%;
-        margin:0 auto;
+        margin: 0 auto;
     }
 
     .container {
@@ -1753,4 +1758,3 @@ p {
         }
     }   
 }
-
