@@ -43,17 +43,18 @@
         </div>
       </div>
 
-      <b-list-group-item><b-form-tags
-            input-id="tags-remove-on-delete"
-            :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
-            v-model="tags"
-            separator=" "
-            placeholder="태그 입력!!"
-            remove-on-delete
-            no-add-on-enter
-            class="mb-2"
-            style="outline:none !important"
-          ></b-form-tags></b-list-group-item>
+      <b-list-group-item>
+        <textarea
+        class="tag-input"
+        v-model="tag"
+        placeholder="태그를 입력하세요.
+스페이스 바를 누르면 자동으로 태그가 입력됩니다."
+        row="20"
+        @keydown.space="inputTag"
+        >
+        </textarea>
+        <b-badge v-for="(Tag, idx) in tags" :key="idx">{{Tag}}<b-icon @click="delTag(Tag)" icon="x" scale="0.75"></b-icon></b-badge>
+      </b-list-group-item>
 
     </b-list-group>
   </div>
@@ -78,6 +79,7 @@ export default {
       Time: null,
       isCalendar: true,
       cc: null,
+      tag: null,
     }
   },
   props: {
@@ -98,6 +100,20 @@ export default {
         return '0'+str
       }
       return str
+    },
+    inputTag(event) {
+      event.preventDefault()
+      if (this.tags.filter(res=>res=== this.tag).length === 0) {
+        this.length++
+        this.tags.push(this.tag)
+        this.tag = null
+      } else {
+        console.log('태그가 중복됩니다.')
+        this.tag = null
+      }
+    },
+    delTag(t) {
+      this.tags = this.tags.filter(res=>res !== t)
     },
     timer() {
       let today = new Date()
@@ -276,6 +292,19 @@ span {
 
 .create-header {
   background-color: #D8BEFE;
+}
+
+.tag-input {
+  height: 100px;
+  resize: none;
+}
+
+.tag-input:focus {
+  outline: none;
+}
+
+.input-form:focus {
+  outline: none;
 }
 
 </style>
