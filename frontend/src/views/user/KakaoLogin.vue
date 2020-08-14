@@ -110,7 +110,7 @@ export default {
     , doJoin(info) {
       if(info.nickname && info.nickname.length > 0) {
         let data = {
-          nick_name: info.nickname,
+          nick_name: info.nickname + '@kakao',
           email: info.email
         };
   
@@ -127,7 +127,7 @@ export default {
 
             this.unlinkKakao();
 
-            this.errorMessage = "카카오 계정 정보로 회원가입 실패";
+            this.errorMessage = "카카오 계정 정보로 회원가입 실패: " + error.msg;
             this.goBack = true;
           }
         )
