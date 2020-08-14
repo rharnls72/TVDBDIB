@@ -2,7 +2,7 @@
     <div class="feed-item">
       <ul class="list-group"> 
           <li v-for="(user) in users_result" v-bind:key="user.uno" 
-           class="list-group-item d-flex align-items-center" type="button" @click="goDetail(user.nick_name)">
+           class="list-group-item d-flex align-items-center" type="button" @click="goDetail(user)">
             
         <div class="box">
               <img v-if="user.profile_pic!=null" :src='user.profile_pic' class="profile" alt="profile">
@@ -17,6 +17,7 @@
 
 <script>
 import defaultProfile from '@/assets/images/profile_default.png'
+import SearchApi from '@/api/SearchApi.js';
 export default {
     name: 'UserSearchResult',
   data: () => {
@@ -28,8 +29,19 @@ export default {
     users_result: Array
   },
   methods:{
-      goDetail(name){
-          this.$router.push("/profile/" + name);
+      goDetail(user){
+        let data = {
+        search_uno : user.uno
+      };
+      SearchApi.addHistory(
+        data
+        , res => {
+          this.$router.push("/profile/" + user.nick_name);
+        }
+        , err => {
+          console.log(err);
+        }
+      );
       }
   }
 }

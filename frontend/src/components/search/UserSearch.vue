@@ -38,9 +38,13 @@
       <div @click="searchIcon" class="searchIcon">
             <b-icon-search style="width: 20px; height: 20px;"></b-icon-search>
       </div>
-      <input class="searchInput" type="text" id="searchInput" placeholder="친구 검색" v-on:input='word = $event.target.value' v-on:keyup='searchIcon()'>
+      <input class="searchInput" type="text" ref="searchInput" placeholder="친구 검색" v-on:input='word = $event.target.value' v-on:keyup='searchIcon()' autocomplete="off">
     </div>
-
+    <div v-if="word==''">
+    <div calss="listSubject">최근 검색</div>
+    <ResultItems :users_result="search_history"/>
+    <div calss="listSubject">전체</div>
+    </div>
     <ResultItems :users_result="part_users_result"/>
     <infinite-loading v-if="loading_complete && !isEndPoint" @infinite="infiniteHandler"></infinite-loading>
 
@@ -75,80 +79,43 @@ export default {
     // 아니면 이거 안쓰고 아래 watch 에 주석 지워서 
     // 매 글자 입력마다 목록 새로 가져와도 되고
     
+    
+  },
+  mounted() {
+    this.word = this.$store.state.searchWord;
+    this.$refs.searchInput.value = this.word;
+
     SearchApi.getAllUser(
       'NoData'
       , res => {
         this.users = res.data.data;
+        this.part_users_result = this.users;
         this.searchIcon();
       }
       , err => {
         console.log(err);
       }
     );
-
-    // 유저 히스토리 가져오기
-    SearchApi.getHistoryList(
-      "noData"
-      , res => {
-        this.search_history = res.data.data;
-      }
-      , err => {
-        console.log(err);
-      }
-    );
-
+    this.getHistoryList();
   },
-  watch: {
-    // word(newWord) {
-    //   // this.getUserList(newWord);
-    // },
-    selectedUser(newUser) {
-      console.log(newUser);
-      let data = {
-        search_uno : newUser.uno
-      };
-      SearchApi.addHistory(
-        data
+  methods: {
+    getHistoryList(){
+      // 유저 히스토리 가져오기
+      SearchApi.getHistoryList(
+        "noData"
         , res => {
+          this.search_history = res.data.data;
         }
         , err => {
           console.log(err);
         }
       );
-      this.$router.push("/profile/" + newUser.nick_name);
-    }
-  },
-  methods: {
+    },
     searchIcon(){
+      this.$store.state.searchWord = this.word;
       this.part_users_result = this.users.filter(
           (user) => user.nick_name.toUpperCase().includes(this.word.toUpperCase())
         );
-      // SearchApi.getUserList(
-      //   this.word,
-      //   res => {
-      //     this.users_result = res.data.data;
-      //     // setTimeout(()=>{}, 1000)
-      //     this.toNextPage();
-      //   },
-      //   err => {
-      //     console.log(err);
-      //   }
-      // );
-    },
-    // 탭을 클릭하면 해당 탭을 활성화
-    moveTab(name) {
-      this.$router.push({name: name})
-    },
-    getUserList(newWord) {
-      SearchApi.getUserList(
-        newWord,
-        res => {
-          this.users = res.data.data;
-        },
-        err => {
-          console.log(err);
-        }
-      );
     },
 
     infiniteHandler($state) {
@@ -219,5 +186,10 @@ export default {
     font-weight: medium;
     vertical-align: middle;
     display: table-cell;
+  }
+  .listSubject{
+    padding: 10px 0 5px 10px;
+    background-color: #D8BEFE;
+    color: #52565c;
   }
 </style>
