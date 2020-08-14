@@ -170,7 +170,7 @@ export default {
           this.article.fno,
           res=> {
             console.log(res)
-            this.$emit('deleteItem', this.article.fno)
+            this.$router.push({path: '/feed/main'})
           },
           err=> console.log(err)
         )
