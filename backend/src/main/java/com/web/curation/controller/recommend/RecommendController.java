@@ -85,7 +85,8 @@ public class RecommendController {
         DataFrame df_pivoted = df.pivot(0, 1, 2);
 
         long login_user_id = (long) uno;
-        int user_size = 1000;
+        int user_size = df_pivoted.length();
+        System.out.println(user_size);
         int colsize = df_pivoted.size();
         //System.out.println(colsize);
 
@@ -95,6 +96,13 @@ public class RecommendController {
                 main_row_num = i;
                 break;
             }
+        }
+
+        if (main_row_num == -1){
+            final BasicResponse result = new BasicResponse();
+            result.status = true;
+            result.msg = "failed";
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
         //System.out.println(main_row_num);
@@ -303,7 +311,7 @@ public class RecommendController {
         stddev = getStddev(ratings, mean);
         for (Program p: programs){
             float std_score = 10 * ((p.getRating() - mean) / stddev) + 50;
-            System.out.println(std_score + " " + score_table.get(p.getPno()));
+            //System.out.println(std_score + " " + score_table.get(p.getPno()));
             p.setRating(std_score + score_table.get(p.getPno()));
         }
 
@@ -315,11 +323,16 @@ public class RecommendController {
             }
         });
 
+        
+
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
         result.status = true;
         result.msg = "success";
-        result.data = programs;
+        if (programs.size() > 10)
+            result.data = programs.subList(0, 10);
+        else
+            result.data = programs;
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

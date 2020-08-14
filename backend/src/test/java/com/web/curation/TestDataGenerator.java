@@ -22,10 +22,9 @@ public class TestDataGenerator {
     public static void main(String[] args) throws Exception {
 
         // user 생성
-        
         OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream("TestDataSql.sql"));
 
-        for (int i=1000; i<2000; i++){
+        for (int i=1000; i<1250; i++){
             os.write("insert into user values (" + i + ", '" + "test" + i + "@gmail.com', 'test', null, 'test" + i + "', null, null, null, 1);\n" );
         }
 
@@ -34,8 +33,7 @@ public class TestDataGenerator {
         RestTemplate restTemplate = new RestTemplate();
         List<Program> programList = new ArrayList<Program>();
 
-        for (int page=1; page<=50; page++){
-
+        for (int page=1; page<=10; page++){
             ResponseEntity<String> re = 
             restTemplate.getForEntity(BASE_URL + "trending/tv/day?page=" + page + "&api_key=" + API_KEY, String.class);
             JSONObject recommended_program = new JSONObject(re.getBody());
@@ -45,24 +43,22 @@ public class TestDataGenerator {
                 Program p = new Program();
                 JSONObject programJson = programs.optJSONObject(i-1);
                 int id = programJson.optInt("id");
-                String name = programJson.optString("name");
-                String thumbnail = programJson.optString("poster_path");
                 p.setPno(id);
-                p.setPname(name);
-                if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
-                
+              
                 if (!programList.contains(id))
                     programList.add(p);
             }
         }
 
         Random r = new Random();
-        for (int i=1000; i<2000; i++){
+        for (int i=1000; i<1250; i++){
             for (int j=0; j<programList.size(); j++){
                 if (r.nextInt(3) < 1)
                     os.write("insert into program_follow values (" + i + "," + programList.get(j).getPno() + ");\n");
                 if (r.nextInt(3) >= 2)
-                    os.write("insert into program_reply values(" + (i*10000+j) + ", " + programList.get(j).getPno() + ", null, " + i + ", 'test', null, null);\n");
+                    os.write("insert into program_reply values(" + (i*10000+j) + ", " + programList.get(j).getPno() + ", null, " + i + ", 'test', current_timestamp(), null);\n");
+                if (r.nextInt(3) < 1)
+                    os.write("insert into program_like values(" + (i*10000+j) + ", " + i + ", " + programList.get(j).getPno() + ", current_timestamp());\n");
             }
         }
 
