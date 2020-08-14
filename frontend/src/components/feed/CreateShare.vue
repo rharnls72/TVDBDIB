@@ -37,6 +37,8 @@ import FeedProgramThumbnail from '@/components/feed/feedThumbnail/FeedProgramThu
 
 import GetUserApi from "@/api/GetUserApi.js"
 
+import $ from "jquery"
+
 export default {
   name: 'CreateShare',
   data() {
