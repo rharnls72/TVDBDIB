@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-nav justified class="myheader d-flex justify-content-between">
+    <b-nav justified class="myheader d-flex justify-content-between align-items-center">
       <b-nav-item>
       </b-nav-item>
       <b-nav-item>
