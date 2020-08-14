@@ -23,7 +23,7 @@
           <b-icon-tv stacked class="myicon5"></b-icon-tv>
         </b-iconstack>
       </h2>
-      <h3 class="text-center">잠시만 기다려 주세요!</h3>
+      <h5 class="text-center">잠시만 기다려 주세요!</h5>
     </div>
   </div>
 </template>
