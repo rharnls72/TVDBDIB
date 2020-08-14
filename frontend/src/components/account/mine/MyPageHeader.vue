@@ -43,10 +43,6 @@ export default {
     info: Object,
   },
   methods: {
-    // 계정 설정 페이지로 이동
-    // editAccount() {
-
-    // },
     goToScrap() {
       this.$router.push({path: '/scrap'})
     },
