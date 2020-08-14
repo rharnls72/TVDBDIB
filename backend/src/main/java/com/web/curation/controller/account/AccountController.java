@@ -377,8 +377,8 @@ public class AccountController {
         final BasicResponse result = new BasicResponse();
 
         try {
-            // String pre_path = "/tvility";
-            String pre_path = "./LocalTestProfilePic";
+            String pre_path = "/tvility";
+            // String pre_path = "./LocalTestProfilePic";
             String post_path = "/" + user.getUno() + ".profile_pic";
             String full_path = pre_path + post_path;
             File file = new File(full_path);
