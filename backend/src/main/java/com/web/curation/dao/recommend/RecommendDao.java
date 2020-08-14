@@ -17,4 +17,6 @@ public interface RecommendDao {
     public List<RecommendData> getProgramReply();
 
     public List<RecommendData> getEpisodeDibs();
+
+    public List<RecommendData> getProgramFollow();
 }
