@@ -53,8 +53,8 @@
         </div>
         <!---->
       </div>
-      <div class="mr-1" v-if="article.ctype !== 4">
-        <div class="mr-2">
+      <div class="mr-1">
+        <div v-if="article.ctype !== 4" class="mr-2">
           <button class="h5">
             <b-icon-pencil @click="createShare"></b-icon-pencil>
           </button>
@@ -62,7 +62,7 @@
         <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
         <div>
           <button class="h5">
-            <b-icon-reply></b-icon-reply>
+            <b-icon-reply @click="copyUrl"></b-icon-reply>
           </button>
         </div>
       </div>
@@ -126,6 +126,27 @@ export default {
   mounted() {
   },
   methods: {
+    makeToast(message, variant){
+      this.$bvToast.toast(message, {
+        title: '알림',
+        toaster: "b-toaster-bottom-right",
+        variant: variant,
+        autoHideDelay: 3000,
+        appendToast: false
+      })
+    },
+    copyToClipboard(val) {
+      var t = document.createElement('textarea')
+      document.body.appendChild(t)
+      t.value = val
+      t.select()
+      document.execCommand('copy')
+      document.body.removeChild(t)
+    },
+    copyUrl() {
+      this.copyToClipboard(`http://i3a106.p.ssafy.io/feed/detail/${this.article.fno}`)
+      this.makeToast("경로 복사에 성공했습니다.", "primary");
+    },
     createShare() {
       this.$router.push({path: `/createShare/0/${this.article.fno}`})
     },
