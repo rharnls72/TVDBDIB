@@ -1,14 +1,13 @@
 <template>
   <div id="app" class="columns">
     <FollowingHeader />
-        <div>
-      <!-- tabIndex라는 값을 v-model 이용해서 제어해서 탭 이동을 구현. 하위 b-tab에서 class만 바꾸는 걸로는 안 됐다 -->
-    <b-tabs v-model="tabIndex" class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
-    </b-tabs>
-    </div>
-      <div class="wrapB">
-        <UserListItem v-if='loadComplete' :users="users"/>
+      <h2>팔로잉</h2>
+      <div :class="{maxWidth:  windowWidth>1200}" style="margin: 0 auto;">
+        <FollowListItem v-if='loadComplete' :users="users"/>
       </div>
+      <!-- <div class="wrapB">
+        <UserListItem v-if='loadComplete' :users="users"/>
+      </div> -->
     <Footer />
   </div>
 </template>
@@ -18,13 +17,13 @@ import "@/components/css/user.scss";
 import http from '@/api/http-common.js';
 import Footer from '@/components/common/custom/Footer.vue';
 import FollowingHeader from '@/components/account/FollowingHeader.vue';
-import UserListItem from '@/components/account/UserListItem.vue';
+import FollowListItem from '@/components/account/FollowListItem.vue';
 import GetUserApi from "@/api/GetUserApi"
 import header from "@/api/header.js"
 export default {
   name: 'AlertTest',
    components: {
-    UserListItem,
+    FollowListItem,
     Footer,
     FollowingHeader,
   },
@@ -36,7 +35,8 @@ export default {
     // 두번째 요청까지 다 끝나기 전에는 props 넘겨주지 않게 해야 했다 
     loadComplete: false, // 그래서 넣은 속성
       users: [],
-      my_followings: []
+      my_followings: [],
+      windowWidth: window.innerWidth,
   }
   },
 
@@ -55,25 +55,24 @@ export default {
     })
     .catch(err => console.error(err));
   },
-
+  mounted() {
+    window.addEventListener('resize', () => {
+      this.windowWidth = window.innerWidth
+    })
+  },
   methods: {
       requestMyFollowing(uno){
         let myuno = this.$store.state.userInfo.uno;
-
-        console.log(uno);
-        console.log(myuno);
 
         // 다른 사람의 페이지인 경우: 내 팔로잉 리스트도 가져온다. (팔로/언팔 버튼 보여주기 위함)
         if (myuno != uno){
             http.get('/following/user/followings/' + myuno, header())
             .then(res => {
-                console.log(res);
                 let temp_following_list = res.data.data.user_list;
                 let no_arr = []
                 for (let i=0; i<temp_following_list.length; i++){
                     no_arr.push(temp_following_list[i].uno);
                 }
-                console.log(no_arr);
                 this.my_followings = no_arr;
             })
             .catch(err => console.error(err))
@@ -104,3 +103,9 @@ export default {
 
 };
 </script>
+<style scope>
+.maxWidth{
+  width: 520px;
+  padding-top: 30px;
+}
+</style>

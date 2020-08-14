@@ -49,6 +49,20 @@ export default {
         }
         , err => console.log(err)
       )
+    },
+    takeEpisode(cnt) {
+      if (cnt === 0) {return}
+      CurationApi.requestEpisodeDetail({
+        pno: this.program.programDetail.id,
+        season: this.program.programDetail.last_episode_to_air.season_number,
+        episode: cnt
+      }
+      ,res => {
+        this.episodes.push(res.list)
+        this.takeEpisode(cnt-1)
+      }
+      ,err => console.log(err)
+      )
     }
   },
   watch: {
@@ -69,18 +83,9 @@ export default {
         res.data.data.programDetail = JSON.parse(res.data.data.programDetail);
         res.data.data.episodeGroup = JSON.parse(res.data.data.episodeGroup);
         this.program = res.data.data
-        for (let i=this.program.programDetail.last_episode_to_air.episode_number; i>0; i--) {
-          CurationApi.requestEpisodeDetail({
-            pno: this.program.programDetail.id,
-            season: this.program.programDetail.last_episode_to_air.season_number,
-            episode: i
-          }
-          ,res => {
-            this.episodes.push(res.list)
-          }
-          ,err => console.log(err)
-          )
-        }
+        console.log(this.program)
+        this.takeEpisode(Number(this.program.programDetail.last_episode_to_air.episode_number))
+        // this.episodes.sort((a, b) => a.episode - b.episode)
       }
       , err => console.log(err)
     )

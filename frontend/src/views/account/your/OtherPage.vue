@@ -41,9 +41,6 @@ export default {
         target_uno: this.info.uno
       };
 
-      console.log(this.info)
-      console.log(data)
-
       FeedApi.getFeedList(
         data
         , res => {
@@ -53,7 +50,6 @@ export default {
             this.writtenFeeds[i].tag = JSON.parse(this.writtenFeeds[i].tag)
           }
           this.requestCount++
-          console.log(this.writtenFeeds)
           setTimeout(()=>{}, 1000)
         }
         , err => {
@@ -67,8 +63,8 @@ export default {
         my_nick_name : this.$store.state.userInfo.nick_name,
         other_nick_name: this.$route.params.nick_name
       };
-      // if(data.my_nick_name == data.other_nick_name)
-        // this.$router.push({name: 'MyPage'});
+      if(data.my_nick_name == data.other_nick_name)
+        this.$router.push({name: 'MyPage'});
       AccountApi.requestProfile(
         data,
         res => {
