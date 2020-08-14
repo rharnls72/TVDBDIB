@@ -1,12 +1,12 @@
 <template>
-  <b-nav justified class="myheader py-1 d-flex justify-content-between">
+  <b-nav justified class="myheader d-flex justify-content-between align-items-center">
     <b-nav-item class="d-flex justify-content-start">
       <button @click="backpage">
       <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
       </button>
     </b-nav-item>
     <b-nav-item>
-      <p class="text-dark mb-0"><strong>Message</strong></p>
+      <p class="text-dark mb-0"><strong>메시지</strong></p>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-end">
       <button @click="chooseFollowing">
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'MessageHeader',
+  name: 'ChatListHeader',
   methods: {
     backpage(){
       this.$router.go(-1);

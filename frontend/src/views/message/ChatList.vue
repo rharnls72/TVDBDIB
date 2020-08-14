@@ -1,9 +1,7 @@
 <template>
-  <div id="app" class="columns">
+  <div>
     <ChatListHeader />
-        <h2>메시지</h2>
-        
-        <b-nav justified class="myheader">
+    <div class="mymessage">
       <b-input-group class="align-items-center m-2 mysearchbar">
         <div class="input-group-prepend">
           <div @click="searchIcon" class="input-group-text py-0" style="border: 0px; background-color: #eee;">
@@ -23,11 +21,10 @@
           style="height: auto; width: 80%; border: 0px; background-color: #eee;"
         />
       </b-input-group>
-    </b-nav>
-      <h1>!</h1>
-      <div class="wrapB">
-        <ChatListItem v-if='loadComplete' :rooms="rooms"/>
-      </div>
+    </div>
+    <div class="wrapB">
+      <ChatListItem v-if='loadComplete' :rooms="rooms"/>
+    </div>
     <Footer />
   </div>
 </template>
@@ -44,7 +41,7 @@ import SearchApi from '@/api/SearchApi.js';
 import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 
 export default {
-  name: 'MessageList',
+  name: 'ChatList',
    components: {
     ChatListItem,
     Footer,
@@ -62,7 +59,7 @@ export default {
       users_result: [],
       word: "",
       selectedUser: null
-  }
+    }
   },
 
   created(){
@@ -187,8 +184,12 @@ export default {
 
 };
 </script>
-<style>
-.mysearchbar {
+
+<style scoped>
+  .mymessage {
+    padding-top: 50px;
+  }
+  .mysearchbar {
     border: 1px solid lightgray;
     border-radius: 0.25rem;
   }

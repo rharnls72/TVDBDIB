@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="col d-flex justify-content-between align-items-center mb-5 myheader">
-      <b-icon @click="moveMain" icon="chevron-left" font-scale="1.5"></b-icon>
-      <img class="mylogo mb-0\" :src="HeaderLogo" alt="header-logo">
+      <b-icon @click="moveback" icon="chevron-left" font-scale="1.5"></b-icon>
+      <img class="mylogo mb-0\" :src="HeaderLogo" alt="header-logo">\
       <b-icon @click="submit" icon="check-square" font-scale="1.4"></b-icon>
     </div>
   </div>
@@ -25,6 +25,9 @@ export default {
     submit() {
       this.$emit('submit')
     },
+    moveback() {
+      this.$router.go(-1)
+    }
   }
 }
 </script>

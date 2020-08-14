@@ -1,23 +1,24 @@
 <template>
-  <div>
+  <div class="feed-create">
     <!-- 헤더 -->
-    <CreateHeader @submit="submitShare"/>
 
-    <div class="px-5 myfeed">
+    <CreateHeader class="feed-header" @submit="submitShare"/>
+
       
-      <!-- 공유글 작성 -->
+    <!-- 공유글 작성 -->
+    <div class="create-feed-form row justify-content-center">
       <ShareForm :article="editArticle" @CreateArticle="makeSubmitData"/>
-
-      <!-- 공유될 글 표기 -->
-      <div class="feed-item mt-3">
-        <FeedArticleThumbnail v-if="article.ctype!==null && article.ctype === 1" :article="article"/>
-        <FeedCountdownThumbnail v-if="article.ctype!==null && article.ctype === 2" :article="article"/>
-        <FeedVoteThumbnail v-if="article.ctype!==null && article.ctype === 3" :article="article"/>
-        <EpisodeThumbnail v-if="!!article.eno" :curation="article"/>
-        <FeedProgramThumbnail v-else :program="article"/>
-      </div>
-
     </div>
+
+    <!-- 공유될 글 표기 -->
+    <div class="feed-item px-5">
+      <FeedArticleThumbnail v-if="article.ctype!==null && article.ctype === 1" :article="article"/>
+      <FeedCountdownThumbnail v-if="article.ctype!==null && article.ctype === 2" :article="article"/>
+      <FeedVoteThumbnail v-if="article.ctype!==null && article.ctype === 3" :article="article"/>
+      <EpisodeThumbnail v-if="!!article.eno" :curation="article"/>
+      <FeedProgramThumbnail v-else :program="article"/>
+    </div>
+
 
   </div>
 </template>
@@ -158,16 +159,34 @@ export default {
         , err => console.log(err)
       )
     }
+
+    $('html').scrollTop(0)
+    
   }
 }
 </script>
 
 <style scoped>
-  .feed-item {
-    border-bottom: none;
-    border-top: none;
-  }
-  .myfeed {
-    padding-top: 70px;
-  }
+.feed-item {
+  border-bottom: none;
+  border-top: none;
+}
+.create-feed-form {
+  width: 100%;
+  padding-top: 15vh;
+  padding-bottom: 5vh;
+  bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+.feed-create {
+  background-color: #f8e8f2;
+}
+.feed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+}
 </style>

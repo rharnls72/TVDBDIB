@@ -86,6 +86,7 @@ export default {
       this.fno = null
       this.article = null
     }
+    $('html').scrollTop(0)
   },
 }
 </script>
@@ -108,10 +109,12 @@ export default {
 .create-feed-form {
   width: 100%;
   padding-top: 20vh;
+  bottom: 0;
   margin-left: 0;
   margin-right: 0;
 }
 .feed-create {
   background-color: #f8e8f2;
+  bottom: 0;
 }
 </style>
