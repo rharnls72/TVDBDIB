@@ -18,9 +18,6 @@ export default {
   props:{
     article: Object,
   },
-  mounted() {
-    console.log(this.article)
-  }
 };
 </script>
 

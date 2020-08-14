@@ -1,9 +1,9 @@
 <template>
   <div class="feed-item">
     <div class="top">
-      <div class="box" style="background: #BDBDBD;">
-              <img v-if="article.profile_pic != null" class="profile" :src="article.profile_pic" :alt="profile_img">
-              <img v-else class="profile" :src="defaultProfile" :alt="profile_img">
+      <div class="box profile-image" style="background: #BDBDBD;">
+              <img v-if="article.profile_pic != null" class="profile" :src="article.profile_pic" alt="">
+              <img v-else class="profile" :src="defaultProfile" alt="">
           </div>
       <!-- <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div> -->
       <div class="user-info mb-2">
@@ -182,8 +182,8 @@ export default {
   height: 55v;
 }
 .box {
-    width: 80px;
-    height: 80px; 
+    width: 40px;
+    height: 40px; 
     border-radius: 70%;
     overflow: hidden;
 }

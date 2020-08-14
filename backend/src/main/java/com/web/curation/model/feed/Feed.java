@@ -1,5 +1,7 @@
 package com.web.curation.model.feed;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -104,6 +106,24 @@ public class Feed {
     }
     public void setProfile_pic(String profile_pic) {
         this.profile_pic = profile_pic;
+
+        // 파일 경로로 된 profile_pic 이 들어왔다면
+        // 이미지 데이터로 바꿔주기
+        if(profile_pic != null && profile_pic.charAt(0) == '/') {
+            try {
+                String pre_path = "/tvility";
+                String full_path = pre_path + profile_pic;
+                File file = new File(full_path);
+
+                FileInputStream fis = new FileInputStream(file);
+                byte[] bytes = fis.readAllBytes();
+                fis.close();
+
+                this.profile_pic = new String(bytes);
+            } catch (Exception e) {
+                System.out.println("유저 프로필 데이터 로딩 실패: " + e.getMessage());
+            }
+        }
     }
     public String getProfile_pic() {
         return profile_pic;

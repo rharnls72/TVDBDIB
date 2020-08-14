@@ -1,12 +1,10 @@
 <template>
 <div>
-    <b-nav justified class="myheader">
-      <b-input-group class="align-items-center m-2 mysearchbar">
-        <div class="input-group-prepend">
-          <div @click="searchIcon" class="input-group-text py-0" style="border: 0px; background-color: #D8BEFE;">
+    <!-- <b-nav justified class="myheader">
+      <b-input-group class="align-items-center" style="height: 40px;">
+          <div @click="searchIcon" class="input-group-text" style="border: 0px; background-color: #D8BEFE;">
             <b-icon-search></b-icon-search>
-          </div>
-        </div>
+          </div> -->
         
         <!-- <b-form-input
           type="search"
@@ -23,7 +21,7 @@
          -->
 
 <!-- @hit="selectedUser = $event" -->
-        <vue-bootstrap-typeahead
+        <!-- <vue-bootstrap-typeahead
           :data="users"
           v-model="word"
           size="sm"
@@ -31,12 +29,17 @@
           :serializer="u => u.nick_name"
           :minMatchingChars='1'
           placeholder="type a username"
-          
           ref="searchInput"
-          style="height: auto; width: 80%; border: 0px; background-color: #eee;"
+          style="height: auto; width: 80%; border: 0px; background-color: #D8BEFE;"
         />
       </b-input-group>
-    </b-nav>
+    </b-nav> -->
+    <div class="searchArea">
+      <div @click="searchIcon" class="searchIcon">
+            <b-icon-search style="width: 20px; height: 20px;"></b-icon-search>
+      </div>
+      <input class="searchInput" type="text" id="searchInput" placeholder="친구 검색" v-on:input='word = $event.target.value' v-on:keyup='searchIcon()'>
+    </div>
 
     <ResultItems :users_result="part_users_result"/>
     <infinite-loading v-if="loading_complete && !isEndPoint" @infinite="infiniteHandler"></infinite-loading>
@@ -46,7 +49,7 @@
 </template>
 
 <script>
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
+// import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 import SearchApi from '@/api/SearchApi.js';
 import ResultItems from "@/components/search/UserSearchResult.vue";
 import InfiniteLoading from 'vue-infinite-loading';
@@ -76,7 +79,7 @@ export default {
       'NoData'
       , res => {
         this.users = res.data.data;
-        console.log(this.users);
+        this.searchIcon();
       }
       , err => {
         console.log(err);
@@ -88,7 +91,6 @@ export default {
       "noData"
       , res => {
         this.search_history = res.data.data;
-        console.log(this.search_history);
       }
       , err => {
         console.log(err);
@@ -97,9 +99,9 @@ export default {
 
   },
   watch: {
-    word(newWord) {
-      // this.getUserList(newWord);
-    },
+    // word(newWord) {
+    //   // this.getUserList(newWord);
+    // },
     selectedUser(newUser) {
       console.log(newUser);
       let data = {
@@ -108,7 +110,6 @@ export default {
       SearchApi.addHistory(
         data
         , res => {
-          console.log("Add History Success!!");
         }
         , err => {
           console.log(err);
@@ -119,17 +120,20 @@ export default {
   },
   methods: {
     searchIcon(){
-      SearchApi.getUserList(
-        this.word,
-        res => {
-          this.users_result = res.data.data;
-          setTimeout(()=>{}, 1000)
-          this.toNextPage();
-        },
-        err => {
-          console.log(err);
-        }
-      );
+      this.part_users_result = this.users.filter(
+          (user) => user.nick_name.toUpperCase().includes(this.word.toUpperCase())
+        );
+      // SearchApi.getUserList(
+      //   this.word,
+      //   res => {
+      //     this.users_result = res.data.data;
+      //     // setTimeout(()=>{}, 1000)
+      //     this.toNextPage();
+      //   },
+      //   err => {
+      //     console.log(err);
+      //   }
+      // );
     },
     // 탭을 클릭하면 해당 탭을 활성화
     moveTab(name) {
@@ -139,7 +143,6 @@ export default {
       SearchApi.getUserList(
         newWord,
         res => {
-          console.log(res.data.data);
           this.users = res.data.data;
         },
         err => {
@@ -175,7 +178,7 @@ export default {
   },
   components: {
     //SearchApi,
-    VueBootstrapTypeahead,
+    // VueBootstrapTypeahead,
     ResultItems,
     InfiniteLoading
   }
@@ -186,12 +189,35 @@ export default {
     background-color: #D8BEFE;
     position: fixed;
     width: 100%;
-    height: 50px;
     z-index: 1;
     position: sticky;
+    height: 40px;
   }
   .mysearchbar {
-    border: 1px solid white;
+    border: 0;
     border-radius: 0.25rem;
+  }
+  .searchArea{
+    width: 100%;
+    background-color: #D8BEFE;
+    display: table;
+  }
+  .searchIcon{
+    width: 60px;
+    padding-left: 20px;
+    vertical-align: middle;
+    display: table-cell;
+    border: 0px; 
+    background-color: #D8BEFE;
+  }
+  .searchInput{
+    padding: 0;
+    border: 0px;
+    color: #52565c;
+    font-size: 17px;
+    background-color: #D8BEFE;
+    font-weight: medium;
+    vertical-align: middle;
+    display: table-cell;
   }
 </style>

@@ -4,8 +4,8 @@
       <!-- <div class="container mt-3"> -->
         <div class="row p-0">
           <div class="box" style="background: #BDBDBD;">
-              <!-- <img v-if="info.profile_pic != null" class="profile" :src="info.profile_pic" :alt="profile_img"> -->
-              <img class="profile" :src="profile_img" :alt="profile_img">
+              <img v-if="info.profile_pic != null" class="profile" :src="info.profile_pic" :alt="defaultProfile">
+              <img v-else class="profile" :src="defaultProfile" :alt="defaultProfile">
           </div>
           
           <div class="col-3 my-3">
@@ -41,13 +41,7 @@ export default {
   },
   data() {
     return {
-      profile_img: defaultProfile,
-    }
-  },
-  mounted() {
-    if(this.info.profile_pic != null) {
-      console.log(this.info.profile_pic)
-      this.profile_img = this.info.profile_pic;
+      defaultProfile: defaultProfile,
     }
   },
   methods: {
