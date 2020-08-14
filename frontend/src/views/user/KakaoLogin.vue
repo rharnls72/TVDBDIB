@@ -1,21 +1,18 @@
-
-
 <template>
   <div class="user" id="login">
-    <div class="wrapC">
-      <h1>
+    <LoginHeader />
+    <div class="wrapC mykakao">
+      <h1 class="text-center">
         Kakao Login........
       </h1>
-
-      <h2>
+      <h2 class="text-center">
         {{msg}}
       </h2>
 
       <button
         class="btn-bottom">
         Go back
-    </button>
-
+      </button>
     </div>
   </div>
 </template>
@@ -24,6 +21,7 @@
 import "../../components/css/user.scss";
 import axios from 'axios';
 import UserApi from '@/api/UserApi.js';
+import LoginHeader from '@/components/user/custom/LoginHeader.vue'
 
 export default {
   methods: {
@@ -171,6 +169,17 @@ export default {
     return {
       msg: ''
     }
+  },
+  components: {
+    LoginHeader,
   }
 };
 </script>
+
+<style scoped>
+  .mykakao {
+    height: 100%;
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
+</style>

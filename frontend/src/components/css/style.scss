@@ -15,7 +15,7 @@
 html {
     margin: 0;
     padding: 0;
-    height: 120%;
+    height: 100%;
 }
 
 body {
@@ -543,11 +543,12 @@ p {
 
 .btn-bottom {
     width: calc(100% - 40px);
-    background: #000;
+    background: #d8c8f8;
     color: #fff;
-    height: 50px;
+    border-radius: 0.25rem;
+    height: 40px;
     text-align: center;
-    line-height: 50px;
+    line-height: 40px;
     font-weight: $f600;
     position: fixed;
     left: 20px;

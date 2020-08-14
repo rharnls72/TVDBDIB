@@ -5,27 +5,25 @@
         <b-icon-chevron-left @click="goToBack" class="text-dark"></b-icon-chevron-left>
       </button>
     </b-nav-item>
-    <b-nav-item>
-      <p class="text-dark mb-0"><strong>{{ info.nick_name }}</strong></p>
+    <b-nav-item class="d-flex justify-content-center">
+      <p class="text-dark mb-0"><strong>{{episode.pname}}</strong></p>
     </b-nav-item>
-    <b-nav-item>
-      <b-icon-blank></b-icon-blank>
-      <b-icon-blank></b-icon-blank>
+    <b-nav-item class="d-flex justify-content-end">
     </b-nav-item>
   </b-nav>
 </template>
 
 <script>
 export default {
-  name: 'OtherPageHeader',
+  name: 'EpisodeHeader',
   props: {
-    info: Object,
+    episode: Object,
   },
   methods: {
     goToBack() {
       this.$router.go(-1)
-    },
-  },
+    }
+  }
 }
 </script>
 

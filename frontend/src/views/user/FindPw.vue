@@ -1,14 +1,13 @@
-
-
 <template>
   <div class="user" id="findPw">
-    <div class="wrapC">
-      <h1>
+    <LoginHeader />
+    <div class="wrapC myfpw">
+      <h1 class="text-center">
         가입할 때 사용하신
-        <br />이메일로 변경링크를
-        <br />보내드릴게요.
       </h1>
-
+      <h1 class="text-center">
+        이메일을 입력해주세요.
+      </h1>
       <div class="input-with-label">
         <input
           v-model="email"
@@ -28,7 +27,7 @@
       @click="onFindPw"
       :disabled="!isSubmit"
       :class="{disabled : !isSubmit}">
-      변경링크 발송
+      변경 링크 발송
     </button>
 
     </div>
@@ -39,6 +38,7 @@
 import "../../components/css/user.scss";
 import UserApi from "../../api/UserApi";
 import * as EmailValidator from "email-validator";
+import LoginHeader from '@/components/user/custom/LoginHeader.vue'
 
 export default {
   watch: {
@@ -107,8 +107,17 @@ export default {
       },
       isSubmit: false
     };
+  },
+  components: {
+    LoginHeader,
   }
 };
 </script>
 
-
+<style scoped>
+  .myfpw {
+    height: 100%;
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
+</style>
