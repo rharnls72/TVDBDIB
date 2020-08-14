@@ -1,39 +1,5 @@
 <template>
 <div>
-    <!-- <b-nav justified class="myheader">
-      <b-input-group class="align-items-center" style="height: 40px;">
-          <div @click="searchIcon" class="input-group-text" style="border: 0px; background-color: #D8BEFE;">
-            <b-icon-search></b-icon-search>
-          </div> -->
-        
-        <!-- <b-form-input
-          type="search"
-          placeholder="검색"
-          ref="searchInput"
-          v-model="word"
-          class="p-0"
-          style="height: auto; border: 0px; background-color: #eee;">
-        </b-form-input> -->
-       
-       <!-- 이 컴포넌트 쓰면 목록 내에서 AutoComplete 가 되는데
-            css 를 어떻게 줘야하지
-            https://github.com/alexurquhart/vue-bootstrap-typeahead
-         -->
-
-<!-- @hit="selectedUser = $event" -->
-        <!-- <vue-bootstrap-typeahead
-          :data="users"
-          v-model="word"
-          size="sm"
-          textVariant="red"
-          :serializer="u => u.nick_name"
-          :minMatchingChars='1'
-          placeholder="type a username"
-          ref="searchInput"
-          style="height: auto; width: 80%; border: 0px; background-color: #D8BEFE;"
-        />
-      </b-input-group>
-    </b-nav> -->
     <div class="searchArea">
       <div @click="searchIcon" class="searchIcon">
             <b-icon-search style="width: 20px; height: 20px;"></b-icon-search>
@@ -49,7 +15,6 @@
 </template>
 
 <script>
-// import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 import SearchApi from '@/api/SearchApi.js';
 import ResultItems from "@/components/search/UserSearchResult.vue";
 import InfiniteLoading from 'vue-infinite-loading';
@@ -123,17 +88,6 @@ export default {
       this.part_users_result = this.users.filter(
           (user) => user.nick_name.toUpperCase().includes(this.word.toUpperCase())
         );
-      // SearchApi.getUserList(
-      //   this.word,
-      //   res => {
-      //     this.users_result = res.data.data;
-      //     // setTimeout(()=>{}, 1000)
-      //     this.toNextPage();
-      //   },
-      //   err => {
-      //     console.log(err);
-      //   }
-      // );
     },
     // 탭을 클릭하면 해당 탭을 활성화
     moveTab(name) {
@@ -177,8 +131,6 @@ export default {
 
   },
   components: {
-    //SearchApi,
-    // VueBootstrapTypeahead,
     ResultItems,
     InfiniteLoading
   }
