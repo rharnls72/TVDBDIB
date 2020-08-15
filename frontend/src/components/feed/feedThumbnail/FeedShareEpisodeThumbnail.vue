@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <img class="col-4" :src="curation.thumbnail">
-    <div class="col-8">
+    <div class="col-8 d-flex align-items-center">
       [{{curation.pname}}] {{curation.episode}}화
     </div>
   </div>

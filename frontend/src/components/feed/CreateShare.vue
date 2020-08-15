@@ -13,9 +13,6 @@
 
     <!-- 공유될 글 표기 -->
     <div class="share-item mx-5">
-      <!-- <FeedArticleThumbnail v-if="article.ctype!==null && article.ctype === 1" :article="article"/>
-      <FeedCountdownThumbnail v-if="article.ctype!==null && article.ctype === 2" :article="article"/>
-      <FeedVoteThumbnail v-if="article.ctype!==null && article.ctype === 3" :article="article"/> -->
       <WrittenFeed v-if="!!article.ctype" :feed="article"/>
       <FeedShareEpisodeThumbnail class="program-thumbnail" v-else-if="!!article.eno" :curation="article"/>
       <FeedProgramThumbnail class="program-thumbnail" v-else :program="article"/>
@@ -31,10 +28,6 @@ import Curation from '@/api/CurationApi.js'
 
 import CreateHeader from '@/components/feed/feedComponents/CreateHeader.vue'
 import ShareForm from '@/components/feed/feedComponents/ShareForm.vue'
-import FeedArticleThumbnail from '@/components/feed/feedThumbnail/FeedArticleThumbnail.vue'
-import FeedCountdownThumbnail from '@/components/feed/feedThumbnail/FeedCountdownThumbnail.vue'
-import FeedVoteThumbnail from '@/components/feed/feedThumbnail/FeedVoteThumbnail.vue'
-import EpisodeThumbnail from '@/components/curation/episode/EpisodeThumbnail.vue'
 import FeedProgramThumbnail from '@/components/feed/feedThumbnail/FeedProgramThumbnail.vue'
 import WrittenFeed from '@/components/account/mine/WrittenFeed.vue'
 import FeedShareEpisodeThumbnail from '@/components/feed/feedThumbnail/FeedShareEpisodeThumbnail.vue'
@@ -53,10 +46,6 @@ export default {
   components: {
     CreateHeader,
     ShareForm,
-    FeedArticleThumbnail,
-    FeedCountdownThumbnail,
-    FeedVoteThumbnail,
-    EpisodeThumbnail,
     FeedProgramThumbnail,
     WrittenFeed,
     FeedShareEpisodeThumbnail,

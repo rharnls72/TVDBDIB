@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <img class="col-4" :src="'https://image.tmdb.org/t/p/w500'+program.programDetail.backdrop_path">
-    <div class="col-8">
+    <div class="col-8 d-flex align-items-center">
       {{program.programDetail.name}}
     </div>
   </div>

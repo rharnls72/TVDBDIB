@@ -4,8 +4,8 @@
     <div class="container mycontainer">
       <MyPageInformation :info="info" :followcnt="followcnt"/>
       <div v-for="feed in writtenFeeds" :key="feed.fno" class="col-12 m-0 p-0 row">
-        <hr class="row col-12">
         <WrittenFeed :feed="feed" class="col-12 row"/>
+        <hr class="row col-12">
       </div>
     </div>
     <Footer />

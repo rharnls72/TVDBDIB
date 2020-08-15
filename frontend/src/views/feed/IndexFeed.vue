@@ -8,6 +8,7 @@
         <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/> -->
         <FeedItem :article="feed" :fno="feed.fno" @deleteItem="removeFeed"/>
       </div>
+      <hr class="row col-12">
     </div>
     <Footer/>
   </div>
@@ -87,6 +88,10 @@ export default {
 </script>
 
 <style scoped>
+  .last {
+    height: 100px;
+    padding: 100px;
+  }
   .myfeed {
     padding-top: 70px;
     margin-bottom: 10px;

@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="col-6">
-        <div class="content d-flex align-items-center">
+        <div class="d-flex align-items-center">
           <div v-if="feed.ctype===1">
             <div>Article</div>
             <div>{{feed.content.title}}</div>
