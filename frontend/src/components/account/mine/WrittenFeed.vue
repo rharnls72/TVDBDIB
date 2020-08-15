@@ -1,52 +1,49 @@
 <template>
-  <div class="col-12 m-0 p-0 row">
-    <hr class="row col-12">
-    <div class="col-12 m-0 p-0">
-      <div @click="moveDetail(feed.fno)" class="col-12 row m-0 px-0 py-2 align-items-center">
-        <!-- {{ feed }} -->
-        <div class="col-6 mythumbnail">
-          <!-- <FeedImage /> -->
-          <div v-if="feed.ctype===1" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center">
-            <!-- <div>{{feed.content.title}}</div> -->
-            <div v-for="(tag, idx) in feed.tag" :key="idx">#{{tag}}</div>
-          </div>
-          <div v-if="feed.ctype===2" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center" style="padding-top:10%; padding-bottom:10%">
-            <!-- <div>{{feed.content.title}}</div> -->
-            <div>{{feed.content.content.date}}</div>
-            <div>{{feed.content.content.time}}</div>
-          </div>
-          <div v-if="feed.ctype===3" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center" style="padding-top:10%; padding-bottom:10%">
-            <!-- <div>{{feed.content.title}}</div> -->
-            <div>
-              <div v-for="(option, idx) in feed.content.content" :key="idx">
-                <div v-if="idx < feed.content.content.length-1">{{option.text}}<br> vs</div>
-                <div v-else>{{option.text}}</div>
-              </div>
+  <div class="col-12 m-0 p-0">
+    <div @click="moveDetail(feed.fno)" class="col-12 row m-0 px-2 py-2 align-items-center">
+      <!-- {{ feed }} -->
+      <div class="col-6 mythumbnail">
+        <!-- <FeedImage /> -->
+        <div v-if="feed.ctype===1" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center">
+          <!-- <div>{{feed.content.title}}</div> -->
+          <div v-for="(tag, idx) in feed.tag" :key="idx">#{{tag}}</div>
+        </div>
+        <div v-if="feed.ctype===2" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center" style="padding-top:10%; padding-bottom:10%">
+          <!-- <div>{{feed.content.title}}</div> -->
+          <div>{{feed.content.content.date}}</div>
+          <div>{{feed.content.content.time}}</div>
+        </div>
+        <div v-if="feed.ctype===3" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center" style="padding-top:10%; padding-bottom:10%">
+          <!-- <div>{{feed.content.title}}</div> -->
+          <div>
+            <div v-for="(option, idx) in feed.content.content" :key="idx">
+              <div v-if="idx < feed.content.content.length-1">{{option.text}}<br> vs</div>
+              <div v-else>{{option.text}}</div>
             </div>
-          </div>
-          <div v-if="feed.ctype===4" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center" style="padding-top:10%; padding-bottom:10%">
-            <!-- <div>{{feed.content.content}}</div> -->
-            <div v-for="(tag, idx) in feed.tag" :key="idx">#{{tag}}</div>
           </div>
         </div>
-        <div class="col-6">
-          <div class="content d-flex align-items-center">
-            <div v-if="feed.ctype===1">
-              <div>Article</div>
-              <div>{{feed.content.title}}</div>
-            </div>
-            <div v-if="feed.ctype===2">
-              <div>Countdown</div>
-              <div>{{feed.content.title}}</div>
-            </div>
-            <div v-if="feed.ctype===3">
-              <div>Vote</div>
-              <div>{{feed.content.title}}</div>
-            </div>
-            <div v-if="feed.ctype===4">
-              <div>Share</div>
-              <div>{{feed.content.content}}</div>
-            </div>
+        <div v-if="feed.ctype===4" class="feed-thumbnail-item d-flex flex-column justify-content-center align-items-center text-center" style="padding-top:10%; padding-bottom:10%">
+          <!-- <div>{{feed.content.content}}</div> -->
+          <div v-for="(tag, idx) in feed.tag" :key="idx">#{{tag}}</div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="content d-flex align-items-center">
+          <div v-if="feed.ctype===1">
+            <div>Article</div>
+            <div>{{feed.content.title}}</div>
+          </div>
+          <div v-if="feed.ctype===2">
+            <div>Countdown</div>
+            <div>{{feed.content.title}}</div>
+          </div>
+          <div v-if="feed.ctype===3">
+            <div>Vote</div>
+            <div>{{feed.content.title}}</div>
+          </div>
+          <div v-if="feed.ctype===4">
+            <div>Share</div>
+            <div>{{feed.content.content}}</div>
           </div>
         </div>
       </div>
