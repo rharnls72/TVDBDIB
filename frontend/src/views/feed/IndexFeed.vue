@@ -8,6 +8,7 @@
         <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/> -->
         <FeedItem :article="feed" :fno="feed.fno" @deleteItem="removeFeed"/>
       </div>
+      <div class="myfeed"></div>
     </div>
     <Footer/>
   </div>
