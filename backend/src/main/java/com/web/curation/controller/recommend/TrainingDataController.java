@@ -155,8 +155,8 @@ public class TrainingDataController {
 
         System.out.println("generating data.csv...");
 
-        //OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream("tvility/testData.csv"));
-        OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream("testData.csv"));
+        OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream("tvility/testData.csv"));
+        //OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream("testData.csv"));
         os.write("userId,programId,rating\n");
 
         for (int key: ratings.keySet()){

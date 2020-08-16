@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.apache.commons.math3.stat.StatUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -69,7 +71,7 @@ public class RecommendController {
     private RecommendDao recommendDao;
 
     static final int WATCH_HOUR = 72;
-    static final int RECOMMEND_SIZE = 10;
+    static final int RECOMMEND_SIZE = 20;
 
     static String BASE_URL = "https://api.themoviedb.org/3/";
     static String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
@@ -83,7 +85,8 @@ public class RecommendController {
         String python_output = null;
         int uno = ((User) request.getAttribute("User")).getUno();
 
-        Process process = Runtime.getRuntime().exec("python model_load.py " + uno);
+        Process process = Runtime.getRuntime().exec("python3.8 tvility/model_load.py " + uno);
+        //Process process = Runtime.getRuntime().exec("python model_load.py " + uno);
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
         //BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         while ((s = stdInput.readLine()) != null){
@@ -215,21 +218,6 @@ public class RecommendController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    // private static double getMean(List row){
-    //     double sum = 0.0;
-    //     int size = row.size();
-    //     int count = 0;
-    //     System.out.println(row);
-    //     for (int i=1; i<size; i++){
-    //         Object obj = row.get(i);
-    //         if (obj != null){
-    //             sum += (double) obj;
-    //             count++;
-    //         }
-    //     }
-    //     return sum / count;
-    // }
-
     // time sliding - 지난 시간에 따라 점수 계산
     private float cal_score(LocalDateTime time){
         LocalDateTime toDate = LocalDateTime.now();
@@ -289,19 +277,27 @@ public class RecommendController {
         // 여기까지 tvdbdib score 산출 (표준화 안된 상태)
         // 표준화
         // 그냥 (List) 이렇게 변환하려고 하면 에러난다. new ArrayList 하고 그 파라미터로 Collection을 주면 됨.
+
+        // 평균, 표준편차 계산할때 라이브러리 쓰면 좀 더 빠를까 싶었는데 아니었다
+        // double[] converted_arr = Arrays.stream(score_table.values().toArray())
+        //                         .mapToDouble(num -> Double.parseDouble(num.toString())).toArray();
+        // float mean = (float) StatUtils.mean(converted_arr);
+        // float stddev = (float) Math.sqrt(StatUtils.populationVariance(converted_arr));
         float mean = getMean_float(new ArrayList<Float>(score_table.values())); 
         float stddev = getStddev(new ArrayList<Float>(score_table.values()), mean);
         for (int id: score_table.keySet()){
             float this_score = score_table.get(id);
-            float t_score = 10 * ((this_score - mean) / stddev) + 50;
+            float t_score = 20 * ((this_score - mean) / stddev) + 100;
             score_table.put(id, t_score);
         }
 
         // 데이터 있는 프로그램들에 대해 TMDB 요청
+        // 너무 요청이 많아서 여기서 시간이 엄청 걸린다. 그냥 TMDB 점수는 뺄까?
         ArrayList<Program> programs = new ArrayList<Program>();
         RestTemplate restTemplate = new RestTemplate();
         ArrayList<Float> ratings = new ArrayList<Float>();
 
+        System.out.println(score_table.size());
         for (int id: score_table.keySet()){
             Program p = new Program();
 
@@ -314,14 +310,11 @@ public class RecommendController {
             String thumbnail = programJson.optString("poster_path");
             float popularity = programJson.optFloat("popularity");
 
-            //popularity *= 100;
-            
             p.setPno(id);
             p.setPname(name);
             if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
             
             p.setRating(popularity);
-
             ratings.add(popularity);
             programs.add(p);
         }
@@ -340,16 +333,14 @@ public class RecommendController {
             public int compare(Program o1, Program o2) {
                 return Float.compare(o2.getRating(), o1.getRating());
             }
-        });
-
-        
+        });        
 
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
         result.status = true;
         result.msg = "success";
-        if (programs.size() > 10)
-            result.data = programs.subList(0, 10);
+        if (programs.size() > 20)
+            result.data = programs.subList(0, 20);
         else
             result.data = programs;
         return new ResponseEntity<>(result, HttpStatus.OK);

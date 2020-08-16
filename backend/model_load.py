@@ -35,7 +35,7 @@ def model_load(user_id):
     user_movie_array = user_movie_array.astype(np.int64)
     ratings = model.predict(user_movie_array).flatten()
 
-    top_ratings_indices = ratings.argsort()[-10:][::-1]
+    top_ratings_indices = ratings.argsort()[-20:][::-1]
     recommended_movie_ids = [
         movie_encoded2movie.get(movies_not_watched[x][0]) for x in top_ratings_indices
     ]
