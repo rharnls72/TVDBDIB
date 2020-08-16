@@ -1,7 +1,10 @@
 <template>
     <div class="scroll-container">
-        <div v-for="(program) in programs" v-bind:key="program.id" class="card">
-            <img :src='program.thumbnail' width="75rem" height="120rem" class="img-fluid" alt="poster">
+        <div v-if="programs == null">추천을 해주기에 아직 데이터가 부족해요. 
+          <br>아래에서 관심있는 프로그램을 찾아 팔로우해보세요!
+        </div>
+        <div v-for="(program) in programs" v-bind:key="program.pno" class="card">
+            <img :src='program.thumbnail' @click="goDetail(program.pno)" width="75rem" height="120rem" class="img-fluid" alt="poster">
         </div>
     </div>
 
