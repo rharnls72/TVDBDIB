@@ -40,4 +40,4 @@ cd ../ai
 pwd
 
 sudo docker build -t $AI_IMG .
-sudo docker run --name $AI_DOCKER -p 8888:8888 -v tvility:/tvility -d $AI_IMG
+sudo docker run --name $AI_DOCKER --network="host" -v tvility:/tvility -d $AI_IMG
