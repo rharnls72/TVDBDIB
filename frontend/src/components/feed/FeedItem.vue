@@ -1,18 +1,23 @@
 <template>
   <div class="feed-item">
     <div class="top">
-      <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
+      <div class="box profile-image" style="background: #BDBDBD;">
+          <img v-if="article.profile_pic != null" class="profile" :src="article.profile_pic" :alt="article.profile_pic">
+          <img v-else class="profile" :src="defaultProfile" alt="">
+      </div>
+      <!-- <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div> -->
       <div class="user-info mb-2">
         <div class="user-name">
           <button>{{article.nick_name}}</button>
         </div>
-        <p class="date">{{createAfter}} 시간 전</p>
+        <p v-if="createAfter <= 60" class="date">{{createAfter}} 시간 전</p>
+        <p v-else class="date">{{parseInt(createAfter/60)}} 일 전</p>
       </div>
-      <div class="content d-flex flex-comlumn justify-content-between align-items-center my-2">
-        <div>{{article.content.title}}</div>
-        <div v-if="!!this.$store.state.userInfo && this.$store.state.userInfo.uno === article.uno">
-          <span @click="updateFeed">수정</span>   <span @click="delFeed">삭제</span>
-        </div>
+    </div>
+    <div class="comment">
+      <div>
+        <div v-if="article.ctype === 1 || article.ctype === 4"><span>{{article.content.content}}</span><br></div>
+        <span v-for="tag in article.tag" :key="tag" class="tag">#{{tag}} </span>
       </div>
     </div>
     <FeedArticleThumbnail v-if="article.ctype === 1" :article="article"/>
@@ -48,8 +53,8 @@
         </div>
         <!---->
       </div>
-      <div class="mr-1" v-if="article.ctype !== 4">
-        <div class="mr-2">
+      <div class="mr-1">
+        <div v-if="article.ctype !== 4" class="mr-2">
           <button class="h5">
             <b-icon-pencil @click="createShare"></b-icon-pencil>
           </button>
@@ -57,26 +62,23 @@
         <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
         <div>
           <button class="h5">
-            <b-icon-reply></b-icon-reply>
+            <b-icon-reply @click="copyUrl"></b-icon-reply>
           </button>
         </div>
       </div>
     </div>
-    <div>
-      <span class="font-weight-bold">좋아요 {{article.like_num}}명</span>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="font-weight-bold">좋아요 {{article.like_num}}명</div>
+      <div v-if="!!this.$store.state.userInfo && this.$store.state.userInfo.uno === article.uno">
+        <span class="moreView" @click="updateFeed">수정 </span>
+        <span class="moreView" @click="delFeed">삭제</span>
+      </div>
     </div>
-    <div class="wrap mt-2">
-      <div v-if="article.ctype===1"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.content}}<br></div>
-      <div v-if="article.ctype===2"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.title}}<br></div>
-      <div v-if="article.ctype===3"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.title}}<br></div>
-      <div v-if="article.ctype===4"><span class="font-weight-bold">{{article.nick_name}} </span>{{article.content.content}}<br></div>
-    </div>
-    <div class="wrap mt-2">
-      <span v-for="tag in article.tag" :key="tag" class="tag">#{{tag}} </span><br>
-      <span v-if="!!article.reply_num && !detail" class="moreView">댓글 {{article.reply_num}}개</span><br>
+    <div v-if="!!article.reply_num && !detail" class="wrap mt-2">
+      <span class="moreView">댓글 {{article.reply_num}}개</span><br>
     </div>
     <div v-if="!detail">
-      <span class="font-weight-bold">{{article.reply_user_nick}} </span>{{article.reply_content}}<br>
+      <div v-if="article.reply_user_nick"><span class="font-weight-bold">{{article.reply_user_nick}} </span>{{article.reply_content}}<br></div>
       <span @click="moveDetail" class="moreView">댓글 남기기</span>
     </div>
   </div>
@@ -118,7 +120,30 @@ export default {
     fno: Number,
     detail: Boolean,
   },
+  mounted() {
+  },
   methods: {
+    makeToast(message, variant){
+      this.$bvToast.toast(message, {
+        title: '알림',
+        toaster: "b-toaster-bottom-right",
+        variant: variant,
+        autoHideDelay: 3000,
+        appendToast: false
+      })
+    },
+    copyToClipboard(val) {
+      var t = document.createElement('textarea')
+      document.body.appendChild(t)
+      t.value = val
+      t.select()
+      document.execCommand('copy')
+      document.body.removeChild(t)
+    },
+    copyUrl() {
+      this.copyToClipboard(`http://i3a106.p.ssafy.io/feed/detail/${this.article.fno}`)
+      this.makeToast("경로 복사에 성공했습니다.", "primary");
+    },
     createShare() {
       this.$router.push({path: `/createShare/0/${this.article.fno}`})
     },
@@ -163,7 +188,7 @@ export default {
           this.article.fno,
           res=> {
             console.log(res)
-            this.$emit('deleteItem', this.article.fno)
+            this.$router.push({path: '/feed/main'})
           },
           err=> console.log(err)
         )
@@ -197,5 +222,20 @@ export default {
   background-color: beige;
   width: 100v;
   height: 55v;
+}
+.box {
+    width: 40px;
+    height: 40px; 
+    border-radius: 70%;
+    overflow: hidden;
+}
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.comment {
+  margin-top: 60px;
+  margin-bottom: 20px;
 }
 </style>

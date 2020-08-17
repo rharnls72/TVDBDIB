@@ -8,7 +8,9 @@ import com.web.curation.dao.feed.FeedDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.feed.Feed;
 import com.web.curation.model.feed.FeedRequest;
+import com.web.curation.model.feed.TagRequest;
 import com.web.curation.model.user.User;
+import com.web.curation.service.KomoranService;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -41,6 +43,9 @@ public class FeedController {
     
     @Autowired
     FeedDao dao;
+
+    @Autowired
+    KomoranService KomoranService;
 
     // Create
     @PostMapping("/feed/create")
@@ -178,6 +183,16 @@ public class FeedController {
         // 여기까지 문제 없이 내려왔으면 성공적으로 삭제가 완료된 것
         result.status = true;
         result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/feed/generate/tags")
+    @ApiOperation(value = "피드 내용을 토대로 태그 생성")
+    public Object generateTags(@RequestBody TagRequest req) {
+        final BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.msg = "success";
+        result.data = KomoranService.getTags(req);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

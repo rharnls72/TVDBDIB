@@ -63,6 +63,10 @@ public class MessageService {
         try {
             Firestore db = FirestoreClient.getFirestore();
             db.collection("chat_room").document(cno).delete();
+            List<QueryDocumentSnapshot> documents = db.collection("message").whereEqualTo("cno", cno).get().get().getDocuments();
+            for (QueryDocumentSnapshot document : documents) {
+                db.collection("message").document(document.getId()).delete();
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();

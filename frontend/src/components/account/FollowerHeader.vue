@@ -1,8 +1,8 @@
 <template>
   <b-nav justified class="myheader d-flex align-items-center">
-    <b-nav-item>
-      <!-- 메시지 -->
+    <b-nav-item class="d-flex justify-content-start">
       <button>
+        <b-icon-chevron-left @click="goToBack" class="text-dark"></b-icon-chevron-left>
       </button>
     </b-nav-item>
     <b-nav-item>
@@ -20,9 +20,8 @@
 export default {
   name: 'FollowerHeader',
   methods: {
-    // 피드 작성 페이지로 이동
-    createFeed() {
-      this.$router.push({name: 'CreateFeed'})
+    goToBack() {
+      this.$router.go(-1)
     },
   },
 }

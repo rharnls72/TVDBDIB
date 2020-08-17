@@ -115,8 +115,8 @@ public class Program {
         like_num = res.like_num;
         press_like = res.press_like;
         reply_num = res.reply_num;
-
-        this.setReply_content(res.reply_content);
+        reply_content = res.reply_content;
+        reply_user_nick = res.reply_user_nick;
     }
 
     public String getPname() {

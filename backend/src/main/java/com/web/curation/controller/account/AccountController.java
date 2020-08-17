@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,17 +58,16 @@ public class AccountController {
     @Autowired
     private MailConfig mailConfig;
 
-    @GetMapping("/account/login")
+    @PostMapping("/account/login")
     @ApiOperation(value = "로그인")
-    public Object login(@RequestParam(required = true) final String email,
-            @RequestParam(required = true) final String password) {
+    public Object login(@RequestBody Map<String, Object> req) {
 
         // 이메일과 비밀번호로 유저 찾아보고 있으면 User 객체 반환
         // 없으면 Null 이 반환
         User user = new User();
-        user.setEmail(email);
+        user.setEmail((String) req.get("email"));
         try {
-            user.setPassword(SHA256(password));
+            user.setPassword(SHA256((String) req.get("password")));
         } catch (Exception e) {
             final BasicResponse result = new BasicResponse();
             result.status = false;
@@ -379,7 +377,8 @@ public class AccountController {
         final BasicResponse result = new BasicResponse();
 
         try {
-            String pre_path = "/tvility";
+            // String pre_path = "/tvility";
+            String pre_path = "./LocalTestProfilePic";
             String post_path = "/" + user.getUno() + ".profile_pic";
             String full_path = pre_path + post_path;
             File file = new File(full_path);

@@ -23,6 +23,9 @@ export default {
   props: {
     programs: Array
   },
+  mounted() {
+    console.log(this.programs)
+  },
   methods:{
       goDetail(id){
           this.$router.push("/program/" + id);
