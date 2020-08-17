@@ -1,14 +1,20 @@
 <template>
   <div>
     <IndexScrapHeader />
-    <div class="container mycontainer">
+    <div class="mycontainer">
       <div class="p-0">
         <b-tabs class="mytabs" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
           <b-tab title="피드 찜" title-link-class="text-secondary" active>
-            <WrittenFeed v-for="(feed, idx) in feedDib" :key="idx" :feed="feed"/>
+            <div v-for="(feed, idx) in feedDib" :key="idx">
+              <WrittenFeed :feed="feed"/>
+              <hr class="row col-12">
+            </div>
           </b-tab>
           <b-tab title="에피소드 찜" title-link-class="text-secondary">
-            <DibEpisode v-for="(episode, idx) in episodeDib" :key="idx" :episode="episode"/>
+            <div v-for="(episode, idx) in episodeDib" :key="idx">
+              <DibEpisode :episode="episode"/>
+              <hr class="row col-12">
+            </div>
           </b-tab>
         </b-tabs>
       </div>
@@ -82,5 +88,6 @@ export default {
   .mycontainer {
     padding-top: 70px;
     padding-bottom: 50px;
+    margin-bottom: 100px;
   }
 </style>
