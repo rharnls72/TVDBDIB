@@ -79,7 +79,17 @@ public class RecommendController {
 
         int uno = ((User) request.getAttribute("User")).getUno();
         // 모델에서 받는 input 데이터가 int64 타입으로 되어있어서 int가 아니라 long으로 만들어야
-        DataFrame df = DataFrame.readCsv(new FileInputStream("testData.csv"));
+        // DataFrame df = DataFrame.readCsv(new FileInputStream("testData.csv"));
+        DataFrame df = null;
+        try {
+            df = DataFrame.readCsv(new FileInputStream("/tvility/testData.csv"));
+        } catch (Exception e) {
+            System.out.println("File Not Found!! => testData.csv");
+            final BasicResponse result = new BasicResponse();
+            result.status = false;
+            result.msg = "File not found";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
         // rating이 value로 들어가는 행렬 형태로 변환. (유저ID = 행, 프로그램ID = 열, 평점 = 값)
         DataFrame df_pivoted = df.pivot(0, 1, 2);
