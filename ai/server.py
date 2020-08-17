@@ -6,7 +6,8 @@ app = Flask(__name__)
 @app.route('/ai/recommend/<uno>')
 def hello_world(uno):
     print('Get uno: ' + uno)
-    print('Type uno: ' + type(uno))
+    int_Uno = int(uno)
+    print('Int uno: ' + str(int_Uno))
     return {'data': ml.model_load(int(uno))}
 
 if __name__ == '__main__':
