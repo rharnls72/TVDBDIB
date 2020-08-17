@@ -129,7 +129,7 @@ public class RecommendController {
         }
         */
 
-        Process process = Runtime.getRuntime().exec("python3.8 tvility/model_load.py " + uno);
+        Process process = Runtime.getRuntime().exec("python3.8 /tvility/model_load.py " + uno);
         //Process process = Runtime.getRuntime().exec("python model_load.py " + uno);
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
         //BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
