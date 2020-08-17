@@ -4,7 +4,7 @@
     <FeedCountdownThumbnail v-if="article.content.article.ctype === 2" :article="article.content.article"/>
     <FeedVoteThumbnail v-if="article.content.article.ctype === 3" :article="article.content.article"/> -->
     <WrittenFeed v-if="article.content.article.ctype" :feed="article.content.article"/>
-    <FeedShareEpisodeThumbnail v-if="!!article.content.article.eno" :curation="article.content.article"/>
+    <FeedShareEpisodeThumbnail v-else-if="!!article.content.article.eno" :curation="article.content.article"/>
     <FeedProgramThumbnail v-else :program="article.content.article"/>
   </div>
 </template>

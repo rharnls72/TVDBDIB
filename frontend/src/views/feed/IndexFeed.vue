@@ -89,10 +89,6 @@ export default {
     },
     removeFeed(fno) {this.feeds = this.feeds.filter(res => res.fno!==fno)}
   },
-
-  mounted() {
-    this.takeFeed()
-  },
   created() {
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
