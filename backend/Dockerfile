@@ -2,7 +2,7 @@
 
 FROM ubuntu:latest
 
-RUN apt-get update && apt-get install -y openjdk-14 && apt-get install -y python3.8
+RUN apt-get update && apt-get install -y openjdk-14-jdk openjdk-14-jre python3.8
 
 RUN pip install pip --upgrade
 RUN pip install setuptools --upgrade
