@@ -1,18 +1,24 @@
 #!/bin/bash
 
 TITLE=tvility
-FRONT_IMG=${TITLE}/front
+
+# FRONT_IMG=${TITLE}/front
 BACK_IMG=${TITLE}/back
-FRONT_DOCKER=${TITLE}-frontend
+AI_IMG=${TITLE}/ai
+
+# FRONT_DOCKER=${TITLE}-frontend
 BACK_DOCKER=${TITLE}-backend
+AI_DOCKER=${TITLE}-ai
 
 pwd
 
-sudo docker rmi -f $FRONT_IMG || true
+# sudo docker rmi -f $FRONT_IMG || true
 sudo docker rmi -f $BACK_IMG || true
+sudo docker rmi -f $AI_IMG || true
 
-sudo docker rm -f $FRONT_DOCKER || true
+# sudo docker rm -f $FRONT_DOCKER || true
 sudo docker rm -f $BACK_DOCKER || true
+sudo docker rm -f $AI_DOCKER || true
 
 cd backend
 pwd
@@ -27,8 +33,11 @@ pwd
 yarn install
 yarn run build
 
-cd dist
-pwd
-
 # sudo docker build -t $FRONT_IMG .
 # sudo docker run --name $FRONT_DOCKER -p 80:80 -d $FRONT_IMG
+
+cd ../ai
+pwd
+
+sudo docker build -t $AI_IMG .
+sudo docker run --name $AI_DOCKER -p 8888:8888 -v tvility:/tvility -d $AI_IMG
