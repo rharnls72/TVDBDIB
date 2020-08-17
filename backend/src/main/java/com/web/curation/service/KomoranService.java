@@ -40,8 +40,10 @@ public class KomoranService {
             String[] tagList = mapper.readValue(jsonTags, String[].class);
 
             // 현재 프론트에 있는 태그들을 Set 에 먼저 넣기
-            for(String str : tagList) {
-                response.add(str);
+            if(tagList != null) {
+                for(String str : tagList) {
+                    response.add(str);
+                }
             }
         } catch (Exception e) {
             System.out.println("JSON to String[] error: " + e.getMessage());
@@ -49,6 +51,12 @@ public class KomoranService {
 
         // 태그를 추출할 문자열(내용) 가져오기
         String str = req.getContent();
+        if(str == null) {
+            str = "";
+        }
+        if(str.length() == 0) {
+            str = "tvdbdib";
+        }
 
         // 문자열(내용) 형태소 분석
         KomoranResult analyzeResultList = komoran.analyze(str);
