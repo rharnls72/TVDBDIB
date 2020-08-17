@@ -40,6 +40,7 @@ export default {
       content: null,
       tags: [],
       tag: null,
+      title: null,
     }
   },
   props: {
@@ -65,6 +66,7 @@ export default {
     makeData() {
 
       var jsonObj = {
+        title: this.title,
         content: this.content,
       }
      

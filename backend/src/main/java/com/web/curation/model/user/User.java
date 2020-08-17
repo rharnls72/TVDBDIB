@@ -99,6 +99,7 @@ public class User {
         if(profile_pic != null && profile_pic.charAt(0) == '/') {
             try {
                 String pre_path = "/tvility";
+                // String pre_path = "./LocalTestProfilePic";
                 String full_path = pre_path + profile_pic;
                 File file = new File(full_path);
 

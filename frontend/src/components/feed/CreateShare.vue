@@ -2,21 +2,20 @@
   <div class="feed-create">
     <!-- 헤더 -->
 
-    <CreateHeader class="feed-header" @submit="submitShare"/>
+    <CreateHeader @submit="submitShare"/>
 
       
     <!-- 공유글 작성 -->
     <div class="create-feed-form row justify-content-center">
-      <ShareForm :article="editArticle" @CreateArticle="makeSubmitData"/>
+      <ShareForm v-if="editArticle!==null" :article="editArticle" @CreateArticle="makeSubmitData"/>
+      <ShareForm v-else @CreateArticle="makeSubmitData"/>
     </div>
 
     <!-- 공유될 글 표기 -->
-    <div class="feed-item px-5">
-      <FeedArticleThumbnail v-if="article.ctype!==null && article.ctype === 1" :article="article"/>
-      <FeedCountdownThumbnail v-if="article.ctype!==null && article.ctype === 2" :article="article"/>
-      <FeedVoteThumbnail v-if="article.ctype!==null && article.ctype === 3" :article="article"/>
-      <EpisodeThumbnail v-if="!!article.eno" :curation="article"/>
-      <FeedProgramThumbnail v-else :program="article"/>
+    <div class="share-item mx-5">
+      <WrittenFeed v-if="!!article.ctype" :feed="article"/>
+      <FeedShareEpisodeThumbnail class="program-thumbnail" v-else-if="!!article.eno" :curation="article"/>
+      <FeedProgramThumbnail class="program-thumbnail" v-else :program="article"/>
     </div>
 
 
@@ -29,11 +28,9 @@ import Curation from '@/api/CurationApi.js'
 
 import CreateHeader from '@/components/feed/feedComponents/CreateHeader.vue'
 import ShareForm from '@/components/feed/feedComponents/ShareForm.vue'
-import FeedArticleThumbnail from '@/components/feed/feedThumbnail/FeedArticleThumbnail.vue'
-import FeedCountdownThumbnail from '@/components/feed/feedThumbnail/FeedCountdownThumbnail.vue'
-import FeedVoteThumbnail from '@/components/feed/feedThumbnail/FeedVoteThumbnail.vue'
-import EpisodeThumbnail from '@/components/curation/episode/EpisodeThumbnail.vue'
 import FeedProgramThumbnail from '@/components/feed/feedThumbnail/FeedProgramThumbnail.vue'
+import WrittenFeed from '@/components/account/mine/WrittenFeed.vue'
+import FeedShareEpisodeThumbnail from '@/components/feed/feedThumbnail/FeedShareEpisodeThumbnail.vue'
 
 import GetUserApi from "@/api/GetUserApi.js"
 
@@ -51,11 +48,9 @@ export default {
   components: {
     CreateHeader,
     ShareForm,
-    FeedArticleThumbnail,
-    FeedCountdownThumbnail,
-    FeedVoteThumbnail,
-    EpisodeThumbnail,
     FeedProgramThumbnail,
+    WrittenFeed,
+    FeedShareEpisodeThumbnail,
   },
   methods: {
     moveMain() {
@@ -138,7 +133,6 @@ export default {
       , err => console.log(err)
       )
     } else if (this.$route.params.type === "2") {
-      console.log("프로그램")
       Curation.programDetail(
         this.$route.params.no
         , res => {
@@ -161,17 +155,18 @@ export default {
         , err => console.log(err)
       )
     }
-
-    $('html').scrollTop(0)
+    
+    document.documentElement.scrollTop = 0
     
   }
 }
 </script>
 
 <style scoped>
-.feed-item {
-  border-bottom: none;
-  border-top: none;
+.share-item {
+  border: none;
+  border-radius: 2px;
+  background-color: white;
 }
 .create-feed-form {
   width: 100%;
@@ -184,11 +179,7 @@ export default {
 .feed-create {
   background-color: #f8e8f2;
 }
-.feed-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 20px;
+.program-thumbnail {
+  padding: 5px;
 }
 </style>

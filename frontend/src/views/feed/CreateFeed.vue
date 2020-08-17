@@ -88,7 +88,7 @@ export default {
       this.fno = null
       this.article = null
     }
-    $('html').scrollTop(0)
+    document.documentElement.scrollTop = 0
   },
 }
 </script>

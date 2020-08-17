@@ -1,26 +1,26 @@
 <template>
-  <div class="user" id="login">
-    <LoginHeader />
-    <div class="wrapC mygoogle">
-      <!-- 이 자리에 로딩 화면 띄운다면! -->
-      <h1 class="text-center">
-        Google Login........
-      </h1>
-      <p class="text-center">
-        progress: {{msg}}
-      </p>
-      <p v-if="goBack">
-        Error: {{errorMessage}}
-      </p>
+  <div>
+    <div v-if="goBack">
+      <div class="user" id="login">
+        <LoginHeader />
+        <div class="wrapC mygoogle">
+          <h1 class="text-center">
+            Google Login
+          </h1>
+          <p>
+            Error: {{errorMessage}}
+          </p>
 
-      <!-- 로그인 실패시 로그인 페이지로 돌아가는 버튼 활성화 -->
-      <button
-        class="btn-bottom"
-        v-if="goBack"
-        @click="goLoginPage">
-        로그인 페이지로 돌아가기
-      </button>
+          <!-- Social Login 실패시 로그인 페이지로 돌아가는 버튼 활성화 -->
+          <button
+            class="btn-bottom"
+            @click="goLoginPage">
+            로그인 페이지로 돌아가기
+          </button>
+        </div>
+      </div>
     </div>
+    <LoadingItem v-else />
   </div>
 </template>
 
@@ -29,6 +29,7 @@ import "../../components/css/user.scss";
 import axios from 'axios';
 import UserApi from '@/api/UserApi.js';
 import LoginHeader from '@/components/user/custom/LoginHeader.vue'
+import LoadingItem from '@/components/common/custom/LoadingItem.vue'
 
 export default {
   methods: {
@@ -169,6 +170,7 @@ export default {
   },
   components: {
     LoginHeader,
+    LoadingItem
   }
 };
 </script>
