@@ -1,13 +1,4 @@
-# FROM openjdk:14-jdk-alpine
-
-FROM ubuntu:latest
-
-RUN apt-get update && apt-get install -y openjdk-14-jdk openjdk-14-jre python3.8
-
-RUN pip install pip --upgrade
-RUN pip install setuptools --upgrade
-RUN pip install tensorflow
-RUN pip install pandas
+FROM openjdk:14-jdk-alpine
 
 EXPOSE 8999
 
