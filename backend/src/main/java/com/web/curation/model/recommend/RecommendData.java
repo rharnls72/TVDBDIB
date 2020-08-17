@@ -10,8 +10,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecommendData {
+    private int uno;
     private int pno;
     private LocalDateTime create_date;
+
+    public int getUno() {
+        return this.uno;
+    }
+
+    public void setUno(int uno) {
+        this.uno = uno;
+    }
 
     public int getPno() {
         return this.pno;
