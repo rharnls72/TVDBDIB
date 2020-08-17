@@ -1,9 +1,7 @@
 <template>
-  <div id="app" class="columns">
+  <div>
     <ChooseFollowingHeader :choosed="choosed"/>
-        <h2>메시지</h2>
-        
-        <b-nav justified class="myheader">
+    <div class="mymessage">
       <b-input-group class="align-items-center m-2 mysearchbar">
         <div class="input-group-prepend">
           <div @click="searchIcon" class="input-group-text py-0" style="border: 0px; background-color: #eee;">
@@ -23,12 +21,12 @@
           style="height: auto; width: 80%; border: 0px; background-color: #eee;"
         />
       </b-input-group>
-    </b-nav>
-      <h1>여백</h1>
-      <ChoosedItem :choosed="choosed"/>
-      <div class="wrapB">
-        <ChooseFollowingItem v-if='loadComplete' :followings="followings" :choosed="choosed"/>
-      </div>
+    </div>
+    <h1>여백</h1>
+    <ChoosedItem :choosed="choosed"/>
+    <div class="wrapB">
+      <ChooseFollowingItem v-if='loadComplete' :followings="followings" :choosed="choosed"/>
+    </div>
     <Footer />
   </div>
 </template>
@@ -47,7 +45,7 @@ import header from "@/api/header.js"
 import http from '@/api/http-common.js';
 
 export default {
-  name: 'MessageList',
+  name: 'ChooseFollowing',
    components: {
     ChooseFollowingItem,
     Footer,
@@ -65,7 +63,7 @@ export default {
       users: [],
       word: "",
       selectedUser: null
-  }
+    }
   },
 
   created(){
@@ -129,8 +127,12 @@ export default {
 
 };
 </script>
-<style>
-.mysearchbar {
+
+<style scoped>
+  .mymessage {
+    padding-top: 50px;
+  }
+  .mysearchbar {
     border: 1px solid lightgray;
     border-radius: 0.25rem;
   }

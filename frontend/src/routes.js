@@ -39,8 +39,9 @@ import Chatroom from './views/message/Chatroom.vue'
 import EmptyChatroom from './views/message/EmptyChatroom.vue'
 import ChooseFollowing from './views/message/ChooseFollowing.vue'
 
-// import MessageList from './views/message/MessageList.vue'
+import Loading from './views/Loading.vue'
 
+// import MessageList from './views/message/MessageList.vue'
 
 // import Components from './views/Components.vue'
 
@@ -216,7 +217,11 @@ export default [
         name: 'ChooseFollowing',
         component: ChooseFollowing
     },
-    
+    {
+        path: '/loading',
+        name: 'Loading',
+        component: Loading
+    },
     // {
     //     path : '/components',
     //     name : 'Components',
