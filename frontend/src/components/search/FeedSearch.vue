@@ -50,7 +50,9 @@ export default {
       isEndPoint: false // 끝까지 도달했으면 더이상 무한스크롤 돌아가는거 안 보이게
     }
   },
-  
+  // props:{
+  //   word: String,
+  // },
   watch: {
     word(newWord) {
         this.getTagList(newWord);

@@ -1,13 +1,10 @@
 <template>
-  <div id="app" class="columns">
+  <div>
     <ChatroomHeader :room="room"/>
         <h1>채팅룸</h1>
-      <div class="wrapB">
-        <MessageItem v-if='loadComplete' :messages="messages"/>
-        
-      </div>
+      <MessageItem v-if='loadComplete' :messages="messages"/>
       <div class="feed-item messageInputArea">
-          <input class="messageInput" type="text" id="messageInput" v-model="content">
+          <input class="messageInput" type="text" id="messageInput" v-model="content" autocomplete="off">
           <button class="sendIcon" @click.stop.prevent="sendMessage()"><b-icon-arrow-right-circle class="text-dark">
             </b-icon-arrow-right-circle></button>
       </div>
@@ -23,7 +20,7 @@ import MessageApi from "@/api/MessageApi";
 import db from '@/api/firebaseInit';
 
 export default {
-  name: 'MessageList',
+  name: 'Chatroom',
    components: {
     MessageItem,
     ChatroomHeader,
@@ -97,11 +94,11 @@ export default {
   }
 };
 </script>
-<style>
+<style scope>
 .messageInputArea{
-    margin-bottom: 5px;
+    margin-bottom: 0;
     padding: 0;
-    background-color: rgba(2, 23, 71, 0.05);
+    background-color: #eee;
     border-radius: 12px;
     position: fixed;
     bottom: 0;
@@ -117,19 +114,21 @@ export default {
   .messageInput{
     width: 100%;
     height: 40px;
-    border: 0px;
-    color: #8B95A1;
+    border: 0;
+    color: rgb(112, 112, 112);
     font-size: 15px;
-    background-color: rgba(2, 23, 71, 0);
     font-weight: medium;
     vertical-align: middle;
     position: fixed;
     left: -40px;
-    bottom: 5px;
     z-index: 1;
     padding-left: 60px;
     padding-right: 0;
   }
-  .messageInput:focus {border:none;}
-  .messageInput:hover { border:none;}
+  .messageInput:focus {
+    border:none;
+  }
+  .messageInput:hover {
+    border:none;
+  }
 </style>
