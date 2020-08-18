@@ -7,7 +7,7 @@ app = Flask(__name__)
 def getRecommends():
     uno = request.args["uno"]
     print('Get uno : ' + uno)
-    return {'data': ml.model_load(int(uno))}
+    return {'data': ml.model_load(int(str(uno)))}
 
 if __name__ == '__main__':
     app.run(port=8888)

@@ -6,6 +6,7 @@ import sys
 def model_load(user_id):
 
     ratings_file = "/tvility/testData.csv"
+    # ratings_file = "testData.csv"
     df = pd.read_csv(ratings_file)
 
     user_ids = df["userId"].unique().tolist()
