@@ -87,7 +87,8 @@ public class RecommendController {
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-            
+
+            // ㅠㅠ으아아 파이썬에서 uno 는 제대로 받는다
             System.out.println();
             System.out.println("Received Data From Python: " + sb.toString());
             System.out.println();
