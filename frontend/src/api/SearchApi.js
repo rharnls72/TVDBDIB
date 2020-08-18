@@ -130,7 +130,7 @@ const getHistoryList = (data,callback,errorCallback) => {
         });
 }
 
-const getTagList = (data,callback,errorCallback) => {
+const getTagList = (callback,errorCallback) => {
     // 전체 태그 리스트 조회 (피드 검색 시 자동완성 용도).
     http.get('/search/taglist', header())
     .then(res => {
@@ -191,7 +191,7 @@ const SearchApi = {
     , getAllUser:(data,callback, errorCallback)=>getAllUser(data, callback, errorCallback)
     , addHistory:(data,callback, errorCallback)=>addHistory(data, callback, errorCallback)
     , getHistoryList:(data,callback, errorCallback)=>getHistoryList(data, callback, errorCallback)
-    , getTagList: (data,callback, errorCallback)=>getTagList(data, callback, errorCallback)
+    , getTagList: (callback, errorCallback)=>getTagList(callback, errorCallback)
     , searchByTag: (data,callback, errorCallback)=>searchByTag(data, callback, errorCallback)
 }
 
