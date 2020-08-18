@@ -1,32 +1,19 @@
 <template>
   <div>
     <ChooseFollowingHeader :choosed="choosed"/>
-    <div class="mymessage">
-      <b-input-group class="align-items-center m-2 mysearchbar">
-        <div class="input-group-prepend">
-          <div @click="searchIcon" class="input-group-text py-0" style="border: 0px; background-color: #eee;">
-            <b-icon-search></b-icon-search>
+        <div class="searchArea">
+          <div @click="searchIcon" class="searchIcon">
+                <b-icon-search style="width: 20px; height: 20px;"></b-icon-search>
+          </div>
+          <input class="searchInput" type="text" id="searchInput" placeholder="친구 검색" 
+          v-on:input='word = $event.target.value' v-on:keyup='searchIcon()' autocomplete="off" 
+          @focus="magic_flag = true" @blur="magic_flag = false" ref="searchInput">
+          <div class="vbt-autcomplete-list" v-if="(word!='' && magic_flag) || userSelect" @mousedown="userSelect=true">
+            <UserSearchResult2 :users_result="part_users_result" :choosed="choosed" v-on:clear="clear()"/>
           </div>
         </div>
-        <vue-bootstrap-typeahead
-          :data="users"
-          v-model="word"
-          size="sm"
-          textVariant="red"
-          :serializer="u => u.nick_name"
-          :minMatchingChars='1'
-          placeholder="type a username"
-          @hit="selectedUser = $event"
-          ref="searchInput"
-          style="height: auto; width: 80%; border: 0px; background-color: #eee;"
-        />
-      </b-input-group>
-    </div>
-    <h1>여백</h1>
-    <ChoosedItem :choosed="choosed"/>
-    <div class="wrapB">
+      <ChoosedItem :choosed="choosed"/>
       <ChooseFollowingItem v-if='loadComplete' :followings="followings" :choosed="choosed"/>
-    </div>
     <Footer />
   </div>
 </template>
@@ -40,18 +27,17 @@ import ChoosedItem from '@/components/message/ChoosedItem.vue';
 import GetUserApi from "@/api/GetUserApi";
 import MessageApi from "@/api/MessageApi";
 import SearchApi from '@/api/SearchApi.js';
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 import header from "@/api/header.js"
 import http from '@/api/http-common.js';
-
+import UserSearchResult2 from '@/components/message/UserSearchResult2.vue'
 export default {
   name: 'ChooseFollowing',
    components: {
     ChooseFollowingItem,
     Footer,
     ChooseFollowingHeader,
-    VueBootstrapTypeahead,
-    ChoosedItem
+    ChoosedItem,
+    UserSearchResult2
   },
 
   data() {
@@ -62,11 +48,15 @@ export default {
       users_result: [],
       users: [],
       word: "",
-      selectedUser: null
-    }
+      selectedUser: null,
+      magic_flag: false,
+      userSelect: false,
+      part_users_result: [],
+  }
   },
 
   created(){
+    this.selectedUser = false;
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });
@@ -85,30 +75,25 @@ export default {
       'NoData'
       , res => {
         this.users = res.data.data;
+        let user = this.users.find(user => user.uno == uno);
+        let idx = this.users.indexOf(user)
+        if (idx > -1) 
+          this.users.splice(idx, 1)
       }
       , err => {
         console.log(err);
       }
     );
   },
-  watch: {
-    selectedUser(user){
-      this.choosed.push(user);
-      this.word = "";
-    }
-  },
   methods: {
+    clear(){
+      this.$refs.searchInput.value = "";
+      this.word = '';
+      this.userSelect = false;
+    },
     searchIcon(){
-      SearchApi.getUserList(
-        this.word,
-        res => {
-          this.users_result = res.data.data;
-          setTimeout(()=>{}, 1000)
-          this.toNextPage();
-        },
-        err => {
-          console.log(err);
-        }
+      this.part_users_result = this.users.filter(
+          (user) => user.nick_name.toUpperCase().includes(this.word.toUpperCase())
       );
     },
     getUserList(newWord) {
@@ -127,13 +112,46 @@ export default {
 
 };
 </script>
-
-<style scoped>
-  .mymessage {
-    padding-top: 50px;
+<style>
+ .searchArea{
+    padding-top: 55px;
+    width: 100%;
+    background-color: #f8e8f2;
+    display: table;
+    margin-bottom: 15px;
   }
-  .mysearchbar {
-    border: 1px solid lightgray;
-    border-radius: 0.25rem;
+  .searchIcon{
+    width: 60px;
+    padding-left: 20px;
+    vertical-align: middle;
+    display: table-cell;
+    border: 0px; 
+    background-color: #f8e8f2;
+  }
+  .searchInput{
+    padding: 0;
+    border: 0px;
+    width: 80%;
+    color: #52565c;
+    font-size: 17px;
+    background-color: #f8e8f2;
+    font-weight: medium;
+    vertical-align: middle;
+    display: table-cell;
+  }
+  #searchInput:focus{
+    outline: none;
+    border: 0;
+  }
+  #searchInput:hover{
+    outline: none !important;
+    border: 0 !important;
+  }
+  .vbt-autcomplete-list{
+    width: 75%;
+    position: absolute;
+    max-height: 350px;
+    /* overflow-y: auto; */
+    z-index: 999;
   }
 </style>

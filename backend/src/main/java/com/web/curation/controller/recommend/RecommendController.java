@@ -231,7 +231,9 @@ public class RecommendController {
     // 각 좋아요, 댓글, 찜 데이터에 대해 점수 계산 메서드 호출하면서 프로그램 점수 갱신
     private HashMap<Integer, Float> add_score(HashMap<Integer, Float> map, List<RecommendData> list, float weight){
         for (RecommendData p: list){
-            if (map.containsKey(p.getPno())) // 이미 있으면 점수를 갱신
+            if (p.getPno() <= 0)
+                continue;
+            else if (map.containsKey(p.getPno())) // 이미 있으면 점수를 갱신
                 map.put(p.getPno(), map.get(p.getPno()) + cal_score(p.getCreate_date()) * weight);
             else // 없으면 새롭게 점수 삽입
                 map.put(p.getPno(), cal_score(p.getCreate_date()) * weight);
@@ -304,22 +306,29 @@ public class RecommendController {
         for (int id: score_table.keySet()){
             Program p = new Program();
 
-            ResponseEntity<String> re = 
-            restTemplate.getForEntity(BASE_URL + "tv/" + id + "?api_key=" + API_KEY + "&language=ko", String.class);
-            
-            JSONObject programJson = new JSONObject(re.getBody());
-            //int pid = programJson.optInt("id");
-            String name = programJson.optString("name");
-            String thumbnail = programJson.optString("poster_path");
-            float popularity = programJson.optFloat("popularity");
+            try{
+                ResponseEntity<String> re = 
+                restTemplate.getForEntity(BASE_URL + "tv/" + id + "?api_key=" + API_KEY + "&language=ko", String.class);
+                
+                JSONObject programJson = new JSONObject(re.getBody());
+                //int pid = programJson.optInt("id");
+                String name = programJson.optString("name");
+                String thumbnail = programJson.optString("poster_path");
+                float popularity = programJson.optFloat("popularity");
 
-            p.setPno(id);
-            p.setPname(name);
-            if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
-            
-            p.setRating(popularity);
-            ratings.add(popularity);
-            programs.add(p);
+                p.setPno(id);
+                p.setPname(name);
+                if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
+                
+                p.setRating(popularity);
+                ratings.add(popularity);
+                programs.add(p);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                System.out.println("API 호출 실패");
+            }
+
         }
 
         mean = getMean_float(ratings); 

@@ -6,9 +6,9 @@
       </button>
     </b-nav-item>
     <b-nav-item>
-      <!-- <p class="text-dark mb-0"><strong>{{room.mainUser.nick_name}}
+      <p class="text-dark mb-0"><strong>{{room.mainUser.nick_name}}
         <span v-if="room.users.length>2">님 외 {{room.users.length-2}}명</span></strong>
-      </p> -->
+      </p>
     </b-nav-item>
     <b-nav-item>
     </b-nav-item>
@@ -33,6 +33,7 @@ export default {
   .myheader {
     background-color: #D8BEFE;
     position: fixed;
+    top: 0;
     width: 100%;
     height: 50px;
     z-index: 1;

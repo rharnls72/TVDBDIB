@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import FeedApi from '@/api/FeedApi'
 
 export default {
   name: 'ShareForm',
@@ -45,6 +46,7 @@ export default {
   },
   props: {
     article: Object,
+    shareTag: String
   },
   methods: {
     inputTag(event) {
@@ -60,7 +62,66 @@ export default {
     },
     delTag(t) {
       this.tags = this.tags.filter(res=>res !== t)
-    },
+    }
+    
+    , checkInput(event) {
+      let keyCode = event.hasOwnProperty('which') ? event.which : event.keyCode;
+
+      // 스페이스바나 엔터가 눌리면 태그 추출하기
+      if(keyCode == 13 || keyCode == 32) {
+        FeedApi.getTags(
+          {
+            content: this.content
+            , tags: JSON.stringify(this.tags)
+          }
+          , res => {
+            console.log(res);
+
+            // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+            this.tags = JSON.parse(res.data.data);
+          }
+          , err => {
+            console.log('getTags Error: ' + err.msg);
+          }
+        )
+      }
+    }
+    , contentFocusOut() {
+      console.log('contentFocusOut() called!!!');
+      FeedApi.getTags(
+        {
+          content: this.content
+          , tags: JSON.stringify(this.tags)
+        }
+        , res => {
+          console.log(res);
+
+          // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+          this.tags = JSON.parse(res.data.data);
+        }
+        , err => {
+          console.log('getTags Error: ' + err.msg);
+        }
+      )
+    }
+    , titleFocusOut() {
+      console.log('titleFocusOut() called!!!');
+      FeedApi.getTags(
+        {
+          content: this.title
+          , tags: JSON.stringify(this.tags)
+        }
+        , res => {
+          console.log(res);
+
+          // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+          this.tags = JSON.parse(res.data.data);
+        }
+        , err => {
+          console.log('getTags Error: ' + err.msg);
+        }
+      )
+    }
   },
   computed: {
     makeData() {
@@ -83,10 +144,34 @@ export default {
     this.$emit('CreateArticle', this.makeData)
   },
   mounted() {
+    /*
     if (this.article !== null) {
       this.content = this.article.content.content
       this.tags = this.article.tag
     }
+    */
+
+    if(this.tags.length == 0 && this.shareTag && this.shareTag.length > 0) {
+      FeedApi.getTags(
+        {
+          content: this.shareTag
+          , tags: JSON.stringify(this.tags)
+        }
+        , res => {
+          console.log(res);
+
+          // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+          this.tags = JSON.parse(res.data.data);
+        }
+        , err => {
+          console.log('getTags Error: ' + err.msg);
+        }
+      )
+    }
+
+    document.getElementById("textarea").addEventListener("keypress", this.checkInput);
+    document.getElementById("textarea").addEventListener("focusout", this.contentFocusOut);
+    document.getElementById("article-title").addEventListener("focusout", this.titleFocusOut);
   }
 }
 </script>

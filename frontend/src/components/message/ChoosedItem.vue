@@ -24,10 +24,10 @@ export default {
 </script>
 <style>
 .label{
-  background-color: blueviolet;
+  background-color: #D8BEFE;
   padding: 10px;
   margin: 8px 5px;
-  border-radius: 25%;
+  border-radius: 10px;
 }
 </style>
 

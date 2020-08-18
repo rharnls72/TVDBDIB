@@ -1,5 +1,5 @@
 <template>
-  <div class="feed newsfeed myfeed">
+  <div class="feed newsfeed pt-0">
     <div class="wrapB">
       <div class="row p-0">
         <div class="box" style="background: #BDBDBD;">
@@ -82,10 +82,10 @@ export default {
       );
     },
     moveFollowerPage(){
-      this.$router.push('/profile/followers/' + this.$store.state.userInfo.uno);
+      this.$router.push('/profile/followers/' + this.info.uno);
     },
     moveFollowingPage(){
-      this.$router.push('/profile/followings/' + this.$store.state.userInfo.uno);
+      this.$router.push('/profile/followings/' + this.info.uno);
     }
   },
 }
