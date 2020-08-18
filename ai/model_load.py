@@ -17,7 +17,7 @@ def model_load(user_id):
 
     df = df.sample(frac=1, random_state=42)
 
-    model = tf.keras.models.load_model("test_model")
+    model = tf.keras.models.load_model("/tvility/test_model")
     movie_df = pd.read_csv(ratings_file)
 
     movies_watched_by_user = df[df.userId == user_id]

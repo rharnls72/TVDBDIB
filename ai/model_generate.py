@@ -8,7 +8,7 @@ from tensorflow.keras import layers
 ## First, load the data and apply preprocessing
 """
 
-ratings_file = "testData.csv"
+ratings_file = "/tvility/testData.csv"
 df = pd.read_csv(ratings_file)
 
 print(df)
@@ -117,4 +117,4 @@ history = model.fit(
     # callbacks=[tensorboard] # 텐서보드 로그 남기기... 근데 도움은 안됐음
 )
 
-model.save('test_model', save_format='tf') # 모델 저장하기. 디렉토리에 test_model이란 폴더로 생김
+model.save('/tvility/test_model', save_format='tf') # 모델 저장하기. 디렉토리에 test_model이란 폴더로 생김
