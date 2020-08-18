@@ -6,7 +6,7 @@
       <ProgramPageInformation @changeSeason="changeSeason" @checkFollowers="readFollower" :program="program" :followers="followers" :seasonNum="seasonNum"/>
       <ProgramTap @addReply="addReply" @delReply="res => delReply(res)" :episodes="episodes" :program="program"/>
     </div>
-    <infinite-loading v-if="episodeNum !== 0" @infinite="infiniteHandler"></infinite-loading>
+    <infinite-loading v-if="episodeNum > 0" @infinite="infiniteHandler"></infinite-loading>
     <Footer/>
   </div>
   <LoadingItem v-else/>
@@ -33,7 +33,7 @@ export default {
       episodes: [],
       followers: null,
       show: false,
-      pickEpisode: 10,
+      pickEpisode: 20,
       seasonNum: 1,
       episodeNum: null,
     }
@@ -65,20 +65,27 @@ export default {
         , err => console.log(err)
       )
     },
+    sortEpisode() {
+      this.episodes.sort(function(a, b) {
+        return b.episode - a.episode
+      })
+    },
     takeEpisode(cnt) {
       if (this.pickEpisode === cnt) {
+        this.sortEpisode()
         return
-      } else if (this.episodeNum - cnt <= 0) {
-        this.episodeNum = 0
+      } else if (this.episodeNum <= 0) {
+        this.sortEpisode()
         return
       }
       CurationApi.requestEpisodeDetail({
         pno: this.program.programDetail.id,
         season: this.seasonNum,
-        episode: this.episodeNum--
+        episode: this.episodeNum
       }
       ,res => {
         this.episodes.push(res.list)
+        this.episodeNum--
         this.takeEpisode(cnt+1)
       }
       ,err => console.log(err)
@@ -115,6 +122,7 @@ export default {
         res.data.data.episodeGroup = JSON.parse(res.data.data.episodeGroup);
         this.program = res.data.data
         this.episodeNum = res.data.data.programDetail.seasons[this.seasonNum].episode_count
+        console.log(this.program)
         this.takeEpisode(0)
         // this.episodes.sort((a, b) => a.episode - b.episode)
       }
