@@ -1,14 +1,17 @@
 <template>
   <div>
-    <MyPageHeader :info="info"/>
-    <div class="container mycontainer">
-      <MyPageInformation :info="info" :followcnt="followcnt"/>
-      <div v-for="feed in writtenFeeds" :key="feed.fno" class="col-12 m-0 p-0 row">
-        <WrittenFeed :feed="feed" class="col-12 row"/>
-        <hr class="row col-12">
+    <div v-if="show">
+      <MyPageHeader :info="info"/>
+      <div class="container mycontainer">
+        <MyPageInformation :info="info" :followcnt="followcnt"/>
+        <div v-for="feed in writtenFeeds" :key="feed.fno" class="col-12 m-0 p-0 row">
+          <WrittenFeed :feed="feed" class="col-12 row"/>
+          <hr class="row col-12">
+        </div>
       </div>
+      <Footer />
     </div>
-    <Footer />
+    <LoadingItem v-else />
   </div>
 </template>
 
@@ -17,6 +20,7 @@ import MyPageHeader from '@/components/account/mine/MyPageHeader.vue'
 import MyPageInformation from '@/components/account/mine/MyPageInformation.vue'
 import WrittenFeed from '@/components/account/mine/WrittenFeed.vue'
 import Footer from '@/components/common/custom/Footer.vue'
+import LoadingItem from '@/components/common/custom/LoadingItem.vue'
 
 import AccountApi from "@/api/AccountApi"
 import GetUserApi from "@/api/GetUserApi"
@@ -30,6 +34,8 @@ export default {
       followcnt: {},
       writtenFeeds: [],
       requestCount: 1,
+
+      show: false
     }
   },
   components: {
@@ -37,6 +43,7 @@ export default {
     MyPageInformation,
     WrittenFeed,
     Footer,
+    LoadingItem
   },
   methods: {
     takeFeed() {
@@ -91,6 +98,8 @@ export default {
             }
             this.requestCount++
             setTimeout(()=>{}, 1000)
+
+            this.show = true;
           }
           , err => {
             console.log(err)
