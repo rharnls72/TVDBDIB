@@ -1,7 +1,6 @@
 <template>
   <div>
     <ChooseFollowingHeader :choosed="choosed"/>
-        <h2>메시지</h2>
         <div class="searchArea">
           <div @click="searchIcon" class="searchIcon">
                 <b-icon-search style="width: 20px; height: 20px;"></b-icon-search>
