@@ -88,6 +88,10 @@ public class RecommendController {
                 sb.append(line);
             }
             
+            System.out.println();
+            System.out.println("Received Data From Python: " + sb.toString());
+            System.out.println();
+
             JSONObject responseJson = new JSONObject(sb.toString());
             JSONArray data = responseJson.getJSONArray("data");
 

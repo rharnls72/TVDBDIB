@@ -6,8 +6,7 @@ app = Flask(__name__)
 @app.route('/ai/recommend', methods=['GET'])
 def getRecommends():
     uno = request.args["uno"]
-    print('Get uno : ' + str(uno))
-    return {'data': "너무 힘들어요"}
+    return {'data': 'Get uno: ' + str(uno)}
 
 if __name__ == '__main__':
     app.run(port=8888)

@@ -11,4 +11,4 @@ RUN pip install pandas
 
 EXPOSE 8888
 
-CMD ["python", "server.py"]
+ENTRYPOINT ["python", "server.py"]
