@@ -1,7 +1,7 @@
 <template>
   <div class="feed-card">
-    <div v-if="curation.thumbnail != 'https://image.tmdb.org/t/p/w500'"><img class="mythumbnail" :src="curation.thumbnail" alt="thumbnail-image"></div>
-    <div v-else><img class="mythumbnail" :src="defaultImage" alt="default-image"></div>
+    <div v-if="curation.thumbnail !== null"><img class="mythumbnail" :src="curation.thumbnail" alt="thumbnail-image"></div>
+    <img v-else class="mythumbnail" :src="defaultImage" alt="default-image">
     <div class="contentsWrap">
       <div class="d-flex justify-content-between">
         <h4 class="title">[{{ curation.pname }}] {{ curation.episode }}화</h4>
@@ -13,8 +13,14 @@
 </template>
 
 <script>
+import defaultImage from "@/assets/images/custom/logo.png"
 export default {
   name: 'EpisodeThumbnail',
+  data() {
+    return {
+      defaultImage,
+    }
+  },
   props: {
     curation: Object,
   },
