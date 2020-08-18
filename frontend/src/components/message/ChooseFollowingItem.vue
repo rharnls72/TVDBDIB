@@ -1,22 +1,22 @@
 <template>
   <div class="feed-item">
-      <ul> <!-- 받아온 데이터로 반복 돌리자 -->
-            <!-- done == 'Y' 일때만 done 이라는 클래스를 지정 -->
-          <li v-for="(following) in followings" v-bind:key="following.uno" 
-          class="shadow" type="button">
+    <ul class="list-group">
+        <li v-for="(following) in followings" v-bind:key="following.uno" 
+          class="list-group-item d-flex align-items-center" type="button">
 
-        <div class="form-group row" style="width: 100%;">
-          <!-- 이미지 바인딩 어떻게...? 잘 안된다 -->
-            <img class="my-auto col-3 col-sm-3" src="@/assets/images/profile_default.png">
-            <span class="user-content my-auto col-6 col-sm-6">
-              {{following.nick_name}}
-            </span>
+        <div class="box">
+          <img v-if="following.profile_pic!=null" :src='following.profile_pic' class="profile" alt="profile">
+          <img v-else :src='defaultProfile' class="profile" alt="profile">
         </div>
-        <button @click.stop.prevent="chooseUser(following)" class="float-right">
-              <b-icon icon="plus-circle" ></b-icon>
+        {{following.nick_name}}
+        <div class="btnGroup">
+            <div class="inbtnGroup">
+                <button @click.stop.prevent="chooseUser(following)" >
+              <b-icon icon="plus-circle" scale="1.3"></b-icon>
               </button>
+            </div>
+          </div>
         </li>
-
       </ul>
   </div>
 </template>
@@ -35,8 +35,22 @@ export default {
   },
   methods:{
     chooseUser(following){
-      this.choosed.push(following);
-    }
+      if(this.choosed.find(element => element.uno ==following.uno) == undefined){
+         this.choosed.push(following);
+      }else{
+        this.makeToast("이미 추가되었습니다.", "primary");
+      }
+
+    },
+    makeToast(message, variant){
+        this.$bvToast.toast(message, {
+          title: '알림',
+          toaster: "b-toaster-bottom-right",
+          variant: variant,
+          autoHideDelay: 3000,
+          appendToast: false
+        })
+     }
   }
   }
 
@@ -44,70 +58,29 @@ export default {
 
 <style scoped>
 ul {
-  list-style-type: none;
-  padding-left: 0px;
-  margin-top: 0%;
-  text-align: left;
+    padding-top: 0px;
 }
-li {
-  display: flex;
-  min-height: 30px;
-  height: 70px;
-  line-height: 20px;
-  margin: 0.5rem 0;
-  padding: 0 0.5rem;
-  background: white;
-  border-radius: 3px;
+  .box {
+    width: 40px;
+    height: 40px; 
+    border-radius: 70%;
+    overflow: hidden;
+    margin-right: 15px;
 }
-.checkBtn {
-  line-height: 45px;
-  color: #62acde;
-  margin-right: 5px;
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
-.removeBtn {
-  color: blue;
-  padding: 0;
+.btnGroup{
+  display: table; 
+  height: 30px; 
+  width: 30px;
+  position: absolute;
+  right: 20px;
 }
-
-.list-item {
-  display: inline-block;
-  margin-right: 5px;
+.inbtnGroup{
+  display: table-cell; 
+  vertical-align: middle;
 }
-.list-move {
-  transition: transform 1s;
-}
-.list-enter-active,
-.list-leave-active {
-  transition: all 1s;
-}
-.list-enter,
-.list-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
-}
-.done{
-  background-color: lightgoldenrodyellow;
-}
-
-img{
-    margin-right: 0%;
-    vertical-align: middle;
-}
-.btn{
-  height: 5%;
-  width: 90%;
-}
-
-.user-content{
-  padding: 0;
-}
-
-p{
-  margin: 5%;
-}
-
-.hidden{
-    display: none;
-}
-
 </style>

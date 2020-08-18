@@ -192,6 +192,6 @@ export default {
 
 <style scoped>
   .myalert {
-    padding-top: 70px;
+    padding-top: 60px;
   }
 </style>

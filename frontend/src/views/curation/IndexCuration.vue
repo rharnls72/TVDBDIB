@@ -1,17 +1,22 @@
 <template>
-  <div class="feed newsfeed">
-    <IndexCurationHeader />
-    <div class="wrapB">
-      <div class="myfeed">
-        <EpisodeItem v-for="curation in partCurations" :key="curation.key" :curation="curation"/>
-        <infinite-loading v-if="!noCuration" @infinite="infiniteHandler"></infinite-loading>
-        <div v-else style="text-align: center; margin-top: 50px;"> 팔로우 중인 프로그램이 없습니다<br/>
-          좋아하는 프로그램을 찾으러 가볼까요?<br/>
-        <button type="button" class="shadow moveSearch" @click="moveSearch">찾으러 가자!</button>
+  <div>
+    <div v-if="show">
+      <div class="feed newsfeed">
+        <IndexCurationHeader />
+        <div class="wrapB">
+          <div class="myfeed">
+            <EpisodeItem v-for="curation in partCurations" :key="curation.key" :curation="curation"/>
+            <infinite-loading v-if="!noCuration" @infinite="infiniteHandler"></infinite-loading>
+            <div v-else style="text-align: center; margin-top: 50px;"> 팔로우 중인 프로그램이 없습니다<br/>
+              좋아하는 프로그램을 찾으러 가볼까요?<br/>
+            <button type="button" class="shadow moveSearch" @click="moveSearch">찾으러 가자!</button>
+            </div>
+          </div>
         </div>
+        <Footer />
       </div>
     </div>
-    <Footer />
+    <LoadingItem v-else />
   </div>
 </template>
 
@@ -23,6 +28,7 @@ import EpisodeItem from "../../components/curation/episode/EpisodeItem.vue";
 import InfiniteLoading from 'vue-infinite-loading';
 import Footer from '../../components/common/custom/Footer.vue';
 import IndexCurationHeader from '../../components/curation/IndexCurationHeader.vue'
+import LoadingItem from '@/components/common/custom/LoadingItem.vue'
 
 import GetUserApi from "@/api/GetUserApi"
 import CurationApi from "@/api/CurationApi"
@@ -38,6 +44,7 @@ export default {
       partCurations: [],
       loading_complete: false,
       noCuration: false,
+      show: false,
     }
   },
   props: ["keyword"],
@@ -46,6 +53,7 @@ export default {
     InfiniteLoading,
     Footer,
     IndexCurationHeader,
+    LoadingItem,
   },
   methods: {
     // 2. 5개씩 끊어서 보여주기
@@ -98,6 +106,7 @@ export default {
           this.noCuration = true;
           this.loading_complete = true;
         }
+        this.show = !this.show
       },
       error => {
         this.$router.push({name:'Errors', query: {message: error.msg}})

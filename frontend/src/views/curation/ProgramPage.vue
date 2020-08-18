@@ -1,5 +1,6 @@
 <template>
-  <div>
+<div>
+  <div v-if="show">
     <ProgramHeader :programTitle="program.programDetail.name"/>
     <div class="container mycontainer">
       <ProgramPageInformation @checkFollowers="readFollower" :program="program" :followers="followers"/>
@@ -7,6 +8,8 @@
     </div>
     <Footer/>
   </div>
+  <LoadingItem v-else/>
+</div>
 </template>
 
 <script>
@@ -14,6 +17,7 @@ import ProgramHeader from '@/components/curation/program/ProgramHeader.vue'
 import ProgramPageInformation from '@/components/curation/program/ProgramPageInformation.vue'
 import ProgramTap from "@/components/curation/program/ProgramTap.vue"
 import Footer from '@/components/common/custom/Footer.vue'
+import LoadingItem from '@/components/common/custom/LoadingItem.vue'
 
 import CurationApi from '@/api/CurationApi.js'
 import GetUserApi from '@/api/GetUserApi.js'
@@ -25,6 +29,7 @@ export default {
       program: null,
       episodes: [],
       followers: null,
+      show: false,
     }
   },
   components: {
@@ -32,6 +37,7 @@ export default {
     ProgramPageInformation,
     ProgramTap,
     Footer,
+    LoadingItem,
   },
   methods: {
     addReply() {
@@ -51,7 +57,10 @@ export default {
       )
     },
     takeEpisode(cnt) {
-      if (cnt === 0) {return}
+      if (cnt === 0) {
+        this.show = !this.show
+        return
+      }
       CurationApi.requestEpisodeDetail({
         pno: this.program.programDetail.id,
         season: this.program.programDetail.last_episode_to_air.season_number,

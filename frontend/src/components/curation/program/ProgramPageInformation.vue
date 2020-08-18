@@ -35,6 +35,10 @@
           <button v-if="!program.press_like" @click="touchLikeIcon" class="col-5 mybutton p-0 text-dark">좋아요</button>
           <button v-else @click="touchLikeIcon" class="col-5 mybutton p-0 text-dark">좋아요 취소</button>
         </p>
+        <p class="row p-0 justify-content-around">
+          <button @click="createShare" class="col-5 mybutton p-0 text-dark">공유하기</button>
+          <button @click="copyUrl" class="col-5 mybutton p-0 text-dark">URL 복사</button>
+        </p>
       <!-- </div> -->
     </div>
   </div>
@@ -50,6 +54,30 @@ export default {
     followers: Array,
   },
   methods: {
+    createShare() {
+      this.$router.push({path:`/createShare/2/${this.program.programDetail.id}`})
+    },
+    makeToast(message, variant){
+      this.$bvToast.toast(message, {
+        title: '알림',
+        toaster: "b-toaster-bottom-right",
+        variant: variant,
+        autoHideDelay: 3000,
+        appendToast: false
+      })
+    },
+    copyToClipboard(val) {
+      var t = document.createElement('textarea')
+      document.body.appendChild(t)
+      t.value = val
+      t.select()
+      document.execCommand('copy')
+      document.body.removeChild(t)
+    },
+    copyUrl() {
+      this.copyToClipboard(`http://i3a106.p.ssafy.io/program/${this.program.programDetail.id}`)
+      this.makeToast("경로 복사에 성공했습니다.", "primary");
+    },
     touchLikeIcon() {
       this.program.press_like = !this.program.press_like
       if (this.program.press_like) {

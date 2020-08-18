@@ -1,30 +1,18 @@
 <template>
-  <div>
-    <ChatListHeader />
-    <div class="mymessage">
-      <b-input-group class="align-items-center m-2 mysearchbar">
-        <div class="input-group-prepend">
-          <div @click="searchIcon" class="input-group-text py-0" style="border: 0px; background-color: #eee;">
-            <b-icon-search></b-icon-search>
-          </div>
-        </div>
-        <vue-bootstrap-typeahead
-          :data="users"
-          v-model="word"
-          size="sm"
-          textVariant="red"
-          :serializer="u => u.nick_name"
-          :minMatchingChars='1'
-          placeholder="type a username"
-          @hit="selectedUser = $event"
-          ref="searchInput"
-          style="height: auto; width: 80%; border: 0px; background-color: #eee;"
-        />
-      </b-input-group>
+  <div id="app" class="columns">
+    <ChatListHeader/>
+    <div class="searchArea">
+      <div @click="searchIcon" class="searchIcon">
+            <b-icon-search style="width: 20px; height: 20px;"></b-icon-search>
+      </div>
+      <input class="searchInput" type="text" id="searchInput" placeholder="친구 검색" 
+      v-on:input='word = $event.target.value' v-on:keyup='searchIcon()' autocomplete="off" 
+      @focus="magic_flag = true" @blur="magic_flag = false">
+      <div class="vbt-autcomplete-list" v-if="(word!='' && magic_flag) || userSelect" @mousedown="userSelect=true">
+        <UserSearchResult :users_result="part_users_result" />
+      </div>
     </div>
-    <div class="wrapB">
-      <ChatListItem v-if='loadComplete' :rooms="rooms"/>
-    </div>
+    <ChatListItem v-if='loadComplete' :rooms="rooms"/>
     <Footer />
   </div>
 </template>
@@ -38,15 +26,14 @@ import GetUserApi from "@/api/GetUserApi";
 import MessageApi from "@/api/MessageApi";
 import db from '@/api/firebaseInit';
 import SearchApi from '@/api/SearchApi.js';
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
-
+import UserSearchResult from '@/components/message/UserSearchResult.vue'
 export default {
   name: 'ChatList',
    components: {
     ChatListItem,
     Footer,
     ChatListHeader,
-    VueBootstrapTypeahead
+    UserSearchResult
   },
 
   data() {
@@ -58,81 +45,45 @@ export default {
       users: [],
       users_result: [],
       word: "",
-      selectedUser: null
-    }
+      selectedUser: null,
+      part_users_result: [],
+      magic_flag: false,
+      userSelect: false,
+  }
   },
 
   created(){
+    this.selectedUser = false;
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });
+    let uno = this.$store.state.userInfo.uno;
     SearchApi.getAllUser(
       'NoData'
       , res => {
         this.users = res.data.data;
+        let user = this.users.find(user => user.uno == uno);
+        let idx = this.users.indexOf(user)
+        if (idx > -1) 
+          this.users.splice(idx, 1)
       }
       , err => {
         console.log(err);
       }
     );
-    let uno = this.$store.state.userInfo.uno;
     db.collection("chat_room").where("users", "array-contains", uno).orderBy("time", "desc")
       .onSnapshot(this.getChatList);
   },
-  watch: {
-    selectedUser(user){
-      let users = [this.$store.state.userInfo.uno, user.uno].sort();
-      let room = {
-          users: users,
-          usersToString: JSON.stringify(users),
-          mainUser: user
-        }
-      MessageApi.getChatRoom(
-        {usersToString: room.usersToString},
-        res => {
-          if(res.room==null){
-            this.$router.push({name:'EmptyChatroom', params: {room: room}})
-          }else{
-            room = res.room;
-             MessageApi.requestUserInfo(
-              [user.uno],
-                res => {
-                  if(res.userInfo!=null){
-                    room.mainUser = res.userInfo[0];
-                    this.$router.push({path: '/message/chatroom/' + room.cno, query: {room: room}})
-                  }
-                },
-                error => {
-                  this.$router.push({name:'Errors', query: {message: error.msg}})
-                }
-            );
-          }
-        },
-        err => {
-          console.log(err);
-        }
-      );
-    }
-  },
   methods: {
     searchIcon(){
-      SearchApi.getUserList(
-        this.word,
-        res => {
-          this.users_result = res.data.data;
-          setTimeout(()=>{}, 1000)
-          this.toNextPage();
-        },
-        err => {
-          console.log(err);
-        }
+      this.part_users_result = this.users.filter(
+          (user) => user.nick_name.toUpperCase().includes(this.word.toUpperCase())
       );
     },
     getUserList(newWord) {
       SearchApi.getUserList(
         newWord,
         res => {
-          console.log(res.data.data);
           this.users = res.data.data;
         },
         err => {
@@ -184,13 +135,45 @@ export default {
 
 };
 </script>
-
-<style scoped>
-  .mymessage {
-    padding-top: 50px;
+<style>
+  .searchArea{
+    padding-top: 55px;
+    width: 100%;
+    background-color: #f8e8f2;
+    display: table;
   }
-  .mysearchbar {
-    border: 1px solid lightgray;
-    border-radius: 0.25rem;
+  .searchIcon{
+    width: 60px;
+    padding-left: 20px;
+    vertical-align: middle;
+    display: table-cell;
+    border: 0px; 
+    background-color: #f8e8f2;
+  }
+  .searchInput{
+    padding: 0;
+    border: 0px;
+    width: 80%;
+    color: #52565c;
+    font-size: 17px;
+    background-color: #f8e8f2;
+    font-weight: medium;
+    vertical-align: middle;
+    display: table-cell;
+  }
+  #searchInput:focus{
+    outline: none;
+    border: 0;
+  }
+  #searchInput:hover{
+    outline: none !important;
+    border: 0 !important;
+  }
+  .vbt-autcomplete-list{
+    width: 75%;
+    position: absolute;
+    max-height: 350px;
+    /* overflow-y: auto; */
+    z-index: 999;
   }
 </style>
