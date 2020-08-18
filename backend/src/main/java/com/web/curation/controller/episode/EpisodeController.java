@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -101,12 +102,16 @@ public class EpisodeController {
 
         // 팔로우중인 프로그램 리스트 조회
         List<Program> programList = followdao.getProgramFollowings(uno);
+        // 프로그램 ID + 시즌 정보 저장해둘 Map
+        HashMap<Integer, JSONArray> season_map = new HashMap<Integer, JSONArray>();
         for (Program program : programList) {
+            System.out.println(program.getPno());
             re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(program.getPno()) + "?api_key=" + API_KEY + "&language=ko", String.class);
             JSONObject programInfo = new JSONObject(re.getBody());
-            System.out.println(programInfo);
+            //System.out.println(programInfo);
             program.setPname(programInfo.optString("name"));
-            program.setSeason(programInfo.optInt("number_of_seasons"));
+            season_map.put(program.getPno(), programInfo.optJSONArray("seasons"));
+            //program.setSeason(programInfo.optInt("number_of_seasons"));
         }
 
         // // Step 1: 아직 팔로우 데이터가 없으므로 일단 임시로 프로그램 리스트도 TMDB에서 추천해주는거 들고오는 걸로
@@ -147,39 +152,50 @@ public class EpisodeController {
         // }
 
         List<EpisodeResponse> episodeList = new ArrayList<EpisodeResponse>();
+        LocalDate currentDate = LocalDate.now();
 
         // Step 3: 팔로우중인 프로그램 각각에 대하여 에피소드 목록 조회 (TMDB API)
         try {
             for (Program program: programList){
                 int pno = program.getPno();
-                int season = program.getSeason();
-    
-                // 프로그램 ID와 시즌 번호로 API 요청
-                re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY + "&language=ko", String.class);
-                JSONObject programInfo = new JSONObject(re.getBody());
-                JSONArray episodes = programInfo.optJSONArray("episodes");
-    
-                re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY, String.class);
-                JSONObject programInfo_eng = new JSONObject(re.getBody());
-                JSONArray episodes_eng = programInfo_eng.optJSONArray("episodes");
-    
-                program.setSeason_name(programInfo.optString("name"));
-    
-                // 결과 데이터 중 episodes Array의 각 요소에 접근하여 episode 정보 추출
-                int len = episodes.length();
-                if(len > episodes_eng.length()) {
-                    System.out.println("episodes 길이와 episodes_eng 길이가 달라요.  " + len + " :: " + episodes_eng.length());
-                    len = episodes_eng.length();
+                JSONArray seasons = season_map.get(pno);
+                int total_seasons = seasons.length();
+                for (int j=0; j<total_seasons; j++){
+                    int season_num = seasons.optJSONObject(j).optInt("season_number");
+                    //int season = program.getSeason();
+                    System.out.println(pno + " " + season_num);
+        
+                    // 프로그램 ID와 시즌 번호로 API 요청
+                    try{
+                        re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season_num + "?api_key=" + API_KEY + "&language=ko", String.class);
+                        JSONObject programInfo = new JSONObject(re.getBody());
+                        JSONArray episodes = programInfo.optJSONArray("episodes");
+            
+                        re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season_num + "?api_key=" + API_KEY, String.class);
+                        JSONObject programInfo_eng = new JSONObject(re.getBody());
+                        JSONArray episodes_eng = programInfo_eng.optJSONArray("episodes");
+                        program.setSeason_name(programInfo.optString("name"));
+            
+                        // 결과 데이터 중 episodes Array의 각 요소에 접근하여 episode 정보 추출
+                        int len = episodes.length();
+                        if(len > episodes_eng.length()) {
+                            System.out.println("episodes 길이와 episodes_eng 길이가 달라요.  " + len + " :: " + episodes_eng.length());
+                            len = episodes_eng.length();
+                        }
+                        for (int i=1; i<=len; i++){
+                            JSONObject detail = episodes.optJSONObject(i-1);
+                            String overview_eng = episodes_eng.optJSONObject(i-1).optString("overview");
+                            EpisodeResponse e = episodeSetter(program, i, detail, overview_eng); // 'detail' 을 파싱하여 Episode 객체 세팅해서 리턴해주는 메서드
+                            
+                            if (e.getBroadcast_date() != null && !e.getBroadcast_date().isAfter(currentDate))
+                                episodeList.add(e);
+                            //System.out.println(e.getBroadcast_date());
+                        }
+                    } catch (Exception e){
+                        System.out.println("season not found");
+                    }
                 }
-                for (int i=1; i<=len; i++){
-                    JSONObject detail = episodes.optJSONObject(i-1);
-                    String overview_eng = episodes_eng.optJSONObject(i-1).optString("overview");
-                    EpisodeResponse e = episodeSetter(program, i, detail, overview_eng); // 'detail' 을 파싱하여 Episode 객체 세팅해서 리턴해주는 메서드
-                    
-                    if (e.getBroadcast_date() != null)
-                        episodeList.add(e);
-                    //System.out.println(e.getBroadcast_date());
-                }
+
             }
         } catch (Exception e) {
             result.status = false;
@@ -206,6 +222,7 @@ public class EpisodeController {
         // 각 에피소드들에 대해 DB 에 존재하는지 확인, 존재하지 않으면 DB 에 추가
         // + 추가정보(좋아요 수, 댓글 수 등) 구하기
         for(EpisodeResponse episode : episodeList) {
+            System.out.println(episode.getEpisode());
             // DB 에 존재하는지 확인
             int n = episodeDao.checkDataExist(episode);
             
@@ -231,6 +248,7 @@ public class EpisodeController {
         //             return 0;
 		// 	}
         // });
+        System.out.println("complete?");
         
         // 에피소드 목록을 포함한 응답 객체 반환
         result.status = true;

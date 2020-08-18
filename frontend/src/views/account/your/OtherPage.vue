@@ -4,7 +4,11 @@
       <OtherPageHeader :info="info"/>
       <div class="container mycontainer">
         <OtherPageInformation :info="info" :followcnt="followcnt"/>
-        <WrittenFeed v-for="feed in writtenFeeds" :key="feed.fno" :feed="feed" class="col-12 row" />
+        
+        <div v-for="feed in writtenFeeds" :key="feed.fno" class="col-12 m-0 p-0 row">
+            <WrittenFeed :feed="feed" class="col-12 row"/>
+            <hr class="row col-12">
+        </div>
       </div>
       <Footer />
     </div>
