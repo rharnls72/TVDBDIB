@@ -99,12 +99,8 @@ export default {
 </script>
 
 <style scoped>
-  .last {
-    height: 100px;
-    padding: 100px;
-  }
   .myfeed {
     padding-top: 70px;
-    margin-bottom: 10px;
+    padding-bottom: 50px;
   }
 </style>

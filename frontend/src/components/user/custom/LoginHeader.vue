@@ -28,6 +28,7 @@ export default {
     /* background-color: #BFBEFE; */
     background-color: #D8BEFE;
     position: fixed;
+    top: 0;
     width: 100%;
     z-index: 1;
   }
