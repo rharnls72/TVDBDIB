@@ -1,12 +1,10 @@
 <template>
   <div class="feed-item">
-      <ul> <!-- 받아온 데이터로 반복 돌리자 -->
-            <!-- done == 'Y' 일때만 done 이라는 클래스를 지정 -->
+      <ul> 
           <li v-for="(alert) in alerts" v-bind:key="alert.ano" style="border-radius: 10px; position: relative;"
           class="shadow" v-bind:class="{done: !alert.read}" type="button" @click="checkAlert(alert)">
 
-        <div class="row listItem">
-          <!-- 이미지 바인딩 어떻게...? 잘 안된다 -->
+        <div class="listItem" style="display:flex">
           <div class="box">
             <img v-if="alert.user.profile_pic!=null" class="profile" :src="alert.user.profile_pic" @click.stop.prevent="movePage(alert)">
             <img v-else class="profile" :src="defaultProfile" @click.stop.prevent="movePage(alert)">
@@ -27,16 +25,6 @@
               </div>
             </div>
         </div>
-<!--
-            <div class="align-center">
-                <img src="@/assets/images/profile_default.png">
-                {{alert.content}}
-            </div>
-
-             <span class="removeBtn" type="button" @click="deleteTodo(alert.no)">
-                <i class="far fa-trash-alt"></i> 쓰레기통 그림 
-            </span>
--->
         </li>
 
       </ul>
@@ -46,7 +34,6 @@
 import defaultProfile from "@/assets/images/profile_default.png";
 import http from '@/api/http-common.js';
 import header from "@/api/header.js"
-//import commentcss from "@/components/css/feed/comment-list.scss";
 export default {
   name: 'AlertItem',
   data: () => {
@@ -56,9 +43,6 @@ export default {
   },
   props: {
     alerts: Array
-  },
-  mounted() {
-    // console.log(this.alerts)
   },
   methods:{
     movePage(alert){
@@ -171,7 +155,7 @@ export default {
     height: 50px; 
     border-radius: 70%;
     overflow: hidden;
-    margin-left: 15px;
+    margin-left: 7px;
     margin-right: 15px;
 }
 .profile {
