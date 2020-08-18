@@ -1,7 +1,10 @@
 <template>
   <div class="feed-item">
     <div class="top">
-      <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
+      <div class="box profile-image" style="background: #BDBDBD;">
+              <img v-if="article.profile_pic != null" class="profile" :src="article.profile_pic" alt="">
+              <img v-else class="profile" :src="defaultProfile" alt="">
+          </div>
       <div class="user-info">
         <div class="user-name">
           <button>{{article.nick_name}}</button>
@@ -68,12 +71,14 @@
     </div>
     <div class="wrap mt-2">
       <span class="font-weight-bold">{{article.nick_name}} </span>
-      <span>
-        <span v-for="tag in article.tag" :key="tag" class="tag">#{{tag}} </span><br>
-        <span v-if="!!article.reply_num" class="moreView">댓글 {{article.reply_num}}개</span>
-      </span>
+    </div>
+    <div class="wrap mt-2">
+      <span v-for="tag in article.tag" :key="tag" class="tag">#{{tag}} </span>
+      <span v-if="!!article.reply_num && !detail" class="moreView"><br>댓글 {{article.reply_num}}개<br></span>
+    </div>
+    <div v-if="!detail">
       <span class="font-weight-bold">{{article.reply_user_nick}} </span>{{article.reply_content}}<br>
-      <span v-if="!detail" class="moreView">댓글 남기기</span>
+      <span @click="moveDetail" class="moreView">댓글 남기기</span>
     </div>
   </div>
 </template>
@@ -182,6 +187,9 @@ export default {
     },
     updateFeed() {
       this.$router.push({ path:'/feed/create/3/'+this.article.fno })
+    },
+    moveDetail() {
+      this.$router.push({path: `/feed/detail/${this.article.fno}`})
     }
   },
   updated() {
@@ -209,5 +217,16 @@ export default {
   background-color: beige;
   width: 100v;
   height: 55v;
+}
+.box {
+    width: 40px;
+    height: 40px; 
+    border-radius: 70%;
+    overflow: hidden;
+}
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 </style>

@@ -1,11 +1,13 @@
 package com.web.curation.controller.program;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,7 @@ import com.web.curation.dao.program.ProgramDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.program.Program;
 import com.web.curation.model.program.ProgramRequest;
+import com.web.curation.model.user.User;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -35,6 +38,10 @@ public class ProgramController {
     @Autowired
     private ProgramDao dao;
 
+    static String BASE_URL = "https://api.themoviedb.org/3/";
+    static String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+    static String API_KEY = "1436d388221956af7b6cd27a6a7ec9d8";
+
     @GetMapping("/program/detail/{pno}")
     @ApiOperation(value = "프로그램 상세 정보 조회")
     public Object getProgramDetail(@PathVariable("pno") int pno, HttpServletRequest req) {
@@ -43,15 +50,22 @@ public class ProgramController {
 
         ////////////////////////////////////////////////////////////////////////////////////////
         // 로그인 한 유저 정보 (유저 번호만) 가져오기
-        // int uno = ((User) req.getAttribute("User")).getUno();
-        // 위에꺼는 로그인해서 테스트 할 때 쓰고 지금은 유저정보 고정값으로 박아두기
-        int uno = 1;
+        int uno = ((User) req.getAttribute("User")).getUno();
         ////////////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////////////////////
         // 프로그램 상세 정보 조회 (API 사용해서 가져오는 영역), Program.java 파일을 API 에 맞게 수정해서 사용
         // 프로그램 상세 조회 실패 시 어떤 처리를 할 지도...
         Program programInfo = new Program();
+
+        RestTemplate restTemplate = new RestTemplate();
+        // 일단 프로그램 (시즌 말고 그보다 더 상위인 프로그램) 정보가 필요하다. 프로그램 이름은 띄워줘야 하잖아...
+        ResponseEntity<String> re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "?api_key=" + API_KEY + "&language=ko", String.class);
+        programInfo.setProgramDetail(re.getBody());
+
+        // 추가 정보 더 받기
+        re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/episode_groups" + "?api_key=" + API_KEY + "&language=ko", String.class);
+        programInfo.setEpisodeGroup(re.getBody());
         ////////////////////////////////////////////////////////////////////////////////////////
 
         // DB 조회 전 ProgramRequest 설정하기

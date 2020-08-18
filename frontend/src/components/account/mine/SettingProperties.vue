@@ -31,6 +31,7 @@ export default {
     logout(){
       this.$store.commit('setAutoLogin', false);
       localStorage.removeItem('tvility');
+      sessionStorage.removeItem('jwt-token');
       this.$router.push({name:'Login'})
     }
   },

@@ -5,23 +5,22 @@
       <!-- 에피소드에는 포스터가 없다,, -->
       <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
       <div class="user-info mb-2">
-        <div class="user-name">
+        <div class="user-name" @click="goToProgramDetail">
           <button>[{{ curation.pname }}]</button>
         </div>
         <p class="date">{{ curation.broadcast_date }} 방송</p>
       </div>
     </div>
-    <div class="feed-card">
+    <!-- <div class="feed-card">
       <div v-if="curation.thumbnail != 'https://image.tmdb.org/t/p/w500'"><img class="mythumbnail" :src="curation.thumbnail" alt="thumbnail-image"></div>
       <div v-else><img class="mythumbnail" :src="defaultImage" alt="default-image"></div>
       <div class="contentsWrap">
         <div class="d-flex justify-content-between">
           <h4 class="title">[{{ curation.pname }}] {{ curation.episode }}화</h4>
-          <!-- 에피소드에는 장르가 없다,, -->
-          <!-- <p class="date">{{ curation.genre }}</p> -->
         </div>
       </div>
-    </div>
+    </div> -->
+    <EpisodeThumbnail :curation="curation"/>
     <!---->
     <div class="btn-group wrap justify-content-between">
       <div>
@@ -52,15 +51,15 @@
       </div>
       <div class="mr-1">
         <!-- 우리가 생각한 공유 (해당 게시물에 대한 글 바로 작성) -->
-        <!-- <div class="mr-2">
+        <div class="mr-2">
           <button class="h5">
-            <b-icon-pencil></b-icon-pencil>
+            <b-icon-pencil @click="createShare"></b-icon-pencil>
           </button>
-        </div> -->
+        </div>
         <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
         <div>
           <button class="h5">
-            <b-icon-reply></b-icon-reply>
+            <b-icon-reply @click="copyUrl"></b-icon-reply>
           </button>
         </div>
       </div>
@@ -85,14 +84,8 @@
       <p><span style="text-decoration: bold;">{{curation.reply_user_nick}} </span> <span>{{curation.reply_content}}</span></p>
       <p><span v-if="!!curation.reply_num" class="more">댓글 {{curation.reply_num}} 개</span></p>
       <!-- 추후에 댓글 연결!~ -->
-      <p><span v-if="!detail" class="more">댓글 남기기</span></p>
+      <p><span v-if="!detail" class="more" @click="moveDetail">댓글 남기기</span></p>
     </div>
-    <!-- <div class="content">
-      <p>댓글이야 댓글 댓글!~</p>
-      <p class="more">댓글 1개</p>
-    </div> -->
-    <!---->
-    <!---->
   </div>
 </template>
 
@@ -100,6 +93,7 @@
 import defaultImage from "../../../assets/images/img-placeholder.png";
 import defaultProfile from "../../../assets/images/profile_default.png";
 import CurationApi from '@/api/CurationApi.js'
+import EpisodeThumbnail from '@/components/curation/episode/EpisodeThumbnail.vue'
 
 export default {
   name: 'EpisodeItem',
@@ -115,8 +109,36 @@ export default {
     detail: Boolean,
   },
   components: {
+    EpisodeThumbnail,
   },
   methods: {
+    makeToast(message, variant){
+      this.$bvToast.toast(message, {
+        title: '알림',
+        toaster: "b-toaster-bottom-right",
+        variant: variant,
+        autoHideDelay: 3000,
+        appendToast: false
+      })
+    },
+    copyToClipboard(val) {
+      var t = document.createElement('textarea')
+      document.body.appendChild(t)
+      t.value = val
+      t.select()
+      document.execCommand('copy')
+      document.body.removeChild(t)
+    },
+    copyUrl() {
+      this.copyToClipboard(`http://i3a106.p.ssafy.io/episode/detail/${this.curation.pno}/${this.curation.season}/${this.curation.episode}`)
+      this.makeToast("경로 복사에 성공했습니다.", "primary");
+    },
+    goToProgramDetail() {
+      this.$router.push({path:`/program/${this.curation.pno}`})
+    },
+    createShare() {
+      this.$router.push({path: `/createShare/1/${this.curation.episode}/${this.curation.pno}/${this.curation.season}`})
+    },
     readMore() {
       this.isStretch = !this.isStretch
     },
@@ -166,7 +188,10 @@ export default {
       }
       // console.log(this.scrapIcon)
     },
-    addReplyCount() {this.curation.reply_num++}
+    addReplyCount() {this.curation.reply_num++},
+    moveDetail() {
+      this.$router.push({path:`/episode/detail/${this.curation.pno}/${this.curation.season}/${this.curation.episode}`})
+    }
   },
   mounted() {
     this.likeIcon = this.curation.press_like;
@@ -181,9 +206,5 @@ export default {
 <style scoped>
   .more {
     color: lightgray;
-  }
-  .mythumbnail {
-    width: 100%;
-    height: auto;
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="feed newsfeed">
-    <IndexCurationHeader />
+    <EpisodeHeader :episode="article"/>
     <div class="wrapB">
       <div class="myfeed">
         <EpisodeItem :curation="article" :detail="true"/>
@@ -15,7 +15,7 @@
 import EpisodeItem from "@/components/curation/episode/EpisodeItem.vue"
 import ReplyItem from "@/components/ReplyItem.vue"
 import Footer from '@/components/common/custom/Footer.vue';
-import IndexCurationHeader from '@/components/curation/IndexCurationHeader.vue'
+import EpisodeHeader from '@/components/curation/episode/EpisodeHeader.vue'
 
 import CurationApi from "@/api/CurationApi.js"
 import GetUserApi from "@/api/GetUserApi.js"
@@ -25,7 +25,7 @@ export default {
   components: {
     EpisodeItem,
     ReplyItem,
-    IndexCurationHeader,
+    EpisodeHeader,
     Footer
   },
   data() {
@@ -65,13 +65,13 @@ export default {
 }
 </script>
 
-<style>
-.feed-item {
-  border-bottom: none;
-  padding-bottom: 0;
-  margin-bottom: 0;
-}
-.newsfeed {
-  margin-bottom: 100px;
-}
+<style scoped>
+  .feed-item {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  .newsfeed {
+    margin-bottom: 100px;
+  }
 </style>

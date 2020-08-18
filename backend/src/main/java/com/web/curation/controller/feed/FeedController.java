@@ -8,7 +8,9 @@ import com.web.curation.dao.feed.FeedDao;
 import com.web.curation.model.BasicResponse;
 import com.web.curation.model.feed.Feed;
 import com.web.curation.model.feed.FeedRequest;
+import com.web.curation.model.feed.TagRequest;
 import com.web.curation.model.user.User;
+import com.web.curation.service.KomoranService;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -41,6 +43,9 @@ public class FeedController {
     
     @Autowired
     FeedDao dao;
+
+    @Autowired
+    KomoranService KomoranService;
 
     // Create
     @PostMapping("/feed/create")
@@ -95,6 +100,27 @@ public class FeedController {
         result.status = true;
         result.msg = "success";
         result.data = list;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/feed/detail/{fno}")
+    @ApiOperation(value = "피드 상세 조회")
+    public Object getFeedDetail(@PathVariable("fno") int fno, HttpServletRequest request) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        // 유저 정보 가져와서 그 번호를 feedRequest 에 넣기
+        FeedRequest feedRequest = new FeedRequest();
+        feedRequest.setUno(((User)request.getAttribute("User")).getUno());
+        feedRequest.setNum(fno);
+
+        // 피드 조회
+        Feed feed = dao.getFeedDetail(feedRequest);
+
+        // 조회된 피드 목록 반환
+        result.status = true;
+        result.msg = "success";
+        result.data = feed;
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -157,6 +183,16 @@ public class FeedController {
         // 여기까지 문제 없이 내려왔으면 성공적으로 삭제가 완료된 것
         result.status = true;
         result.msg = "success";
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/feed/generate/tags")
+    @ApiOperation(value = "피드 내용을 토대로 태그 생성")
+    public Object generateTags(@RequestBody TagRequest req) {
+        final BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.msg = "success";
+        result.data = KomoranService.getTags(req);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

@@ -2,11 +2,14 @@
   <div class="feed newsfeed">
     <IndexCurationHeader />
     <div class="wrapB">
-      <div class="myfeed" v-for="d in feeds" :key="d.fno">
-        <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
+      <div class="myfeed" v-for="(feed, idx) in feeds" :key="idx">
+        <!-- <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
         <feedCountdownItem v-if="d.ctype===2" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
-        <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
+        <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/> -->
+        <FeedItem :article="feed" :fno="feed.fno" @deleteItem="removeFeed"/>
       </div>
+      <hr class="row col-12">
+      <infinite-loading v-if="!feedNull" @infinite="infiniteHandler"></infinite-loading>
     </div>
     <Footer/>
   </div>
@@ -18,9 +21,11 @@ import { mapState } from "vuex";
 import "../../components/css/feed/feed-item.scss";
 import "../../components/css/feed/newsfeed.scss";
 
-import feedArticleItem from "@/components/feed/feedArticleItem.vue";
-import feedCountdownItem from "@/components/feed/feedCountdownItem.vue";
-import feedVoteItem from "@/components/feed/feedVoteItem.vue";
+// import feedArticleItem from "@/components/feed/feedArticleItem.vue";
+// import feedCountdownItem from "@/components/feed/feedCountdownItem.vue";
+// import feedVoteItem from "@/components/feed/feedVoteItem.vue";
+
+import FeedItem from "@/components/feed/FeedItem.vue"
 
 import FeedApi from "@/api/FeedApi.js";
 
@@ -28,18 +33,22 @@ import IndexCurationHeader from "@/components/curation/IndexCurationHeader.vue";
 import Footer from '@/components/common/custom/Footer.vue';
 import GetUserApi from "@/api/GetUserApi"
 
+import InfiniteLoading from 'vue-infinite-loading'
+
 export default {
   data() {
     return {
       feeds: [],
       requestCount: 1,
+      feedNull: false,
     }
   },
 
   components: { 
-    feedArticleItem, 
-    feedCountdownItem, 
-    feedVoteItem,
+    // feedArticleItem, 
+    // feedCountdownItem, 
+    // feedVoteItem,
+    FeedItem,
     IndexCurationHeader,
     Footer,
   },
@@ -53,30 +62,32 @@ export default {
       FeedApi.getFeedList(
         data
         , res => {
-          console.log(111, res);
-
-          this.feeds = res.list
-          for (let i=0; i<res.list.length; i++) {
-            this.feeds[i].content = JSON.parse(this.feeds[i].content)
-            this.feeds[i].tag = JSON.parse(this.feeds[i].tag)
+          if (res.list.length > 0) {
+            for (let i=0; i<res.list.length; i++) {
+              res.list[i].content = JSON.parse(res.list[i].content)
+              res.list[i].tag = JSON.parse(res.list[i].tag)
+            }
+            this.feeds = this.feeds.concat(res.list)
+            this.requestCount++
+            setTimeout(()=>{}, 300)
+          } else {
+            this.feedNull = !this.feedNull
           }
-          this.requestCount++
-          console.log(this.feeds)
-          setTimeout(()=>{}, 1000)
         }
         , err => {
           console.log(err)
         }
       )
     },
+    infiniteHandler($state) {
+      setTimeout(() => {
+        if (!this.feedNull){
+          this.takeFeed()
+        }
+        $state.loaded();
+      }, 300);
+    },
     removeFeed(fno) {this.feeds = this.feeds.filter(res => res.fno!==fno)}
-  },
-
-  mounted() {
-    this.takeFeed()
-    GetUserApi.getUser(res => {
-      this.$store.commit('addUserInfo', res.user);
-    });
   },
   created() {
     GetUserApi.getUser(res => {
@@ -88,7 +99,12 @@ export default {
 </script>
 
 <style scoped>
+  .last {
+    height: 100px;
+    padding: 100px;
+  }
   .myfeed {
     padding-top: 70px;
+    margin-bottom: 10px;
   }
 </style>

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,17 +58,16 @@ public class AccountController {
     @Autowired
     private MailConfig mailConfig;
 
-    @GetMapping("/account/login")
+    @PostMapping("/account/login")
     @ApiOperation(value = "로그인")
-    public Object login(@RequestParam(required = true) final String email,
-            @RequestParam(required = true) final String password) {
+    public Object login(@RequestBody Map<String, Object> req) {
 
         // 이메일과 비밀번호로 유저 찾아보고 있으면 User 객체 반환
         // 없으면 Null 이 반환
         User user = new User();
-        user.setEmail(email);
+        user.setEmail((String) req.get("email"));
         try {
-            user.setPassword(SHA256(password));
+            user.setPassword(SHA256((String) req.get("password")));
         } catch (Exception e) {
             final BasicResponse result = new BasicResponse();
             result.status = false;
@@ -93,11 +92,11 @@ public class AccountController {
                 user.setProfile_pic(null);
 
                 HashMap<String, Object> responseData = new HashMap<>();
-                responseData.put("user", user);
                 responseData.put("token", jwtService.makeToken(user));
-
+                
                 // 토큰 만들었으면 profile_pic 리스토어
                 user.setProfile_pic(save_profile_pic);
+                responseData.put("user", user);
 
                 result.status = true;
                 result.msg = "success";
@@ -124,29 +123,35 @@ public class AccountController {
         return response;
     }
 
+    @GetMapping("/account/social/login/{email}")
+    @ApiOperation(value = "Login for social")
+    public Object loginForSocial(@PathVariable String email) {
+        User user = userDao.getUserByEmail(email);
+        final BasicResponse result = new BasicResponse();
+
+        // 토큰 주기 전에 profile_pic 부터 좀 어떻게 해줘야함 ㅠ
+        String save_profile_pic = user.getProfile_pic();
+        user.setProfile_pic(null);
+
+        HashMap<String, Object> responseData = new HashMap<>();
+        responseData.put("token", jwtService.makeToken(user));
+        
+        // 토큰 만들었으면 profile_pic 리스토어
+        user.setProfile_pic(save_profile_pic);
+        responseData.put("user", user);
+
+        result.status = true;
+        result.msg = "success";
+        result.data = responseData;
+        System.out.println("Social Login 성공 !");
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @PostMapping("/account/signup")
     @ApiOperation(value = "가입하기")
     public Object signup(@Valid @RequestBody SignupRequest request) {
-        // 이메일, 닉네임 중복처리 필수
+        // 이메일, 닉네임 중복처리 필수 => 프론트에서 했서요
         // 회원가입단을 생성해 보세요.
-
-        // 먼저 이메일 중복 확인 해보기
-        User user = userDao.getUserByEmail(request.getEmail());
-        if (user != null) {
-            final BasicResponse result = new BasicResponse();
-            result.status = false;
-            result.msg = "이메일 중복";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        // 닉네임도 중복 확인 해보기
-        user = userDao.getUserByNickName(request.getNick_name());
-        if (user != null) {
-            final BasicResponse result = new BasicResponse();
-            result.status = false;
-            result.msg = "닉네임 중복";
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
         try {
             request.setPassword(SHA256(request.getPassword()));
         } catch (Exception e) {
@@ -176,13 +181,36 @@ public class AccountController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PostMapping("/account/social/join")
+    @ApiOperation(value = "Social join")
+    public Object joinWithSocial(@RequestBody User user) {
+        // 이메일이 중복되지 않았다면 회원가입 진행
+        int n = userDao.addNewUserWithSocial(user);
+        final BasicResponse result = new BasicResponse();
+
+        // Why errer bb
+        System.out.println(user);
+
+        // 단 하나의 수정이 일어났다면 가입 된거
+        if (n == 1) {
+            result.status = true;
+            result.msg = "success";
+        }
+        // 아니면 오류가 난거
+        else {
+            result.status = false;
+            result.msg = "데이터베이스 갱신 : " + n;
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @PostMapping("/account/sendjoinEmail")
     @ApiOperation(value = "가입메일 재전송하기")
-    public Object sendjoinEmail(@RequestParam(required = true) final String email,
-            @RequestParam(required = true) final String nick_name) {
+    public Object sendjoinEmail(@RequestBody SignupRequest request) {
 
         final BasicResponse result = new BasicResponse();
-        mailConfig.sendJoinMail(sender, email, nick_name);
+        mailConfig.sendJoinMail(sender, request.getEmail(), request.getNick_name());
         result.status = true;
         result.msg = "success";
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -349,11 +377,11 @@ public class AccountController {
         final BasicResponse result = new BasicResponse();
 
         try {
-            File file = ResourceUtils.getFile("classpath:application.properties");
-            String pre_path = file.getAbsolutePath().split("application.properties")[0];
-            String post_path = "static\\user_profile\\" + user.getUno() + "-pic";
+            // String pre_path = "/tvility";
+            String pre_path = "./LocalTestProfilePic";
+            String post_path = "/" + user.getUno() + ".profile_pic";
             String full_path = pre_path + post_path;
-            file = new File(full_path);
+            File file = new File(full_path);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(user.getProfile_pic().getBytes());
             fos.close();

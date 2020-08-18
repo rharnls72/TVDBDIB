@@ -1,67 +1,62 @@
 <template>
-  <div class="user join wrapC">
-    <div class="d-flex justify-content-between align-items-center">
-      <b-icon @click="moveMain" icon="chevron-left" font-scale="1.5"></b-icon>
-      <b-icon icon="check-square" @click="submitArticle" font-scale="1.4"></b-icon>
-    </div>
-    <div class="warpB">
-      <b-list-group style="border-radius: 20px;">
-        
-        <b-list-group-item class="p-0 bg-dark"><input id="article-title" type="text" class="m-0 border-0 rounded-pill text-white bg-dark" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
-        <b-list-group-item data-toggle="modal" data-target="#exampleModal">
-          <label for="selectDate" style="font-size:10px;">Select Date</label>
-          <div id="selectDate" class="d-flex justify-content-center py-3">
-            <div>
-              <div class="time">{{value.date}}</div>
-            </div>
-            <div>
-              <div class="time">{{value.hour}}</div>
-            </div>
-            <div>
-              <div class="time">{{value.min}}</div>
-            </div>
-            <div>
-              <div class="time">{{value.sec}}</div>
-            </div>
+  <div class="col-10">
+    <b-list-group style="border-radius: 20px;">
+      
+      <b-list-group-item class="p-0 create-header"><input id="article-title" type="text" class="m-0 border-0 rounded-pill create-header-input" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
+      <b-list-group-item data-toggle="modal" data-target="#exampleModal">
+        <label for="selectDate">Select Date</label>
+        <div id="selectDate" class="d-flex justify-content-center py-3">
+          <div>
+            <div class="time">{{value.date}}</div>
           </div>
-        </b-list-group-item>
+          <div>
+            <div class="time">{{value.hour}}</div>
+          </div>
+          <div>
+            <div class="time">{{value.min}}</div>
+          </div>
+          <div>
+            <div class="time">{{value.sec}}</div>
+          </div>
+        </div>
+      </b-list-group-item>
 
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-body d-flex flex-column justify-content-center">
-                <div v-if="isCalendar">
-                  <b-calendar v-model="date" @context="onContext" locale="en-US"></b-calendar>
-                  <b-row class="mt-3 d-flex justify-content-between">
-                    <b-col class="text-right" @click="moveTime">시간 선택</b-col>
-                  </b-row>
-                </div>
-                <div v-else class="d-flex flex-column justify-content-center">
-                  <b-time class="border rounded p-2" v-model="Time" locale="en"></b-time>
-                  <b-row class="mt-3 d-flex justify-content-between">
-                    <b-col class="text-left" @click="moveCalender">날짜 선택</b-col>
-                    <b-col class="text-right" @click="submitDateTime" data-dismiss="modal">완료</b-col>
-                  </b-row>
-                </div>
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+              <div v-if="isCalendar">
+                <b-calendar v-model="date" @context="onContext" locale="en-US"></b-calendar>
+                <b-row class="mt-3 d-flex justify-content-between">
+                  <b-col class="text-right" @click="moveTime">시간 선택</b-col>
+                </b-row>
+              </div>
+              <div v-else class="d-flex flex-column justify-content-center">
+                <b-time class="border rounded p-2" v-model="Time" locale="en"></b-time>
+                <b-row class="mt-3 d-flex justify-content-between">
+                  <b-col class="text-left" @click="moveCalender">날짜 선택</b-col>
+                  <b-col class="text-right" @click="submitDateTime" data-dismiss="modal">완료</b-col>
+                </b-row>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <b-list-group-item><b-form-tags
-              input-id="tags-remove-on-delete"
-              :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
-              v-model="tags"
-              separator=" "
-              placeholder="태그 입력!!"
-              remove-on-delete
-              no-add-on-enter
-              class="mb-2"
-              style="outline:none !important"
-            ></b-form-tags></b-list-group-item>
+      <b-list-group-item>
+        <textarea
+        class="tag-input"
+        v-model="tag"
+        placeholder="태그를 입력하세요.
+스페이스 바를 누르면 자동으로 태그가 입력됩니다."
+        row="20"
+        @keydown.space="inputTag"
+        >
+        </textarea>
+        <b-badge v-for="(Tag, idx) in tags" :key="idx">{{Tag}}<b-icon @click="delTag(Tag)" icon="x" scale="0.75"></b-icon></b-badge>
+      </b-list-group-item>
 
-      </b-list-group>
-    </div>
+    </b-list-group>
   </div>
 </template>
 
@@ -84,16 +79,17 @@ export default {
       Time: null,
       isCalendar: true,
       cc: null,
+      tag: null,
     }
   },
   props: {
     article: Object,
     fno: Number,
+    submit: Boolean,
   },
   methods: {
     moveMain() {
-      console.log(1)
-      this.$router.push('/feed/main')
+      this.$router.go(-1)
     },
     onContext(ctx) {
       this.context = ctx
@@ -104,6 +100,20 @@ export default {
         return '0'+str
       }
       return str
+    },
+    inputTag(event) {
+      event.preventDefault()
+      if (this.tags.filter(res=>res=== this.tag).length === 0) {
+        this.length++
+        this.tags.push(this.tag)
+        this.tag = null
+      } else {
+        console.log('태그가 중복됩니다.')
+        this.tag = null
+      }
+    },
+    delTag(t) {
+      this.tags = this.tags.filter(res=>res !== t)
     },
     timer() {
       let today = new Date()
@@ -130,8 +140,8 @@ export default {
     },
     makeData() {
       var jsonObj = {
+        title: this.title,
         content: {
-          title: this.title,
           date: this.date,
           time: this.Time,
         }
@@ -185,7 +195,10 @@ export default {
     }
   },
   watch: {
-    tags: function(n, o) {this.catchTags}
+    tags: function(n, o) {this.catchTags},
+    submit: function(n, o) {
+      this.submitArticle()
+    }
   },
   mounted() {
     if(this.article !== null) {
@@ -202,7 +215,7 @@ export default {
 <style scoped>
 
 input[id=article-title]::placeholder {
-  color: white;
+  color: black;
 }
 
 input[type=text], select, textarea{
@@ -275,6 +288,23 @@ span {
     width: 100%;
     margin-top: 0;
   }
+}
+
+.create-header {
+  background-color: #D8BEFE;
+}
+
+.tag-input {
+  height: 100px;
+  resize: none;
+}
+
+.tag-input:focus {
+  outline: none;
+}
+
+.input-form:focus {
+  outline: none;
 }
 
 </style>

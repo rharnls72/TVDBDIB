@@ -1,5 +1,5 @@
-import firebase from 'firebase'
-import 'firebase/firestore'
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 var firebaseConfig = {
     apiKey: "AIzaSyAVLHmJoWa3tY3Xz30ub9eUjeSFG2yGlNU",
     authDomain: "tvility.firebaseapp.com",

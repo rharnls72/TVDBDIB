@@ -3,7 +3,11 @@
     <div class="wrapB">
       <!-- <div class="container mt-3"> -->
         <div class="row p-0">
-          <img class="col-3 p-0 mb-3" :src="defaultProfile" alt="default-image">
+          <div class="box" style="background: #BDBDBD;">
+              <img v-if="info.profile_pic != null" class="profile" :src="info.profile_pic" :alt="defaultProfile">
+              <img v-else class="profile" :src="defaultProfile" :alt="defaultProfile">
+          </div>
+          
           <div class="col-3 my-3">
             <h5 class="mb-0 text-center">{{followcnt.feed_cnt}}</h5>
             <p class="mb-0 text-center">게시물</p>
@@ -37,7 +41,7 @@ export default {
   },
   data() {
     return {
-      defaultProfile,
+      defaultProfile: defaultProfile,
     }
   },
   methods: {
@@ -64,4 +68,15 @@ export default {
     border: 1px solid lightgray;
     border-radius: 0.25rem;
   }
+  .box {
+    width: 80px;
+    height: 80px; 
+    border-radius: 70%;
+    overflow: hidden;
+}
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 </style>

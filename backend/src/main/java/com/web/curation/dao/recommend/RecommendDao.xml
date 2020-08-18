@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.recommend.RecommendDao">
+    <select id="getEpisodeLike" resultType="RecommendData">
+        select
+            l.uno           AS `uno`
+            , e.pno           AS `pno`
+            , l.create_date AS `create_date`
+        from
+            `episode_like` l
+                JOIN
+            `episode` e ON l.eno = e.eno
+        order by `create_date` desc
+    </select>
+    <select id="getProgramLike" resultType="RecommendData">
+        select
+            `uno`
+            , `pno`
+            , `create_date`
+        from
+            `program_like`
+        order by `create_date` desc
+    </select>
+    <select id="getEpisodeReply" resultType="RecommendData">
+        select
+            r.uno           AS `uno`
+            , e.pno           AS `pno`
+            , r.write_date  AS `create_date`
+        from
+            `episode_reply` r
+                JOIN
+            `episode` e ON r.eno = e.eno
+        order by `create_date` desc
+    </select>
+    <select id="getProgramReply" resultType="RecommendData">
+        select
+            `uno`
+            , `pno`
+            , `write_date` AS `create_date`
+        from
+            `program_reply`
+        order by `create_date` desc
+    </select>
+    <select id="getEpisodeDibs" resultType="RecommendData">
+        select
+            d.uno           AS `uno`
+            , e.pno           AS `pno`
+            , d.create_date AS `create_date`
+        from
+            `episode_dibs` d
+                JOIN
+            `episode` e ON d.eno = e.eno
+        order by `create_date` desc
+    </select>
+
+    <select id="getProgramFollow" resultType="RecommendData">
+        select
+            `uno`,
+            `pno`
+        from
+            `program_follow`
+    </select>
+
+</mapper>
