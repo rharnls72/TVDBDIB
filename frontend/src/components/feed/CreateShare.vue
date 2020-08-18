@@ -1,24 +1,23 @@
 <template>
-  <div class="feed-create">
-    <!-- 헤더 -->
+  <div>
+    <div v-if="shareTag" class="feed-create">
+      <!-- 헤더 -->
+      <CreateHeader @submit="submitShare"/>
 
-    <CreateHeader @submit="submitShare"/>
+      <!-- 공유글 작성 -->
+      <div class="create-feed-form row justify-content-center">
+        <ShareForm v-if="editArticle!==null" :shareTag="shareTag" :article="editArticle" @CreateArticle="makeSubmitData"/>
+        <ShareForm v-else :shareTag="shareTag" @CreateArticle="makeSubmitData"/>
+      </div>
 
-      
-    <!-- 공유글 작성 -->
-    <div class="create-feed-form row justify-content-center">
-      <ShareForm v-if="editArticle!==null" :article="editArticle" @CreateArticle="makeSubmitData"/>
-      <ShareForm v-else @CreateArticle="makeSubmitData"/>
+      <!-- 공유될 글 표기 -->
+      <div class="share-item mx-5">
+        <WrittenFeed v-if="!!article.ctype" :feed="article"/>
+        <FeedShareEpisodeThumbnail class="program-thumbnail" v-else-if="!!article.eno" :curation="article"/>
+        <FeedProgramThumbnail class="program-thumbnail" v-else :program="article"/>
+      </div>
     </div>
-
-    <!-- 공유될 글 표기 -->
-    <div class="share-item mx-5">
-      <WrittenFeed v-if="!!article.ctype" :feed="article"/>
-      <FeedShareEpisodeThumbnail class="program-thumbnail" v-else-if="!!article.eno" :curation="article"/>
-      <FeedProgramThumbnail class="program-thumbnail" v-else :program="article"/>
-    </div>
-
-
+    <LoadingItem v-else />
   </div>
 </template>
 
@@ -31,6 +30,7 @@ import ShareForm from '@/components/feed/feedComponents/ShareForm.vue'
 import FeedProgramThumbnail from '@/components/feed/feedThumbnail/FeedProgramThumbnail.vue'
 import WrittenFeed from '@/components/account/mine/WrittenFeed.vue'
 import FeedShareEpisodeThumbnail from '@/components/feed/feedThumbnail/FeedShareEpisodeThumbnail.vue'
+import LoadingItem from '@/components/common/custom/LoadingItem.vue'
 
 import GetUserApi from "@/api/GetUserApi.js"
 
@@ -43,6 +43,8 @@ export default {
       article: null,
       editArticle: null,
       submitData: null,
+
+      shareTag: false
     }
   },
   components: {
@@ -51,6 +53,7 @@ export default {
     FeedProgramThumbnail,
     WrittenFeed,
     FeedShareEpisodeThumbnail,
+    LoadingItem
   },
   methods: {
     moveMain() {
@@ -118,6 +121,31 @@ export default {
           this.article = res.feed
           this.article.content = JSON.parse(this.article.content)
           this.article.tag = JSON.parse(this.article.tag)
+
+          let shareTag = "";
+          if(this.article.content.title && this.article.content.title.length > 0) {
+            shareTag = shareTag + this.article.content.title;
+          }
+
+          let type = this.article.ctype;
+          if(type == 1 || type == 4) {
+            if(this.article.content.content && this.article.content.content.length > 0) {
+              shareTag = shareTag + " " + this.article.content.content;
+            }
+          } else if(type == 3) {
+            let contents = this.article.content.content;
+            let str = "";
+            for(let item of contents) {
+              if(item.text && item.text.length > 0) {
+                str = str + " " + item.text;
+              }
+            }
+            shareTag = shareTag + str;
+          }
+
+          this.shareTag = shareTag;
+
+          console.log('Maked share tag string: ', shareTag);
         }
         , err => console.log(err)
       )
@@ -129,6 +157,25 @@ export default {
       }
       , res => {
         this.article = res.list
+
+        let epi = this.article;
+        let shareTag = "";
+        if(epi.pname && epi.pname.length > 0) {
+          shareTag = shareTag + " " + epi.pname;
+        }
+        if(epi.season_name && epi.season_name.length > 0) {
+          shareTag = shareTag + " " + epi.season_name;
+        }
+        if(epi.episode_name && epi.episode_name.length > 0) {
+          shareTag = shareTag + " " + epi.episode_name;
+        }
+        if(epi.summary && epi.summary.length > 0) {
+          shareTag = shareTag + " " + epi.summary;
+        }
+
+        this.shareTag = shareTag;
+
+        console.log('Maked share tag string: ', shareTag);
       }
       , err => console.log(err)
       )

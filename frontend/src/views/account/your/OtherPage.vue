@@ -1,11 +1,18 @@
 <template>
   <div>
-    <OtherPageHeader :info="info"/>
-    <div class="container mycontainer">
-      <OtherPageInformation :info="info" :followcnt="followcnt"/>
-      <WrittenFeed v-for="feed in writtenFeeds" :key="feed.fno" :feed="feed" class="col-12 row" />
+    <div v-if="show">
+      <OtherPageHeader :info="info"/>
+      <div class="container mycontainer">
+        <OtherPageInformation :info="info" :followcnt="followcnt"/>
+        
+        <div v-for="feed in writtenFeeds" :key="feed.fno" class="col-12 m-0 p-0 row">
+            <WrittenFeed :feed="feed" class="col-12 row"/>
+            <hr class="row col-12">
+        </div>
+      </div>
+      <Footer />
     </div>
-    <Footer />
+    <LoadingItem v-else />
   </div>
 </template>
 
@@ -14,6 +21,8 @@ import OtherPageHeader from '@/components/account/your/OtherPageHeader.vue'
 import OtherPageInformation from '@/components/account/your/OtherPageInformation.vue'
 import Footer from '@/components/common/custom/Footer.vue'
 import WrittenFeed from "@/components/account/mine/WrittenFeed.vue"
+import LoadingItem from '@/components/common/custom/LoadingItem.vue'
+
 import AccountApi from "@/api/AccountApi";
 import GetUserApi from "@/api/GetUserApi"
 import FeedApi from "@/api/FeedApi.js"
@@ -26,6 +35,8 @@ export default {
       followcnt: {},
       requestCount: 1,
       writtenFeeds: null,
+
+      show: false
     }
   },
   components: {
@@ -33,6 +44,7 @@ export default {
     OtherPageInformation,
     WrittenFeed,
     Footer,
+    LoadingItem
   },
   methods: {
     takeFeed() {
@@ -40,6 +52,8 @@ export default {
         num: this.requestCount,
         target_uno: this.info.uno
       };
+
+      console.log('Other page, written feed data', data);
 
       FeedApi.getFeedList(
         data
@@ -51,6 +65,8 @@ export default {
           }
           this.requestCount++
           setTimeout(()=>{}, 1000)
+
+          this.show = true;
         }
         , err => {
           console.log(err)
@@ -70,6 +86,9 @@ export default {
         res => {
           this.info = res.info;
           this.followcnt = res.followcnt;
+
+          // 그 사람이 쓴 피드 목록은 info 가 설정 된 후에 가져오기
+          this.takeFeed()
         },
         error => {
           this.$router.push({name:'Errors', query: {message: error.msg}})
@@ -78,7 +97,7 @@ export default {
     }
   },
   mounted() {
-    this.takeFeed()
+    // this.takeFeed()
   },
   created() {
     GetUserApi.getUser(res => {

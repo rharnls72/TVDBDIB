@@ -6,8 +6,8 @@
         <div class="wrapB">
           <div class="myfeed">
             <EpisodeItem v-for="curation in partCurations" :key="curation.key" :curation="curation"/>
-            <infinite-loading v-if="!noCuration" @infinite="infiniteHandler"></infinite-loading>
-            <div v-else style="text-align: center; margin-top: 50px;"> 팔로우 중인 프로그램이 없습니다<br/>
+            <infinite-loading v-if="!noCuration && !isEndPoint" @infinite="infiniteHandler"></infinite-loading>
+            <div v-if="noCuration" style="text-align: center; margin-top: 50px;"> 팔로우 중인 프로그램이 없습니다<br/>
               좋아하는 프로그램을 찾으러 가볼까요?<br/>
             <button type="button" class="shadow moveSearch" @click="moveSearch">찾으러 가자!</button>
             </div>
@@ -44,6 +44,7 @@ export default {
       partCurations: [],
       loading_complete: false,
       noCuration: false,
+      isEndPoint: false,
       show: false,
     }
   },
@@ -61,6 +62,10 @@ export default {
       console.log(this.startPoint);
       let temp = []
       for (let i = this.startPoint; i < this.startPoint + this.interval; i++) {
+        if (i >= this.curations.length){
+          this.isEndPoint = true;
+          break;
+        }
         this.curations[i].key = this.curations[i].pno * 10000 + this.curations[i].episode;
         temp.push(this.curations[i])
       }
@@ -99,6 +104,7 @@ export default {
     });
     CurationApi.requestEpisode(
       res => {
+        console.log(res);
         this.curations = res.list;
         if(this.curations.length>0){
           this.makeCurations();
