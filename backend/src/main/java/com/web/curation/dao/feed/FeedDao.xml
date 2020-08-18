@@ -140,8 +140,8 @@
                                     WHERE
                                         `follower` = #{uno}
                                 )
-                                <!-- OR
-                                `uno` = #{uno} -->
+                                OR
+                                `uno` = #{uno}
                                 </when>
                                 <!-- Get feed list(profile) => Feed written by target user -->
                                 <otherwise>

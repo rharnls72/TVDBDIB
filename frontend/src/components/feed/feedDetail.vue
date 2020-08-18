@@ -6,8 +6,8 @@
         <!-- <feedArticleItem v-if="article.ctype === 1" :article="article" :detail="true"/>
         <feedVoteItem v-if="article.ctype === 3" :article="article" :detail="true"/>
         <feedCountdownItem v-if="article.ctype === 2" :article="article" :detail="true"/> -->
-        <FeedItem :article="article" :detail="true"/>
-        <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno" :fno="article.fno"/>
+        <FeedItem v-if="article != null" :article="article" :detail="true"/>
+        <ReplyItem v-if="article != null" @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno != 0 ? article.eno : null" :fno="article.fno"/>
       </div>
       <hr class="row col-12">
     </div>
