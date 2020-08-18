@@ -1,29 +1,5 @@
 <template>
 <div>
-    <b-nav justified class="myheader" >
-      <b-input-group class="align-items-center">
-        <div class="input-group-prepend">
-          <div @click="searchIcon()" class="input-group-text py-0" style="border: 0px; background-color: #D8BEFE;">
-            <b-icon-search></b-icon-search>
-          </div>
-        </div>
-
-        <!-- 프로그램명 / 인명 검색 select -->
-        <b-form-select v-model="selected" :options="options"
-         ></b-form-select>
-
-        <!-- 자동완성 기능 지원하는 검색 창 컴포넌트 -->
-        <input 
-          class="searchInput" 
-          type="text" 
-          ref="searchInput" 
-          placeholder="검색" 
-          v-on:input='word = $event.target.value' 
-          v-on:keyup='searchIcon()' 
-          autocomplete="off">
-      </b-input-group>
-    </b-nav>
-
     <ResultProgram v-if="current_option == 1" :programs="searchedList"/>
     <ResultPeople v-if="current_option == 2" :peoples="searchedList"/>
 
@@ -47,32 +23,30 @@ export default {
   name: 'ProgramSearch',
   data() {
     return {
-      // selectbox 관련 속성
-      selected: 'program',
-      options: [
-        { value: 'program', text: "프로그램명" },
-        { value: 'people', text: "출연자"}
-      ],
       current_option: 0,
-      
-      word: "",
+
       searchedList: [],
       result: [],
       total_pages: 0,
       current_page: 0,
       loading_complete: false,
       isEndPoint: false
-      //search_history: [],
-      //selectedUser: {},
     }
   },
-  
+  props:{
+    word: String,
+    selected: String,
+  },
   watch: {
-    word(newWord) {
+    word: function() {
+      this.searchedList = [];
+      if(this.word!= ''){
         if (this.selected == 'program')
-          this.getProgramList(newWord);
-        else if (this.selected == 'people')
-          this.getPeopleList(newWord);
+          this.getProgramList(this.word);
+        else
+          this.getPeopleList(this.word);
+      }
+      
     },
   },
   
@@ -106,6 +80,7 @@ export default {
     },
 
     getProgramList(newWord) {
+      this.current_option = 1;
         axios.get(tmdbApi.BASE_URL + "search/tv?query=" + newWord + "&api_key=" + tmdbApi.API_KEY + "&language=ko")
             .then(res => {
                 this.searchedList = res.data.results;
@@ -117,6 +92,7 @@ export default {
 
     // 한글로 입력하면 분명 검색결과는 받아오는데 원문이 영어라서 그런지 자동완성이 안된다.
     getPeopleList(newWord){
+      this.current_option = 2;
         axios.get(tmdbApi.BASE_URL + "search/person?query=" + newWord + "&api_key=" + tmdbApi.API_KEY + "&language=ko")
             .then(res => {
                 this.searchedList = res.data.results;

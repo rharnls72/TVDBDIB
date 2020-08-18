@@ -2,7 +2,7 @@
   <div>
     <ProgramRecommendHeader v-if="tabState == 1" />
       <UserSearchHeader v-if="tabState == 2" :word="word" @update:word="searchWord => word = searchWord"/>
-      <UserSearchHeader v-if="tabState == 3" />
+      <ProgramSearchHeader v-if="tabState == 3" :word="word" @update:word="searchWord => word = searchWord" @update:selected="select => selected = select"/>
       <FeedSearchHeader v-if="tabState == 4" :word="word" @update:word="searchWord => word = searchWord"/>
 
       <!-- b-tabs에 v-model: tabState를 주면 0부터로 동작 -->
@@ -16,7 +16,7 @@
       <!-- 선택한 탭번호에 따라 하위 컴포넌트 출력 -->
       <ProgramRecommend v-if="tabState == 1" />
       <UserSearch v-if="tabState == 2" :word="word"/>
-      <ProgramSearch v-if="tabState == 3" />
+      <ProgramSearch v-if="tabState == 3" :word="word" :selected="selected"/>
       <FeedSearch v-if="tabState == 4" :word="word"/>
     <Footer />
   </div>
@@ -32,12 +32,14 @@ import FeedSearch from '@/components/search/FeedSearch.vue';
 import ProgramRecommendHeader from '@/components/search/ProgramRecommendHeader.vue'
 import UserSearchHeader from '@/components/search/UserSearchHeader.vue'
 import FeedSearchHeader from '@/components/search/FeedSearchHeader.vue'
+import ProgramSearchHeader from '@/components/search/ProgramSearchHeader.vue';
 export default {
   name: 'IndexSearch',
   data() {
     return {
       tabState: 1,
       word: '',
+      selected: '',
     }
   },
   components: {
@@ -48,7 +50,8 @@ export default {
     FeedSearch,
     ProgramRecommendHeader,
     UserSearchHeader,
-    FeedSearchHeader
+    FeedSearchHeader,
+    ProgramSearchHeader
   },
   created() {
     GetUserApi.getUser(res => {
