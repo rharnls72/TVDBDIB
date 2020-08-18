@@ -1,15 +1,13 @@
 <template>
   <div>
     <ChatroomHeader :room="room"/>
-    <div class="wrapB mymessage">
+        <h1>채팅룸</h1>
       <MessageItem v-if='loadComplete' :messages="messages"/>
-    </div>
-    <div class="feed-item messageInputArea">
-      <input class="messageInput" type="text" id="messageInput" v-model="content">
-      <button class="sendIcon" @click.stop.prevent="sendMessage()">
-        <b-icon-arrow-right-circle class="text-dark"></b-icon-arrow-right-circle>
-      </button>
-    </div>
+      <div class="feed-item messageInputArea">
+          <input class="messageInput" type="text" id="messageInput" v-model="content" autocomplete="off">
+          <button class="sendIcon" @click.stop.prevent="sendMessage()"><b-icon-arrow-right-circle class="text-dark">
+            </b-icon-arrow-right-circle></button>
+      </div>
   </div>
 </template>
 
@@ -96,15 +94,11 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-  .mymessage {
-    padding-top: 70px;
-  }
-  .messageInputArea{
-    margin-bottom: 5px;
+<style scope>
+.messageInputArea{
+    margin-bottom: 0;
     padding: 0;
-    background-color: rgba(2, 23, 71, 0.05);
+    background-color: #eee;
     border-radius: 12px;
     position: fixed;
     bottom: 0;
@@ -120,15 +114,13 @@ export default {
   .messageInput{
     width: 100%;
     height: 40px;
-    border: 0px;
-    color: #8B95A1;
+    border: 0;
+    color: rgb(112, 112, 112);
     font-size: 15px;
-    background-color: rgba(2, 23, 71, 0);
     font-weight: medium;
     vertical-align: middle;
     position: fixed;
     left: -40px;
-    bottom: 5px;
     z-index: 1;
     padding-left: 60px;
     padding-right: 0;
