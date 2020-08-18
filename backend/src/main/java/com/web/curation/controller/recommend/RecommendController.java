@@ -2,60 +2,38 @@ package com.web.curation.controller.recommend;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.tensorflow.SavedModelBundle;
-import org.tensorflow.Session;
-import org.tensorflow.Tensor;
-
-import ch.qos.logback.core.joran.conditional.ElseAction;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.apache.commons.math3.stat.StatUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.web.curation.dao.episode.EpisodeDao;
-import com.web.curation.dao.following.FollowingDao;
 import com.web.curation.dao.recommend.RecommendDao;
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.episode.EpisodeDB;
-import com.web.curation.model.episode.EpisodeResponse;
 import com.web.curation.model.program.Program;
 import com.web.curation.model.recommend.RecommendData;
 import com.web.curation.model.user.User;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import joinery.DataFrame;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
@@ -81,16 +59,66 @@ public class RecommendController {
     @ApiOperation(value = "협업 필터링을 이용한 사용자 맞춤 추천 결과 받아오기")
     public Object getTastyRecommendation(HttpServletRequest request) throws Exception {
 
-        String s = null;
-        String python_output = null;
         int uno = ((User) request.getAttribute("User")).getUno();
 
-        Process process = Runtime.getRuntime().exec("python3.8 tvility/model_load.py " + uno);
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /*
+        Process process = Runtime.getRuntime().exec("/tvility/python3.8 /tvility/model_load.py " + uno);
         //Process process = Runtime.getRuntime().exec("python model_load.py " + uno);
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
         //BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         while ((s = stdInput.readLine()) != null){
             python_output = s;
+        }
+        */
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        URL url = new URL("http://localhost:8888/ai/recommend?uno=" + uno);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        conn.setRequestMethod("GET");
+
+        int responseCode = conn.getResponseCode();
+        System.out.println("Recommend Python server response code: " + responseCode);
+
+        if(responseCode == 200) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            JSONObject responseJson = new JSONObject(sb.toString());
+            JSONArray data = responseJson.getJSONArray("data");
+
+            ArrayList<Program> final_result = new ArrayList<Program>();
+            RestTemplate restTemplate = new RestTemplate();
+            
+            // 추천 결과 Program ID들로 TMDB API에 요청 보내서 포스터, 프로그램명 가져오기.
+            for (int i=0; i<RECOMMEND_SIZE; i++){
+                Program p = new Program();
+                ResponseEntity<String> re = 
+                restTemplate.getForEntity(BASE_URL + "tv/" + data.getInt(i) + "?api_key=" + API_KEY + "&language=ko", String.class);
+                JSONObject programJson = new JSONObject(re.getBody());
+                int id = programJson.optInt("id");
+                String name = programJson.optString("name");
+                String thumbnail = programJson.optString("poster_path");
+                p.setPno(id);
+                p.setPname(name);
+                if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
+                    final_result.add(p);
+            }
+
+            final BasicResponse result = new BasicResponse();
+            result.status = true;
+            result.msg = "success";
+            result.data = final_result;
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            final BasicResponse result = new BasicResponse();
+            result.status = false;
+            result.msg = "Response code: " + responseCode;
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
         // int uno = ((User) request.getAttribute("User")).getUno();
@@ -191,31 +219,6 @@ public class RecommendController {
         //     }
 
         // }
-
-        String[] recommends = python_output.replace("[", "").replace("]", "").split(", ");
-
-        ArrayList<Program> final_result = new ArrayList<Program>();
-        RestTemplate restTemplate = new RestTemplate();
-        // 추천 결과 Program ID들로 TMDB API에 요청 보내서 포스터, 프로그램명 가져오기.
-        for (int i=0; i<RECOMMEND_SIZE; i++){
-            Program p = new Program();
-            ResponseEntity<String> re = 
-            restTemplate.getForEntity(BASE_URL + "tv/" + recommends[i] + "?api_key=" + API_KEY + "&language=ko", String.class);
-            JSONObject programJson = new JSONObject(re.getBody());
-            int id = programJson.optInt("id");
-            String name = programJson.optString("name");
-            String thumbnail = programJson.optString("poster_path");
-            p.setPno(id);
-            p.setPname(name);
-            if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
-            final_result.add(p);
-        }
-
-        final BasicResponse result = new BasicResponse();
-        result.status = true;
-        result.msg = "success";
-        result.data = final_result;
-        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // time sliding - 지난 시간에 따라 점수 계산

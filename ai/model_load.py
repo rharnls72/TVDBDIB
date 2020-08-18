@@ -5,7 +5,8 @@ import sys
 
 def model_load(user_id):
 
-    ratings_file = "testData.csv"
+    ratings_file = "/tvility/testData.csv"
+    # ratings_file = "testData.csv"
     df = pd.read_csv(ratings_file)
 
     user_ids = df["userId"].unique().tolist()
@@ -16,8 +17,8 @@ def model_load(user_id):
 
     df = df.sample(frac=1, random_state=42)
 
-    model = tf.keras.models.load_model("test_model")
-    movie_df = pd.read_csv("testData.csv")
+    model = tf.keras.models.load_model("/tvility/test_model")
+    movie_df = pd.read_csv(ratings_file)
 
     movies_watched_by_user = df[df.userId == user_id]
     movies_not_watched = movie_df[
@@ -42,4 +43,6 @@ def model_load(user_id):
     
     print (recommended_movie_ids)
 
-model_load(int(sys.argv[1]))
+    return recommended_movie_ids
+
+# model_load(int(sys.argv[1]))
