@@ -2,7 +2,14 @@
   <div class="col-10">
     <b-list-group style="border-radius: 20px;">
       
-      <b-list-group-item class="p-0 create-header"><input id="article-title" type="text" class="m-0 border-0 rounded-pill create-header-input" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
+      <b-list-group-item class="p-0 create-header">
+        <input 
+          id="article-title" 
+          type="text" 
+          class="m-0 border-0 rounded-pill create-header-input" 
+          v-model="title" 
+          placeholder="제목은 뭐지??">
+      </b-list-group-item>
       <b-list-group-item>
         <b-form-textarea
           id="textarea"
@@ -158,6 +165,24 @@ export default {
         }
       )
     }
+    , titleFocusOut() {
+      console.log('titleFocusOut() called!!!');
+      FeedApi.getTags(
+        {
+          content: this.title
+          , tags: JSON.stringify(this.value)
+        }
+        , res => {
+          console.log(res);
+
+          // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+          this.value = JSON.parse(res.data.data);
+        }
+        , err => {
+          console.log('getTags Error: ' + err.msg);
+        }
+      )
+    }
   },
   watch: {
     submit: function(n, o) {
@@ -182,6 +207,7 @@ export default {
 
     document.getElementById("textarea").addEventListener("keypress", this.checkInput);
     document.getElementById("textarea").addEventListener("focusout", this.contentFocusOut);
+    document.getElementById("article-title").addEventListener("focusout", this.titleFocusOut);
   }
 }
 </script>

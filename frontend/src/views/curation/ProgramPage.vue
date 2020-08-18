@@ -73,9 +73,11 @@ export default {
     takeEpisode(cnt) {
       if (this.pickEpisode === cnt) {
         this.sortEpisode()
+        this.show = true;
         return
       } else if (this.episodeNum <= 0) {
         this.sortEpisode()
+        this.show = true;
         return
       }
       CurationApi.requestEpisodeDetail({
@@ -128,7 +130,6 @@ export default {
       }
       , err => console.log(err)
     )
-    this.show = !this.show
   }
 }
 </script>

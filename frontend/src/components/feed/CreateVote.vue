@@ -1,8 +1,15 @@
 <template>
   <div class="col-10">
-    <b-list-group style="border-radius: 20px;">
+    <b-list-group style="border-radius: 20px;" id="vote-content-area">
       
-      <b-list-group-item class="p-0 create-header"><input id="article-title" type="text" class="m-0 border-0 rounded-pill" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
+      <b-list-group-item class="p-0 create-header">
+        <input 
+          id="article-title" 
+          type="text" 
+          class="m-0 border-0 rounded-pill" 
+          v-model="title" 
+          placeholder="제목은 뭐지??">
+      </b-list-group-item>
       
       <b-list-group-item v-for="(content, idx) in contents" :key="content.id">
         <div class="row d-flex align-items-center px-3">
@@ -36,6 +43,7 @@
 
 <script>
 import FeedApi from '../../api/FeedApi'
+import $ from 'jquery'
 
 export default {
   name: 'CreateVote',
@@ -131,6 +139,35 @@ export default {
           )
       }
     }
+    , voteFocusOut() {
+      let content = "";
+      if(this.title && this.title.length > 0) {
+        content = this.title;
+      }
+
+      for(let item of this.contents) {
+        if(item.text && item.text.length > 0) {
+          content = content + " " + item.text;
+        }
+      }
+
+      console.log('Request vote tags: ', content);
+      FeedApi.getTags(
+        {
+          content: content
+          , tags: JSON.stringify(this.value)
+        }
+        , res => {
+          console.log(res);
+
+          // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+          this.value = JSON.parse(res.data.data);
+        }
+        , err => {
+          console.log('getTags Error: ' + err.msg);
+        }
+      )
+    }
   },
   watch: {
     submit: function(n, o) {
@@ -151,6 +188,8 @@ export default {
       this.title = null
       this.value = []
     }
+
+    $("#vote-content-area").on("focusout", "input", this.voteFocusOut);
   }
 }
 </script>

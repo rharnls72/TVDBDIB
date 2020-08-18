@@ -193,6 +193,24 @@ export default {
           )
       }
     }
+    , titleFocusOut() {
+      console.log('titleFocusOut() called!!!');
+      FeedApi.getTags(
+        {
+          content: this.title
+          , tags: JSON.stringify(this.tags)
+        }
+        , res => {
+          console.log(res);
+
+          // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+          this.tags = JSON.parse(res.data.data);
+        }
+        , err => {
+          console.log('getTags Error: ' + err.msg);
+        }
+      )
+    }
   },
   watch: {
     tags: function(n, o) {this.catchTags},
@@ -208,6 +226,8 @@ export default {
       this.tags = this.article.tag
       this.submitDateTime()
     }
+
+    document.getElementById("article-title").addEventListener("focusout", this.titleFocusOut);
   }
 }
 </script>
