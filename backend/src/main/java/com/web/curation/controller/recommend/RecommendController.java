@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -115,6 +116,11 @@ public class RecommendController {
             result.data = final_result;
             return new ResponseEntity<>(result, HttpStatus.OK);
         } else {
+            String s = null;
+            BufferedReader error = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            while ((s = error.readLine()) != null){
+                System.out.println(s);
+            }
             final BasicResponse result = new BasicResponse();
             result.status = false;
             result.msg = "Response code: " + responseCode;
