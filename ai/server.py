@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import model_load as ml
 
 app = Flask(__name__)
