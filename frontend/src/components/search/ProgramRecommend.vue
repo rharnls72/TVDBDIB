@@ -49,6 +49,7 @@ export default {
           }
           , err => {
             console.log(err);
+            this.tasty_loading = true;
           }
         );
 
@@ -58,9 +59,11 @@ export default {
             this.trending_programs = res.data.data;
             console.log(this.trending_programs);  
             this.trending_loading = true; 
+            
           }
           , err => {
             console.log(err);
+            this.trending_loading = true;
           }
         );
 
@@ -73,6 +76,7 @@ export default {
           }
           , err => {
             console.log(err);
+            this.new_loading = true;
           }
         );
     },
