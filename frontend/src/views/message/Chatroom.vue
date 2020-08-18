@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="columns">
+  <div>
     <ChatroomHeader :room="room"/>
         <h1>채팅룸</h1>
       <MessageItem v-if='loadComplete' :messages="messages"/>
@@ -20,7 +20,7 @@ import MessageApi from "@/api/MessageApi";
 import db from '@/api/firebaseInit';
 
 export default {
-  name: 'MessageList',
+  name: 'Chatroom',
    components: {
     MessageItem,
     ChatroomHeader,
@@ -125,6 +125,10 @@ export default {
     padding-left: 60px;
     padding-right: 0;
   }
-  .messageInput:focus {border:none;}
-  .messageInput:hover { border:none;}
+  .messageInput:focus {
+    border:none;
+  }
+  .messageInput:hover {
+    border:none;
+  }
 </style>

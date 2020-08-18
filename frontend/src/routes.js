@@ -3,6 +3,7 @@ import Errors from './views/Errors.vue'
 
 import Login from './views/user/Login.vue'
 import KakaoLogin from './views/user/KakaoLogin.vue';
+import GoogleLogin from './views/user/GoogleLogin.vue';
 import Join from './views/user/Join.vue'
 import EmailConfirm from './views/user/EmailConfirm.vue'
 import JoinComplete from './views/user/JoinComplete.vue'
@@ -39,8 +40,9 @@ import Chatroom from './views/message/Chatroom.vue'
 import EmptyChatroom from './views/message/EmptyChatroom.vue'
 import ChooseFollowing from './views/message/ChooseFollowing.vue'
 
-// import MessageList from './views/message/MessageList.vue'
+import Loading from './views/Loading.vue'
 
+// import MessageList from './views/message/MessageList.vue'
 
 // import Components from './views/Components.vue'
 
@@ -65,6 +67,11 @@ export default [
         path: '/oauth/kakao',
         name: 'KakaoLogin',
         component: KakaoLogin
+    },
+    {
+        path: '/oauth/google',
+        name: 'GoogleLogin',
+        component: GoogleLogin
     },
     {
         path : '/user/join',
@@ -216,7 +223,11 @@ export default [
         name: 'ChooseFollowing',
         component: ChooseFollowing
     },
-    
+    {
+        path: '/loading',
+        name: 'Loading',
+        component: Loading
+    },
     // {
     //     path : '/components',
     //     name : 'Components',

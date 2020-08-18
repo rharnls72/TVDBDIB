@@ -28,6 +28,10 @@ public class JWTInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if(request.getRequestURI().contains("testdata")) {
+            return true;
+        }
+
         // Option 메서드는 보내주기, 이거 해줘야 제대로 동작됨 왜죠?
         if(request.getMethod().equals("OPTIONS")) {
             return true;

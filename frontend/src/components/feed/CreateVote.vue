@@ -4,31 +4,31 @@
       
       <b-list-group-item class="p-0 create-header"><input id="article-title" type="text" class="m-0 border-0 rounded-pill" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
       
-      <b-list-group-item v-for="content in contents" :key="content.id">
+      <b-list-group-item v-for="(content, idx) in contents" :key="content.id">
         <div class="row d-flex align-items-center px-3">
-          <b-form-input type="text" class="m-0 col rounded-pill" v-model="content.text" placeholder="항목 입력!!!">
-          </b-form-input>
-          <b-icon icon="dash-circle" v-if="content.id>1" @click="delItem(content.id)" class="ml-1 text-right" font-scale="1.4"></b-icon>
+          <input type="text" class="m-0 col rounded-pill input-form" v-model="content.text" placeholder="항목 입력!!!">
+          <b-icon icon="dash-circle" v-if="idx>1" @click="delItem(content.id)" class="ml-1 text-right" font-scale="1.4"></b-icon>
         </div>
       </b-list-group-item>
 
-      <b-list-group-item>
+      <b-list-group-item v-if="contents.length < 3">
         <div class="row">
           <b-icon icon="plus-circle" class="ml-1 col text-right" @click="addItem" font-scale="1.4"></b-icon>
         </div>
       </b-list-group-item>
 
-      <b-list-group-item><b-form-tags
-            input-id="tags-remove-on-delete"
-            :input-attrs="{ 'aria-describedby': 'tags-remove-on-delete-help' }"
-            v-model="value"
-            separator=" "
-            placeholder="태그 입력!!"
-            remove-on-delete
-            no-add-on-enter
-            class="mb-2"
-            style="outline:none !important"
-          ></b-form-tags></b-list-group-item>
+      <b-list-group-item>
+        <textarea
+        class="tag-input"
+        v-model="tag"
+        placeholder="태그를 입력하세요.
+스페이스 바를 누르면 자동으로 태그가 입력됩니다."
+        row="20"
+        @keydown.space="inputTag"
+        >
+        </textarea>
+        <b-badge v-for="(Tag, idx) in value" :key="idx">{{Tag}}<b-icon @click="delTag(Tag)" icon="x" scale="0.75"></b-icon></b-badge>
+      </b-list-group-item>
 
     </b-list-group>
   </div>
@@ -48,6 +48,7 @@ export default {
       ],
       value: [],
       length: 2,
+      tag: null,
     }
   },
   props: {
@@ -56,6 +57,20 @@ export default {
     submit: Boolean,
   },
   methods: {
+    inputTag(event) {
+      event.preventDefault()
+      if (this.value.filter(res=>res=== this.tag).length === 0) {
+        this.length++
+        this.value.push(this.tag)
+        this.tag = null
+      } else {
+        console.log('태그가 중복됩니다.')
+        this.tag = null
+      }
+    },
+    delTag(t) {
+      this.value = this.value.filter(res=>res !== t)
+    },
     delItem(delId) {
       this.contents = this.contents.filter(res => {
         return res.id !== delId
@@ -148,7 +163,7 @@ input[id=article-title]::placeholder {
 
 input[type=text], select, textarea{
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
@@ -168,7 +183,7 @@ button {
   float: right;
 }
 
-.disable-button {
+.disable-button { 
   background-color: gray;
   text-align: center;
   width: 100%;
@@ -217,6 +232,19 @@ span {
 
 .create-header {
   background-color: #D8BEFE;
+}
+
+.tag-input {
+  height: 100px;
+  resize: none;
+}
+
+.tag-input:focus {
+  outline: none;
+}
+
+.input-form:focus {
+  outline: none;
 }
 
 </style>

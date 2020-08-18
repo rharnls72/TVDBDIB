@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="columns">
+  <div>
     <ChooseFollowingHeader :choosed="choosed"/>
         <h2>메시지</h2>
         <div class="searchArea">
@@ -32,7 +32,7 @@ import header from "@/api/header.js"
 import http from '@/api/http-common.js';
 import UserSearchResult2 from '@/components/message/UserSearchResult2.vue'
 export default {
-  name: 'MessageList',
+  name: 'ChooseFollowing',
    components: {
     ChooseFollowingItem,
     Footer,

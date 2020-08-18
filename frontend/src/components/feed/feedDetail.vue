@@ -9,6 +9,7 @@
         <FeedItem :article="article" :detail="true"/>
         <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno" :fno="article.fno"/>
       </div>
+      <hr class="row col-12">
     </div>
     <Footer />
   </div>

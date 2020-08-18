@@ -28,7 +28,7 @@ import db from '@/api/firebaseInit';
 import SearchApi from '@/api/SearchApi.js';
 import UserSearchResult from '@/components/message/UserSearchResult.vue'
 export default {
-  name: 'MessageList',
+  name: 'ChatList',
    components: {
     ChatListItem,
     Footer,
