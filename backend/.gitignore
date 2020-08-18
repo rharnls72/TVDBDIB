@@ -5,6 +5,7 @@ target/
 !**/src/test/**
 .DS_Store
 testData.csv
+LocalTestProfilePic/**
 ### STS ###
 .apt_generated
 .classpath

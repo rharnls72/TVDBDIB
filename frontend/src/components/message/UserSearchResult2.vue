@@ -1,8 +1,8 @@
 <template>
-    <div class="feed-item">
+    <div>
       <ul class="list-group"> 
           <li v-for="(user) in users_result" v-bind:key="user.uno" 
-           class="list-group-item d-flex align-items-center" type="button" @click="goDetail(user)">
+           class="list-group-item d-flex align-items-center shadow" type="button" @click="selectedUser(user)" >
             
         <div class="box">
               <img v-if="user.profile_pic!=null" :src='user.profile_pic' class="profile" alt="profile">
@@ -17,7 +17,7 @@
 
 <script>
 import defaultProfile from '@/assets/images/profile_default.png'
-import SearchApi from '@/api/SearchApi.js';
+import MessageApi from "@/api/MessageApi";
 export default {
     name: 'UserSearchResult',
   data: () => {
@@ -26,23 +26,28 @@ export default {
     };
   },
   props: {
-    users_result: Array
+    users_result: Array,
+    choosed: Array
   },
   methods:{
-      goDetail(user){
-        let data = {
-        search_uno : user.uno
-      };
-      SearchApi.addHistory(
-        data
-        , res => {
-          this.$router.push("/profile/" + user.nick_name);
+      selectedUser(user){
+        if(this.choosed.find(element => element.uno ==user.uno) == undefined){
+          this.choosed.push(user);
+           this.$emit('clear')
+        }else{
+          this.makeToast("이미 추가되었습니다.", "primary");
+          this.$emit('clear')
         }
-        , err => {
-          console.log(err);
-        }
-      );
-      }
+    },
+    makeToast(message, variant){
+        this.$bvToast.toast(message, {
+          title: '알림',
+          toaster: "b-toaster-bottom-right",
+          variant: variant,
+          autoHideDelay: 3000,
+          appendToast: false
+        })
+     }
   }
 }
 </script>
@@ -51,9 +56,12 @@ export default {
 ul {
     padding-top: 0px; /* 검색창을 sticky로 고정시키니까 이걸 다시 0으로 해도 됐다. 50이었는데... */
 }
+li{
+  background-color: rgb(241, 241, 241);
+}
   .box {
-    width: 40px;
-    height: 40px; 
+    width: 30px;
+    height: 30px; 
     border-radius: 70%;
     overflow: hidden;
     margin-right: 15px;

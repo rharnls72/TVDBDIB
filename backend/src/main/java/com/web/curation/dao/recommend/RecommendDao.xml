@@ -6,7 +6,8 @@
 <mapper namespace="com.web.curation.dao.recommend.RecommendDao">
     <select id="getEpisodeLike" resultType="RecommendData">
         select
-            e.pno           AS `pno`
+            l.uno           AS `uno`
+            , e.pno           AS `pno`
             , l.create_date AS `create_date`
         from
             `episode_like` l
@@ -16,7 +17,8 @@
     </select>
     <select id="getProgramLike" resultType="RecommendData">
         select
-            `pno`
+            `uno`
+            , `pno`
             , `create_date`
         from
             `program_like`
@@ -24,7 +26,8 @@
     </select>
     <select id="getEpisodeReply" resultType="RecommendData">
         select
-            e.pno           AS `pno`
+            r.uno           AS `uno`
+            , e.pno           AS `pno`
             , r.write_date  AS `create_date`
         from
             `episode_reply` r
@@ -34,7 +37,8 @@
     </select>
     <select id="getProgramReply" resultType="RecommendData">
         select
-            `pno`
+            `uno`
+            , `pno`
             , `write_date` AS `create_date`
         from
             `program_reply`
@@ -42,7 +46,8 @@
     </select>
     <select id="getEpisodeDibs" resultType="RecommendData">
         select
-            e.pno           AS `pno`
+            d.uno           AS `uno`
+            , e.pno           AS `pno`
             , d.create_date AS `create_date`
         from
             `episode_dibs` d
@@ -50,4 +55,13 @@
             `episode` e ON d.eno = e.eno
         order by `create_date` desc
     </select>
+
+    <select id="getProgramFollow" resultType="RecommendData">
+        select
+            `uno`,
+            `pno`
+        from
+            `program_follow`
+    </select>
+
 </mapper>

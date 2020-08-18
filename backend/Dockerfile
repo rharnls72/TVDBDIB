@@ -1,6 +1,6 @@
 FROM openjdk:14-jdk-alpine
 
-EXPOSE 9100
+EXPOSE 8999
 
 ARG JAR_FILE=target/TvilityBack.jar
 

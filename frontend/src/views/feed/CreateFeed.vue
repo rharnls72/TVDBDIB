@@ -20,6 +20,8 @@ import FeedApi from '@/api/FeedApi'
 
 import GetUserApi from "@/api/GetUserApi"
 
+import $ from "jquery"
+
 export default {
   name: 'CreateFeed',
   components: {
