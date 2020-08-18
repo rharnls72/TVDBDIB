@@ -9,25 +9,11 @@
           <img v-else :src='defaultProfile' class="profile" alt="profile">
         </div>
         {{room.mainUser.nick_name}}<span v-if="room.users.length>2">님 외 {{room.users.length-2}}명</span>
-        <!-- <span class="" type="button">
-          <button @click.stop.prevent="deleteChat(room)" class="">삭제</button>
-        </span> -->
           <div class="btnGroup">
             <div class="inbtnGroup">
                 <button @click.stop.prevent="deleteChat(room)" class="delbtn">삭제</button>
             </div>
           </div>
-        <!-- <div class="form-group row" style="width: 100%;">
-            <img class="my-auto col-3 col-sm-3" src="@/assets/images/profile_default.png">
-
-
-            <span class="user-content my-auto col-6 col-sm-6">
-              
-            </span>
-            <span class="float-right my-auto col-3 col-sm-3 removeBtn" type="button">
-                <button @click.stop.prevent="deleteChat(room)" class="float-right btn btn-danger btn-sm">삭제</button>
-            </span>
-        </div> -->
         </li>
 
       </ul>

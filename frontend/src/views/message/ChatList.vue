@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="columns">
-    <ChatListHeader @click="magic_flag = false"/>
+    <ChatListHeader/>
     <div class="searchArea">
       <div @click="searchIcon" class="searchIcon">
             <b-icon-search style="width: 20px; height: 20px;"></b-icon-search>
@@ -75,9 +75,6 @@ export default {
       .onSnapshot(this.getChatList);
   },
   methods: {
-    focusOut(event){
-      console.log(event)
-    },
     searchIcon(){
       this.part_users_result = this.users.filter(
           (user) => user.nick_name.toUpperCase().includes(this.word.toUpperCase())
