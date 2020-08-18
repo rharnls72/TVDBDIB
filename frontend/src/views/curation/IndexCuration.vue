@@ -99,6 +99,7 @@ export default {
     });
     CurationApi.requestEpisode(
       res => {
+        console.log(res);
         this.curations = res.list;
         if(this.curations.length>0){
           this.makeCurations();
