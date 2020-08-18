@@ -3,52 +3,37 @@ package com.web.curation.controller.recommend;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import ch.qos.logback.core.joran.conditional.ElseAction;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.web.curation.dao.episode.EpisodeDao;
-import com.web.curation.dao.following.FollowingDao;
 import com.web.curation.dao.recommend.RecommendDao;
 import com.web.curation.model.BasicResponse;
-import com.web.curation.model.episode.EpisodeDB;
-import com.web.curation.model.episode.EpisodeResponse;
 import com.web.curation.model.program.Program;
 import com.web.curation.model.recommend.RecommendData;
 import com.web.curation.model.user.User;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import joinery.DataFrame;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
@@ -64,6 +49,7 @@ public class RecommendController {
     private RecommendDao recommendDao;
 
     static final int WATCH_HOUR = 72;
+    static final int RECOMMEND_SIZE = 20;
 
     static String BASE_URL = "https://api.themoviedb.org/3/";
     static String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
@@ -75,185 +61,164 @@ public class RecommendController {
 
         int uno = ((User) request.getAttribute("User")).getUno();
 
-        RestTemplate restTemplate = new RestTemplate();
-        List<Program> programList = new ArrayList<Program>();
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /*
+        Process process = Runtime.getRuntime().exec("/tvility/python3.8 /tvility/model_load.py " + uno);
+        //Process process = Runtime.getRuntime().exec("python model_load.py " + uno);
+        BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        //BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        while ((s = stdInput.readLine()) != null){
+            python_output = s;
+        }
+        */
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        URL url = new URL("http://localhost:8888/ai/recommend?uno=" + uno);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-        for (int page = 1; page <= 5; page++) {
-            ResponseEntity<String> re = restTemplate
-                    .getForEntity(BASE_URL + "trending/tv/day?page=" + page + "&api_key=" + API_KEY, String.class);
-            JSONObject recommended_program = new JSONObject(re.getBody());
-            JSONArray programs = recommended_program.optJSONArray("results");
+        conn.setRequestMethod("GET");
 
-            for (int i = 1; i <= programs.length(); i++) {
+        int responseCode = conn.getResponseCode();
+        System.out.println("Recommend Python server response code: " + responseCode);
+
+        if(responseCode == 200) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            JSONObject responseJson = new JSONObject(sb.toString());
+            JSONArray data = responseJson.getJSONArray("data");
+
+            ArrayList<Program> final_result = new ArrayList<Program>();
+            RestTemplate restTemplate = new RestTemplate();
+            
+            // 추천 결과 Program ID들로 TMDB API에 요청 보내서 포스터, 프로그램명 가져오기.
+            for (int i=0; i<RECOMMEND_SIZE; i++){
                 Program p = new Program();
-                JSONObject programJson = programs.optJSONObject(i - 1);
+                ResponseEntity<String> re = 
+                restTemplate.getForEntity(BASE_URL + "tv/" + data.getInt(i) + "?api_key=" + API_KEY + "&language=ko", String.class);
+                JSONObject programJson = new JSONObject(re.getBody());
                 int id = programJson.optInt("id");
                 String name = programJson.optString("name");
                 String thumbnail = programJson.optString("poster_path");
                 p.setPno(id);
                 p.setPname(name);
-                if (thumbnail != null && thumbnail.length() > 1)
-                    p.setThumbnail(IMAGE_BASE_URL + thumbnail);
-                programList.add(p);
-            }
-        }
-
-        OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream("testData.csv"));
-        Random r = new Random();
-        os.write("userId, programId, rating\n");
-
-        for (int i = 1; i <= 100; i++) {
-            for (int j = 0; j < programList.size(); j++) {
-                int isSkip = r.nextInt(3);
-                if (isSkip >= 2)
-                    continue;
-
-                String line = i + "," + programList.get(j).getPno() + "," + (r.nextInt(4) + 1) + ".0";
-                os.write(line + "\n");
-            }
-        }
-
-        os.close();
-
-        List<Long> recommend_result = collaborative_filtering(uno);
-        ArrayList<Program> final_result = new ArrayList<Program>();
-
-        for (Program p: programList){
-            long pno = p.getPno();
-            if (recommend_result.contains(pno))
-                final_result.add(p);
-        }
-
-        System.out.println(final_result.size());
-
-        final BasicResponse result = new BasicResponse();
-        result.status = true;
-        result.msg = "success";
-        result.data = final_result;
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    private List collaborative_filtering(int uno) throws Exception {
-        long login_user_id = uno;
-        int user_size = 100;
-
-        // joinery로 데이터 읽기.
-        DataFrame df = DataFrame.readCsv(new FileInputStream("testData.csv"));
-
-        // rating이 value로 들어가는 행렬 형태로 변환. (유저ID = 행, 프로그램ID = 열, 평점 = 값)
-        DataFrame df_pivoted = df.pivot(0, 1, 2);
-
-        int main_row_num = -1;
-        for (int i=0; i<user_size; i++){
-            if ((long)df_pivoted.get(i, 0) == login_user_id){
-                main_row_num = i;
-                break;
-            }
-        }
-
-        System.out.println(main_row_num);
-        HashMap<Integer, Double> cor_list = new HashMap<Integer, Double>();
-
-        // 상관계수 계산.
-        List main_row = df_pivoted.row(main_row_num); // 다른 유저들과의 상관계수를 비교할 축
-        int colsize = df_pivoted.size();
-
-        for (int i=0; i<user_size; i++) {
-            if (i == main_row_num) continue;
-            List row2 = df_pivoted.row(i);
-
-            double sumx = 0.0;
-            double sumy = 0.0;
-            double sumxy = 0.0;
-            double sumx_pow = 0.0;
-            double sumy_pow = 0.0;
-            int n = 0;
-
-            for (int j=1; j<colsize; j++){
-                Object a = main_row.get(j);
-                Object b = row2.get(j);
-                //System.out.println(a + " " + b);
-                if (a != null && b != null){ // A, B가 모두 본 프로그램에 대해서만.
-                    n++;
-                    sumx += (double) a;
-                    sumy += (double) b;
-                    sumxy += (double) a * (double) b;
-                    sumx_pow += (double) a * (double) a;
-                    sumy_pow += (double) b * (double) b;
-                }
+                if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
+                    final_result.add(p);
             }
 
-            double up = n*sumxy - sumx*sumy;
-            double down = (n*sumx_pow - (sumx * sumx)) * (n*sumy_pow - (sumy * sumy));
-            double cor = up / Math.sqrt(down);
-
-            cor_list.put(i, cor);
+            final BasicResponse result = new BasicResponse();
+            result.status = true;
+            result.msg = "success";
+            result.data = final_result;
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            final BasicResponse result = new BasicResponse();
+            result.status = false;
+            result.msg = "Response code: " + responseCode;
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
-        System.out.println(cor_list);
+        // int uno = ((User) request.getAttribute("User")).getUno();
+        // // 모델에서 받는 input 데이터가 int64 타입으로 되어있어서 int가 아니라 long으로 만들어야
 
-        // 상관계수 내림차순으로 정렬해서 제일 비슷한 유저 N명을 찾는다
-        List<Integer> keySetList = new ArrayList<>(cor_list.keySet());
+        // //DataFrame df = DataFrame.readCsv(new FileInputStream("tvility/testData.csv"));
+        // DataFrame df = DataFrame.readCsv(new FileInputStream("testData.csv"));
 
-        Collections.sort(keySetList, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return cor_list.get(o2).compareTo(cor_list.get(o1));
-            }
-        });
+        // // rating이 value로 들어가는 행렬 형태로 변환. (유저ID = 행, 프로그램ID = 열, 평점 = 값)
+        // DataFrame df_pivoted = df.pivot(0, 1, 2);
 
-        int nearest_N = 5;
-        ArrayList<Double> means = new ArrayList<Double>();
-        double mymean = getMean(main_row);
+        // long login_user_id = (long) uno;
+        // int user_size = df_pivoted.length();
+        // System.out.println(user_size);
+        // int colsize = df_pivoted.size();
+        // //System.out.println(colsize);
 
-        // 자신과 비슷한 유저 N명에 대해 각각 매긴 평점의 평균을 구함
-        for (int i=0; i<nearest_N; i++){
-            List row = df_pivoted.row(keySetList.get(i));
-            means.add(getMean(row));
-        }
+        // int main_row_num = -1;
+        // for (int i=0; i<user_size; i++){
+        //     if ((long)df_pivoted.get(i, 0) == login_user_id){
+        //         main_row_num = i;
+        //         break;
+        //     }
+        // }
 
-        Object[] program_ids = df_pivoted.columns().toArray();
-        ArrayList<Long> recommend = new ArrayList<Long>();
+        // if (main_row_num == -1){
+        //     final BasicResponse result = new BasicResponse();
+        //     result.status = true;
+        //     result.msg = "failed";
+        //     return new ResponseEntity<>(result, HttpStatus.OK);
+        // }
 
-        // 비슷한 유저 N명의 평점정보를 기반으로 내가 아직 안본 프로그램에 대한 평점 예측
-        for (int i=1; i<colsize; i++){
-            if (main_row.get(i) == null){ // 내가 아직 안본 프로그램이라면.
-                // 채워질 값 = 내 평균 + k * sigma (유사도 * (상대유저가 매긴 평점 - 상대유저의 평균))
-                double sigma = 0.0;
-                double k = 0.0;
+        // //System.out.println(main_row_num);
+        // List main_row = df_pivoted.row(main_row_num); // 추천 대상 유저의 시청 정보 row.
+        // ArrayList<Long> not_watched_col_nums = new ArrayList<Long>();
 
-                for (int j=0; j<nearest_N; j++){
-                    int user_row_num = keySetList.get(j);
-                    if (df_pivoted.get(user_row_num, i) != null){
-                        sigma += cor_list.get(user_row_num) * ((double) df_pivoted.get(user_row_num, i) - means.get(j));
-                        k += Math.abs(cor_list.get(user_row_num));
-                    }
-                }
+        // //System.out.println(main_row);
+        
+        // // 맨 첫 column은 userId니까 빼고 세어야
+        // for (int i=1; i<colsize; i++){
+        //     if (main_row.get(i) == null){
+        //         not_watched_col_nums.add((long)i-1);
+        //     }
+        // }
 
-                k = 1/k;
-                double rating = mymean + (k * sigma);
-                System.out.println("프로그램 " + program_ids[i] + "에 대한 내 평점 예측: " + rating);
-                if (rating >= mymean){
-                    recommend.add((Long)program_ids[i]);
-                }
-            }
-        }
-        return recommend;
-    }
+        // long[][] input = new long[not_watched_col_nums.size()][2];
+        // for (int i=0; i<not_watched_col_nums.size(); i++){
+        //     input[i][0] = main_row_num;
+        //     input[i][1] = not_watched_col_nums.get(i);
+        // }
 
-    private static double getMean(List row){
-        double sum = 0.0;
-        int size = row.size();
-        int count = 0;
-        System.out.println(row);
-        for (int i=1; i<size; i++){
-            Object obj = row.get(i);
-            if (obj != null){
-                sum += (double) obj;
-                count++;
-            }
-        }
-        return sum / count;
+        // Object[] program_ids = df_pivoted.columns().toArray();
+        // long[] recommends = new long[RECOMMEND_SIZE];
+
+        // // 만들어놨던 모델 불러오기
+        // //try (SavedModelBundle b = SavedModelBundle.load("tvility/test_model_2", "serve")){
+        // try (SavedModelBundle b = SavedModelBundle.load("test_model_2", "serve")){
+
+        //     // byte[] 를 제대로 출력하려면 String 생성자의 매개변수로 넣어주는 방법이 있었음
+        //     //System.out.println(new String(b.metaGraphDef())); // input, output 노드 이름 알아내기 위함.
+        //     Session sess = b.session();
+        //     Tensor result = sess.runner()
+        //     .feed("serving_default_input_1:0", Tensor.create(input)) // 노드 이름 알아내서 넣어줘야 했다
+        //     .fetch("StatefulPartitionedCall:0")
+        //     .run()
+        //     .get(0); // 리턴타입이 기본적으로 List<Tensor> 라서
+
+        //     // IdentityIdentity:output:0
+
+        //     HashMap<Long, Float> ratings = new HashMap<Long, Float>();
+
+        //     //System.out.println(result);
+        //     // 텐서가 6x1짜리로 오는데 행이 1개라도 어쨌든 2차원 배열로 선언해줘야 함
+        //     float[][] result_arr = (float[][]) result.copyTo(new float[input.length][1]); 
+        //     for (int i=0; i<result_arr.length; i++){
+        //         for (int j=0; j<result_arr[i].length; j++){
+        //             //System.out.println(input[i][1] + " " + result_arr[i][j]);
+        //             ratings.put(input[i][1], result_arr[i][j]);
+        //         }
+        //     }
+
+        //     List<Long> keySetList = new ArrayList<>(ratings.keySet());
+
+        //     Collections.sort(keySetList, new Comparator<Long>() {
+        //         @Override
+        //         public int compare(Long o1, Long o2) {
+        //             return ratings.get(o2).compareTo(ratings.get(o1));
+        //         }
+        //     });
+
+        //     //System.out.println(df_pivoted.columns());
+        //     //System.out.println(df_pivoted.columns().size());
+
+        //     for (int i=0; i<RECOMMEND_SIZE; i++){
+        //         long col_num = keySetList.get(i) + 1; // 맨앞엔 userId라는 값이 붙어있음
+        //         //System.out.println(program_ids[(int)col_num]);
+        //         recommends[i] = (long) program_ids[(int)col_num];
+        //     }
+
+        // }
     }
 
     // time sliding - 지난 시간에 따라 점수 계산
@@ -315,19 +280,27 @@ public class RecommendController {
         // 여기까지 tvdbdib score 산출 (표준화 안된 상태)
         // 표준화
         // 그냥 (List) 이렇게 변환하려고 하면 에러난다. new ArrayList 하고 그 파라미터로 Collection을 주면 됨.
+
+        // 평균, 표준편차 계산할때 라이브러리 쓰면 좀 더 빠를까 싶었는데 아니었다
+        // double[] converted_arr = Arrays.stream(score_table.values().toArray())
+        //                         .mapToDouble(num -> Double.parseDouble(num.toString())).toArray();
+        // float mean = (float) StatUtils.mean(converted_arr);
+        // float stddev = (float) Math.sqrt(StatUtils.populationVariance(converted_arr));
         float mean = getMean_float(new ArrayList<Float>(score_table.values())); 
         float stddev = getStddev(new ArrayList<Float>(score_table.values()), mean);
         for (int id: score_table.keySet()){
             float this_score = score_table.get(id);
-            float t_score = 10 * ((this_score - mean) / stddev) + 50;
+            float t_score = 20 * ((this_score - mean) / stddev) + 100;
             score_table.put(id, t_score);
         }
 
         // 데이터 있는 프로그램들에 대해 TMDB 요청
+        // 너무 요청이 많아서 여기서 시간이 엄청 걸린다. 그냥 TMDB 점수는 뺄까?
         ArrayList<Program> programs = new ArrayList<Program>();
         RestTemplate restTemplate = new RestTemplate();
         ArrayList<Float> ratings = new ArrayList<Float>();
 
+        System.out.println(score_table.size());
         for (int id: score_table.keySet()){
             Program p = new Program();
 
@@ -340,14 +313,11 @@ public class RecommendController {
             String thumbnail = programJson.optString("poster_path");
             float popularity = programJson.optFloat("popularity");
 
-            //popularity *= 100;
-            
             p.setPno(id);
             p.setPname(name);
             if (thumbnail != null && thumbnail.length() > 1) p.setThumbnail(IMAGE_BASE_URL + thumbnail);
             
             p.setRating(popularity);
-
             ratings.add(popularity);
             programs.add(p);
         }
@@ -356,7 +326,7 @@ public class RecommendController {
         stddev = getStddev(ratings, mean);
         for (Program p: programs){
             float std_score = 10 * ((p.getRating() - mean) / stddev) + 50;
-            System.out.println(std_score + " " + score_table.get(p.getPno()));
+            //System.out.println(std_score + " " + score_table.get(p.getPno()));
             p.setRating(std_score + score_table.get(p.getPno()));
         }
 
@@ -366,13 +336,16 @@ public class RecommendController {
             public int compare(Program o1, Program o2) {
                 return Float.compare(o2.getRating(), o1.getRating());
             }
-        });
+        });        
 
         // 반환할 응답 객체
         final BasicResponse result = new BasicResponse();
         result.status = true;
         result.msg = "success";
-        result.data = programs;
+        if (programs.size() > 20)
+            result.data = programs.subList(0, 20);
+        else
+            result.data = programs;
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

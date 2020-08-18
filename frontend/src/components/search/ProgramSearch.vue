@@ -1,7 +1,7 @@
 <template>
 <div>
     <b-nav justified class="myheader" >
-      <b-input-group class="align-items-center m-2 mysearchbar">
+      <b-input-group class="align-items-center">
         <div class="input-group-prepend">
           <div @click="searchIcon()" class="input-group-text py-0" style="border: 0px; background-color: #D8BEFE;">
             <b-icon-search></b-icon-search>
@@ -10,27 +10,22 @@
 
         <!-- 프로그램명 / 인명 검색 select -->
         <b-form-select v-model="selected" :options="options"
-         style="height: 85%; width: 20%; border: 0px;"></b-form-select>
+         ></b-form-select>
 
         <!-- 자동완성 기능 지원하는 검색 창 컴포넌트 -->
-        <vue-bootstrap-typeahead
-          :data="searchedList"
-          v-model="word"
-          size="sm"
-          textVariant="red"
-          :serializer="p => p.name"
-          :minMatchingChars='1'
-          :maxMatches='20'
-          placeholder="search..."
-          @hit="selectedUser = $event"
-          ref="searchInput"
-          style="height: auto; width: 55%; border: 0px; background-color: #eee;"
-        />
+        <input 
+          class="searchInput" 
+          type="text" 
+          ref="searchInput" 
+          placeholder="검색" 
+          v-on:input='word = $event.target.value' 
+          v-on:keyup='searchIcon()' 
+          autocomplete="off">
       </b-input-group>
     </b-nav>
 
-    <ResultProgram v-if="current_option == 1" :programs="result"/>
-    <ResultPeople v-if="current_option == 2" :peoples="result"/>
+    <ResultProgram v-if="current_option == 1" :programs="searchedList"/>
+    <ResultPeople v-if="current_option == 2" :peoples="searchedList"/>
 
     <!-- v-if를 넣어서 처음 페이지 띄웠을 때 (검색버튼 안 눌렀을 때) 는 동작 안하게 함 -->
     <infinite-loading v-if="loading_complete && !isEndPoint" @infinite="infiniteHandler"></infinite-loading>
@@ -40,7 +35,7 @@
 </template>
 
 <script>
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
+// import VueBootstrapTypeahead from 'vue-bootstrap-typeahead';
 import SearchApi from '@/api/SearchApi.js';
 import tmdbApi from '@/api/tmdbApi.js';
 import axios from "axios";
@@ -102,7 +97,6 @@ export default {
       this.current_page++;
         axios.get(tmdbApi.BASE_URL + "search/tv?query=" + this.word + "&api_key=" + tmdbApi.API_KEY + "&page=" + this.current_page + "&language=ko")
             .then(res => {
-                console.log(res);
                 this.result = this.result.concat(res.data.results);
                 this.loading_complete = true;
             })
@@ -114,7 +108,6 @@ export default {
     getProgramList(newWord) {
         axios.get(tmdbApi.BASE_URL + "search/tv?query=" + newWord + "&api_key=" + tmdbApi.API_KEY + "&language=ko")
             .then(res => {
-                console.log(res);
                 this.searchedList = res.data.results;
             })
             .catch(error => {
@@ -126,7 +119,6 @@ export default {
     getPeopleList(newWord){
         axios.get(tmdbApi.BASE_URL + "search/person?query=" + newWord + "&api_key=" + tmdbApi.API_KEY + "&language=ko")
             .then(res => {
-                console.log(res);
                 this.searchedList = res.data.results;
             })
             .catch(error => {
@@ -144,7 +136,6 @@ export default {
     getProgramResult(word){
         axios.get(tmdbApi.BASE_URL + "search/tv?query=" + word + "&api_key=" + tmdbApi.API_KEY + "&language=ko")
             .then(res => {
-                console.log(res);
                 this.result = res.data.results;
                 this.total_pages = res.data.total_pages;
                 this.current_page = 1;
@@ -161,7 +152,6 @@ export default {
             .then(res => {
               // 1. 동명이인 어떻게 처리? - 다 띄워줄 수 있게 인터페이스를...?
               // 2. known_for가 왜 3개까지밖에 안뜨지?
-                console.log(res);
                 let promises = [];
                 this.result = [];
 
@@ -197,7 +187,6 @@ export default {
 
                   axios.get(tmdbApi.BASE_URL + "person/" + id + "/tv_credits?api_key=" + tmdbApi.API_KEY + "&language=ko")
                   .then(res => {
-                      console.log(res);
                       item.id = id;
                       item.people_name = name;
                       item.profile_path = pic;
@@ -220,7 +209,7 @@ export default {
   },
   components: {
     //SearchApi,
-    VueBootstrapTypeahead,
+    // VueBootstrapTypeahead,
     ResultProgram,
     ResultPeople,
     InfiniteLoading,
@@ -234,5 +223,8 @@ export default {
     height: 50px;
     z-index: 1;
     position: sticky;
+  }
+  .searchInput{
+    border: none;
   }
 </style>

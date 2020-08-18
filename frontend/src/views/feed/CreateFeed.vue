@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="feed-create">
     <CreateFeedHeader @submitArticle="submitArticle" class="feed-header"/>
     <div v-if="this.isArticle" class="create-feed-form row justify-content-center">
       <CreateVote v-if="page===3" :submit="submit.vote" :article="article" :fno="fno"/>
@@ -19,6 +19,8 @@ import CreateFeedHeader from '@/components/feed/CreateFeedHeader.vue'
 import FeedApi from '@/api/FeedApi'
 
 import GetUserApi from "@/api/GetUserApi"
+
+import $ from "jquery"
 
 export default {
   name: 'CreateFeed',
@@ -86,6 +88,7 @@ export default {
       this.fno = null
       this.article = null
     }
+    document.documentElement.scrollTop = 0
   },
 }
 </script>
@@ -107,8 +110,13 @@ export default {
 }
 .create-feed-form {
   width: 100%;
-  margin-top: 20vh;
+  padding-top: 20vh;
+  bottom: 0;
   margin-left: 0;
   margin-right: 0;
+}
+.feed-create {
+  background-color: #f8e8f2;
+  bottom: 0;
 }
 </style>

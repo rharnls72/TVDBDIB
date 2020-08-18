@@ -1,11 +1,17 @@
 <template>
   <div>
-    <MyPageHeader :info="info"/>
-    <div class="container mycontainer">
-      <MyPageInformation :info="info" :followcnt="followcnt"/>
-      <WrittenFeed v-for="feed in writtenFeeds" :key="feed.fno" :feed="feed" class="col-12 row"/>
+    <div v-if="show">
+      <MyPageHeader :info="info"/>
+      <div class="container mycontainer">
+        <MyPageInformation :info="info" :followcnt="followcnt"/>
+        <div v-for="feed in writtenFeeds" :key="feed.fno" class="col-12 m-0 p-0 row">
+          <WrittenFeed :feed="feed" class="col-12 row"/>
+          <hr class="row col-12">
+        </div>
+      </div>
+      <Footer />
     </div>
-    <Footer />
+    <LoadingItem v-else />
   </div>
 </template>
 
@@ -14,6 +20,7 @@ import MyPageHeader from '@/components/account/mine/MyPageHeader.vue'
 import MyPageInformation from '@/components/account/mine/MyPageInformation.vue'
 import WrittenFeed from '@/components/account/mine/WrittenFeed.vue'
 import Footer from '@/components/common/custom/Footer.vue'
+import LoadingItem from '@/components/common/custom/LoadingItem.vue'
 
 import AccountApi from "@/api/AccountApi"
 import GetUserApi from "@/api/GetUserApi"
@@ -27,6 +34,8 @@ export default {
       followcnt: {},
       writtenFeeds: [],
       requestCount: 1,
+
+      show: false
     }
   },
   components: {
@@ -34,6 +43,7 @@ export default {
     MyPageInformation,
     WrittenFeed,
     Footer,
+    LoadingItem
   },
   methods: {
     takeFeed() {
@@ -42,21 +52,15 @@ export default {
         target_uno: this.info.uno
       };
 
-      console.log(this.info)
-      console.log(data)
-
       FeedApi.getFeedList(
         data
         , res => {
-          console.log(111, res);
-
           this.writtenFeeds = res.list
           for (let i=0; i<res.list.length; i++) {
             this.writtenFeeds[i].content = JSON.parse(this.writtenFeeds[i].content)
             this.writtenFeeds[i].tag = JSON.parse(this.writtenFeeds[i].tag)
           }
           this.requestCount++
-          console.log(this.writtenFeeds)
           setTimeout(()=>{}, 1000)
         }
         , err => {
@@ -86,7 +90,6 @@ export default {
             target_uno: this.$store.state.userInfo.uno
           }
           , res => {
-            console.log(111, res);
 
             this.writtenFeeds = res.list
             for (let i=0; i<res.list.length; i++) {
@@ -94,8 +97,9 @@ export default {
               this.writtenFeeds[i].tag = JSON.parse(this.writtenFeeds[i].tag)
             }
             this.requestCount++
-            console.log(this.writtenFeeds)
             setTimeout(()=>{}, 1000)
+
+            this.show = true;
           }
           , err => {
             console.log(err)
