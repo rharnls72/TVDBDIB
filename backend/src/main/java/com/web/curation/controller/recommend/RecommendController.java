@@ -72,7 +72,7 @@ public class RecommendController {
         }
         */
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        URL url = new URL("http://localhost:8888/ai/recommend/" + uno);
+        URL url = new URL("http://localhost:8888/ai/recommend?uno=" + uno);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
         conn.setRequestMethod("GET");
