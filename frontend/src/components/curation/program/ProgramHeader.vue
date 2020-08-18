@@ -1,7 +1,6 @@
 <template>
   <b-nav justified class="myheader align-items-center">
     <b-nav-item class="d-flex justify-content-start">
-      <!-- 새 글 작성 -->
       <button>
         <b-icon-chevron-left @click="goToBack" class="text-dark"></b-icon-chevron-left>
       </button>
@@ -28,12 +27,12 @@ export default {
 }
 </script>
 
-<style>
-.myheader {
-  background-color: #eee;
-  position: fixed;
-  width: 100%;
-  height: 50px;
-  z-index: 1;
-}
+<style scoped>
+  .myheader {
+    background-color: #D8BEFE;
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    z-index: 1;
+  }
 </style>

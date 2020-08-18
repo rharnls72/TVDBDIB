@@ -1,29 +1,12 @@
 <template>
-  <div>
-    <div v-if="this.isArticle">
-      <CreateVote v-if="page===3" :article="article" :fno="fno"/>
-      <CreateArticle v-else-if="page===1" :article="article" :fno="fno"/>
-      <CreateCountdown v-else :article="article" :fno="fno"/>
+  <div class="feed-create">
+    <CreateFeedHeader @submitArticle="submitArticle" class="feed-header"/>
+    <div v-if="this.isArticle" class="create-feed-form row justify-content-center">
+      <CreateVote v-if="page===3" :submit="submit.vote" :article="article" :fno="fno"/>
+      <CreateArticle v-else-if="page===1" :submit="submit.article" :article="article" :fno="fno"/>
+      <CreateCountdown v-else :article="article" :submit="submit.countdown" :fno="fno"/>
     </div>
-    <div class="container">
-      <div class="page-btns col row">
-        <div @click="turnArticle" class="col d-flex justify-content-center">
-          <div class="link-btn d-flex justify-content-center align-items-center">
-            <b-icon icon="pencil-square" font-scale="1.4"></b-icon>
-          </div>
-        </div>
-        <div @click="turnCountdown" class="col d-flex justify-content-center">
-          <div class="link-btn d-flex justify-content-center align-items-center">
-            <b-icon icon="stopwatch" font-scale="1.4"></b-icon>
-          </div>
-        </div>
-        <div @click="turnVote" class="col d-flex justify-content-center">
-          <div class="link-btn d-flex justify-content-center align-items-center">
-            <b-icon icon="card-checklist" font-scale="1.4"></b-icon>
-          </div>
-        </div>
-      </div>
-    </div>
+    <CreateFeedFooter class="page-btns" @changeArticle="turnArticle" @changeVote="turnVote" @changeCountdown="turnCountdown"/>
   </div>
 </template>
 
@@ -31,14 +14,20 @@
 import CreateVote from '@/components/feed/CreateVote.vue'
 import CreateArticle from '@/components/feed/CreateArticle.vue'
 import CreateCountdown from '@/components/feed/CreateCountdown.vue'
+import CreateFeedFooter from '@/components/feed/CreateFeedFooter.vue'
+import CreateFeedHeader from '@/components/feed/CreateFeedHeader.vue'
 import FeedApi from '@/api/FeedApi'
 
 import GetUserApi from "@/api/GetUserApi"
 
+import $ from "jquery"
+
 export default {
   name: 'CreateFeed',
   components: {
-    CreateVote, CreateArticle, CreateCountdown
+    CreateVote, CreateArticle, CreateCountdown,
+    CreateFeedFooter,
+    CreateFeedHeader,
   },
   data() {
     return {
@@ -46,12 +35,27 @@ export default {
       article: null,
       isArticle: true,
       fno: null,
+      submit: {
+        article: false,
+        countdown: false,
+        vote: false,
+      }
     }
   },
   methods: {
     turnArticle() {this.page = 1},
     turnVote() {this.page = 3},
     turnCountdown() {this.page = 2},
+    submitArticle() {
+      if (this.page === 1) {
+        this.submit.article = true
+      } else if (this.page === 2) {
+        this.submit.countdown = true
+      } else {
+        this.submit.vote = true
+      }
+      console.log(this.page)
+    }
   },
   created() {
     GetUserApi.getUser(res => {
@@ -84,21 +88,35 @@ export default {
       this.fno = null
       this.article = null
     }
+    document.documentElement.scrollTop = 0
   },
 }
 </script>
 
 <style scoped>
-.link-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: gray;
+.feed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
 }
 .page-btns {
   position: fixed;
   bottom: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
   margin-bottom: 3rem;
+}
+.create-feed-form {
+  width: 100%;
+  padding-top: 20vh;
+  bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+.feed-create {
+  background-color: #f8e8f2;
+  bottom: 0;
 }
 </style>

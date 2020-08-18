@@ -1,22 +1,45 @@
 <template>
   <div class="feed-item">
-      <ul> <!-- 받아온 데이터로 반복 돌리자 -->
-            <!-- done == 'Y' 일때만 done 이라는 클래스를 지정 -->
-          <li v-for="(message) in messages" :key="message.mno" 
-          class="shadow" type="button">
+      <ul>
+        <li v-for="(message) in messages" :key="message.mno">
 
-        <div class="form-group row" style="width: 100%;">
-          <!-- 이미지 바인딩 어떻게...? 잘 안된다 -->
-            <img class="my-auto col-3 col-sm-3" src="@/assets/images/profile_default.png">
-            <span class="user-content my-auto col-6 col-sm-6">
-              {{message.user.nick_name}}<br/>{{message.content}}
-            </span>
-            <span class="float-right my-auto col-3 col-sm-3 removeBtn" type="button">
-                <button @click.stop.prevent="deleteMessage(message)" class="float-right btn btn-danger btn-sm">삭제</button>
-            </span>
-        </div>
+          <div v-if="message.user.uno!=uno" style="clear:both;">
+              <div style="margin-top: 10px; display:flex;">
+                <div class="box">
+                  <img v-if="message.user.profile_pic!=null" class="profile" :src="message.user.profile_pic">
+                  <img v-else class="profile" :src="defaultProfile">
+                </div>
+                <div style="margin: auto 0;">{{message.user.nick_name}}</div>
+              </div>
+              <div style="display:flex;">
+                  <div class="messageContent">{{message.content}}</div>
+                  <div style="position: relative; padding-left:5px;">
+                    <div style="position:absolute; bottom:0;">{{message.time.hour}}:{{message.time.minute}}</div>
+                  </div>
+              </div>
+          </div>
+          <div v-else style="clear:both;">
+              <div style="margin-top: 10px; display:flex; float:right;">
+                <div style="margin: auto 0;">{{message.user.nick_name}}</div>
+                <div class="box">
+                    <img v-if="message.user.profile_pic!=null" class="profile" :src="message.user.profile_pic">
+                    <img v-else class="profile" :src="defaultProfile">
+                </div>
+            </div>
+            <div style="clear:both;">
+              <div style="display:flex; float:right;">
+                <div style="position: relative; padding-left:40px; padding-right:45px;">
+                  <div style="position:absolute; bottom:0;"> 
+                      <span @click.stop.prevent="deleteMessage(message)" style="color: red;">삭제</span>
+                      {{message.time.hour}}:{{message.time.minute.toString().padStart(2,'0')}}</div>
+                  </div>
+                    <!-- <div style="position:absolute; bottom:0; right : 10px;"> 
+                  </div> -->
+                  <div class="mineMessageContent">{{message.content}}</div>
+              </div>
+            </div>
+          </div>
         </li>
-
       </ul>
   </div>
 </template>
@@ -27,11 +50,15 @@ export default {
   name: 'MessageItem',
   data: () => {
     return {
-      defaultProfile
+      defaultProfile,
+      uno: -1,
     };
   },
   props: {
     messages: Array,
+  },
+  created() {
+    this.uno = this.$store.state.userInfo.uno;
   },
   methods:{
     deleteMessage(message){
@@ -60,71 +87,39 @@ export default {
 </script>
 
 <style scoped>
-ul {
-  list-style-type: none;
-  padding-left: 0px;
-  margin-top: 0%;
-  text-align: left;
+.box {
+    width: 30px;
+    height: 30px; 
+    border-radius: 70%;
+    overflow: hidden;
+    margin-left: 10px;
+    margin-right: 10px;
 }
-li {
-  display: flex;
-  min-height: 30px;
-  height: 70px;
-  line-height: 20px;
-  margin: 0.5rem 0;
-  padding: 0 0.5rem;
-  background: white;
-  border-radius: 3px;
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
-.checkBtn {
-  line-height: 45px;
-  color: #62acde;
-  margin-right: 5px;
+.messageContent{
+  max-width: 1000px;
+  margin-top: 5px;
+  margin-left: 40px;
+  padding: 10px;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  background-color: #f8e8f2;
+  word-break:break-all;
 }
-.removeBtn {
-  color: blue;
-  padding: 0;
-}
-
-.list-item {
-  display: inline-block;
-  margin-right: 5px;
-}
-.list-move {
-  transition: transform 1s;
-}
-.list-enter-active,
-.list-leave-active {
-  transition: all 1s;
-}
-.list-enter,
-.list-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
-}
-.done{
-  background-color: lightgoldenrodyellow;
-}
-
-img{
-    margin-right: 0%;
-    vertical-align: middle;
-}
-.btn{
-  height: 5%;
-  width: 90%;
-}
-
-.user-content{
-  padding: 0;
-}
-
-p{
-  margin: 5%;
-}
-
-.hidden{
-    display: none;
+.mineMessageContent{
+  max-width: 1000px;
+  margin-top: 5px;
+  margin-right: 40px;
+  padding: 10px;
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  background-color: #D8BEFE;
+  word-break:break-all;
+  /* overflow-wrap: break-word; */
 }
 
 </style>

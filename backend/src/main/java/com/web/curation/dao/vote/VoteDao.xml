@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.web.curation.dao.vote.VoteDao">
+    <!-- Create -->
+    <insert id="addVote">
+        insert into
+            `vote` (
+                `fno`
+                , `uno`
+                , `pos`
+            )
+        values (
+            #{fno}
+            , #{uno}
+            , #{pos}
+        )
+    </insert>
+
+    <select id="readVote" resultType="Vote">
+        select
+            `pos`
+            , count(*) as `count`
+            , (
+                select
+                    s.pos
+                from
+                    `vote` s
+                where
+                    s.fno = #{fno}
+                    and
+                    s.uno = #{uno}
+            ) as `user_pos`
+        from
+            `vote`
+        where
+            `fno` = #{fno}
+        group by
+            `pos`
+        order by
+            `pos`
+    </select>
+
+    <delete id="deleteVote">
+        delete from
+            `vote`
+        where
+            `fno` = #{fno}
+            and
+            `uno` = #{uno}
+    </delete>
+</mapper>

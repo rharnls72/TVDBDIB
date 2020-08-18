@@ -1,7 +1,7 @@
 <template>
   <div>
     <OtherPageHeader :info="info"/>
-    <div class="container mycontainer pb-5">
+    <div class="container mycontainer">
       <OtherPageInformation :info="info" :followcnt="followcnt"/>
       <WrittenFeed v-for="feed in writtenFeeds" :key="feed.fno" :feed="feed" class="col-12 row" />
     </div>
@@ -35,15 +35,11 @@ export default {
     Footer,
   },
   methods: {
-    
     takeFeed() {
       let data = {
         num: this.requestCount,
         target_uno: this.info.uno
       };
-
-      console.log(this.info)
-      console.log(data)
 
       FeedApi.getFeedList(
         data
@@ -54,7 +50,6 @@ export default {
             this.writtenFeeds[i].tag = JSON.parse(this.writtenFeeds[i].tag)
           }
           this.requestCount++
-          console.log(this.writtenFeeds)
           setTimeout(()=>{}, 1000)
         }
         , err => {
@@ -68,8 +63,8 @@ export default {
         my_nick_name : this.$store.state.userInfo.nick_name,
         other_nick_name: this.$route.params.nick_name
       };
-      // if(data.my_nick_name == data.other_nick_name)
-        // this.$router.push({name: 'MyPage'});
+      if(data.my_nick_name == data.other_nick_name)
+        this.$router.push({name: 'MyPage'});
       AccountApi.requestProfile(
         data,
         res => {
@@ -96,6 +91,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .mycontainer {
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
 </style>

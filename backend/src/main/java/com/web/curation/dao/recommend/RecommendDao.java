@@ -17,4 +17,11 @@ public interface RecommendDao {
     public List<RecommendData> getProgramReply();
 
     public List<RecommendData> getEpisodeDibs();
+
+    public List<RecommendData> getProgramFollow();
+
+    // public void insertTestUser();
+    // public void insertTestFollow();
+    // public void insertTestReply();
+    // public void insertTestLike();
 }

@@ -1,12 +1,9 @@
-
-
 <template>
   <div class="user" id="login">
-    <div class="wrapC">
-      <h1>
-        비밀번호 변경
-        <br />새로운 비밀번호를
-        <br />입력해주세요.
+    <LoginHeader />
+    <div class="wrapC mympw">
+      <h1 class="text-center">
+        비밀번호를 변경하세요.
       </h1>
 
       <div class="input-with-label">
@@ -60,6 +57,7 @@ import "../../components/css/user.scss";
 import UserApi from "../../api/UserApi";
 import PV from "password-validator";
 import GetUserApi from "@/api/GetUserApi"
+import LoginHeader from '@/components/user/custom/LoginHeader.vue'
 
 export default {
   created() {
@@ -169,8 +167,17 @@ export default {
       passwordConfirmType: "password",
 
     };
+  },
+  components: {
+    LoginHeader,
   }
 };
 </script>
 
-
+<style scoped>
+  .mympw {
+    height: 100%;
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
+</style>
