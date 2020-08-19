@@ -67,7 +67,8 @@ export default {
   }
 };
 </script>
-<style scope>
+
+<style scoped>
 .messageInputArea{
     margin-bottom: 0;
     padding: 0;

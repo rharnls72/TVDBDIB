@@ -1,13 +1,13 @@
 <template>
   <div>
     <ChatroomHeader :room="room"/>
-        <h1>채팅룸</h1>
-      <MessageItem v-if='loadComplete' :messages="messages"/>
-      <div class="feed-item messageInputArea">
-          <input class="messageInput" type="text" id="messageInput" v-model="content" autocomplete="off">
-          <button class="sendIcon" @click.stop.prevent="sendMessage()"><b-icon-arrow-right-circle class="text-dark">
-            </b-icon-arrow-right-circle></button>
-      </div>
+    <MessageItem v-if='loadComplete' :messages="messages" class="mymessage"/>
+    <div class="feed-item messageInputArea">
+      <input class="messageInput" type="text" id="messageInput" v-model="content" autocomplete="off">
+      <button class="sendIcon" @click.stop.prevent="sendMessage()">
+        <b-icon-arrow-right-circle class="text-dark"></b-icon-arrow-right-circle>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -94,7 +94,8 @@ export default {
   }
 };
 </script>
-<style scope>
+
+<style scoped>
 .messageInputArea{
     margin-bottom: 0;
     padding: 0;
@@ -130,5 +131,8 @@ export default {
   }
   .messageInput:hover {
     border:none;
+  }
+  .mymessage {
+    padding-top: 70px;
   }
 </style>

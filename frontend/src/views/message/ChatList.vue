@@ -3,7 +3,7 @@
     <ChatListHeader/>
     <div class="searchArea">
       <div @click="searchIcon" class="searchIcon">
-            <b-icon-search style="width: 20px; height: 20px;"></b-icon-search>
+        <b-icon-search style="width: 20px; height: 20px;"></b-icon-search>
       </div>
       <input class="searchInput" type="text" id="searchInput" placeholder="친구 검색" 
       v-on:input='word = $event.target.value' v-on:keyup='searchIcon()' autocomplete="off" 
@@ -135,7 +135,8 @@ export default {
 
 };
 </script>
-<style>
+
+<style scoped>
   .searchArea{
     padding-top: 55px;
     width: 100%;
