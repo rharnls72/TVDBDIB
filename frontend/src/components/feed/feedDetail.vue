@@ -81,4 +81,8 @@ export default {
     padding-bottom: 0;
     margin-bottom: 0;
   }
+  .myfeed {
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
 </style>
