@@ -1,6 +1,6 @@
 <template>
   <div class="user mt-0 myuser">
-    <LoginHeader />
+    <JoinHeader />
     <div class="wrapC myjoin d-flex flex-column justify-content-between">
       <div>
         <div class="input-with-label pb-3">
@@ -68,7 +68,7 @@ import UserApi from "../../api/UserApi";
 import AccountApi from "@/api/AccountApi";
 import PV from "password-validator";
 import * as EmailValidator from "email-validator";
-import LoginHeader from '../../components/user/custom/LoginHeader.vue'
+import JoinHeader from '../../components/user/custom/JoinHeader.vue'
 
 export default {
   created() {
@@ -250,7 +250,7 @@ export default {
     };
   },
   components: {
-    LoginHeader,
+    JoinHeader,
   },
 };
 </script>
