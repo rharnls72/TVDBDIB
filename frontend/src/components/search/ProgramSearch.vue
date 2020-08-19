@@ -1,7 +1,7 @@
 <template>
 <div>
-    <ResultProgram v-if="current_option == 1" :programs="searchedList"/>
-    <ResultPeople v-if="current_option == 2" :peoples="searchedList"/>
+    <ResultProgram v-if="current_option == 1" :programs="result"/>
+    <ResultPeople v-if="current_option == 2 && people_complete" :peoples="result"/>
 
     <!-- v-if를 넣어서 처음 페이지 띄웠을 때 (검색버튼 안 눌렀을 때) 는 동작 안하게 함 -->
     <infinite-loading v-if="loading_complete && !isEndPoint" @infinite="infiniteHandler"></infinite-loading>
@@ -30,7 +30,8 @@ export default {
       total_pages: 0,
       current_page: 0,
       loading_complete: false,
-      isEndPoint: false
+      isEndPoint: false,
+      people_complete: false
     }
   },
   props:{
@@ -83,7 +84,8 @@ export default {
       this.current_option = 1;
         axios.get(tmdbApi.BASE_URL + "search/tv?query=" + newWord + "&api_key=" + tmdbApi.API_KEY + "&language=ko")
             .then(res => {
-                this.searchedList = res.data.results;
+                this.result = res.data.results;
+                this.searchIcon();
             })
             .catch(error => {
                 console.log(error);
@@ -95,7 +97,8 @@ export default {
       this.current_option = 2;
         axios.get(tmdbApi.BASE_URL + "search/person?query=" + newWord + "&api_key=" + tmdbApi.API_KEY + "&language=ko")
             .then(res => {
-                this.searchedList = res.data.results;
+                this.result = res.data.results;
+                this.searchIcon();
             })
             .catch(error => {
                 console.log(error);
@@ -124,6 +127,7 @@ export default {
     },
 
     getProgramResultForPeople(word){
+      this.people_complete = false;
         axios.get(tmdbApi.BASE_URL + "search/person?query=" + word + "&api_key=" + tmdbApi.API_KEY + "&language=ko")
             .then(res => {
               // 1. 동명이인 어떻게 처리? - 다 띄워줄 수 있게 인터페이스를...?
@@ -144,6 +148,7 @@ export default {
                   this.current_page = 1;
                   this.current_option = 2;
                   this.loading_complete = true;
+                  this.people_complete = true;
                 })
 
             })
