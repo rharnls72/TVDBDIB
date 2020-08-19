@@ -65,22 +65,22 @@
       </div>
     </div>
     <!-- 내용 더 보기 (현재 페이지에서 펼치기) -->
-    <div v-if="!curation.summary" class="content">
+    <div v-if="!curation.summary">
       <p>{{ curation.summary }}</p>
     </div>
-    <div v-else-if="curation.summary.length <= 30" class="content">
+    <div v-else-if="curation.summary.length <= 25">
       <p>{{ curation.summary }}</p>
     </div>
-    <div v-else class="content">
+    <div v-else>
       <div v-if="!isStretch" class="d-flex justify-content-between">
-        <p>{{ curation.summary.slice(0, 30) }}</p>
+        <p class="mb-0">{{ curation.summary.slice(0, 25) }}</p>
         <button @click="readMore" class="more">더 보기</button>
       </div>
       <div v-else>
         <p>{{ curation.summary }}</p>
       </div>
     </div>
-    <div v-if="!detail" class="content">
+    <div v-if="!detail">
       <p><span style="text-decoration: bold;">{{curation.reply_user_nick}} </span> <span>{{curation.reply_content}}</span></p>
       <p><span v-if="!!curation.reply_num" class="more">댓글 {{curation.reply_num}} 개</span></p>
       <!-- 추후에 댓글 연결!~ -->
