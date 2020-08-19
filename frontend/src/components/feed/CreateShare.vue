@@ -6,8 +6,8 @@
 
       <!-- 공유글 작성 -->
       <div class="create-feed-form row justify-content-center">
-        <ShareForm v-if="editArticle!==null" :shareTag="shareTag" :article="editArticle" @CreateArticle="makeSubmitData"/>
-        <ShareForm v-else :shareTag="shareTag" @CreateArticle="makeSubmitData"/>
+        <ShareForm v-if="editArticle!==null" :shareTag="shareTag" :article="editArticle" @CreateArticle="getFormData"/>
+        <ShareForm v-else :shareTag="shareTag" @CreateArticle="getFormData"/>
       </div>
 
       <!-- 공유될 글 표기 -->
@@ -43,6 +43,7 @@ export default {
       article: null,
       editArticle: null,
       submitData: null,
+      formData: null,
 
       shareTag: false
     }
@@ -60,14 +61,42 @@ export default {
       console.log(1)
       this.$router.push('/feed/main')
     },
-    
+    getFormData(res) {
+      this.formData = res;
+    },
     makeSubmitData(res) {
       res.content.article = this.article
       res.content = JSON.stringify(res.content)
+      res.tag = JSON.stringify(res.tags)
       this.submitData = res
     },
 
     submitShare() {
+      if(this.formData == null) {
+        this.makeToast("제목, 내용, 태그를 입력해주세요!", "danger");
+        return;
+      }
+
+      let formD = this.formData;
+      let submitState = true;
+      if(!(formD.content.title && formD.content.title.length > 0)) {
+        this.makeToast("제목을 입력해주세요.", "danger");
+        submitState = false;
+      }
+      if(!(formD.content.content && formD.content.content.length > 0)) {
+        this.makeToast("내용을 입력해주세요.", "danger");
+        submitState = false;
+      }
+      if(!(formD.tags && formD.tags.length > 0)) {
+        this.makeToast("적어도 하나 이상의 태그가 필요합니다.", "danger");
+        submitState = false;
+      }
+
+      if(!submitState) {
+        return;
+      }
+
+      this.makeSubmitData(this.formData);
 
       if (!this.$route.params.fno) {
         // Axios 요청
@@ -106,7 +135,15 @@ export default {
         )
       }
     },
-      
+    makeToast(message, variant){
+        this.$bvToast.toast(message, {
+          title: '알림',
+          toaster: "b-toaster-bottom-right",
+          variant: variant,
+          autoHideDelay: 3000,
+          appendToast: false
+        })
+     }
   },
   created() {
     
@@ -186,6 +223,21 @@ export default {
           console.log(res)
           this.article = res.data.data
           this.article.programDetail = JSON.parse(this.article.programDetail)
+
+          let shareTag = "";
+          if(this.article.programDetail.name
+            && this.article.programDetail.name.length > 0) {
+            shareTag = shareTag + " " + this.article.programDetail.name;
+          }
+          if(this.article.programDetail.overview
+            && this.article.programDetail.overview.length > 0) {
+            shareTag = shareTag + " " + this.article.programDetail.overview;
+          }
+
+          if(shareTag.length == 0) {
+            shareTag = "tvility";
+          }
+          this.shareTag = shareTag;
         }
         , err => console.log(err)
       )

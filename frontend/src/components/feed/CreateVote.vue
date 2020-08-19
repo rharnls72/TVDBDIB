@@ -100,6 +100,29 @@ export default {
       return JSON.stringify(jsonObj)
     },
     submitArticle() {
+      let submitState = true;
+      if(!(this.title && this.title.length > 0)) {
+        this.makeToast("제목을 입력해주세요.", "danger");
+        submitState = false;
+      }
+
+      for(let item of this.contents) {
+        if(!(item.text && item.text.length > 0)) {
+          this.makeToast("항목을 입력해주세요.", "danger");
+          submitState = false;
+          break;
+        }
+      }
+      
+      if(!(this.value && this.value.length > 0)) {
+        this.makeToast("적어도 하나 이상의 태그가 필요합니다.", "danger");
+        submitState = false;
+      }
+
+      if(!submitState) {
+        return;
+      }
+
       let sendData = this.makeData();
 
       // createFeed 요청에 줄 데이터 목록
@@ -168,6 +191,15 @@ export default {
         }
       )
     }
+    , makeToast(message, variant){
+        this.$bvToast.toast(message, {
+          title: '알림',
+          toaster: "b-toaster-bottom-right",
+          variant: variant,
+          autoHideDelay: 3000,
+          appendToast: false
+        })
+     }
   },
   watch: {
     submit: function(n, o) {

@@ -9,7 +9,6 @@
         <FeedItem v-if="article != null" :article="article" :detail="true"/>
         <ReplyItem v-if="article != null" @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno != 0 ? article.eno : null" :fno="article.fno"/>
       </div>
-      <hr class="row col-12">
     </div>
     <Footer />
   </div>
@@ -82,7 +81,8 @@ export default {
     padding-bottom: 0;
     margin-bottom: 0;
   }
-  .newsfeed {
-    margin-bottom: 100px;
+  .myfeed {
+    padding-top: 70px;
+    padding-bottom: 50px;
   }
 </style>

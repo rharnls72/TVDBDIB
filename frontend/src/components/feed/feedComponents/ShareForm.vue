@@ -134,7 +134,7 @@ export default {
       let Data = {
         ctype: 4,
         content: jsonObj,
-        tag: JSON.stringify(this.tags)
+        tags: this.tags
       }
 
       return Data

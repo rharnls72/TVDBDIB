@@ -91,7 +91,8 @@ public class ReplyController {
             alert.setAtype(2);
             // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
             alert.setCtype(3);
-            alert.setCno(reply.getParent_reply());
+            // alert.setCno(reply.getParent_reply());
+            alert.setCno(reply.getNo()); // 댓글의 경우 부모 댓글의 번호가 아니라 그 글의 번호를 줌
             alert.setRead(false);
             alert.setTime(LocalDateTime.now());
             alertService.addAlert(alert);
@@ -109,7 +110,8 @@ public class ReplyController {
             alert.setAtype(2);
             // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
             alert.setCtype(4);
-            alert.setCno(reply.getParent_reply());
+            // alert.setCno(reply.getParent_reply());
+            alert.setCno(reply.getNo());
             alert.setRead(false);
             alert.setTime(LocalDateTime.now());
             alertService.addAlert(alert);
@@ -123,22 +125,27 @@ public class ReplyController {
     public Object createFeedReply(@RequestBody Reply reply, HttpServletRequest httpReq) {
         Alert alert = new Alert();
         alert.setSubject_no(((User) httpReq.getAttribute("User")).getUno());
-        if(reply.getParent_reply() != 0){
+
+        if(alert.getSubject_no() != reply.getWriter_uno()) {
             // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
             alert.setAtype(2);
-            // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
-            alert.setCtype(2);
-            alert.setCno(reply.getParent_reply());
-        }else{
-            // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
-            alert.setAtype(2);
-            // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
-            alert.setCtype(1);
             alert.setCno(reply.getNo());
+            
+            // 대댓일때
+            if(reply.getParent_reply() != 0){
+                // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+                alert.setCtype(2);
+            }
+            // 댓글일때
+            else{
+                // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+                alert.setCtype(1);
+            }
+            alert.setRead(false);
+            alert.setTime(LocalDateTime.now());
+            alertService.addAlert(alert);
         }
-        alert.setRead(false);
-        alert.setTime(LocalDateTime.now());
-        alertService.addAlert(alert);
+
         return createReply(reply, httpReq, feedReplyDao, (param_reply, dao) -> dao.createReply(param_reply));
     }
 

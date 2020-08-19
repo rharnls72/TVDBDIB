@@ -26,8 +26,21 @@ export default {
     is_valid: Object
   },
   methods: {
+    checkChanged() {
+      let isChanged = false;
+      let currentInfo = this.$store.state.userInfo;
+
+      if(this.info.nick_name != currentInfo.nick_name) isChanged = true;
+      if(this.info.bio != currentInfo.bio) isChanged = true;
+      
+      if(this.info.profile_pic != null
+        && this.info.profile_pic != currentInfo.profile_pic)
+        isChanged = true;
+      
+      return isChanged;
+    },
     backpage(){
-      if(JSON.stringify(this.info) != JSON.stringify(this.$store.state.userInfo)){
+      if(this.checkChanged()){
         if(confirm("저장되지 않은 변경 내용이 있습니다. \n 취소하시겠어요?"))
           this.$router.go(-1);
       }else{

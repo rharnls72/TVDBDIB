@@ -1,6 +1,6 @@
 <template>
 <div>
-  <FeedTagSearchResult :tags="tags" :selectTag="selectTag" @update:selectTag="tag => selectTag = tag"/>
+  <!-- <FeedTagSearchResult :tags="tags" :selectTag="selectTag" @update:selectTag="tag => selectTag = tag"/> -->
     <ResultItems :feeds_result="part_feeds_result"/>
     <infinite-loading v-if="loading_complete && !isEndPoint" @infinite="infiniteHandler"></infinite-loading>
 </div>
@@ -11,7 +11,7 @@
 import SearchApi from '@/api/SearchApi.js';
 import ResultItems from "@/components/search/FeedSearchResult.vue";
 import InfiniteLoading from 'vue-infinite-loading';
-import FeedTagSearchResult from '@/components/search/FeedTagSearchResult.vue';
+// import FeedTagSearchResult from '@/components/search/FeedTagSearchResult.vue';
 
 export default {
   name: 'FeedSearch',
@@ -33,9 +33,13 @@ export default {
   },
   watch: {
     word: function (){
-      this.selectTag = '';
-      // this.searchIcon();
-      this.getTagList();
+      if(this.word==''){
+        this.part_feeds_result = [];
+      }else{
+        this.searchIcon();
+      }
+      // this.selectTag = '';
+      // this.getTagList();
     },
     selectTag: function(){
       if(this.selectTag!=''){
@@ -45,15 +49,15 @@ export default {
     }
   },
   mounted() {
-    SearchApi.getTagList(
-        res => {
-            this.alltags = res.data.data;
-            this.getTagList();
-        }
-        , err => {
-            console.log(err);
-        }
-    );
+    // SearchApi.getTagList(
+    //     res => {
+    //         this.alltags = res.data.data;
+    //         this.getTagList();
+    //     }
+    //     , err => {
+    //         console.log(err);
+    //     }
+    // );
   },
   methods: {
     getTagList() {
@@ -82,9 +86,10 @@ export default {
           }
 
           console.log(this.total_feeds_result);
-          setTimeout(()=>{}, 1000)
+          this.part_feeds_result = this.total_feeds_result;
+          // setTimeout(()=>{}, 1000)
 
-          this.toNextPage();
+          // this.toNextPage();
         }
         , err => {
             console.log(err);
@@ -119,7 +124,7 @@ export default {
   components: {
     ResultItems,
     InfiniteLoading,
-    FeedTagSearchResult
+    // FeedTagSearchResult
   }
 }
 </script>
