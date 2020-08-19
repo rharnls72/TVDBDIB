@@ -16,7 +16,6 @@
           autocapitalize="off"
         />
         <label for="email">이메일</label>
-        <div class="error-text" v-if="error.email">{{error.email}}</div>
       </div>
 
       <div class="input-with-label mb-3 myinput">
@@ -30,7 +29,6 @@
           autocapitalize="off"
         />
         <label for="password">비밀번호</label>
-        <div class="error-text" v-if="error.password">{{error.password}}</div>
       </div>
 
       <div class="d-flex justify-content-end">
