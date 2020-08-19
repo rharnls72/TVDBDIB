@@ -101,6 +101,6 @@ export default {
 <style scoped>
   .myfeed {
     padding-top: 70px;
-    padding-bottom: 50px;
+    /* padding-bottom: 50px; */
   }
 </style>
