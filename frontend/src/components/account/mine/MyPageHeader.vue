@@ -22,10 +22,10 @@
                   <b-icon-blank class="h5"></b-icon-blank>
                   <p class="text-dark d-inline m-0">설정</p>
                 </b-nav-item>
-                <b-nav-item href="#link-2" @click="hide">
+                <b-nav-item href="#link-2" @click="moveTab('IndexScrap')">
                   <b-icon-bookmark class="text-dark d-inline"></b-icon-bookmark>
                   <b-icon-blank class="h5"></b-icon-blank>
-                  <p class="text-dark d-inline m-0" @click="goToScrap">스크랩</p>
+                  <p class="text-dark d-inline m-0">스크랩</p>
                 </b-nav-item>
               </b-nav>
             </nav>
@@ -43,9 +43,6 @@ export default {
     info: Object,
   },
   methods: {
-    goToScrap() {
-      this.$router.push({path: '/scrap'})
-    },
     moveTab(name) {
       this.$router.push({name: name})
     }
