@@ -76,7 +76,7 @@ export default {
     padding-bottom: 0;
     margin-bottom: 0;
   }
-  .newsfeed {
-    margin-bottom: 100px;
+  .myfeed {
+    padding-top: 70px;
   }
 </style>
