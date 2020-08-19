@@ -1,8 +1,8 @@
 <template>
   <div class="d-flex justify-content-between align-items-center mb-3 myheader">
-    <b-icon @click="moveMain" icon="chevron-left" font-scale="1.5"></b-icon>
+    <b-icon-chevron-left @click="moveMain" font-scale="1.5" class="ml-3"></b-icon-chevron-left>
     <img class="mylogo mb-0\" :src="HeaderLogo" alt="header-logo">
-    <b-icon @click="submitArticle" icon="check-square" font-scale="1.4"></b-icon>
+    <b-icon-check-square @click="submitArticle" font-scale="1.4" class="mr-3"></b-icon-check-square>
   </div>
 </template>
 

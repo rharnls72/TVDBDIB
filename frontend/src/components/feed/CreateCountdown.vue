@@ -2,7 +2,14 @@
   <div class="col-10">
     <b-list-group style="border-radius: 20px;">
       
-      <b-list-group-item class="p-0 create-header"><input id="article-title" type="text" class="m-0 border-0 rounded-pill create-header-input" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
+      <b-list-group-item class="p-0 create-header">
+        <input
+          id="article-title"
+          type="text"
+          class="m-0 border-0 rounded-pill"
+          v-model="title"
+          placeholder="제목은 뭐지??">
+      </b-list-group-item>
       <b-list-group-item data-toggle="modal" data-target="#exampleModal">
         <label for="selectDate">Select Date</label>
         <div id="selectDate" class="d-flex justify-content-center py-3">
