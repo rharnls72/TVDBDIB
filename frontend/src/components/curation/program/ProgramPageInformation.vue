@@ -69,7 +69,7 @@ export default {
     makeToast(message, variant){
       this.$bvToast.toast(message, {
         title: '알림',
-        toaster: "b-toaster-bottom-right",
+        toaster: "b-toaster-bottom-center",
         variant: variant,
         autoHideDelay: 3000,
         appendToast: false
@@ -85,7 +85,7 @@ export default {
     },
     copyUrl() {
       this.copyToClipboard(`http://i3a106.p.ssafy.io/program/${this.program.programDetail.id}`)
-      this.makeToast("경로 복사에 성공했습니다.", "primary");
+      this.makeToast("경로 복사에 성공했습니다.", "danger");
     },
     touchLikeIcon() {
       this.program.press_like = !this.program.press_like

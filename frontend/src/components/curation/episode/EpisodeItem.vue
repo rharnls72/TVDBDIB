@@ -115,7 +115,7 @@ export default {
     makeToast(message, variant){
       this.$bvToast.toast(message, {
         title: '알림',
-        toaster: "b-toaster-bottom-right",
+        toaster: "b-toaster-bottom-center",
         variant: variant,
         autoHideDelay: 3000,
         appendToast: false
@@ -131,7 +131,7 @@ export default {
     },
     copyUrl() {
       this.copyToClipboard(`http://i3a106.p.ssafy.io/episode/detail/${this.curation.pno}/${this.curation.season}/${this.curation.episode}`)
-      this.makeToast("경로 복사에 성공했습니다.", "primary");
+      this.makeToast("경로 복사에 성공했습니다.", "danger");
     },
     goToProgramDetail() {
       this.$router.push({path:`/program/${this.curation.pno}`})
