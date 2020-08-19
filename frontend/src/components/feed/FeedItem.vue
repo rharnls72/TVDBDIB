@@ -1,14 +1,14 @@
 <template>
   <div class="feed-item">
     <div class="top">
-      <div class="box profile-image" style="background: #BDBDBD;">
+      <div class="box profile-image" style="background: #BDBDBD;" @click="goUserProfile">
           <img v-if="article.profile_pic != null" class="profile" :src="article.profile_pic" :alt="article.profile_pic">
           <img v-else class="profile" :src="defaultProfile" alt="">
       </div>
       <!-- <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div> -->
       <div class="user-info mb-2">
         <div class="user-name">
-          <button>{{article.nick_name}}</button>
+          <button @click="goUserProfile">{{article.nick_name}}</button>
         </div>
         <p v-if="createAfter <= 24" class="date">{{createAfter}} 시간 전</p>
         <p v-else class="date">{{parseInt(createAfter/24)}} 일 전</p>
@@ -209,6 +209,9 @@ export default {
       } else {
         console.log('Current path: ' + currentPath);
       }
+    },
+    goUserProfile() {
+      this.$router.push("/profile/" + this.article.nick_name);
     }
   },
   created() {

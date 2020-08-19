@@ -376,22 +376,24 @@ public class AccountController {
     public Object modifyProfile(@RequestBody User user) {
         final BasicResponse result = new BasicResponse();
 
-        try {
-            // String pre_path = "/tvility";
-            String pre_path = "./LocalTestProfilePic";
-            String post_path = "/" + user.getUno() + ".profile_pic";
-            String full_path = pre_path + post_path;
-            File file = new File(full_path);
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(user.getProfile_pic().getBytes());
-            fos.close();
-
-            user.setProfile_pic_without_convert(post_path);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            result.status = false;
-            result.msg = "프로필 사진 저장 실패";
-            return new ResponseEntity<>(result, HttpStatus.OK);
+        if(user.getProfile_pic() != null) {
+            try {
+                // String pre_path = "/tvility";
+                String pre_path = "./LocalTestProfilePic";
+                String post_path = "/" + user.getUno() + ".profile_pic";
+                String full_path = pre_path + post_path;
+                File file = new File(full_path);
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(user.getProfile_pic().getBytes());
+                fos.close();
+    
+                user.setProfile_pic_without_convert(post_path);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                result.status = false;
+                result.msg = "프로필 사진 저장 실패";
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            }
         }
         
         int n = userDao.modifyProfile(user);
