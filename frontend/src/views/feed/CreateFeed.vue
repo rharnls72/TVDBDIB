@@ -1,6 +1,6 @@
 <template>
   <div class="feed-create">
-    <CreateFeedHeader @submitArticle="submitArticle" class="feed-header"/>
+    <CreateFeedHeader @submitArticle="submitArticle"/>
     <div v-if="this.isArticle" class="create-feed-form row justify-content-center">
       <CreateVote v-if="page===3" :submit="submit.vote" :article="article" :fno="fno"/>
       <CreateArticle v-else-if="page===1" :submit="submit.article" :article="article" :fno="fno"/>
@@ -48,11 +48,11 @@ export default {
     turnCountdown() {this.page = 2},
     submitArticle() {
       if (this.page === 1) {
-        this.submit.article = true
+        this.submit.article = !this.submit.article
       } else if (this.page === 2) {
-        this.submit.countdown = true
+        this.submit.countdown = !this.submit.countdown
       } else {
-        this.submit.vote = true
+        this.submit.vote = !this.submit.vote
       }
       console.log(this.page)
     }
@@ -94,29 +94,23 @@ export default {
 </script>
 
 <style scoped>
-.feed-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 20px;
-}
-.page-btns {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin-bottom: 3rem;
-}
-.create-feed-form {
-  width: 100%;
-  padding-top: 20vh;
-  bottom: 0;
-  margin-left: 0;
-  margin-right: 0;
-}
-.feed-create {
-  background-color: #f8e8f2;
-  bottom: 0;
-}
+  .page-btns {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: 3rem;
+  }
+  .create-feed-form {
+    width: 100%;
+    padding-top: 20vh;
+    bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .feed-create {
+    background-color: #f8e8f2;
+    height: 100%;
+    /* bottom: 0; */
+  }
 </style>

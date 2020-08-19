@@ -2,7 +2,14 @@
   <div class="col-10">
     <b-list-group style="border-radius: 20px;">
       
-      <b-list-group-item class="p-0 create-header"><input id="article-title" type="text" class="m-0 border-0 rounded-pill create-header-input" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
+      <b-list-group-item class="p-0 create-header">
+        <input
+          id="article-title"
+          type="text"
+          class="m-0 border-0 rounded-pill"
+          v-model="title"
+          placeholder="제목은 뭐지??">
+      </b-list-group-item>
       <b-list-group-item data-toggle="modal" data-target="#exampleModal">
         <label for="selectDate">Select Date</label>
         <div id="selectDate" class="d-flex justify-content-center py-3">
@@ -151,6 +158,24 @@ export default {
     catchTags() {console.log(this.tags)}
     ,
     submitArticle() {
+      let submitState = true;
+      if(!(this.title && this.title.length > 0)) {
+        this.makeToast("제목을 입력해주세요.", "danger");
+        submitState = false;
+      }
+      if(!this.date || !this.Time) {
+        this.makeToast("날짜와 시간을 설정해주세요.", "danger");
+        submitState = false;
+      }
+      if(!(this.tags && this.tags.length > 0)) {
+        this.makeToast("적어도 하나 이상의 태그가 필요합니다.", "danger");
+        submitState = false;
+      }
+
+      if(!submitState) {
+        return;
+      }
+
       let sendData = this.makeData();
 
       // createFeed 요청에 줄 데이터 목록
@@ -211,6 +236,15 @@ export default {
         }
       )
     }
+    , makeToast(message, variant){
+        this.$bvToast.toast(message, {
+          title: '알림',
+          toaster: "b-toaster-bottom-right",
+          variant: variant,
+          autoHideDelay: 3000,
+          appendToast: false
+        })
+     }
   },
   watch: {
     tags: function(n, o) {this.catchTags},

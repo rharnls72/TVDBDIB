@@ -1,6 +1,6 @@
 <template>
   <div class="user" id="login">
-    <LoginHeader />
+    <JoinHeader />
     <div class="wrapC mympw">
       <h1 class="text-center">
         비밀번호를 변경하세요.
@@ -57,7 +57,7 @@ import "../../components/css/user.scss";
 import UserApi from "../../api/UserApi";
 import PV from "password-validator";
 import GetUserApi from "@/api/GetUserApi"
-import LoginHeader from '@/components/user/custom/LoginHeader.vue'
+import JoinHeader from '@/components/user/custom/JoinHeader.vue'
 
 export default {
   created() {
@@ -169,7 +169,7 @@ export default {
     };
   },
   components: {
-    LoginHeader,
+    JoinHeader,
   }
 };
 </script>

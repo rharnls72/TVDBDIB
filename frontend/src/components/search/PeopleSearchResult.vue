@@ -13,14 +13,17 @@
                 <div class="text-muted" v-if="people.birthday != null">{{people.birthday}} 출생</div>
             </li>
             </ul>
-            <img :src='imgBaseUrl + people.profile_path' width="35rem" height="35rem" class="img-fluid float-right" alt="profile">           
+            <img v-if="people.profile_path == null" :src="defaultProfile" alt="">
+            <img v-else :src='imgBaseUrl + people.profile_path' width="35rem" height="35rem" class="rounded-circle img-fluid float-right" alt="profile">           
         </div>
         <ul class="list-group list-group-flush">
             <li v-for="(program) in people.programs" v-bind:key="program.id" 
             class="list-group-item d-flex justify-content-between align-items-center" @click="goDetail(program.id)">
-                {{program.name}}
+                <span v-if="program.name !=null">{{program.name}}</span>
+                <span v-else>{{program.title}}</span>
                 <div class="image-parent">
-                    <img :src='imgBaseUrl + program.poster_path' width="75rem" height="120rem" class="img-fluid" alt="poster">
+                    <img v-if="program.poster_path == null" :src='defaultPoster' width="75rem" height="120rem" class="img-fluid" alt="poster">
+                    <img v-else :src='imgBaseUrl + program.poster_path' width="75rem" height="120rem" class="img-fluid" alt="poster">
                 </div>
             </li>
         </ul>
@@ -32,16 +35,23 @@
 
 <script>
 import tmdbApi from '@/api/tmdbApi.js';
+import defaultProfile from '@/assets/images/profile_default.png'
+import defaultPoster from '@/assets/images/custom/logo.png'
 
 export default {
     name: 'ProgramSearchResult',
   data: () => {
     return {
-        imgBaseUrl: tmdbApi.IMAGE_BASE_URL
+        imgBaseUrl: tmdbApi.IMAGE_BASE_URL,
+        defaultProfile,
+        defaultPoster
     };
   },
   props: {
     peoples: Array
+  },
+  mounted() {
+      console.log(this.peoples)
   },
   methods:{
       goDetail(id){
@@ -55,6 +65,10 @@ export default {
 
 ul {
   padding-top: 0px; /* 검색창을 sticky로 고정시키니까 이걸 다시 0으로 해도 됐다. 50이었는데... */
+}
+
+.profile {
+    object-fit: cover;
 }
 
 </style>

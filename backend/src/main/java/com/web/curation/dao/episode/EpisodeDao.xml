@@ -34,6 +34,17 @@
             `episode` = #{episode}
     </select>
 
+    <select id="getSimpleEpisodeInfo" resultType="EpisodeDB">
+        select
+            `pno`
+            , `season`
+            , `episode`
+        from
+            `episode`
+        where
+            `eno` = #{value}
+    </select>
+
     <select id="getLikeReplyInfo" resultType="EpisodeDB">
         select
             e.eno as `eno`

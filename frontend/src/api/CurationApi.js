@@ -1,6 +1,27 @@
 import http from "./http-common.js";
 import header from "@/api/header.js"
 
+const requestSimpleEpisode = (data, callback,errorCallback) => {
+    http.get('/episode/simple/' + data, header())
+    .then(res => {
+        if(res == null) {
+            let error = {msg : '알 수 없는 오류 발생'};
+            errorCallback(error);
+        }else {
+            if(res.data.status) {
+                callback(res.data.data);
+            }
+            else {
+                let error = {msg : res.data.msg};
+                errorCallback(error);
+            }
+        }
+    })
+    .catch(error => {
+        error.msg = '서버 요청에서 오류 발생';
+        errorCallback(error);
+    });
+}
 const requestEpisode = (callback,errorCallback) => {
     http.get('/episode/following', header())
     .then(res => {
@@ -655,7 +676,9 @@ const deleteProgramReplyLike = (data,callback,errorCallback) => {
 }
 
 const CurationApi = {
-    requestEpisode:(callback,errorCallback)=>requestEpisode(callback,errorCallback)
+    requestSimpleEpisode:(data, callback,errorCallback)=>requestSimpleEpisode(data, callback,errorCallback)
+
+    , requestEpisode:(callback,errorCallback)=>requestEpisode(callback,errorCallback)
     , requestEpisodeDetail:(data,callback,errorCallback)=>requestEpisodeDetail(data,callback,errorCallback)
 
     , createEpisodeLike:(data,callback,errorCallback)=>createEpisodeLike(data,callback,errorCallback)
