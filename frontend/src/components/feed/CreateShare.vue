@@ -277,6 +277,7 @@ export default {
 }
 .feed-create {
   background-color: #f8e8f2;
+  height: 100%;
 }
 .program-thumbnail {
   padding: 5px;
