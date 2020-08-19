@@ -2,7 +2,14 @@
   <div class="col-10">
     <b-list-group style="border-radius: 20px;">
       
-      <b-list-group-item class="p-0 create-header"><input id="article-title" type="text" class="m-0 border-0 rounded-pill create-header-input" v-model="title" placeholder="제목은 뭐지??"></b-list-group-item>
+      <b-list-group-item class="p-0 create-header">
+        <input
+          id="article-title"
+          type="text"
+          class="m-0 border-0 rounded-pill"
+          v-model="title"
+          placeholder="제목은 뭐지??">
+      </b-list-group-item>
       <b-list-group-item data-toggle="modal" data-target="#exampleModal">
         <label for="selectDate">Select Date</label>
         <div id="selectDate" class="d-flex justify-content-center py-3">
@@ -193,6 +200,24 @@ export default {
           )
       }
     }
+    , titleFocusOut() {
+      console.log('titleFocusOut() called!!!');
+      FeedApi.getTags(
+        {
+          content: this.title
+          , tags: JSON.stringify(this.tags)
+        }
+        , res => {
+          console.log(res);
+
+          // 받아온 태그 목록 중 현재 태그 목록에 없는거만 적용
+          this.tags = JSON.parse(res.data.data);
+        }
+        , err => {
+          console.log('getTags Error: ' + err.msg);
+        }
+      )
+    }
   },
   watch: {
     tags: function(n, o) {this.catchTags},
@@ -208,6 +233,8 @@ export default {
       this.tags = this.article.tag
       this.submitDateTime()
     }
+
+    document.getElementById("article-title").addEventListener("focusout", this.titleFocusOut);
   }
 }
 </script>

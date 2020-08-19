@@ -1,11 +1,5 @@
 <template>
 <div>
-    <div class="searchArea">
-      <div @click="searchIcon" class="searchIcon">
-            <b-icon-search style="width: 20px; height: 20px;"></b-icon-search>
-      </div>
-      <input class="searchInput" type="text" ref="searchInput" placeholder="친구 검색" v-on:input='word = $event.target.value' v-on:keyup='searchIcon()' autocomplete="off">
-    </div>
     <div v-if="word==''">
     <div calss="listSubject">최근 검색</div>
     <ResultItems :users_result="search_history"/>
@@ -13,7 +7,6 @@
     </div>
     <ResultItems :users_result="part_users_result"/>
     <infinite-loading v-if="loading_complete && !isEndPoint" @infinite="infiniteHandler"></infinite-loading>
-
 </div>
 
 </template>
@@ -29,7 +22,6 @@ export default {
     return {
       startPoint: 0,
       interval: 20,
-      word: "",
       users: [],
       users_result: [],
       part_users_result: [],
@@ -39,17 +31,15 @@ export default {
       isEndPoint: false
     }
   },
-  created() {
-    // 모든 유저 정보를 받아와도 크기가 많이 안클거같은데
-    // 아니면 이거 안쓰고 아래 watch 에 주석 지워서 
-    // 매 글자 입력마다 목록 새로 가져와도 되고
-    
-    
+  props:{
+    word: String,
+  },
+  watch: {
+    word: function () {
+      this.searchIcon()
+    },
   },
   mounted() {
-    this.word = this.$store.state.searchWord;
-    this.$refs.searchInput.value = this.word;
-
     SearchApi.getAllUser(
       'NoData'
       , res => {
@@ -77,7 +67,6 @@ export default {
       );
     },
     searchIcon(){
-      this.$store.state.searchWord = this.word;
       this.part_users_result = this.users.filter(
           (user) => user.nick_name.toUpperCase().includes(this.word.toUpperCase())
         );
@@ -130,43 +119,7 @@ export default {
 }
 </script>
 <style scoped>
-  .myheader {
-    background-color: #D8BEFE;
-    position: fixed;
-    width: 100%;
-    z-index: 1;
-    position: sticky;
-    height: 40px;
-  }
-  .mysearchbar {
-    border: 0;
-    border-radius: 0.25rem;
-  }
-  .searchArea{
-    width: 100%;
-    background-color: #D8BEFE;
-    display: table;
-  }
-  .searchIcon{
-    width: 60px;
-    padding-left: 20px;
-    vertical-align: middle;
-    display: table-cell;
-    border: 0px; 
-    background-color: #D8BEFE;
-  }
-  .searchInput{
-    padding: 0;
-    border: 0px;
-    color: #52565c;
-    font-size: 17px;
-    background-color: #D8BEFE;
-    font-weight: medium;
-    vertical-align: middle;
-    display: table-cell;
-  }
   .listSubject{
-    padding: 10px 0 5px 10px;
     background-color: #D8BEFE;
     color: #52565c;
   }

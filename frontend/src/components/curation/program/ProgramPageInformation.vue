@@ -6,6 +6,9 @@
         <div class="row p-0 justify-content-center">
           <img class="col-5 p-0 mb-3" :src="'https://image.tmdb.org/t/p/w500/'+program.programDetail.poster_path">
           <div class="col-5 pl-3 mb-3 d-flex flex-column justify-content-end">
+            <select v-model="season">
+              <option v-for="(season, idx) in program.programDetail.seasons" :key="idx" :value="season.season_number">시즌 {{season.season_number}}</option>
+            </select>
             <div>방송시작일 : <p class="mb-0">{{program.programDetail.first_air_date}}</p></div>
             <div>방영 국가 : <span>{{program.programDetail.language}}</span></div>
             <div>방영사 : <span v-for="(network, idx) in program.programDetail.networks" :key="idx">{{network.name}} </span></div>
@@ -49,9 +52,15 @@ import CurationApi from '@/api/CurationApi.js'
 
 export default {
   name: 'ProgramPageInformation',
+  data() {
+    return {
+      season: null
+    }
+  },
   props: {
     program: Object,
     followers: Array,
+    seasonNum: Number,
   },
   methods: {
     createShare() {
@@ -130,6 +139,11 @@ export default {
       // console.log(this.likeIcon)
     },
   },
+  watch: {
+    season: function(e, n) {
+      this.$emit('changeSeason', this.season)
+    }
+  },
   computed: {
     infollowers() {
       var define = this.followers.filter(res => {
@@ -140,6 +154,9 @@ export default {
       else {result = true}
       return result
     }
+  },
+  mounted() {
+    this.season = this.seasonNum
   }
 }
 </script>

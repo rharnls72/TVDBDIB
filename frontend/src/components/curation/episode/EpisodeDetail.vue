@@ -1,13 +1,16 @@
 <template>
-  <div class="feed newsfeed">
-    <EpisodeHeader :episode="article"/>
-    <div class="wrapB">
-      <div class="myfeed">
-        <EpisodeItem :curation="article" :detail="true"/>
-        <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno"/>
+  <div>
+    <div v-if="article != null" class="feed newsfeed">
+      <EpisodeHeader :episode="article"/>
+      <div class="wrapB">
+        <div class="myfeed">
+          <EpisodeItem :curation="article" :detail="true"/>
+          <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno"/>
+        </div>
       </div>
+      <Footer />
     </div>
-    <Footer />
+    <LoadingItem v-else />
   </div>
 </template>
 
@@ -16,6 +19,7 @@ import EpisodeItem from "@/components/curation/episode/EpisodeItem.vue"
 import ReplyItem from "@/components/ReplyItem.vue"
 import Footer from '@/components/common/custom/Footer.vue';
 import EpisodeHeader from '@/components/curation/episode/EpisodeHeader.vue'
+import LoadingItem from '@/components/common/custom/LoadingItem.vue'
 
 import CurationApi from "@/api/CurationApi.js"
 import GetUserApi from "@/api/GetUserApi.js"
@@ -26,7 +30,8 @@ export default {
     EpisodeItem,
     ReplyItem,
     EpisodeHeader,
-    Footer
+    Footer,
+    LoadingItem
   },
   data() {
     return {

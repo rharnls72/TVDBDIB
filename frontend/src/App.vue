@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style scoped>
-  /* div {
+  div {
     height: 100%;
-  } */
+  }
 </style>

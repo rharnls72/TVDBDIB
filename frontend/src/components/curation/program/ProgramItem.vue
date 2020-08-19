@@ -2,9 +2,10 @@
   <div class="feed newsfeed pt-0">
     <div class="wrapB">
       <div class="col-12 m-0  p-0">
-        <div class="col-12 row m-0 px-0 py-2 align-items-center">
+        <div @click="moveDetail" class="col-12 row m-0 px-0 py-2 align-items-center">
           <!-- {{ feed }} -->
-          <img class="col-6" :src="episode.thumbnail" :alt="episode.pname">
+          <img v-if="episode.thumbnail===null" class="col-6" :src="defaultImg" alt="default-image">
+          <img v-else class="col-6" :src="episode.thumbnail" :alt="episode.pname">
           <div class="col-6">
             <div>{{episode.episode}} 화</div>
             <div>{{episode.broadcast_date}} 방영</div>
@@ -16,12 +17,21 @@
 </template>
 
 <script>
+import defaultImg from '@/assets/images/custom/logo.png'
 export default {
   name: 'ProgramItem',
+  data() {
+    return {
+      defaultImg,
+    }
+  },
   props: {
     episode: Object,
   },
   methods: {
+    moveDetail() {
+      this.$router.push({path: `/episode/detail/${this.episode.pno}/${this.episode.season}/${this.episode.episode}`})
+    }
   },
 };
 </script>

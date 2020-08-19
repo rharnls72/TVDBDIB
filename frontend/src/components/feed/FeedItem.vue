@@ -54,11 +54,6 @@
         <!---->
       </div>
       <div class="mr-1">
-        <div v-if="article.ctype !== 4" class="mr-2">
-          <button class="h5">
-            <b-icon-pencil @click="createShare"></b-icon-pencil>
-          </button>
-        </div>
         <!-- 명세에 있는 공유 (url만 복사하면 됨) -->
         <div>
           <button class="h5">
@@ -219,7 +214,7 @@ export default {
   color:deepskyblue;
 }
 .mythumbnail {
-  background-color: beige;
+  background-color: #f8e8f2;
   width: 100v;
   height: 55v;
 }

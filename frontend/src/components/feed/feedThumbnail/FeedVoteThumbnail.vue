@@ -117,7 +117,7 @@ export default {
 
 <style scoped>
 .mythumbnail {
-  background-color: beige;
+  background-color: #f8e8f2;
   width: 100v;
   height: 55v;
 }

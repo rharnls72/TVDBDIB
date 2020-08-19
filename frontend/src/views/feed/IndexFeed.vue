@@ -8,7 +8,6 @@
         <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/> -->
         <FeedItem :article="feed" :fno="feed.fno" @deleteItem="removeFeed"/>
       </div>
-      <hr class="row col-12">
       <infinite-loading v-if="!feedNull" @infinite="infiniteHandler"></infinite-loading>
     </div>
     <Footer/>
@@ -101,6 +100,6 @@ export default {
 <style scoped>
   .myfeed {
     padding-top: 70px;
-    padding-bottom: 50px;
+    /* padding-bottom: 50px; */
   }
 </style>

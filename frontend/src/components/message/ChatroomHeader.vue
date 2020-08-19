@@ -6,9 +6,9 @@
       </button>
     </b-nav-item>
     <b-nav-item>
-      <!-- <p class="text-dark mb-0"><strong>{{room.mainUser.nick_name}}
+      <p class="text-dark mb-0"><strong>{{room.mainUser.nick_name}}
         <span v-if="room.users.length>2">님 외 {{room.users.length-2}}명</span></strong>
-      </p> -->
+      </p>
     </b-nav-item>
     <b-nav-item>
     </b-nav-item>
