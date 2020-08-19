@@ -1,6 +1,9 @@
 <template>
   <b-nav justified class="myheader d-flex justify-content-center align-items-center">
-    <b-nav-item>
+    <b-nav-item class="d-flex justify-content-start">
+      <button @click="backpage()">
+        <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
+      </button>
     </b-nav-item>
     <b-nav-item>
       <img class="mylogo mb-0" :src="HeaderLogo" alt="header-logo">
@@ -14,12 +17,17 @@
 import HeaderLogo from '../../../assets/images/custom/header-logo.png'
 
 export default {
-  name: 'LoginHeader',
+  name: 'JoinHeader',
   data() {
     return {
       HeaderLogo,
     }
-  }
+  },
+  methods: {
+    backpage(){
+      this.$router.go(-1);
+    },
+  },
 }
 </script>
 
