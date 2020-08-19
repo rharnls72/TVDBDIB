@@ -99,6 +99,9 @@ export default {
   },
   // 1. 데이터 모두 다 받아오기
   created() {
+    sessionStorage.setItem('tab_num', 3);
+    this.$store.commit('changeState', 3);
+    
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
     });

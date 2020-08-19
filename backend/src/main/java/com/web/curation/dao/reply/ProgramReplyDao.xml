@@ -78,7 +78,7 @@
             ORDER BY `like_num` DESC
             LIMIT ${num} , 20
             ) sub
-        ORDER BY `like_num` DESC, `no`
+        ORDER BY `like_num` DESC, `no` DESC
     </select>
 
     <select id="getReReplyList" resultType="Reply">
@@ -113,7 +113,7 @@
             ORDER BY `like_num` DESC
             LIMIT ${num} , 20
             ) sub
-        ORDER BY `like_num` DESC, `no`
+        ORDER BY `like_num` DESC, `no` DESC
     </select>
 
     <!-- Update -->
