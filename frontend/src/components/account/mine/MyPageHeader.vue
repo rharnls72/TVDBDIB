@@ -12,7 +12,7 @@
       <b-icon-blank></b-icon-blank>
       <!-- 설정, 스크랩한 게시물 보기 -->
       <b-icon-list v-b-toggle.sidebar-no-header class="text-dark"></b-icon-list>
-      <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" no-header right shadow>
+      <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" right shadow>
         <template v-slot:default="{ hide }">
           <div class="p-1">
             <nav class="mb-3">
