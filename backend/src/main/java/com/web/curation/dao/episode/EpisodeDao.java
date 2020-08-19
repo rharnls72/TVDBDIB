@@ -16,6 +16,7 @@ public interface EpisodeDao {
 
     // Read
     int checkDataExist(EpisodeResponse episode);
+    EpisodeDB getSimpleEpisodeInfo(int eno);
     List<EpisodeDB> getLikeReplyInfo(EpisodeResponse episode);
 
     // Update

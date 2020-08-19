@@ -118,14 +118,17 @@ public class LikeController {
     public Object addFeedLike(@RequestBody Like like, HttpServletRequest httpReq) {
         Alert alert = new Alert();
         alert.setSubject_no(((User) httpReq.getAttribute("User")).getUno());
-        // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
-        alert.setAtype(1);
-        // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
-        alert.setCtype(1);
-        alert.setCno(like.getTno());
-        alert.setRead(false);
-        alert.setTime(LocalDateTime.now());
-        alertService.addAlert(alert);
+        
+        if(alert.getSubject_no() != like.getUno()) {
+            // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
+            alert.setAtype(1);
+            // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+            alert.setCtype(1);
+            alert.setCno(like.getTno());
+            alert.setRead(false);
+            alert.setTime(LocalDateTime.now());
+            alertService.addAlert(alert);
+        }
 
         return addLike(like, httpReq, (param_like, dao) -> dao.addFeedLike(param_like));
     }
@@ -135,14 +138,18 @@ public class LikeController {
     public Object addFeedReplyLike(@RequestBody Like like, HttpServletRequest httpReq) {
         Alert alert = new Alert();
         alert.setSubject_no(((User) httpReq.getAttribute("User")).getUno());
-        // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
-        alert.setAtype(1);
-        // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
-        alert.setCtype(2);
-        alert.setCno(like.getTno());
-        alert.setRead(false);
-        alert.setTime(LocalDateTime.now());
-        alertService.addAlert(alert);
+
+        if(alert.getSubject_no() != like.getUno()) {
+            // 알림 타입(1: 좋아요, 2: 댓글, 3: 언급)
+            alert.setAtype(1);
+            // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
+            alert.setCtype(2);
+            alert.setCno(like.getTno());
+            alert.setRead(false);
+            alert.setTime(LocalDateTime.now());
+            alertService.addAlert(alert);
+        }
+        
         return addLike(like, httpReq, (param_like, dao) -> dao.addFeedReplyLike(param_like));
     }
 

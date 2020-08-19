@@ -48,11 +48,11 @@ export default {
     turnCountdown() {this.page = 2},
     submitArticle() {
       if (this.page === 1) {
-        this.submit.article = true
+        this.submit.article = !this.submit.article
       } else if (this.page === 2) {
-        this.submit.countdown = true
+        this.submit.countdown = !this.submit.countdown
       } else {
-        this.submit.vote = true
+        this.submit.vote = !this.submit.vote
       }
       console.log(this.page)
     }

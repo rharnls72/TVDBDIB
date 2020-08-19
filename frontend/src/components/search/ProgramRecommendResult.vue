@@ -4,7 +4,8 @@
           <br>아래에서 관심있는 프로그램을 찾아 팔로우해보세요!
         </div>
         <div v-for="(program) in programs" v-bind:key="program.pno" class="card">
-            <img :src='program.thumbnail' @click="goDetail(program.pno)" width="75rem" height="120rem" class="img-fluid" alt="poster">
+          <img v-if='program.thumbnail == null' :src='defaultPoster' @click="goDetail(program.pno)" width="75rem" height="120rem" class="img-fluid" alt="poster">
+            <img v-else :src='program.thumbnail' @click="goDetail(program.pno)" width="75rem" height="120rem" class="img-fluid" alt="poster">
         </div>
     </div>
 
@@ -12,12 +13,14 @@
 
 <script>
 import tmdbApi from '@/api/tmdbApi.js';
+import defaultPoster from '@/assets/images/custom/logo.png';
 
 export default {
     name: 'ProgramSearchResult',
   data: () => {
     return {
-        imgBaseUrl: tmdbApi.IMAGE_BASE_URL
+        imgBaseUrl: tmdbApi.IMAGE_BASE_URL,
+        defaultPoster
     };
   },
   props: {

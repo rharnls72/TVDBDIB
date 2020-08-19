@@ -90,7 +90,10 @@ export default {
         this.episodeNum--
         this.takeEpisode(cnt+1)
       }
-      ,err => console.log(err)
+      ,err => {
+        console.log(err)
+        this.show = true;
+      }
       )
     },
     infiniteHandler($state) {
@@ -123,12 +126,15 @@ export default {
         res.data.data.programDetail = JSON.parse(res.data.data.programDetail);
         res.data.data.episodeGroup = JSON.parse(res.data.data.episodeGroup);
         this.program = res.data.data
-        this.episodeNum = res.data.data.programDetail.seasons[this.seasonNum].episode_count
+        this.episodeNum = res.data.data.programDetail.seasons[this.seasonNum - 1].episode_count
         console.log(this.program)
         this.takeEpisode(0)
         // this.episodes.sort((a, b) => a.episode - b.episode)
       }
-      , err => console.log(err)
+      , err => {
+        console.log(err)
+        this.show = true;
+      }
     )
   }
 }
