@@ -3,10 +3,10 @@
     <div class="top">
       <!-- 추후에 poster url 가져오면 img 태그로 바꿔줄 것 -->
       <!-- 에피소드에는 포스터가 없다,, -->
-      <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
+      <!-- <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div> -->
       <div class="user-info mb-2">
         <div class="user-name" @click="goToProgramDetail">
-          <button>[{{ curation.pname }}]</button>
+          <button class="myname">{{ curation.pname }}</button>
         </div>
         <p class="date">{{ curation.broadcast_date }} 방송</p>
       </div>
@@ -206,5 +206,10 @@ export default {
 <style scoped>
   .more {
     color: lightgray;
+  }
+  .myname {
+    /* text-shadow: 1px 1px 2px pink; */
+    text-shadow: pink 1px 0 7px;
+    /* text-shadow: 1px 1px 2px pink, 0 0 0.2em purple; */
   }
 </style>

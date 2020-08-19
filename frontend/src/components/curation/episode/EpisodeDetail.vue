@@ -3,10 +3,10 @@
     <div v-if="article != null" class="feed newsfeed">
       <EpisodeHeader :episode="article"/>
       <div class="wrapB">
-        <div class="myfeed">
-          <EpisodeItem :curation="article" :detail="true"/>
+        <!-- <div class="myfeed"> -->
+          <EpisodeItem :curation="article" :detail="true" class="myfeed"/>
           <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno"/>
-        </div>
+        <!-- </div> -->
       </div>
       <Footer />
     </div>
@@ -76,7 +76,7 @@ export default {
     padding-bottom: 0;
     margin-bottom: 0;
   }
-  .newsfeed {
-    margin-bottom: 100px;
+  .myfeed {
+    padding-top: 55px;
   }
 </style>
