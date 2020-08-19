@@ -1,10 +1,9 @@
 <template>
-  <div id="app" class="columns">
+  <div>
     <FollowerHeader />
-      <h2>팔로워</h2>
-      <div :class="{maxWidth:  windowWidth>1200}" style="margin: 0 auto;">
-        <FollowListItem v-if='loadComplete' :users="users"/>
-      </div>
+    <div :class="{maxWidth: windowWidth>1200}" class="myfollow">
+      <FollowListItem v-if='loadComplete' :users="users"/>
+    </div>
     <Footer />
   </div>
 </template>
@@ -19,7 +18,7 @@ import GetUserApi from "@/api/GetUserApi"
 import header from "@/api/header.js"
 
 export default {
-  name: 'AlertTest',
+  name: 'ViewFollowers',
    components: {
     FollowListItem,
     Footer,
@@ -82,9 +81,14 @@ export default {
 
 };
 </script>
-<style scope>
-.maxWidth{
-  width: 520px;
-  padding-top: 30px;
-}
+
+<style scoped>
+  .maxWidth{
+    width: 520px;
+  }
+  .myfollow {
+    margin: 0 auto;
+    padding-top: 70px;
+    padding-bottom: 50px;
+  }
 </style>
