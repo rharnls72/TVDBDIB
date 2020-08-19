@@ -6,7 +6,7 @@
         <!-- <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
         <feedCountdownItem v-if="d.ctype===2" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
         <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/> -->
-        <FeedItem :article="feed" :fno="feed.fno" @deleteItem="removeFeed"/>
+        <FeedItem :article="feed" :fno="feed.fno" @deleteItem="removeFeed(feed.fno)"/>
       </div>
       <hr class="row col-12">
       <infinite-loading v-if="!feedNull" @infinite="infiniteHandler"></infinite-loading>

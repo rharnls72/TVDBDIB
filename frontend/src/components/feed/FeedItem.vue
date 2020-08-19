@@ -10,8 +10,8 @@
         <div class="user-name">
           <button>{{article.nick_name}}</button>
         </div>
-        <p v-if="createAfter <= 60" class="date">{{createAfter}} 시간 전</p>
-        <p v-else class="date">{{parseInt(createAfter/60)}} 일 전</p>
+        <p v-if="createAfter <= 24" class="date">{{createAfter}} 시간 전</p>
+        <p v-else class="date">{{parseInt(createAfter/24)}} 일 전</p>
       </div>
     </div>
     <div class="comment">
@@ -37,7 +37,7 @@
         </div>
         <!-- 댓글 -->
         <div class="mr-3">
-          <button class="h6 mr-1">
+          <button class="h6 mr-1" @click="moveDetail">
             <b-icon-chat></b-icon-chat>
           </button>
           {{article.reply_num}}
@@ -188,7 +188,14 @@ export default {
           this.article.fno,
           res=> {
             console.log(res)
-            this.$router.push({path: '/feed/main'})
+
+            let currentPath = this.$router.currentRoute.path;
+            if(currentPath.indexOf('/feed/main') == -1) {
+              this.$router.push({path: '/feed/main'})
+            } else {
+              console.log('Current path: ' + currentPath);
+              this.$emit('deleteItem');
+            }
           },
           err=> console.log(err)
         )
@@ -201,7 +208,12 @@ export default {
       }
     },
     moveDetail() {
-      this.$router.push({path: `/feed/detail/${this.article.fno}`})
+      let currentPath = this.$router.currentRoute.path;
+      if(currentPath.indexOf('/feed/detail') == -1) {
+        this.$router.push({path: `/feed/detail/${this.article.fno}`})
+      } else {
+        console.log('Current path: ' + currentPath);
+      }
     }
   },
   created() {
