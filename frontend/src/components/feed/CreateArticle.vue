@@ -6,7 +6,7 @@
         <input 
           id="article-title" 
           type="text" 
-          class="m-0 border-0 rounded-pill create-header-input" 
+          class="m-0 border-0 rounded-pill" 
           v-model="title" 
           placeholder="제목은 뭐지??">
       </b-list-group-item>

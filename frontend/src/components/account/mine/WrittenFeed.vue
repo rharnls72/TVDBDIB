@@ -30,19 +30,15 @@
       <div class="col-6">
         <div class="d-flex align-items-center">
           <div v-if="feed.ctype===1">
-            <div>Article</div>
             <div>{{feed.content.title}}</div>
           </div>
           <div v-if="feed.ctype===2">
-            <div>Countdown</div>
             <div>{{feed.content.title}}</div>
           </div>
           <div v-if="feed.ctype===3">
-            <div>Vote</div>
             <div>{{feed.content.title}}</div>
           </div>
           <div v-if="feed.ctype===4">
-            <div>Share</div>
             <div>{{feed.content.content}}</div>
           </div>
         </div>

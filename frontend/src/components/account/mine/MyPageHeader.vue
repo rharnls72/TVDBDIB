@@ -12,7 +12,7 @@
       <b-icon-blank></b-icon-blank>
       <!-- 설정, 스크랩한 게시물 보기 -->
       <b-icon-list v-b-toggle.sidebar-no-header class="text-dark"></b-icon-list>
-      <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" no-header right shadow>
+      <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" right shadow>
         <template v-slot:default="{ hide }">
           <div class="p-1">
             <nav class="mb-3">
@@ -22,10 +22,10 @@
                   <b-icon-blank class="h5"></b-icon-blank>
                   <p class="text-dark d-inline m-0">설정</p>
                 </b-nav-item>
-                <b-nav-item href="#link-2" @click="hide">
+                <b-nav-item href="#link-2" @click="moveTab('IndexScrap')">
                   <b-icon-bookmark class="text-dark d-inline"></b-icon-bookmark>
                   <b-icon-blank class="h5"></b-icon-blank>
-                  <p class="text-dark d-inline m-0" @click="goToScrap">스크랩</p>
+                  <p class="text-dark d-inline m-0">스크랩</p>
                 </b-nav-item>
               </b-nav>
             </nav>
@@ -43,9 +43,6 @@ export default {
     info: Object,
   },
   methods: {
-    goToScrap() {
-      this.$router.push({path: '/scrap'})
-    },
     moveTab(name) {
       this.$router.push({name: name})
     }
