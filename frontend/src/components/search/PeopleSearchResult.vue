@@ -14,7 +14,7 @@
             </li>
             </ul>
             <img v-if="people.profile_path == null" :src="defaultProfile" alt="">
-            <img v-else :src='imgBaseUrl + people.profile_path' width="35rem" height="35rem" class="img-fluid float-right" alt="profile">           
+            <img v-else :src='imgBaseUrl + people.profile_path' width="35rem" height="35rem" class="rounded-circle img-fluid float-right" alt="profile">           
         </div>
         <ul class="list-group list-group-flush">
             <li v-for="(program) in people.programs" v-bind:key="program.id" 
@@ -65,6 +65,10 @@ export default {
 
 ul {
   padding-top: 0px; /* 검색창을 sticky로 고정시키니까 이걸 다시 0으로 해도 됐다. 50이었는데... */
+}
+
+.profile {
+    object-fit: cover;
 }
 
 </style>
