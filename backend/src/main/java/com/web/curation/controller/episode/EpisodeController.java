@@ -58,6 +58,22 @@ public class EpisodeController {
     static String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
     static String API_KEY = "1436d388221956af7b6cd27a6a7ec9d8";
 
+    @GetMapping("/episode/simple/{eno}")
+    @ApiOperation(value = "프로그램번호, 시즌번호, 에피소드 번호 조회")
+    public Object getSimpleEpisode(@PathVariable("eno") int eno) {
+        // 반환할 응답 객체
+        final BasicResponse result = new BasicResponse();
+
+        // 에피소드 조회
+        EpisodeDB info = episodeDao.getSimpleEpisodeInfo(eno);
+
+        // 공유 수 증가 완료
+        result.status = true;
+        result.msg = "success";
+        result.data = info;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @PutMapping("/episode/increase/share")
     @ApiOperation(value = "에피소드 공유 수 증가")
     public Object increaseShare(@RequestBody EpisodeDB req) {
