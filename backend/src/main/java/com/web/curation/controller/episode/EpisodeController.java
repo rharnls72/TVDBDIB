@@ -371,9 +371,19 @@ public class EpisodeController {
         System.out.println("Episode no: " + (epno - 1));
         JSONObject detail = episodes.optJSONObject(epno-1); // episodes 배열 중에서 찾는 에피소드 번호에 해당하는 부분만 있음 된다.
 
+        String overview_eng = null;
+        try {
+            re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY, String.class);
+            JSONObject programInfo_eng = new JSONObject(re.getBody());
+            JSONArray episodes_eng = programInfo_eng.optJSONArray("episodes");
+            overview_eng = episodes_eng.optJSONObject(epno-1).optString("overview");
+        } catch (Exception e) {
+            // 여기서 아무것도 안함(오류 무시)
+        }
+
         EpisodeResponse e = null;
         if(detail != null) {
-            e = episodeSetter(program, epno, detail, " "); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
+            e = episodeSetter(program, epno, detail, overview_eng); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
         }
         
         return e;
