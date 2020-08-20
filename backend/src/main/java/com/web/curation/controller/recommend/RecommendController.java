@@ -94,9 +94,12 @@ public class RecommendController {
 
             ArrayList<Program> final_result = new ArrayList<Program>();
             RestTemplate restTemplate = new RestTemplate();
+
+            int size = RECOMMEND_SIZE;
+            if (data.length() < RECOMMEND_SIZE) size = data.length();
             
             // 추천 결과 Program ID들로 TMDB API에 요청 보내서 포스터, 프로그램명 가져오기.
-            for (int i=0; i<RECOMMEND_SIZE; i++){
+            for (int i=0; i<size; i++){
                 Program p = new Program();
                 ResponseEntity<String> re = 
                 restTemplate.getForEntity(BASE_URL + "tv/" + data.getInt(i) + "?api_key=" + API_KEY + "&language=ko", String.class);

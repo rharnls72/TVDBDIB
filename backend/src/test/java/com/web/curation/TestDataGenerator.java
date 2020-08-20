@@ -24,7 +24,7 @@ public class TestDataGenerator {
         // user 생성
         OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream("TestDataSql.sql"));
 
-        for (int i=1000; i<1250; i++){
+        for (int i=1000; i<1150; i++){
             os.write("insert into user values (" + i + ", '" + "test" + i + "@gmail.com', 'test', null, 'test" + i + "', null, null, null, 1);\n" );
         }
 
@@ -33,7 +33,7 @@ public class TestDataGenerator {
         RestTemplate restTemplate = new RestTemplate();
         List<Program> programList = new ArrayList<Program>();
 
-        for (int page=1; page<=10; page++){
+        for (int page=1; page<=5; page++){
             ResponseEntity<String> re = 
             restTemplate.getForEntity(BASE_URL + "trending/tv/day?page=" + page + "&api_key=" + API_KEY, String.class);
             JSONObject recommended_program = new JSONObject(re.getBody());
@@ -51,7 +51,7 @@ public class TestDataGenerator {
         }
 
         Random r = new Random();
-        for (int i=1000; i<1250; i++){
+        for (int i=1000; i<1150; i++){
             for (int j=0; j<programList.size(); j++){
                 if (r.nextInt(3) < 1)
                     os.write("insert into program_follow values (" + i + "," + programList.get(j).getPno() + ");\n");
