@@ -77,6 +77,6 @@ export default {
     margin-bottom: 0;
   }
   .myfeed {
-    padding-top: 55px;
+    padding-top: 60px;
   }
 </style>

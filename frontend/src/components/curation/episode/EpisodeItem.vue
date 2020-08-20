@@ -3,12 +3,17 @@
     <div class="top">
       <!-- 추후에 poster url 가져오면 img 태그로 바꿔줄 것 -->
       <!-- 에피소드에는 포스터가 없다,, -->
-      <!-- <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div> -->
-      <div class="user-info mb-2">
-        <div class="user-name" @click="goToProgramDetail">
-          <button class="myname">{{ curation.pname }}</button>
+      <div class="d-flex align-items-center mb-2">
+        <div class="box profile-image" style="background: #BDBDBD;">
+              <img v-if="curation.poster != null" class="profile" :src="curation.poster" alt="">
+              <img v-else class="profile" :src="defaultProfile" alt="">
+          </div>
+        <div class="user-info pl-3">
+          <div class="user-name" @click="goToProgramDetail">
+            <button class="myname">{{ curation.pname }}</button>
+          </div>
+          <p class="date mb-0">{{ curation.broadcast_date }} 방송</p>
         </div>
-        <p class="date">{{ curation.broadcast_date }} 방송</p>
       </div>
     </div>
     <!-- <div class="feed-card">
@@ -20,7 +25,9 @@
         </div>
       </div>
     </div> -->
-    <EpisodeThumbnail :curation="curation"/>
+    <div @click="moveDetail">
+      <EpisodeThumbnail :curation="curation"/>
+    </div>
     <!---->
     <div class="btn-group wrap justify-content-between">
       <div>
@@ -207,9 +214,20 @@ export default {
   .more {
     color: lightgray;
   }
-  .myname {
-    /* text-shadow: 1px 1px 2px pink; */
-    text-shadow: pink 1px 0 7px;
-    /* text-shadow: 1px 1px 2px pink, 0 0 0.2em purple; */
-  }
+  /* .myname {
+    text-shadow: 1px 1px 2px hotpink;
+    text-shadow: hotpink 1px 0 7px;
+    text-shadow: 1px 1px 2px hotpink, 0 0 0.2em purple;
+  } */
+  .box {
+    width: 40px;
+    height: 40px; 
+    border-radius: 70%;
+    overflow: hidden;
+}
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 </style>
