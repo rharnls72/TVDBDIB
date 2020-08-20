@@ -352,6 +352,7 @@ public class EpisodeController {
         JSONObject programInfo = new JSONObject(re.getBody());
         int program_id = programInfo.optInt("id");
         String program_name = programInfo.optString("name");
+        
 
         // 시즌 정보 요청. 시즌 정보에 에피소드 정보들도 들어있다
         re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY + "&language=ko", String.class);
@@ -366,6 +367,8 @@ public class EpisodeController {
         program.setPname(program_name);
         program.setSeason(season_num);
         program.setSeason_name(season_name);
+        program.setThumbnail(programInfo.optString("poster_path"));
+        program.setBackdrop(programInfo.optString("backdrop_path"));
 
         System.out.println("Episode num: " + episodes.length());
         System.out.println("Episode no: " + (epno - 1));
