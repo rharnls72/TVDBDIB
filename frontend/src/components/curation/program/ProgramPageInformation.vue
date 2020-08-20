@@ -5,16 +5,25 @@
 
         <div class="row p-0 justify-content-center">
           <img class="col-5 p-0 mb-3" :src="'https://image.tmdb.org/t/p/w500/'+program.programDetail.poster_path">
-          <div class="col-5 pl-3 mb-3 d-flex flex-column justify-content-end">
-            <select v-model="season">
-              <template v-for="(season) in program.programDetail.seasons">
-                <option v-if="season.season_number != 0" :key="season.season_number" :value="season.season_number">시즌 {{season.season_number}}</option>
-              </template>
-            </select>
-            <div>방송시작일 : <p class="mb-0">{{program.programDetail.first_air_date}}</p></div>
-            <div>방영 국가 : <span>{{program.programDetail.language}}</span></div>
-            <div>방영사 : <span v-for="(network, idx) in program.programDetail.networks" :key="idx">{{network.name}} </span></div>
-            <div>장르 : <span v-for="(genre, idx) in program.programDetail.genres" :key="idx">{{genre.name}} </span></div>
+          <div class="col-5 pl-3 mb-3 d-flex flex-column justify-content-between">
+            <div class="row px-3">
+              <select v-if="program.programDetail.number_of_seasons!=1" v-model="season" class="col-12 mb-3">
+                <template v-for="(season) in program.programDetail.seasons">
+                  <option v-if="season.season_number!=0" :key="season.season_number" :value="season.season_number">시즌 {{season.season_number}}</option>
+                </template>
+              </select>
+              <div>방송시작일 : <p class="mb-0">{{program.programDetail.first_air_date}}</p></div>
+              <div>방영사 : <span v-for="(network, idx) in program.programDetail.networks" :key="idx">{{network.name}} </span></div>
+              <div>장르 : <span v-for="(genre, idx) in program.programDetail.genres" :key="idx">{{genre.name}} </span></div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <h5 class="mb-0">
+                <b-icon-heart v-if="!program.press_like" @click="touchLikeIcon"></b-icon-heart>
+                <b-icon-heart-fill v-else @click="touchLikeIcon" class="text-danger"></b-icon-heart-fill>
+                <b-icon-pencil @click="createShare" class="mx-4"></b-icon-pencil>
+                <b-icon-reply @click="copyUrl"></b-icon-reply>
+              </h5>
+            </div>
           </div>
         </div>
 
@@ -33,16 +42,12 @@
           </div>
         </div>
 
-        <p class="row mb-0 pb-3 introduce">{{program.programDetail.overview}}</p>
-        <p class="row p-0 justify-content-around">
-          <button v-if="!infollowers" @click="touchFollowIcon" class="col-5 mybutton p-0 text-dark">팔로우</button>
-          <button v-else @click="touchFollowIcon" class="col-5 mybutton p-0 text-dark">팔로우 취소</button>
-          <button v-if="!program.press_like" @click="touchLikeIcon" class="col-5 mybutton p-0 text-dark">좋아요</button>
-          <button v-else @click="touchLikeIcon" class="col-5 mybutton p-0 text-dark">좋아요 취소</button>
-        </p>
-        <p class="row p-0 justify-content-around">
-          <button @click="createShare" class="col-5 mybutton p-0 text-dark">공유하기</button>
-          <button @click="copyUrl" class="col-5 mybutton p-0 text-dark">URL 복사</button>
+        <div class="row justify-content-center">
+          <p class="col-10 mb-0 pb-3 px-0 introduce">{{program.programDetail.overview}}</p>
+        </div>
+        <p class="row p-0 justify-content-center">
+          <button v-if="!infollowers" @click="touchFollowIcon" class="col-10 mybutton p-0 text-dark my-3">팔로우</button>
+          <button v-else @click="touchFollowIcon" class="col-10 followstate p-0 text-dark my-3">팔로우 취소</button>
         </p>
       <!-- </div> -->
     </div>
@@ -172,5 +177,12 @@ export default {
     box-shadow: none;
     border: 1px solid lightgray;
     border-radius: 0.25rem;
+  }
+  .followstate {
+    height: auto;
+    box-shadow: none;
+    border: 1px solid lightgray;
+    border-radius: 0.25rem;
+    background-color: #f8e8f2;
   }
 </style>
