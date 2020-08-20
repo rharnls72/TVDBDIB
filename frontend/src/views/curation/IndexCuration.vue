@@ -5,7 +5,7 @@
         <IndexCurationHeader />
         <div class="wrapB">
           <div class="myfeed">
-            <EpisodeItem v-for="curation in partCurations" :key="curation.key" :curation="curation"/>
+            <EpisodeItem v-for="curation in partCurations" :key="curation.key" :curation="curation" :isStretch="isStretch"/>
             <infinite-loading v-if="!noCuration && !isEndPoint" @infinite="infiniteHandler"></infinite-loading>
             <div v-if="noCuration" style="text-align: center; margin-top: 50px;"> 팔로우 중인 프로그램이 없습니다<br/>
               좋아하는 프로그램을 찾으러 가볼까요?<br/>
@@ -46,6 +46,7 @@ export default {
       noCuration: false,
       isEndPoint: false,
       show: false,
+      isStretch: false,
     }
   },
   props: ["keyword"],

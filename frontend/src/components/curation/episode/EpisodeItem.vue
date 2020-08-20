@@ -108,12 +108,12 @@ export default {
     return {
       defaultImage,
       defaultProfile,
-      isStretch: false,
     };
   },
   props: {
     curation: Object,
     detail: Boolean,
+    isStretch: Boolean,
   },
   components: {
     EpisodeThumbnail,
