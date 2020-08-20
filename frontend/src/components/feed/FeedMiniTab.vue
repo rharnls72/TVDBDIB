@@ -81,7 +81,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .feed-thumbnail-list {
   width: 100%;
   border-bottom: 1px solid black;
