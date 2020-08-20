@@ -12,8 +12,12 @@
             <UserSearchResult2 :users_result="part_users_result" :choosed="choosed" v-on:clear="clear()"/>
           </div>
         </div>
-      <ChoosedItem :choosed="choosed"/>
+        <div class="tags" ref="tags">
+          <ChoosedItem :choosed="choosed"/>
+        </div>
+      <div style="margin-top: 165px; ">
       <ChooseFollowingItem v-if='loadComplete' :followings="followings" :choosed="choosed"/>
+      </div>
     <Footer />
   </div>
 </template>
@@ -85,6 +89,9 @@ export default {
       }
     );
   },
+  updated() {
+      this.$refs.tags.scrollLeft =1000000000;
+  },
   methods: {
     clear(){
       this.$refs.searchInput.value = "";
@@ -114,8 +121,20 @@ export default {
 </script>
 
 <style scoped>
+.tags{
+  position: fixed; 
+  top: 100px; 
+  z-index: 1; 
+  background-color: white; 
+  width:100%;
+  padding: 20px 5px;
+  white-space:nowrap;
+  overflow-x: scroll;
+}
  .searchArea{
-    padding-top: 55px;
+   position: fixed;
+    top: 50px;
+    z-index: 999;
     width: 100%;
     background-color: #f8e8f2;
     display: table;
@@ -153,6 +172,6 @@ export default {
     position: absolute;
     max-height: 350px;
     /* overflow-y: auto; */
-    z-index: 999;
+    z-index: 9999;
   }
 </style>

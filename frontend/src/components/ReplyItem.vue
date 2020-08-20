@@ -16,8 +16,10 @@
           </div>
           <div>
             <span @click="changeIsStretch(idx)" v-if="!re.isStretch"><b-icon-chat></b-icon-chat></span>
-            <span @click="touchLike(re)" v-if="!re.press_like" class="ml-2"><b-icon-heart></b-icon-heart> <small>0</small></span> 
-            <span @click="touchLike(re)" v-else class="ml-2 text-danger"><b-icon-heart-fill></b-icon-heart-fill> <small class="myreplylike">0</small></span> 
+
+            <span @click="touchLike(re)" v-if="!re.press_like" class="ml-2"><b-icon-heart></b-icon-heart> <small>{{re.like_num}}</small></span> 
+            <span @click="touchLike(re)" v-else class="ml-2 text-danger"><b-icon-heart-fill></b-icon-heart-fill> <small>{{re.like_num}}</small></span> 
+
             <span class="ml-2" v-if="re.writer_uno === $store.state.userInfo.uno" @click="delReply(re)"><b-icon-trash></b-icon-trash></span>
           </div>
         </div>
@@ -27,7 +29,7 @@
         @delReReply="delReReply(idx)" 
         :isStretch="re.isStretch" 
         :parentNo="re.no" 
-        :fno="fno" :eno="eno" 
+        :fno="fno" :eno="eno" :pno="pno" :auno="re.writer_uno"
         :addfun="addfun" :delfun="delfun" :section="section"
         :addlike="addlike" :dellike="dellike"
         />
@@ -61,18 +63,33 @@ export default {
     fno: Number,
     eno: Number,
     pno: Number,
+    auno: Number
   },
   methods: {
     touchLike(reply) {
       reply.press_like = !reply.press_like
+
+      let ano = 0;
+      if(!this.fno === false) {
+        ano = this.fno;
+      } else if(!this.eno === false) {
+        ano = this.eno;
+      } else {
+        ano = this.pno;
+      }
+
       if (reply.press_like) {
+        reply.like_num++;
         this.addlike({
           tno: reply.no
+          , uno: reply.writer_uno
+          , ano: ano
         }
         , res => console.log(res)
         , err => console.log(err)
         )
       } else {
+        reply.like_num--;
         this.dellike({
           tno: reply.no
         }
@@ -93,20 +110,23 @@ export default {
     },
     pushReply() {
 
-      if (!this.eno===false) {
-        this.addData = {
-          no: this.eno,
-          content: this.content,
-        }
-      } else if (!this.fno===false) {
+      if (!this.fno===false) {
         this.addData = {
           no: this.fno,
           content: this.content,
+          writer_uno: this.auno
+        }
+      } else if (!this.eno===false) {
+        this.addData = {
+          no: this.eno,
+          content: this.content,
+          writer_uno: this.auno
         }
       } else {
         this.addData = {
           no: this.pno,
           content: this.content,
+          writer_uno: this.auno
         }
       }
 

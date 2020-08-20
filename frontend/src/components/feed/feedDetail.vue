@@ -5,7 +5,7 @@
       <div class="wrapB">
         <div class="myfeed">
           <FeedItem :article="article" :detail="true" :isStretch="isStretch" class="myfi"/>
-          <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno != 0 ? article.eno : null" :fno="article.fno"/>
+          <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :auno="article.uno" :eno="article.eno != 0 ? article.eno : null" :fno="article.fno"/>
         </div>
       </div>
       <Footer />

@@ -70,7 +70,6 @@
     </div>
     <!-- 내용 더 보기 (현재 페이지에서 펼치기) -->
     <div v-if="!curation.summary">
-      <p>{{ curation.summary }}</p>
     </div>
     <div v-else-if="curation.summary.length <= 25">
       <p>{{ curation.summary }}</p>

@@ -56,7 +56,7 @@ export default {
                   this.$router.push({name:'Errors', query: {message: error.msg}})
                 }
             );
-            this.$router.push({path: '/message/chatroom/' + this.room.cno, query: {room: this.room}});
+            this.$router.replace({path: '/message/chatroom/' + this.room.cno, query: {room: this.room}});
           },
           error => {
             this.$router.push({name:'Errors', query: {message: error.msg}})

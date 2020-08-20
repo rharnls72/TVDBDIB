@@ -20,8 +20,8 @@
           <span>{{r.content}}</span>
         </div>
         <div class="d-flex align-items-center">
-          <span @click="touchLike(r)" v-if="!r.press_like" class="ml-2"><b-icon-heart></b-icon-heart> <small>0</small></span> 
-          <span @click="touchLike(r)" v-else class="ml-2 text-danger"><b-icon-heart-fill></b-icon-heart-fill> <small>0</small></span>
+          <span @click="touchLike(r)" v-if="!r.press_like" class="ml-2"><b-icon-heart></b-icon-heart> <small>{{r.like_num}}</small></span> 
+          <span @click="touchLike(r)" v-else class="ml-2 text-danger"><b-icon-heart-fill></b-icon-heart-fill> <small>{{r.like_num}}</small></span>
           <span class="ml-2" v-if="r.writer_uno === $store.state.userInfo.uno" @click="delReReply(r.no)"><b-icon-trash></b-icon-trash></span>
         </div>
       </div>
@@ -53,6 +53,7 @@ export default {
     eno: Number,
     fno: Number,
     pno: Number,
+    auno: Number,
     addfun: Function,
     delfun: Function,
     isStretch: Boolean,
@@ -69,14 +70,28 @@ export default {
     },
     touchLike(reply) {
       reply.press_like = !reply.press_like
+
+      let ano = 0;
+      if(!this.fno === false) {
+        ano = this.fno;
+      } else if(!this.eno === false) {
+        ano = this.eno;
+      } else {
+        ano = this.pno;
+      }
+
       if (reply.press_like) {
+        reply.like_num++;
         this.addlike({
           tno: reply.no
+          , uno: reply.writer_uno
+          , ano: ano
         }
         , res => console.log(res)
         , err => console.log(err)
         )
       } else {
+        reply.like_num--;
         this.dellike({
           tno: reply.no
         }
@@ -92,18 +107,21 @@ export default {
           no: this.eno,
           parent_reply: this.parentNo,
           content: this.content,
+          writer_uno: this.auno
         }
       } else if (!this.fno===false) {
         this.addData = {
           no: this.fno,
           parent_reply: this.parentNo,
           content: this.content,
+          writer_uno: this.auno
         }
       } else {
         this.addData = {
           no: this.pno,
           parent_reply: this.parentNo,
           content: this.content,
+          writer_uno: this.auno
         }
       }
       

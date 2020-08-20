@@ -12,6 +12,9 @@ public class Like {
     private int uno;
     private int tno; // eno, erno, fno 등 타겟의 고유 번호
 
+    // 좋아요를 누른 글의 번호(댓글의 경우 댓글 번호가아니라 그 글의 번호가 필요함)
+    private int ano;
+
     // Like 객체 하나로 프로그램과 관련된 서비스도 제공하기위해
     // 프로그램의 좋아요 수 와 로그인한 유저가 좋아요 눌렀는지 여부도
     // 여기에 포함시켰음
@@ -36,6 +39,14 @@ public class Like {
     }
     public void setTno(int tno) {
         this.tno = tno;
+    }
+
+    public int getAno() {
+        return this.ano;
+    }
+
+    public void setAno(int ano) {
+        this.ano = ano;
     }
 
     public int getLike_num() {

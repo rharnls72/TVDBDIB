@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="userList">
       <ul class="list-group"> 
           <li v-for="(user) in users_result" v-bind:key="user.uno" 
            class="list-group-item d-flex align-items-center shadow" type="button" @click="selectedUser(user)" >
@@ -67,6 +67,10 @@ export default {
 </script>
 
 <style scoped>
+.userList{
+  max-height: 400px;
+  overflow:scroll;
+}
 ul {
     padding-top: 0px; /* 검색창을 sticky로 고정시키니까 이걸 다시 0으로 해도 됐다. 50이었는데... */
 }

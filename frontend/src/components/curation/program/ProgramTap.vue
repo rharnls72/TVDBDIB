@@ -5,7 +5,10 @@
         <ProgramItem v-for="(episode, idx) in episodes" :key="idx" :episode="episode"/>
       </b-tab>
       <b-tab title="댓글" title-link-class="text-secondary">
-        <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :pno="program.programDetail.id"/>
+        <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)"  :auno="0" :pno="program.programDetail.id"/>
+      </b-tab>
+      <b-tab title="비슷한" title-link-class="text-secondary">
+        <ProgramSearchResult :programs="program.similar.results"/>
       </b-tab>
     </b-tabs>
   </div>
@@ -14,7 +17,7 @@
 <script>
 import ProgramItem from "@/components/curation/program/ProgramItem.vue"
 import ReplyItem from "@/components/ReplyItem.vue"
-
+import ProgramSearchResult from '@/components/search/ProgramSearchResult.vue'
 export default {
   name: "ProgramEpisodes",
   props: {
@@ -35,9 +38,10 @@ export default {
   components: {
     ProgramItem,
     ReplyItem,
+    ProgramSearchResult
   },
   mounted() {
-    console.log(this.episodes)
+    this.program.similar = JSON.parse(this.program.similar)
     // this.episodes.sort((a, b) => a.-b)
   }
 }

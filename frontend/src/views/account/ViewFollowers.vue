@@ -88,7 +88,7 @@ export default {
   }
   .myfollow {
     margin: 0 auto;
-    padding-top: 70px;
+    padding-top: 50px;
     padding-bottom: 50px;
   }
 </style>
