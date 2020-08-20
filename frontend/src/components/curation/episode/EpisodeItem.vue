@@ -33,26 +33,26 @@
       <div>
         <!-- 좋아요 -->
         <div class="mr-3">
-          <button class="h6 mr-1" @click="touchLikeIcon">
+          <button class="h6 mr-2" @click="touchLikeIcon">
             <b-icon-heart v-if="!curation.press_like"></b-icon-heart>
             <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
           </button>
-          {{ curation.like_num }}
+          <span class="mynumber">{{ curation.like_num }}</span>
         </div>
         <!-- 댓글 -->
         <div class="mr-3">
-          <button class="h6 mr-1">
+          <button class="h6 mr-2">
             <b-icon-chat></b-icon-chat>
           </button>
-          {{curation.reply_num}}
+          <span class="mynumber">{{curation.reply_num}}</span>
         </div>
         <!-- 스크랩 -->
         <div class="mr-3">
-          <button class="h6 mr-1" @click="touchScrapIcon">
+          <button class="h6 mr-2" @click="touchScrapIcon">
             <b-icon-bookmark v-if="!curation.press_dibs"></b-icon-bookmark>
             <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
-          {{ curation.dibs_num }}
+          <span class="mynumber">{{ curation.dibs_num }}</span>
         </div>
         <!---->
       </div>
@@ -84,14 +84,13 @@
         <button @click="readMore" class="more">더 보기</button>
       </div>
       <div v-else>
-        <p>{{ curation.summary }}</p>
+        <p class="mb-2">{{ curation.summary }}</p>
       </div>
     </div>
     <div v-if="!detail">
-      <p><span style="text-decoration: bold;">{{curation.reply_user_nick}} </span> <span>{{curation.reply_content}}</span></p>
-      <p><span v-if="!!curation.reply_num" class="more">댓글 {{curation.reply_num}} 개</span></p>
-      <!-- 추후에 댓글 연결!~ -->
-      <p><span v-if="!detail" class="more" @click="moveDetail">댓글 남기기</span></p>
+      <p class="my-1"><strong class="mr-2">{{curation.reply_user_nick}}</strong><span>{{curation.reply_content}}</span></p>
+      <p class="myreply"><span v-if="!!curation.reply_num" class="more" @click="moveDetail">댓글 {{curation.reply_num}}개 모두 보기</span></p>
+      <p><span v-if="!detail && !curation.reply_num" class="more" @click="moveDetail">댓글 남기기</span></p>
     </div>
   </div>
 </template>
@@ -219,10 +218,16 @@ export default {
     height: 40px; 
     border-radius: 70%;
     overflow: hidden;
-}
-.profile {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+  }
+  .profile {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+  }
+  .myreply {
+    font-size: 0.9rem;
+  }
+  .mynumber {
+    font-size: 0.8rem;
+  }
 </style>
