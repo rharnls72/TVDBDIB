@@ -6,8 +6,8 @@
         <b-icon-plus-circle class="text-dark"></b-icon-plus-circle>
       </button>
     </b-nav-item>
-    <b-nav-item class="d-flex justify-content-center" @click="test"> <!-- 여기에 test 이벤트 바인딩해서 아직 구현되지 않은 기능 테스트 해봤음 -->
-      <img class="mylogo mb-0\" :src="HeaderLogo" alt="header-logo">
+    <b-nav-item @click="test"> <!-- 여기에 test 이벤트 바인딩해서 아직 구현되지 않은 기능 테스트 해봤음 -->
+      <img class="mylogo mb-0" :src="HeaderLogo" alt="header-logo">
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-end">
       <!-- 메시지 -->

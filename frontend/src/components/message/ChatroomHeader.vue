@@ -1,5 +1,5 @@
 <template>
-  <b-nav justified class="myheader d-flex justify-content-between align-items-center">
+  <b-nav fill class="myheader d-flex justify-content-between align-items-center">
     <b-nav-item class="d-flex justify-content-start">
       <button @click="backpage">
       <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
@@ -11,6 +11,7 @@
       </p>
     </b-nav-item>
     <b-nav-item>
+      <b-icon-blank></b-icon-blank>
     </b-nav-item>
   </b-nav>
 </template>

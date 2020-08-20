@@ -5,7 +5,7 @@
         <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
       </button>
     </b-nav-item>
-    <b-nav-item class="d-flex justify-content-center">
+    <b-nav-item>
       <p class="text-dark mb-0"><strong>스크랩</strong></p>
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-end">

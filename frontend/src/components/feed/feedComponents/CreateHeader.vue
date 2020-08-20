@@ -1,11 +1,19 @@
 <template>
-  <div>
-    <div class="col d-flex justify-content-between align-items-center mb-5 myheader">
-      <b-icon @click="moveback" icon="chevron-left" font-scale="1.5"></b-icon>
-      <img class="mylogo mb-0\" :src="HeaderLogo" alt="header-logo">
-      <b-icon @click="submit" icon="check-square" font-scale="1.4"></b-icon>
-    </div>
-  </div>
+  <b-nav justified class="myheader align-items-center">
+    <b-nav-item class="d-flex justify-content-start">
+      <button @click="moveback">
+        <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
+      </button>
+    </b-nav-item>
+    <b-nav-item>
+      <img class="mylogo mb-0" :src="HeaderLogo" alt="header-logo">
+    </b-nav-item>
+    <b-nav-item class="d-flex justify-content-end">
+      <button @click="submit">
+        <b-icon-check-square class="text-dark"></b-icon-check-square>
+      </button>
+    </b-nav-item>
+  </b-nav>
 </template>
 
 <script>
