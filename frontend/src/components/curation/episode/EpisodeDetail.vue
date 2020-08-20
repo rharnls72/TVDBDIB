@@ -3,10 +3,12 @@
     <div v-if="article != null" class="feed newsfeed">
       <EpisodeHeader :episode="article"/>
       <div class="wrapB">
+
         <div class="myfeed">
           <EpisodeItem :curation="article" :detail="true" :isStretch="isStretch" class="myei"/>
-          <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno"/>
+          <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :auno="0" :eno="article.eno"/>
         </div>
+
       </div>
       <Footer />
     </div>

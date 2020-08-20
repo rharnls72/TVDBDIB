@@ -16,6 +16,12 @@
         </div>
         <Footer />
       </div>
+
+      <div v-if="feedNull">
+        <h1>No more results...</h1>
+        <div style="height:50px;"></div>
+      </div>
+
     </div>
     <!-- <LoadingItem v-else /> -->
   </div>

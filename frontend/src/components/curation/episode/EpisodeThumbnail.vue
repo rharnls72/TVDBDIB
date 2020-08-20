@@ -1,7 +1,8 @@
 <template>
   <div class="feed-card">
     <div v-if="curation.thumbnail !== null"><img class="mythumbnail" :src="curation.thumbnail" alt="thumbnail-image"></div>
-    <img v-else class="mythumbnail" :src="defaultImage" alt="default-image">
+    <div v-else class="emptyThumbnail">방영 예정입니다.</div>
+    <!-- <img v-else class="mythumbnail" :src="defaultImage" alt="default-image"> -->
     <div class="contentsWrap">
       <div class="d-flex justify-content-between">
         <h4 class="title">{{ curation.pname }} - {{ curation.episode }}화</h4>
@@ -32,5 +33,11 @@ export default {
     width: 100%;
     height: auto;
     background-color: #f8e8f2;
+  }
+  .emptyThumbnail{
+    height: 100px;
+    background-color: #f8e8f2;
+    text-align: center;
+    padding-top: 35px;
   }
 </style>

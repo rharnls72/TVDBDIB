@@ -21,8 +21,8 @@
             <p class="mb-0 text-center">팔로잉</p>
           </div>
         </div>
-        <p class="row mb-0 pb-3 introduce">{{info.bio}}</p>
-        <p class="row p-0">
+        <p class="row mb-2 mt-4 pb-3 introduce">{{info.bio}}</p>
+        <p class="row p-0 mb-4">
           <button class="col-12 mybutton p-0 text-dark" @click="editmypage">프로필 수정</button>
         </p>
       <!-- </div> -->

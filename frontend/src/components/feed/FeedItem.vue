@@ -145,7 +145,7 @@ export default {
       if (this.article.press_like) {
         this.article.like_num ++
         FeedApi.createFeedLike(
-          { tno: this.article.fno }
+          { tno: this.article.fno, uno: this.article.uno }
           , res => console.log(res)
           , err => console.log(err))
       }

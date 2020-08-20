@@ -12,7 +12,9 @@
         <UserSearchResult :users_result="part_users_result" />
       </div>
     </div>
+    <div style="margin-top: 100px; ">
     <ChatListItem v-if='loadComplete' :rooms="rooms"/>
+    </div>
     <Footer />
   </div>
 </template>
@@ -137,7 +139,9 @@ export default {
 
 <style scoped>
   .searchArea{
-    padding-top: 55px;
+    position: fixed;
+    top: 50px;
+    z-index: 1;
     width: 100%;
     background-color: #f8e8f2;
     display: table;
