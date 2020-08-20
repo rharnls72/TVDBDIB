@@ -1,7 +1,7 @@
 <template>
     <div class="feed-item">
-        <div v-for="(people) in peoples" v-bind:key="people.id" style="width: 100%;" >
-            <div v-if="people.people_name !=null" @click="searchActor(people)" class="list-group-item d-flex align-items-center" style="width: 100%;">
+        <!-- <div v-for="(people) in peoples" v-bind:key="people.id" style="width: 100%;" > -->
+            <div v-if="people.people_name !=null" class="actor" style="width: 100%;">
             <div class="box">
               <img v-if="people.profile_path!=null" :src='imgBaseUrl + people.profile_path' class="profile" alt="profile">
               <img v-else :src='defaultProfile' class="profile" alt="profile">
@@ -16,7 +16,7 @@
             </div>
        </div>
 
-        <!-- <div v-if="people.programs.length>0" class="programs"> 
+        <div v-if="people.programs.length>0" class="programs"> 
           <div v-for="(program) in people.programs" v-bind:key="program.id"
             @click="goDetail(program.id)" class="programItem">
         <div class="imageBox">
@@ -30,9 +30,9 @@
             <span v-else>{{program.title}}</span>
           </div>
           </div>
-        </div> -->
-
         </div>
+
+        <!-- </div> -->
 
     </div>
 
@@ -54,23 +54,27 @@ export default {
     };
   },
   props: {
-    peoples: Array
+    people: Object
   },
   mounted() {
-      console.log(this.peoples)
+      // console.log(this.peoples)
   },
   methods:{
       goDetail(id){
           this.$router.push("/program/" + id);
-      },
-      searchActor(people){
-          this.$router.push({name: 'ActorSearch', params: {people: people}});
       }
   }
 }
 </script>
 
 <style scoped>
+.actor{
+  padding: 10px;
+  position: fixed;
+  top: 50px;
+  background-color: white;
+  display: flex;
+}
 .peopleList{
     display: flex;
     background-color: lightgray;
@@ -91,7 +95,7 @@ ul {
     object-fit: cover;
 }
 .programs{
-    padding-top: 10px;
+    padding-top: 120px;
     padding-bottom: 10px;
 }
 .programItem {

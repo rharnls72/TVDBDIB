@@ -57,7 +57,6 @@ export default {
   },
   methods: {
     getMessagesList(querySnapshot) {
-        // this.makeToast("알림이 왔습니다.", "primary");
         let temp = [];
         let message = {};
         let tempUsers = this.userInfos;

@@ -19,8 +19,8 @@
           <p class="mb-0 text-center">팔로잉</p>
         </div>
       </div>
-      <p class="row mb-0 pb-3 introduce">{{info.bio}}</p>
-      <p class="row p-0">
+      <p class="row mb-2 mt-4 pb-3 introduce">{{info.bio}}</p>
+        <p class="row p-0 mb-4">
         <button v-if="followcnt.is_follow==0" @click="follow()" class="col-12 mybutton p-0 text-dark">팔로우</button>
         <button v-else @click="defollow()" class="col-12 mybutton p-0 text-dark">팔로우 취소</button>
       </p>

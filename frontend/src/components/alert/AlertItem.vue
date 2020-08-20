@@ -78,9 +78,11 @@ export default {
       // 에피소드 관련
       else if(type == 4) {
         // 에피소드 번호로 프로그램 번호, 시즌 번호, 에피소드 번호 가져오기
+        console.log("Alert go to Episode Detail!!", alert.cno);
         CurationApi.requestSimpleEpisode(
           alert.cno
           , res => {
+            console.log("Alert get the Episode simple info", "" + res.pno + "/" + res.season + "/" + res.episode);
             this.$router.push({path: `/episode/detail/${res.pno}/${res.season}/${res.episode}`})
           }
           , err => {
@@ -111,7 +113,10 @@ export default {
           })
           .catch((err) => this.makeToast(err, "danger"));
       }
+
       if (alert.atype == 4) this.movePage(alert);
+      
+      // Problem Zone ???
       switch (alert.ctype) {
         case 1:
         case 2:
@@ -121,7 +126,16 @@ export default {
           this.$router.push("/program/" + alert.cno);
           break;
         case 4: //에피소드는 /:pno/:season/:episode 다필요..
-          this.$router.push("/profile/" + alert.cno);
+          CurationApi.requestSimpleEpisode(
+          alert.cno
+          , res => {
+            console.log("Alert get the Episode simple info", "" + res.pno + "/" + res.season + "/" + res.episode);
+            this.$router.push({path: `/episode/detail/${res.pno}/${res.season}/${res.episode}`})
+          }
+          , err => {
+            this.$router.push({name:'Errors', query: {message: err.msg}})
+          }
+        )
       }
     },
     // 팔로우 거절
@@ -157,7 +171,7 @@ export default {
     makeToast(message, variant) {
       this.$bvToast.toast(message, {
         title: "알림",
-        toaster: "b-toaster-bottom-right",
+        toaster: "b-toaster-bottom-center",
         variant: variant,
         autoHideDelay: 3000,
         appendToast: false,

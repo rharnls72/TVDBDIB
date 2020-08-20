@@ -72,17 +72,8 @@ export default {
           }
       );
     },
-    makeToast(message, variant){
-        this.$bvToast.toast(message, {
-          title: '알림',
-          toaster: "b-toaster-bottom-right",
-          variant: variant,
-          autoHideDelay: 3000,
-          appendToast: false
-        })
-     }
-    }
   }
+}
 
 </script>
 

@@ -2,16 +2,15 @@
   <div class="feed-card">
     <div class="mythumbnail d-flex flex-column justify-content-center align-items-center">
       <div v-for="content in article.content.content" :key="content.id" style="width: 80%;">
-        <div class="my-2">
+        <div class="mt-2 mb-3">
           <label class="d-flex justify-content-between">
             <span>{{content.text}}</span>
-            <span v-if="votePos == 0" @click="voteOption(content.id)" class="moreView">투표하기</span>
+            <span v-if="votePos == 0" @click="voteOption(content.id)" class="moreView"><b-icon-check-circle></b-icon-check-circle></span>
           </label>
-          <b-progress :value="voteInfo[content.id - 1]" :max="totalNum" show-progress></b-progress>
+          <b-progress class="myprogress" :value="voteInfo[content.id - 1]" :max="totalNum" variant="danger" show-progress></b-progress>
         </div>
       </div>
-
-      <span v-if="votePos > 0" @click="voteClear" class="moreView">투표 초기화</span>
+      <h5 v-if="votePos>0" @click="voteClear" class="moreView mb-3"><b-icon-arrow-counterclockwise></b-icon-arrow-counterclockwise></h5>
     </div>
   </div>
 </template>
@@ -116,9 +115,12 @@ export default {
 </script>
 
 <style scoped>
-.mythumbnail {
-  background-color: #f8e8f2;
-  width: 100v;
-  height: 55v;
-}
+  .mythumbnail {
+    background-color: #f8e8f2;
+    width: 100v;
+    height: 55v;
+  }
+  .myprogress {
+    background-color: lightpink;
+  }
 </style>

@@ -1,55 +1,48 @@
 <template>
-  <div class="feed-item">
+  <div class="feed-item mb-0 pt-3">
     <div class="top">
-      <div class="box profile-image" style="background: #BDBDBD;" @click="goUserProfile">
+      <div class="d-flex align-items-center mb-3">
+        <div class="box profile-image" style="background: #BDBDBD;" @click="goUserProfile">
           <img v-if="article.profile_pic != null" class="profile" :src="article.profile_pic" :alt="article.profile_pic">
           <img v-else class="profile" :src="defaultProfile" alt="">
-      </div>
-      <!-- <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div> -->
-      <div class="user-info mb-2">
-        <div class="user-name">
-          <button @click="goUserProfile">{{article.nick_name}}</button>
         </div>
-        <p v-if="createAfter <= 24" class="date">{{createAfter}} 시간 전</p>
-        <p v-else class="date">{{parseInt(createAfter/24)}} 일 전</p>
-      </div>
-    </div>
-    <div class="comment">
-      <div>
-        <div v-if="article.ctype === 1 || article.ctype === 4"><span>{{article.content.content}}</span><br></div>
-        <span v-for="tag in article.tag" :key="tag" class="tag">#{{tag}} </span>
+        <div class="user-info pl-3">
+          <div class="user-name" @click="goUserProfile">
+            <button>{{ article.nick_name }}</button>
+          </div>
+          <p v-if="createAfter<=24" class="date mb-0">{{ createAfter }}시간 전</p>
+          <p v-else class="date mb-0">{{ parseInt(createAfter/24) }}일 전</p>
+        </div>
       </div>
     </div>
     <FeedArticleThumbnail v-if="article.ctype === 1" :article="article"/>
     <FeedCountdownThumbnail v-if="article.ctype === 2" :article="article"/>
     <FeedVoteThumbnail v-if="article.ctype === 3" :article="article"/>
     <FeedShareThumbnail v-if="article.ctype === 4" :article="article"/>
-    <!---->
     <div class="btn-group wrap justify-content-between" style="margin: 15px 0 0 0;">
       <div>
         <!-- 좋아요 -->
         <div class="mr-3">
-          <button class="h6 mr-1" @click="touchLikeIcon">
+          <button class="h6 mr-2" @click="touchLikeIcon">
             <b-icon-heart v-if="!article.press_like"></b-icon-heart>
             <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
           </button>
-          {{article.like_num}}
+          <span class="mynumber">{{ article.like_num }}</span>
         </div>
         <!-- 댓글 -->
         <div class="mr-3">
-          <button class="h6 mr-1" @click="moveDetail">
+          <button class="h6 mr-2" @click="moveDetail">
             <b-icon-chat></b-icon-chat>
           </button>
-          {{article.reply_num}}
+          <span class="mynumber">{{article.reply_num}}</span>
         </div>
         <!-- 스크랩 -->
         <div class="mr-3">
-          <button class="h6 mr-1" @click="touchScrapIcon">
+          <button class="h6 mr-2" @click="touchScrapIcon">
             <b-icon-bookmark v-if="!article.press_dibs"></b-icon-bookmark>
             <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
-          {{article.dibs_num}} 
-          <!-- 스크랩 카운트 -->
+          <span class="mynumber">{{ article.dibs_num }}</span>
         </div>
         <!---->
       </div>
@@ -62,19 +55,24 @@
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="font-weight-bold">좋아요 {{article.like_num}}명</div>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div v-if="article.content.title" class="font-weight-bold">{{ article.content.title }}</div>
+      <div v-else class="font-weight-bold">{{ article.content.content }}</div>
       <div v-if="!!this.$store.state.userInfo && this.$store.state.userInfo.uno === article.uno">
-        <span class="moreView" @click="updateFeed">수정 </span>
-        <span class="moreView" @click="delFeed">삭제</span>
+        <span @click="updateFeed"><b-icon-wrench></b-icon-wrench></span>
+        <span @click="delFeed" class="ml-2"><b-icon-trash></b-icon-trash></span>
       </div>
     </div>
-    <div v-if="!!article.reply_num && !detail" class="wrap mt-2">
-      <span class="moreView">댓글 {{article.reply_num}}개</span><br>
+    <div>
+      <div class="my-2" v-if="article.ctype === 1"><span>{{article.content.content}}</span><br></div>
+      <span v-for="tag in article.tag" :key="tag" class="tag">#{{tag}} </span>
     </div>
     <div v-if="!detail">
-      <div v-if="article.reply_user_nick"><span class="font-weight-bold">{{article.reply_user_nick}} </span>{{article.reply_content}}<br></div>
-      <span @click="moveDetail" class="moreView">댓글 남기기</span>
+      <p v-if="!!article.reply_num" class="my-1"><strong class="mr-2">{{article.reply_user_nick}}</strong><span>{{article.reply_content}}</span></p>
+      <p class="myreply mt-1">
+        <span v-if="!!article.reply_num" class="more" @click="moveDetail">댓글 {{article.reply_num}}개 모두 보기</span>
+        <span v-else class="more" @click="moveDetail">댓글 남기기</span>
+      </p>
     </div>
   </div>
 </template>
@@ -222,30 +220,33 @@ export default {
 </script>
 
 <style scoped>
-.moreView {
-  color: darkgray; 
-}
-.tag {
-  color:deepskyblue;
-}
-.mythumbnail {
-  background-color: #f8e8f2;
-  width: 100v;
-  height: 55v;
-}
-.box {
-    width: 40px;
-    height: 40px; 
-    border-radius: 70%;
-    overflow: hidden;
-}
-.profile {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.comment {
-  margin-top: 60px;
-  margin-bottom: 20px;
-}
+  .more {
+    color: lightgray;
+  }
+  .tag {
+    color: #F54952;
+    font-weight: bold;
+  }
+  .mythumbnail {
+    background-color: #f8e8f2;
+    width: 100v;
+    height: 55v;
+  }
+  .box {
+      width: 40px;
+      height: 40px; 
+      border-radius: 70%;
+      overflow: hidden;
+  }
+  .profile {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+  }
+  .mynumber {
+    font-size: 0.8rem;
+  }
+  .myreply {
+    font-size: 0.9rem;
+  }
 </style>
