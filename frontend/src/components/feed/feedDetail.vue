@@ -1,29 +1,26 @@
 <template>
-  <div class="feed newsfeed">
-    <FeedHeader />
-    <div class="wrapB">
-      <div class="myfeed">
-        <!-- <feedArticleItem v-if="article.ctype === 1" :article="article" :detail="true"/>
-        <feedVoteItem v-if="article.ctype === 3" :article="article" :detail="true"/>
-        <feedCountdownItem v-if="article.ctype === 2" :article="article" :detail="true"/> -->
-        <FeedItem v-if="article != null" :article="article" :detail="true"/>
-        <ReplyItem v-if="article != null" @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno != 0 ? article.eno : null" :fno="article.fno"/>
+  <div>
+    <div v-if="article != null" class="feed newsfeed">
+      <FeedHeader />
+      <div class="wrapB">
+        <div class="myfeed">
+          <FeedItem :article="article" :detail="true" :isStretch="isStretch" class="myfi"/>
+          <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno != 0 ? article.eno : null" :fno="article.fno"/>
+        </div>
       </div>
+      <Footer />
     </div>
-    <Footer />
+    <LoadingItem v-else />
   </div>
 </template>
 
 <script>
-// import feedArticleItem from "@/components/feed/feedArticleItem.vue"
-// import feedVoteItem from "@/components/feed/feedVoteItem.vue"
-// import feedCountdownItem from "@/components/feed/feedCountdownItem.vue"
-
 import FeedItem from "@/components/feed/FeedItem.vue"
 
 import ReplyItem from "@/components/ReplyItem.vue"
 import Footer from '@/components/common/custom/Footer.vue';
 import FeedHeader from '@/components/feed/FeedHeader.vue'
+// import LoadingItem from '@/components/common/custom/LoadingItem.vue'
 
 import FeedApi from "@/api/FeedApi.js"
 import GetUserApi from "@/api/GetUserApi.js"
@@ -31,13 +28,11 @@ import GetUserApi from "@/api/GetUserApi.js"
 export default {
   name: 'FeedDetail',
   components: {
-    // feedArticleItem,
-    // feedVoteItem,
-    // feedCountdownItem,
     FeedItem,
     ReplyItem,
     FeedHeader,
-    Footer
+    Footer,
+    // LoadingItem
   },
   data() {
     return {
@@ -76,13 +71,11 @@ export default {
 </script>
 
 <style scoped>
-  .feed-item {
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
-  }
   .myfeed {
-    padding-top: 70px;
-    padding-bottom: 50px;
+    padding-top: 50px;
+    border-bottom: none;
+  }
+  .myfi {
+    border-bottom: none;
   }
 </style>
