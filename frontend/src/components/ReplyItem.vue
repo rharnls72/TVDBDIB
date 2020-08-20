@@ -1,5 +1,5 @@
 <template>
-  <div class="feed-item pb-5" style="border-bottom: none;">
+  <div class="feed-item myreplyfeed">
     <div class="d-flex justify-align-between align-items-center mt-2">
       <b-form-input type="text" class="m-0 rounded-pill myreply" v-model="content" placeholder="댓글을 입력하세요 :D"></b-form-input>
       <!-- 댓글 내용이 없으면 -->
@@ -257,6 +257,10 @@ export default {
 </script>
 
 <style scoped>
+  .myreplyfeed {
+    padding-bottom: 50px;
+    border-bottom: none;
+  }
   .myreply {
     font-size: 0.9rem;
   }

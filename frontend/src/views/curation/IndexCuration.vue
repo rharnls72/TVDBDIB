@@ -132,7 +132,7 @@ export default {
 </script>
 <style scoped>
   .myfeed {
-    padding-top: 66px;
+    padding-top: 50px;
   }
   .moveSearch{
     margin-top: 30px;
