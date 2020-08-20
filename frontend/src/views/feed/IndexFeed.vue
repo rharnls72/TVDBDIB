@@ -9,6 +9,11 @@
         <FeedItem :article="feed" :fno="feed.fno" @deleteItem="removeFeed(feed.fno)"/>
       </div>
       <infinite-loading v-if="!feedNull" @infinite="infiniteHandler"></infinite-loading>
+
+      <div v-if="feedNull">
+        <h1>No more results...</h1>
+        <div style="height:50px;"></div>
+      </div>
     </div>
     <Footer/>
   </div>
