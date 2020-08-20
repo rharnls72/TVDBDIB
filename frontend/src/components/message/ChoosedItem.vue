@@ -22,12 +22,13 @@ export default {
   }
 
 </script>
-<style>
-.label{
-  background-color: #D8BEFE;
-  padding: 10px;
-  margin: 8px 5px;
-  border-radius: 10px;
-}
+
+<style scoped>
+  .label{
+    background-color: #D8BEFE;
+    padding: 10px;
+    margin: 8px 5px;
+    border-radius: 10px;
+  }
 </style>
 

@@ -112,7 +112,8 @@ export default {
 
 };
 </script>
-<style>
+
+<style scoped>
  .searchArea{
     padding-top: 55px;
     width: 100%;
