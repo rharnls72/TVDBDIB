@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -67,6 +68,12 @@ public class ProgramController {
         re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/episode_groups" + "?api_key=" + API_KEY + "&language=ko", String.class);
         programInfo.setEpisodeGroup(re.getBody());
         ////////////////////////////////////////////////////////////////////////////////////////
+
+        re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/similar" + "?api_key=" + API_KEY + "&language=ko", String.class);
+        programInfo.setSimilar(re.getBody());
+        // JSONObject program = new JSONObject(re.getBody());
+        // JSONArray episodes = program.optJSONArray("results");
+        // programInfo.setSimilar(episodes);
 
         // DB 조회 전 ProgramRequest 설정하기
         ProgramRequest programReq = new ProgramRequest();

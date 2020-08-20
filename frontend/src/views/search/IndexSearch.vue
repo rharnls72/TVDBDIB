@@ -1,10 +1,11 @@
 <template>
   <div>
+    <div class="searchHeader">
     <ProgramRecommendHeader v-if="tabState == 1" />
       <UserSearchHeader v-if="tabState == 2" :word="word" @update:word="searchWord => word = searchWord"/>
       <ProgramSearchHeader v-if="tabState == 3" :word="word" @update:word="searchWord => word = searchWord" @update:selected="select => selected = select"/>
       <FeedSearchHeader v-if="tabState == 4" :word="word" @update:word="searchWord => word = searchWord"/>
-
+    
       <!-- b-tabs에 v-model: tabState를 주면 0부터로 동작 -->
       <b-tabs :class="{mytabs: tabState == 1}" active-nav-item-class="font-weight-bold text-dark" content-class="mt-3" justified>
         <b-tab @click="changeState(1)" title="인기" title-link-class="text-secondary" active ref='searchTab1'></b-tab>
@@ -12,12 +13,14 @@
         <b-tab @click="changeState(3)" title="큐레이션" title-link-class="text-secondary" ref='searchTab3'></b-tab>
         <b-tab @click="changeState(4)" title="피드" title-link-class="text-secondary" ref='searchTab4'></b-tab>
       </b-tabs>
-
+    </div>
+    <div class="searchContent">
       <!-- 선택한 탭번호에 따라 하위 컴포넌트 출력 -->
       <ProgramRecommend v-if="tabState == 1" />
       <UserSearch v-if="tabState == 2" :word="word"/>
       <ProgramSearch v-if="tabState == 3" :word="word" :selected="selected"/>
       <FeedSearch v-if="tabState == 4" :word="word"/>
+    </div>
     <Footer />
   </div>
 </template>
@@ -85,6 +88,16 @@ export default {
 };
 </script>
 <style scoped>
+.searchHeader{
+  position: fixed;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+    background-color: white;
+}
+.searchContent{
+  margin-top: 120px;
+}
 .mytabs{
   padding-top: 60px;
 }

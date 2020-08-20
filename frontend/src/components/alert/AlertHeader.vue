@@ -25,6 +25,6 @@ export default {
     top: 0;
     width: 100%;
     height: 50px;
-    z-index: 1;
+    z-index: 2;
   }
 </style>
