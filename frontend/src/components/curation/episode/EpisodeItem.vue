@@ -3,10 +3,10 @@
     <div class="top">
       <!-- 추후에 poster url 가져오면 img 태그로 바꿔줄 것 -->
       <!-- 에피소드에는 포스터가 없다,, -->
-      <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
+      <!-- <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div> -->
       <div class="user-info mb-2">
         <div class="user-name" @click="goToProgramDetail">
-          <button>[{{ curation.pname }}]</button>
+          <button class="myname">{{ curation.pname }}</button>
         </div>
         <p class="date">{{ curation.broadcast_date }} 방송</p>
       </div>
@@ -65,22 +65,22 @@
       </div>
     </div>
     <!-- 내용 더 보기 (현재 페이지에서 펼치기) -->
-    <div v-if="!curation.summary" class="content">
+    <div v-if="!curation.summary">
       <p>{{ curation.summary }}</p>
     </div>
-    <div v-else-if="curation.summary.length <= 30" class="content">
+    <div v-else-if="curation.summary.length <= 25">
       <p>{{ curation.summary }}</p>
     </div>
-    <div v-else class="content">
+    <div v-else>
       <div v-if="!isStretch" class="d-flex justify-content-between">
-        <p>{{ curation.summary.slice(0, 30) }}</p>
+        <p class="mb-0">{{ curation.summary.slice(0, 25) }}</p>
         <button @click="readMore" class="more">더 보기</button>
       </div>
       <div v-else>
         <p>{{ curation.summary }}</p>
       </div>
     </div>
-    <div v-if="!detail" class="content">
+    <div v-if="!detail">
       <p><span style="text-decoration: bold;">{{curation.reply_user_nick}} </span> <span>{{curation.reply_content}}</span></p>
       <p><span v-if="!!curation.reply_num" class="more">댓글 {{curation.reply_num}} 개</span></p>
       <!-- 추후에 댓글 연결!~ -->
@@ -115,7 +115,7 @@ export default {
     makeToast(message, variant){
       this.$bvToast.toast(message, {
         title: '알림',
-        toaster: "b-toaster-bottom-right",
+        toaster: "b-toaster-bottom-center",
         variant: variant,
         autoHideDelay: 3000,
         appendToast: false
@@ -131,7 +131,7 @@ export default {
     },
     copyUrl() {
       this.copyToClipboard(`http://i3a106.p.ssafy.io/episode/detail/${this.curation.pno}/${this.curation.season}/${this.curation.episode}`)
-      this.makeToast("경로 복사에 성공했습니다.", "primary");
+      this.makeToast("경로 복사에 성공했습니다.", "danger");
     },
     goToProgramDetail() {
       this.$router.push({path:`/program/${this.curation.pno}`})
@@ -206,5 +206,10 @@ export default {
 <style scoped>
   .more {
     color: lightgray;
+  }
+  .myname {
+    /* text-shadow: 1px 1px 2px pink; */
+    text-shadow: pink 1px 0 7px;
+    /* text-shadow: 1px 1px 2px pink, 0 0 0.2em purple; */
   }
 </style>

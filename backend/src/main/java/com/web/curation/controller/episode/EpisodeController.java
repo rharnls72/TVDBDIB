@@ -121,7 +121,7 @@ public class EpisodeController {
         // 프로그램 ID + 시즌 정보 저장해둘 Map
         HashMap<Integer, JSONArray> season_map = new HashMap<Integer, JSONArray>();
         for (Program program : programList) {
-            System.out.println(program.getPno());
+            //System.out.println(program.getPno());
             re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(program.getPno()) + "?api_key=" + API_KEY + "&language=ko", String.class);
             JSONObject programInfo = new JSONObject(re.getBody());
             //System.out.println(programInfo);
@@ -179,7 +179,7 @@ public class EpisodeController {
                 for (int j=0; j<total_seasons; j++){
                     int season_num = seasons.optJSONObject(j).optInt("season_number");
                     //int season = program.getSeason();
-                    System.out.println(pno + " " + season_num);
+                    //System.out.println(pno + " " + season_num);
         
                     // 프로그램 ID와 시즌 번호로 API 요청
                     try{
@@ -190,6 +190,7 @@ public class EpisodeController {
                         re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season_num + "?api_key=" + API_KEY, String.class);
                         JSONObject programInfo_eng = new JSONObject(re.getBody());
                         JSONArray episodes_eng = programInfo_eng.optJSONArray("episodes");
+                        program.setSeason(season_num);
                         program.setSeason_name(programInfo.optString("name"));
             
                         // 결과 데이터 중 episodes Array의 각 요소에 접근하여 episode 정보 추출
@@ -238,7 +239,7 @@ public class EpisodeController {
         // 각 에피소드들에 대해 DB 에 존재하는지 확인, 존재하지 않으면 DB 에 추가
         // + 추가정보(좋아요 수, 댓글 수 등) 구하기
         for(EpisodeResponse episode : episodeList) {
-            System.out.println(episode.getEpisode());
+            //System.out.println(episode.getEpisode());
             // DB 에 존재하는지 확인
             int n = episodeDao.checkDataExist(episode);
             

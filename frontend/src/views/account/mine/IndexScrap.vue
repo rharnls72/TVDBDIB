@@ -7,13 +7,13 @@
           <b-tab title="피드 찜" title-link-class="text-secondary" active>
             <div v-for="(feed, idx) in feedDib" :key="idx">
               <WrittenFeed :feed="feed"/>
-              <hr class="row col-12">
+              <hr>
             </div>
           </b-tab>
           <b-tab title="에피소드 찜" title-link-class="text-secondary">
             <div v-for="(episode, idx) in episodeDib" :key="idx">
               <DibEpisode :episode="episode"/>
-              <hr class="row col-12">
+              <hr>
             </div>
           </b-tab>
         </b-tabs>
