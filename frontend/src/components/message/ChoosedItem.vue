@@ -1,5 +1,5 @@
 <template>
-  <div class="feed-item">
+  <div>
     <span class="label" v-for="(choose) in choosed" v-bind:key="choose.uno">{{choose.nick_name}}
       <button @click="deleteChoose(choose)">
       <b-icon icon="x" class="text-dark"></b-icon>
