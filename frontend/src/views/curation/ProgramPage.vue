@@ -82,7 +82,7 @@ export default {
       }
       CurationApi.requestEpisodeDetail({
         pno: this.program.programDetail.id,
-        season: this.seasonNum,
+        season: this.seasonNum - 1,
         episode: this.episodeNum
       }
       ,res => {
@@ -111,7 +111,7 @@ export default {
     },
     seasonNum: function(e, n) {
       this.episodes = []
-      this.episodeNum = this.program.programDetail.seasons[this.seasonNum].episode_count
+      this.episodeNum = this.program.programDetail.seasons[this.seasonNum - 1].episode_count
     },
   },
   created() {
