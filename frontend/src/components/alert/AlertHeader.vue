@@ -2,11 +2,13 @@
   <div>
     <b-nav justified class="myheader d-flex justify-content-between align-items-center">
       <b-nav-item>
+        <b-icon-blank></b-icon-blank>
       </b-nav-item>
       <b-nav-item>
         <p class="text-dark mb-0"><strong>알림</strong></p>
       </b-nav-item>
       <b-nav-item>
+        <b-icon-blank></b-icon-blank>
       </b-nav-item>
     </b-nav>
   </div>

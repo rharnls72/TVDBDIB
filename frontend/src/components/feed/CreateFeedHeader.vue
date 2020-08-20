@@ -1,9 +1,19 @@
 <template>
-  <div class="d-flex justify-content-between align-items-center mb-3 myheader">
-    <b-icon-chevron-left @click="moveMain" font-scale="1.5" class="ml-3"></b-icon-chevron-left>
-    <img class="mylogo mb-0\" :src="HeaderLogo" alt="header-logo">
-    <b-icon-check-square @click="submitArticle" font-scale="1.4" class="mr-3"></b-icon-check-square>
-  </div>
+  <b-nav justified class="myheader align-items-center">
+    <b-nav-item class="d-flex justify-content-start">
+      <button @click="moveMain">
+        <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
+      </button>
+    </b-nav-item>
+    <b-nav-item>
+      <img class="mylogo mb-0" :src="HeaderLogo" alt="header-logo">
+    </b-nav-item>
+    <b-nav-item class="d-flex justify-content-end">
+      <button @click="submitArticle">
+        <b-icon-check-square class="text-dark"></b-icon-check-square>
+      </button>
+    </b-nav-item>
+  </b-nav>
 </template>
 
 <script>

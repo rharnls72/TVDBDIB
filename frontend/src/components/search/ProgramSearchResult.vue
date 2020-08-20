@@ -56,6 +56,6 @@ ul {
 li{
   width: 100px;
   height: 200px;
-  margin: 10px;
+  margin: 5px;
 }
 </style>

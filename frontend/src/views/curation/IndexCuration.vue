@@ -105,23 +105,29 @@ export default {
     
     GetUserApi.getUser(res => {
       this.$store.commit('addUserInfo', res.user);
-    });
-    CurationApi.requestEpisode(
-      res => {
-        console.log(res);
-        this.curations = res.list;
-        if(this.curations.length>0){
-          this.makeCurations();
-        }else{
-          this.noCuration = true;
-          this.loading_complete = true;
-        }
-        this.show = !this.show
-      },
-      error => {
-        this.$router.push({name:'Errors', query: {message: error.msg}})
+
+      if(this.$store.state.userInfo == null) {
+        this.$router.push({name:'Login'});
+        return;
       }
-    );
+
+      CurationApi.requestEpisode(
+        res => {
+          console.log(res);
+          this.curations = res.list;
+          if(this.curations.length>0){
+            this.makeCurations();
+          }else{
+            this.noCuration = true;
+            this.loading_complete = true;
+          }
+          this.show = !this.show
+        },
+        error => {
+          this.$router.push({name:'Errors', query: {message: error.msg}})
+        }
+      );
+    });
   },
 /*
   mounted(){
