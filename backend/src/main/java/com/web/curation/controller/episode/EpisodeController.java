@@ -127,6 +127,7 @@ public class EpisodeController {
             System.out.println(programInfo);
             program.setPname(programInfo.optString("name"));
             program.setThumbnail(programInfo.optString("poster_path"));
+            program.setBackdrop(programInfo.optString("backdrop_path"));
             season_map.put(program.getPno(), programInfo.optJSONArray("seasons"));
             //program.setSeason(programInfo.optInt("number_of_seasons"));
         }
@@ -334,6 +335,8 @@ public class EpisodeController {
 
         if (thumbnail != null && thumbnail.length() > 1)
             e.setThumbnail(IMAGE_BASE_URL + thumbnail);
+        else if(program.getBackdrop() != null)
+            e.setThumbnail(IMAGE_BASE_URL + program.getBackdrop());
         if (program.getThumbnail() != null)
             e.setPoster(IMAGE_BASE_URL + program.getThumbnail());
 
@@ -349,6 +352,7 @@ public class EpisodeController {
         JSONObject programInfo = new JSONObject(re.getBody());
         int program_id = programInfo.optInt("id");
         String program_name = programInfo.optString("name");
+        
 
         // 시즌 정보 요청. 시즌 정보에 에피소드 정보들도 들어있다
         re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY + "&language=ko", String.class);
@@ -363,14 +367,26 @@ public class EpisodeController {
         program.setPname(program_name);
         program.setSeason(season_num);
         program.setSeason_name(season_name);
+        program.setThumbnail(programInfo.optString("poster_path"));
+        program.setBackdrop(programInfo.optString("backdrop_path"));
 
         System.out.println("Episode num: " + episodes.length());
         System.out.println("Episode no: " + (epno - 1));
         JSONObject detail = episodes.optJSONObject(epno-1); // episodes 배열 중에서 찾는 에피소드 번호에 해당하는 부분만 있음 된다.
 
+        String overview_eng = null;
+        try {
+            re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season + "?api_key=" + API_KEY, String.class);
+            JSONObject programInfo_eng = new JSONObject(re.getBody());
+            JSONArray episodes_eng = programInfo_eng.optJSONArray("episodes");
+            overview_eng = episodes_eng.optJSONObject(epno-1).optString("overview");
+        } catch (Exception e) {
+            // 여기서 아무것도 안함(오류 무시)
+        }
+
         EpisodeResponse e = null;
         if(detail != null) {
-            e = episodeSetter(program, epno, detail, " "); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
+            e = episodeSetter(program, epno, detail, overview_eng); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
         }
         
         return e;

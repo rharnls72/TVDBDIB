@@ -29,6 +29,7 @@ public class Program {
     private LocalDate start_date;
     private float rating;
     private ArrayList<EpisodeResponse> episode_list;
+    private String backdrop;
 
     // Return API row result(JSON)
     private Object programDetail;
@@ -205,6 +206,14 @@ public class Program {
 
     public void setEpisode_list(ArrayList<EpisodeResponse> episode_list) {
         this.episode_list = episode_list;
+    }
+
+    public String getBackdrop() {
+        return backdrop;
+    }
+
+    public void setBackdrop(String backdrop) {
+        this.backdrop = backdrop;
     }
 }
 
