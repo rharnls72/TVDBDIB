@@ -55,6 +55,13 @@ export default {
 
         let countdown = parseInt((selectDate - today) / 1000)
 
+        if(countdown <= 0) {
+          this.Value.sec = "00";
+          this.Value.min = "00";
+          this.Value.hour = "00";
+          this.Value.date = "00";
+        }
+
         this.Value.sec = this.changeString(countdown % 60)
         countdown = parseInt(countdown / 60)
         this.Value.min = this.changeString(countdown % 60)
