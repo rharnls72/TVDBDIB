@@ -20,8 +20,8 @@
           <span>{{r.content}}</span>
         </div>
         <div class="d-flex align-items-center">
-          <span @click="touchLike(r)" v-if="!r.press_like" class="ml-2"><b-icon-heart></b-icon-heart> <small>{{re.like_num}}</small></span> 
-          <span @click="touchLike(r)" v-else class="ml-2 text-danger"><b-icon-heart-fill></b-icon-heart-fill> <small>{{re.like_num}}</small></span>
+          <span @click="touchLike(r)" v-if="!r.press_like" class="ml-2"><b-icon-heart></b-icon-heart> <small>{{r.like_num}}</small></span> 
+          <span @click="touchLike(r)" v-else class="ml-2 text-danger"><b-icon-heart-fill></b-icon-heart-fill> <small>{{r.like_num}}</small></span>
           <span class="ml-2" v-if="r.writer_uno === $store.state.userInfo.uno" @click="delReReply(r.no)"><b-icon-trash></b-icon-trash></span>
         </div>
       </div>
