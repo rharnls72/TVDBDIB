@@ -124,8 +124,9 @@ public class EpisodeController {
             //System.out.println(program.getPno());
             re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(program.getPno()) + "?api_key=" + API_KEY + "&language=ko", String.class);
             JSONObject programInfo = new JSONObject(re.getBody());
-            //System.out.println(programInfo);
+            System.out.println(programInfo);
             program.setPname(programInfo.optString("name"));
+            program.setThumbnail(programInfo.optString("poster_path"));
             season_map.put(program.getPno(), programInfo.optJSONArray("seasons"));
             //program.setSeason(programInfo.optInt("number_of_seasons"));
         }
@@ -334,7 +335,7 @@ public class EpisodeController {
         if (thumbnail != null && thumbnail.length() > 1)
             e.setThumbnail(IMAGE_BASE_URL + thumbnail);
         else if (program.getThumbnail() != null)
-            e.setThumbnail(program.getThumbnail());
+            e.setThumbnail(IMAGE_BASE_URL + program.getThumbnail());
 
         return e;
     }

@@ -64,7 +64,6 @@ export default {
     height: 50px;
   }
   .myactiveicon {
-    /* color: #5e2390; */
-    color: purple;
+    color: #5e2390;
   }
 </style>
