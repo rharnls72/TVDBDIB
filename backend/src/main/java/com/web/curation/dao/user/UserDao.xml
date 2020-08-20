@@ -14,7 +14,7 @@
     <select id="getUserByNickName" resultType="User">
         select *
         from user
-        where nick_name = #{nick_name}
+        where BINARY nick_name = #{nick_name}
     </select>
 
     <select id="findUserByEmailAndPassword" resultType="User">
