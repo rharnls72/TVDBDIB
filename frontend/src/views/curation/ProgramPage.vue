@@ -80,9 +80,12 @@ export default {
         this.show = true;
         return
       }
+      // 왜 프로그램 추천에서 여기 오면 시즌 번호가 0이 되죠?
+      let sn = this.seasonNum;
+      if(sn > 1) sn--;
       CurationApi.requestEpisodeDetail({
         pno: this.program.programDetail.id,
-        season: this.seasonNum,
+        season: sn,
         episode: this.episodeNum
       }
       ,res => {
@@ -111,7 +114,7 @@ export default {
     },
     seasonNum: function(e, n) {
       this.episodes = []
-      this.episodeNum = this.program.programDetail.seasons[this.seasonNum].episode_count
+      this.episodeNum = this.program.programDetail.seasons[this.seasonNum - 1].episode_count
     },
   },
   created() {

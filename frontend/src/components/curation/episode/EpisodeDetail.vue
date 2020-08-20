@@ -4,7 +4,7 @@
       <EpisodeHeader :episode="article"/>
       <div class="wrapB">
         <!-- <div class="myfeed"> -->
-          <EpisodeItem :curation="article" :detail="true" class="myfeed"/>
+          <EpisodeItem :curation="article" :detail="true" :isStretch="isStretch" class="myfeed"/>
           <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno"/>
         <!-- </div> -->
       </div>
@@ -35,7 +35,8 @@ export default {
   },
   data() {
     return {
-      article: null
+      article: null,
+      isStretch: true,
     }
   },
   methods: {

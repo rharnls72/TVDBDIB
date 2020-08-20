@@ -7,7 +7,9 @@
           <img class="col-5 p-0 mb-3" :src="'https://image.tmdb.org/t/p/w500/'+program.programDetail.poster_path">
           <div class="col-5 pl-3 mb-3 d-flex flex-column justify-content-end">
             <select v-model="season">
-              <option v-for="(season, idx) in program.programDetail.seasons" :key="idx" :value="season.season_number">시즌 {{season.season_number}}</option>
+              <template v-for="(season) in program.programDetail.seasons">
+                <option v-if="season.season_number != 0" :key="season.season_number" :value="season.season_number">시즌 {{season.season_number}}</option>
+              </template>
             </select>
             <div>방송시작일 : <p class="mb-0">{{program.programDetail.first_air_date}}</p></div>
             <div>방영 국가 : <span>{{program.programDetail.language}}</span></div>

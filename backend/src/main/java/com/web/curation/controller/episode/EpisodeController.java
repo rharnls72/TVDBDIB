@@ -121,11 +121,12 @@ public class EpisodeController {
         // 프로그램 ID + 시즌 정보 저장해둘 Map
         HashMap<Integer, JSONArray> season_map = new HashMap<Integer, JSONArray>();
         for (Program program : programList) {
-            System.out.println(program.getPno());
+            //System.out.println(program.getPno());
             re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(program.getPno()) + "?api_key=" + API_KEY + "&language=ko", String.class);
             JSONObject programInfo = new JSONObject(re.getBody());
-            //System.out.println(programInfo);
+            System.out.println(programInfo);
             program.setPname(programInfo.optString("name"));
+            program.setThumbnail(programInfo.optString("poster_path"));
             season_map.put(program.getPno(), programInfo.optJSONArray("seasons"));
             //program.setSeason(programInfo.optInt("number_of_seasons"));
         }
@@ -179,7 +180,7 @@ public class EpisodeController {
                 for (int j=0; j<total_seasons; j++){
                     int season_num = seasons.optJSONObject(j).optInt("season_number");
                     //int season = program.getSeason();
-                    System.out.println(pno + " " + season_num);
+                    //System.out.println(pno + " " + season_num);
         
                     // 프로그램 ID와 시즌 번호로 API 요청
                     try{
@@ -190,6 +191,7 @@ public class EpisodeController {
                         re = restTemplate.getForEntity(BASE_URL + "tv/" + Integer.toString(pno) + "/season/" + season_num + "?api_key=" + API_KEY, String.class);
                         JSONObject programInfo_eng = new JSONObject(re.getBody());
                         JSONArray episodes_eng = programInfo_eng.optJSONArray("episodes");
+                        program.setSeason(season_num);
                         program.setSeason_name(programInfo.optString("name"));
             
                         // 결과 데이터 중 episodes Array의 각 요소에 접근하여 episode 정보 추출
@@ -238,7 +240,7 @@ public class EpisodeController {
         // 각 에피소드들에 대해 DB 에 존재하는지 확인, 존재하지 않으면 DB 에 추가
         // + 추가정보(좋아요 수, 댓글 수 등) 구하기
         for(EpisodeResponse episode : episodeList) {
-            System.out.println(episode.getEpisode());
+            //System.out.println(episode.getEpisode());
             // DB 에 존재하는지 확인
             int n = episodeDao.checkDataExist(episode);
             
@@ -332,8 +334,8 @@ public class EpisodeController {
 
         if (thumbnail != null && thumbnail.length() > 1)
             e.setThumbnail(IMAGE_BASE_URL + thumbnail);
-        else if (program.getThumbnail() != null)
-            e.setThumbnail(program.getThumbnail());
+        if (program.getThumbnail() != null)
+            e.setPoster(IMAGE_BASE_URL + program.getThumbnail());
 
         return e;
     }
@@ -362,8 +364,14 @@ public class EpisodeController {
         program.setSeason(season_num);
         program.setSeason_name(season_name);
 
+        System.out.println("Episode num: " + episodes.length());
+        System.out.println("Episode no: " + (epno - 1));
         JSONObject detail = episodes.optJSONObject(epno-1); // episodes 배열 중에서 찾는 에피소드 번호에 해당하는 부분만 있음 된다.
-        EpisodeResponse e = episodeSetter(program, epno, detail, " "); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
+
+        EpisodeResponse e = null;
+        if(detail != null) {
+            e = episodeSetter(program, epno, detail, " "); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
+        }
         
         return e;
     }
@@ -375,6 +383,11 @@ public class EpisodeController {
         final BasicResponse result = new BasicResponse();
         
         EpisodeResponse e = getEpisodeDetailFunc(pno, season, epno);
+        if(e == null) {
+            result.status = false;
+            result.msg = "There is no result at 에피소드 상세정보 조회";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////// 정상작동할까요?
         // 에피소드에 대해 추가정보(좋아요 수, 댓글 수 등) 구하기
@@ -427,7 +440,9 @@ public class EpisodeController {
             int season = ep.getSeason();
             int epno = ep.getEpisode();
 
-            // 그 정보들로 API 요청을 통해 에피소드 상세정보 가져오기
+            // 그 정보들로 API 요청을 통해 에피소드 상세정보 가져오기, 여기서 왜 오류가 나요
+            System.out.println("Episode Request: " + pno + "/" + season + "/" + epno);
+
             EpisodeResponse epiInfo = getEpisodeDetailFunc(pno, season, epno);
 
             // 에피소드 상세정보에 댓글, 좋아요 등의 정보 붙이기
