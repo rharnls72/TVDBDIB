@@ -23,7 +23,8 @@ export default {
   },
   methods: {
     backpage(){
-      this.$router.push({name: 'ChatList'});
+      // this.$router.push({name: 'ChatList'});
+      this.$router.go(-1);
     },
   },
 }
