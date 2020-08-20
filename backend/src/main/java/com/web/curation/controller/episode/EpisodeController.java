@@ -363,8 +363,14 @@ public class EpisodeController {
         program.setSeason(season_num);
         program.setSeason_name(season_name);
 
+        System.out.println("Episode num: " + episodes.length());
+        System.out.println("Episode no: " + (epno - 1));
         JSONObject detail = episodes.optJSONObject(epno-1); // episodes 배열 중에서 찾는 에피소드 번호에 해당하는 부분만 있음 된다.
-        EpisodeResponse e = episodeSetter(program, epno, detail, " "); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
+
+        EpisodeResponse e = null;
+        if(detail != null) {
+            e = episodeSetter(program, epno, detail, " "); // 그 부분 찾았으면 episodeSetter 똑같이 써서 에피소드 추출
+        }
         
         return e;
     }
@@ -376,6 +382,11 @@ public class EpisodeController {
         final BasicResponse result = new BasicResponse();
         
         EpisodeResponse e = getEpisodeDetailFunc(pno, season, epno);
+        if(e == null) {
+            result.status = false;
+            result.msg = "There is no result at 에피소드 상세정보 조회";
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////// 정상작동할까요?
         // 에피소드에 대해 추가정보(좋아요 수, 댓글 수 등) 구하기
@@ -428,7 +439,9 @@ public class EpisodeController {
             int season = ep.getSeason();
             int epno = ep.getEpisode();
 
-            // 그 정보들로 API 요청을 통해 에피소드 상세정보 가져오기
+            // 그 정보들로 API 요청을 통해 에피소드 상세정보 가져오기, 여기서 왜 오류가 나요
+            System.out.println("Episode Request: " + pno + "/" + season + "/" + epno);
+
             EpisodeResponse epiInfo = getEpisodeDetailFunc(pno, season, epno);
 
             // 에피소드 상세정보에 댓글, 좋아요 등의 정보 붙이기
