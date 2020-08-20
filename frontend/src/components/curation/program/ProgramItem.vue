@@ -1,5 +1,5 @@
 <template>
-  <div class="feed newsfeed pt-0">
+  <div class="feed newsfeed pt-0" v-if="episode.broadcast_date!=null">
     <div class="wrapB">
       <div class="col-12 m-0  p-0">
         <div @click="moveDetail" class="col-12 row m-0 px-0 py-2 align-items-center">
