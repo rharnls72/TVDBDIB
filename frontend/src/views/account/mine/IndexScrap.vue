@@ -70,7 +70,7 @@ export default {
     )
 
     CurationApi.readScrapedEpisode(
-      { 
+      {
         num: 1,
         is_dibs: 1
       }
