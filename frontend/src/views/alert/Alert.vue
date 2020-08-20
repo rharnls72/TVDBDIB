@@ -96,7 +96,6 @@ export default {
       }
     },
     getAlerts(querySnapshot) {
-        // this.makeToast("알림이 왔습니다.", "primary");
         let temp = [];
         let unos = [];
         querySnapshot.forEach(function(doc) {
@@ -112,7 +111,6 @@ export default {
         }
     },
     getFollowings(querySnapshot){
-      // this.makeToast("알림이 왔습니다.", "primary");
         let temp = [];
         let unos = [];
         querySnapshot.forEach(function(doc) {
@@ -149,15 +147,6 @@ export default {
           }
       );
     },
-    makeToast(message, variant){
-        this.$bvToast.toast(message, {
-          title: '알림',
-          toaster: "b-toaster-bottom-right",
-          variant: variant,
-          autoHideDelay: 3000,
-          appendToast: false
-        })
-     }
   }
 
 /*

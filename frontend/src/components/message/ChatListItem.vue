@@ -32,7 +32,7 @@ export default {
   props: {
     rooms: Array
   },
-  methods:{
+  methods: {
     movePage(room){
         this.$router.push({path: '/message/chatroom/' + room.cno, query: {room: room}});
     },
@@ -47,17 +47,8 @@ export default {
           }
       );
     },
-    makeToast(message, variant){
-        this.$bvToast.toast(message, {
-          title: '알림',
-          toaster: "b-toaster-bottom-right",
-          variant: variant,
-          autoHideDelay: 3000,
-          appendToast: false
-        })
-     }
-    }
   }
+}
 
 </script>
 

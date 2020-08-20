@@ -92,7 +92,6 @@ export default {
       );
     },
     getChatList(querySnapshot) {
-        // this.makeToast("알림이 왔습니다.", "primary");
         let temp = [];
         let unos = [];
         let myUno = this.$store.state.userInfo.uno;
