@@ -5,10 +5,11 @@
         <b-icon-chevron-left @click="goToBack" class="text-dark"></b-icon-chevron-left>
       </button>
     </b-nav-item>
-    <b-nav-item class="d-flex justify-content-center">
-      <img class="mylogo mb-0\" :src="HeaderLogo" alt="header-logo">
+    <b-nav-item>
+      <img class="mylogo mb-0" :src="HeaderLogo" alt="header-logo">
     </b-nav-item>
-    <b-nav-item class="d-flex justify-content-end">
+    <b-nav-item>
+      <b-icon-blank></b-icon-blank>
     </b-nav-item>
   </b-nav>
 </template>

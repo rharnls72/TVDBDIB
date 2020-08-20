@@ -145,7 +145,7 @@ export default {
 
 <style scoped>
   .mycontainer {
-    padding-top: 70px;
+    padding-top: 90px;
     padding-bottom: 50px;
   }
 </style>

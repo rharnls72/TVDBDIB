@@ -2,7 +2,7 @@
   <b-nav justified class="myheader d-flex justify-content-between align-items-center">
     <b-nav-item class="d-flex justify-content-start">
       <button @click="backpage">
-      <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
+        <b-icon-chevron-left class="text-dark"></b-icon-chevron-left>
       </button>
     </b-nav-item>
     <b-nav-item>
@@ -10,7 +10,7 @@
     </b-nav-item>
     <b-nav-item class="d-flex justify-content-end">
       <button @click="chooseFollowing">
-      <b-icon icon="plus-circle" class="text-dark"></b-icon>
+        <b-icon-plus-circle class="text-dark"></b-icon-plus-circle>
       </button>
     </b-nav-item>
   </b-nav>

@@ -9,6 +9,7 @@
       <img class="mylogo mb-0" :src="HeaderLogo" alt="header-logo">
     </b-nav-item>
     <b-nav-item>
+      <b-icon-blank></b-icon-blank>
     </b-nav-item>
   </b-nav>
 </template>
