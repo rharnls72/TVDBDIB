@@ -23,6 +23,7 @@ import CreateShare from "@/components/feed/CreateShare.vue"
 import FeedMain from './views/feed/IndexFeed.vue'
 import feedDetail from '@/components/feed/feedDetail.vue'
 
+import ActorSearch from '@/views/search/ActorSearch.vue'
 import IndexSearch from './views/search/IndexSearch.vue'
 
 import MyPage from './views/account/mine/MyPage.vue'
@@ -157,6 +158,11 @@ export default [
         path: '/feed/detail/:fno',
         name: 'FeedDetail',
         component: feedDetail
+    },
+    {
+        path: '/search/actor',
+        name: 'ActorSearch',
+        component: ActorSearch
     },
     {
         path: '/search/main',

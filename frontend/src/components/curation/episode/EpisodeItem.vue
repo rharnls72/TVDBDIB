@@ -1,8 +1,6 @@
 <template>
-  <div class="feed-item">
+  <div class="feed-item mb-0 pt-3 myei">
     <div class="top">
-      <!-- 추후에 poster url 가져오면 img 태그로 바꿔줄 것 -->
-      <!-- 에피소드에는 포스터가 없다,, -->
       <div class="d-flex align-items-center mb-3">
         <div class="box profile-image" style="background: #BDBDBD;">
           <img v-if="curation.poster != null" class="profile" :src="curation.poster" alt="">
@@ -54,7 +52,6 @@
           </button>
           <span class="mynumber">{{ curation.dibs_num }}</span>
         </div>
-        <!---->
       </div>
       <div class="mr-1">
         <!-- 우리가 생각한 공유 (해당 게시물에 대한 글 바로 작성) -->
@@ -87,9 +84,11 @@
       </div>
     </div>
     <div v-if="!detail">
-      <p class="my-1"><strong class="mr-2">{{curation.reply_user_nick}}</strong><span>{{curation.reply_content}}</span></p>
-      <p class="myreply"><span v-if="!!curation.reply_num" class="more" @click="moveDetail">댓글 {{curation.reply_num}}개 모두 보기</span></p>
-      <p><span v-if="!detail && !curation.reply_num" class="more" @click="moveDetail">댓글 남기기</span></p>
+      <p v-if="!!curation.reply_num" class="my-1"><strong class="mr-2">{{curation.reply_user_nick}}</strong><span>{{curation.reply_content}}</span></p>
+      <p class="myreply mt-1">
+        <span v-if="!!curation.reply_num" class="more" @click="moveDetail">댓글 {{curation.reply_num}}개 모두 보기</span>
+        <span v-else class="more" @click="moveDetail">댓글 남기기</span>
+      </p>
     </div>
   </div>
 </template>

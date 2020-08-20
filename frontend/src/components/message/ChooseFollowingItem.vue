@@ -38,14 +38,14 @@ export default {
       if(this.choosed.find(element => element.uno ==following.uno) == undefined){
          this.choosed.push(following);
       }else{
-        this.makeToast("이미 추가되었습니다.", "primary");
+        this.makeToast("이미 추가되었습니다.", "danger");
       }
 
     },
     makeToast(message, variant){
         this.$bvToast.toast(message, {
           title: '알림',
-          toaster: "b-toaster-bottom-right",
+          toaster: "b-toaster-bottom-center",
           variant: variant,
           autoHideDelay: 3000,
           appendToast: false

@@ -1,17 +1,18 @@
 <template>
-    <div class="feed-item">
-      <ul class="list-group"> 
-          <li v-for="(program) in programs" v-bind:key="program.id" 
-           class="list-group-item d-flex justify-content-between align-items-center" type="button" @click="goDetail(program.id)">
-            {{program.name}}
-        <div class="image-parent">
+    <div class="topBox">
+      <ul> 
+          <li v-for="(program) in programs" v-bind:key="program.id"
+            @click="goDetail(program.id)">
+        <div class="imageBox">
+          <div>
               <img v-if="program.poster_path != null" :src='imgBaseUrl + program.poster_path'
-               width="75rem" height="120rem" class="img-fluid" alt="poster">
+               class="img-fluid" alt="poster">
               <img v-else :src='defaultImage'
-               width="75rem" height="120rem" class="img-fluid" alt="poster">
+               style="padding-top:35px; padding-bottom: 35px;" class="img-fluid" alt="poster">
+          </div>
+            {{program.name}}
           </div>
           </li>
-          
     </ul>
     </div>
 
@@ -41,7 +42,20 @@ export default {
 </script>
 
 <style scoped>
+.topBox{
+  padding-bottom: 50px;
+  margin: auto;
+}
+ul li {
+  list-style-type: none;
+  float: left;
+}
 ul {
   padding-top: 0px; /* 검색창을 sticky로 고정시키니까 이걸 다시 0으로 해도 됐다. 50이었는데... */
+}
+li{
+  width: 100px;
+  height: 200px;
+  margin: 10px;
 }
 </style>

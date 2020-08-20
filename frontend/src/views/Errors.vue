@@ -4,9 +4,9 @@
     <div class="wrapB myerror">
       <h1>{{message}}</h1>
       <button 
-        @click="goBackpage"
+        @click="goHome"
         class="btn-bottom"
-        >backpage</button>
+        >홈으로 가기</button>
     </div>
   </div>
 </template>
@@ -22,8 +22,8 @@ export default {
     }
   },
   methods: {
-    goBackpage() {
-      this.$router.go(-1)
+    goHome() {
+      this.$router.replace({name: 'IndexCuration'})
     }
   },
   components: {

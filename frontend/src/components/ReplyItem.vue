@@ -1,5 +1,5 @@
 <template>
-  <div class="feed-item pb-5" style="border-bottom: none;">
+  <div class="feed-item myreplyfeed">
     <div class="d-flex justify-align-between align-items-center mt-2">
       <b-form-input type="text" class="m-0 rounded-pill myreply" v-model="content" placeholder="댓글을 입력하세요 :D"></b-form-input>
       <!-- 댓글 내용이 없으면 -->
@@ -16,8 +16,10 @@
           </div>
           <div>
             <span @click="changeIsStretch(idx)" v-if="!re.isStretch"><b-icon-chat></b-icon-chat></span>
+
             <span @click="touchLike(re)" v-if="!re.press_like" class="ml-2"><b-icon-heart></b-icon-heart> <small>{{re.like_num}}</small></span> 
             <span @click="touchLike(re)" v-else class="ml-2 text-danger"><b-icon-heart-fill></b-icon-heart-fill> <small>{{re.like_num}}</small></span> 
+
             <span class="ml-2" v-if="re.writer_uno === $store.state.userInfo.uno" @click="delReply(re)"><b-icon-trash></b-icon-trash></span>
           </div>
         </div>
@@ -275,7 +277,14 @@ export default {
 </script>
 
 <style scoped>
+  .myreplyfeed {
+    padding-bottom: 50px;
+    border-bottom: none;
+  }
   .myreply {
     font-size: 0.9rem;
+  }
+  .myreplylike {
+    color: black;
   }
 </style>

@@ -1,16 +1,29 @@
 <template>
-  <div class="feed newsfeed">
-    <IndexCurationHeader />
-    <div class="wrapB">
-      <div class="myfeed" v-for="(feed, idx) in feeds" :key="idx">
-        <!-- <feedArticleItem v-if="d.ctype===1" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
-        <feedCountdownItem v-if="d.ctype===2" :article="d" :fno="d.fno" @deleteItem="removeFeed"/>
-        <feedVoteItem v-if="d.ctype===3" :article="d" :fno="d.fno" @deleteItem="removeFeed"/> -->
-        <FeedItem :article="feed" :fno="feed.fno" @deleteItem="removeFeed(feed.fno)"/>
+  <div>
+    <!-- <div v-if="show"> -->
+    <div>
+      <div class="feed newsfeed">
+        <IndexCurationHeader />
+        <div class="wrapB">
+          <div class="myfeed">
+            <FeedItem v-for="(feed, idx) in feeds" :key="idx" :article="feed" :fno="feed.fno" @deleteItem="removeFeed(feed.fno)"/>
+            <infinite-loading v-if="!feedNull" @infinite="infiniteHandler"></infinite-loading>
+            <!-- <div v-if="noCuration" style="text-align: center; margin-top: 50px;"> 팔로우 중인 유저가 없습니다<br/>
+              소통할 유저를 찾으러 가볼까요?<br/>
+            <button type="button" class="shadow moveSearch" @click="moveSearch">찾으러 가자!</button>
+            </div> -->
+          </div>
+        </div>
+        <Footer />
       </div>
-      <infinite-loading v-if="!feedNull" @infinite="infiniteHandler"></infinite-loading>
+
+      <div v-if="feedNull">
+        <h1>No more results...</h1>
+        <div style="height:50px;"></div>
+      </div>
+
     </div>
-    <Footer/>
+    <!-- <LoadingItem v-else /> -->
   </div>
 </template>
 
@@ -33,6 +46,7 @@ import Footer from '@/components/common/custom/Footer.vue';
 import GetUserApi from "@/api/GetUserApi"
 
 import InfiniteLoading from 'vue-infinite-loading'
+// import LoadingItem from '@/components/common/custom/LoadingItem.vue'
 
 export default {
   data() {
@@ -43,13 +57,11 @@ export default {
     }
   },
 
-  components: { 
-    // feedArticleItem, 
-    // feedCountdownItem, 
-    // feedVoteItem,
+  components: {
     FeedItem,
     IndexCurationHeader,
     Footer,
+    // LoadingItem,
   },
 
   methods: {
@@ -99,7 +111,14 @@ export default {
 
 <style scoped>
   .myfeed {
-    padding-top: 70px;
-    /* padding-bottom: 50px; */
+    padding-top: 50px;
+  }
+  .moveSearch{
+    margin-top: 30px;
+    width: 150px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #f8e8f2;
+    color: rgb(84, 78, 88);
   }
 </style>
