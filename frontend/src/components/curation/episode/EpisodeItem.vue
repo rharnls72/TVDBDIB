@@ -4,7 +4,10 @@
       <!-- 추후에 poster url 가져오면 img 태그로 바꿔줄 것 -->
       <!-- 에피소드에는 포스터가 없다,, -->
       <div class="d-flex align-items-center mb-2">
-        <div class="profile-image" :style="{'background-image': 'url('+defaultProfile+')'}"></div>
+        <div class="box profile-image" style="background: #BDBDBD;">
+              <img v-if="curation.poster != null" class="profile" :src="curation.poster" alt="">
+              <img v-else class="profile" :src="defaultProfile" alt="">
+          </div>
         <div class="user-info pl-3">
           <div class="user-name" @click="goToProgramDetail">
             <button class="myname">{{ curation.pname }}</button>
@@ -216,4 +219,15 @@ export default {
     text-shadow: hotpink 1px 0 7px;
     text-shadow: 1px 1px 2px hotpink, 0 0 0.2em purple;
   } */
+  .box {
+    width: 40px;
+    height: 40px; 
+    border-radius: 70%;
+    overflow: hidden;
+}
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 </style>
