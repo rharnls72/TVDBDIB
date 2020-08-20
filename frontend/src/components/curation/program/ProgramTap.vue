@@ -7,6 +7,9 @@
       <b-tab title="댓글" title-link-class="text-secondary">
         <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)"  :auno="0" :pno="program.programDetail.id"/>
       </b-tab>
+      <b-tab title="비슷한" title-link-class="text-secondary">
+        
+      </b-tab>
     </b-tabs>
   </div>
 </template>
