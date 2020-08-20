@@ -317,10 +317,7 @@ public class EpisodeController {
 
         // 한글로 된 설명이 없는 경우: 영어로 된 설명 받아오기 위해 요청을 한번 더 보낸다...
         if (summary == null || summary.length() <= 1){
-            if (overview_eng == null || overview_eng.length() <= 1)
-                summary = "에피소드에 대한 설명이 없습니다.";
-            else
-                summary = overview_eng;
+            summary = overview_eng;
         }
         
         e.setPno(pno);
