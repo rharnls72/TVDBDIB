@@ -1,19 +1,16 @@
 <template>
-  <b-nav justified class="myheader align-items-center">
+  <b-nav fill class="myheader justify-content-between align-items-center">
     <b-nav-item>
       <b-icon-blank></b-icon-blank>
     </b-nav-item>
     <b-nav-item>
       <p class="text-dark mb-0"><strong>{{ info.nick_name }}</strong></p>
     </b-nav-item>
-    <b-nav-item>
-      <b-icon-blank></b-icon-blank>
-      <b-icon-blank></b-icon-blank>
-      <b-icon-blank></b-icon-blank>
+    <b-nav-item class="d-flex justify-content-end">
       <!-- 설정, 스크랩한 게시물 보기 -->
-      <b-icon-list v-b-toggle.sidebar-no-header class="text-dark"></b-icon-list>
-      <b-sidebar id="sidebar-no-header" aria-labelledby="sidebar-no-header-title" right shadow>
-        <template v-slot:default="{ hide }">
+      <b-icon-list v-b-toggle.sidebar-right class="text-dark"></b-icon-list>
+      <b-sidebar id="sidebar-right" aria-labelledby="sidebar-right-title" right shadow>
+        <template>
           <div class="p-1">
             <nav class="mb-3">
               <b-nav vertical>

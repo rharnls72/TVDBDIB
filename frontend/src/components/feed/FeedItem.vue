@@ -15,10 +15,18 @@
         </div>
       </div>
     </div>
-    <FeedArticleThumbnail v-if="article.ctype === 1" :article="article"/>
-    <FeedCountdownThumbnail v-if="article.ctype === 2" :article="article"/>
-    <FeedVoteThumbnail v-if="article.ctype === 3" :article="article"/>
-    <FeedShareThumbnail v-if="article.ctype === 4" :article="article"/>
+    <div v-if="article.ctype === 1" @click="moveDetail">
+      <FeedArticleThumbnail :article="article"/>
+    </div>
+    <div v-if="article.ctype === 2" @click="moveDetail">
+      <FeedCountdownThumbnail :article="article"/>
+    </div>
+    <div v-if="article.ctype === 3">
+      <FeedVoteThumbnail :article="article"/>
+    </div>
+    <div v-if="article.ctype === 4" @click="moveDetail">
+      <FeedShareThumbnail :article="article"/>
+    </div>
     <div class="btn-group wrap justify-content-between" style="margin: 15px 0 0 0;">
       <div>
         <!-- 좋아요 -->
@@ -224,7 +232,7 @@ export default {
     color: lightgray;
   }
   .tag {
-    color: #F54952;
+    color: rgb(110, 144, 253);
     font-weight: bold;
   }
   .mythumbnail {

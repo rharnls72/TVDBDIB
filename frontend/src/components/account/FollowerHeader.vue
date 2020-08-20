@@ -9,9 +9,7 @@
       <p class="text-dark mb-0"><strong>Followers</strong></p>
     </b-nav-item>
     <b-nav-item>
-      <!-- 메시지 -->
-      <button>
-      </button>
+      <b-icon-blank></b-icon-blank>
     </b-nav-item>
   </b-nav>
 </template>
