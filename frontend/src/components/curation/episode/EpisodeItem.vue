@@ -3,14 +3,14 @@
     <div class="top">
       <!-- 추후에 poster url 가져오면 img 태그로 바꿔줄 것 -->
       <!-- 에피소드에는 포스터가 없다,, -->
-      <div class="d-flex align-items-center mb-2">
+      <div class="d-flex align-items-center mb-3">
         <div class="box profile-image" style="background: #BDBDBD;">
-              <img v-if="curation.poster != null" class="profile" :src="curation.poster" alt="">
-              <img v-else class="profile" :src="defaultProfile" alt="">
-          </div>
+          <img v-if="curation.poster != null" class="profile" :src="curation.poster" alt="">
+          <img v-else class="profile" :src="defaultProfile" alt="">
+        </div>
         <div class="user-info pl-3">
           <div class="user-name" @click="goToProgramDetail">
-            <button class="myname">{{ curation.pname }}</button>
+            <button>{{ curation.pname }}</button>
           </div>
           <p class="date mb-0">{{ curation.broadcast_date }} 방송</p>
         </div>
@@ -33,26 +33,26 @@
       <div>
         <!-- 좋아요 -->
         <div class="mr-3">
-          <button class="h6 mr-1" @click="touchLikeIcon">
+          <button class="h6 mr-2" @click="touchLikeIcon">
             <b-icon-heart v-if="!curation.press_like"></b-icon-heart>
             <b-icon-heart-fill v-else variant="danger"></b-icon-heart-fill>
           </button>
-          {{ curation.like_num }}
+          <span class="mynumber">{{ curation.like_num }}</span>
         </div>
         <!-- 댓글 -->
         <div class="mr-3">
-          <button class="h6 mr-1">
+          <button class="h6 mr-2">
             <b-icon-chat></b-icon-chat>
           </button>
-          {{curation.reply_num}}
+          <span class="mynumber">{{curation.reply_num}}</span>
         </div>
         <!-- 스크랩 -->
         <div class="mr-3">
-          <button class="h6 mr-1" @click="touchScrapIcon">
+          <button class="h6 mr-2" @click="touchScrapIcon">
             <b-icon-bookmark v-if="!curation.press_dibs"></b-icon-bookmark>
             <b-icon-bookmark-fill v-else variant="success"></b-icon-bookmark-fill>
           </button>
-          {{ curation.dibs_num }}
+          <span class="mynumber">{{ curation.dibs_num }}</span>
         </div>
         <!---->
       </div>
@@ -84,14 +84,13 @@
         <button @click="readMore" class="more">더 보기</button>
       </div>
       <div v-else>
-        <p>{{ curation.summary }}</p>
+        <p class="mb-2">{{ curation.summary }}</p>
       </div>
     </div>
     <div v-if="!detail">
-      <p><span style="text-decoration: bold;">{{curation.reply_user_nick}} </span> <span>{{curation.reply_content}}</span></p>
-      <p><span v-if="!!curation.reply_num" class="more">댓글 {{curation.reply_num}} 개</span></p>
-      <!-- 추후에 댓글 연결!~ -->
-      <p><span v-if="!detail" class="more" @click="moveDetail">댓글 남기기</span></p>
+      <p class="my-1"><strong class="mr-2">{{curation.reply_user_nick}}</strong><span>{{curation.reply_content}}</span></p>
+      <p class="myreply"><span v-if="!!curation.reply_num" class="more" @click="moveDetail">댓글 {{curation.reply_num}}개 모두 보기</span></p>
+      <p><span v-if="!detail && !curation.reply_num" class="more" @click="moveDetail">댓글 남기기</span></p>
     </div>
   </div>
 </template>
@@ -108,12 +107,12 @@ export default {
     return {
       defaultImage,
       defaultProfile,
-      isStretch: false,
     };
   },
   props: {
     curation: Object,
     detail: Boolean,
+    isStretch: Boolean,
   },
   components: {
     EpisodeThumbnail,
@@ -214,20 +213,21 @@ export default {
   .more {
     color: lightgray;
   }
-  /* .myname {
-    text-shadow: 1px 1px 2px hotpink;
-    text-shadow: hotpink 1px 0 7px;
-    text-shadow: 1px 1px 2px hotpink, 0 0 0.2em purple;
-  } */
   .box {
     width: 40px;
     height: 40px; 
     border-radius: 70%;
     overflow: hidden;
-}
-.profile {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+  }
+  .profile {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+  }
+  .myreply {
+    font-size: 0.9rem;
+  }
+  .mynumber {
+    font-size: 0.8rem;
+  }
 </style>

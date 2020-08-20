@@ -1,8 +1,8 @@
 <template>
-  <div class="pl-4 mt-2">
+  <div class="pl-3 mt-1">
 
     <div v-if="isStretch" class="d-flex justify-align-between align-items-center">
-      <b-form-input type="text" class="m-0 rounded-pill" v-model="content" placeholder="댓글 입력!!!"></b-form-input>
+      <b-form-input type="text" class="m-0 rounded-pill myreply" v-model="content" placeholder="댓글을 입력하세요 :D"></b-form-input>
             <!-- 댓글 내용이 없으면 -->
       <b-icon v-if="!content" icon="plus-circle" class="text-right ml-2 text-light" font-scale="1.4"></b-icon>
             <!-- 댓글 내용이 있으면 -->
@@ -10,14 +10,21 @@
     </div>
 
     <div v-if="!moreView && !!reply.length" class="d-flex mb-2">
-      <span class="mr-2">댓글 {{reply.length}} 개</span><span @click="changeMoreView" class="moreView">더 보기</span>
+      <span @click="changeMoreView" class="moreView myreply">댓글 {{reply.length}}개 더 보기</span>
     </div>
 
     <div v-else class="pl-2 my-1" v-for="r in reply" :key="r.no">
-      <strong @click="moveAccount(r)">{{r.writer_nick_name}} </strong> <span>{{r.content}} </span> 
-      <span @click="touchLike(r)" v-if="!r.press_like" class="moreView">좋아요 </span> 
-      <span @click="touchLike(r)" v-else class="moreView">좋아요 취소 </span> 
-      <span class="moreView" v-if="r.writer_uno === $store.state.userInfo.uno" @click="delReReply(r.no)">삭제</span>
+      <div class="d-flex justify-content-between">
+        <div>
+          <strong @click="moveAccount(r)" class="mr-2">{{r.writer_nick_name}}</strong>
+          <span>{{r.content}}</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <span @click="touchLike(r)" v-if="!r.press_like" class="ml-2"><b-icon-heart></b-icon-heart> <small>{{re.like_num}}</small></span> 
+          <span @click="touchLike(r)" v-else class="ml-2 text-danger"><b-icon-heart-fill></b-icon-heart-fill> <small>{{re.like_num}}</small></span>
+          <span class="ml-2" v-if="r.writer_uno === $store.state.userInfo.uno" @click="delReReply(r.no)"><b-icon-trash></b-icon-trash></span>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -74,6 +81,7 @@ export default {
       }
 
       if (reply.press_like) {
+        reply.like_num++;
         this.addlike({
           tno: reply.no
           , uno: reply.writer_uno
@@ -83,6 +91,7 @@ export default {
         , err => console.log(err)
         )
       } else {
+        reply.like_num--;
         this.dellike({
           tno: reply.no
         }
@@ -206,11 +215,14 @@ export default {
 }
 </script>
  
-<style>
-.moreView {
-  color: darkgray; 
-}
-.tap {
-  white-space: pre;
-}
+<style scoped>
+  .moreView {
+    color: darkgray; 
+  }
+  .tap {
+    white-space: pre;
+  }
+  .myreply {
+    font-size: 0.9rem;
+  }
 </style>
