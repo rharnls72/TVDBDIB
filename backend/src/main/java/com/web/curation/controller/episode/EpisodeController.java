@@ -334,8 +334,8 @@ public class EpisodeController {
 
         if (thumbnail != null && thumbnail.length() > 1)
             e.setThumbnail(IMAGE_BASE_URL + thumbnail);
-        else if (program.getThumbnail() != null)
-            e.setThumbnail(IMAGE_BASE_URL + program.getThumbnail());
+        if (program.getThumbnail() != null)
+            e.setPoster(IMAGE_BASE_URL + program.getThumbnail());
 
         return e;
     }
