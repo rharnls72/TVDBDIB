@@ -84,7 +84,7 @@ public class LikeController {
         alert.setAtype(1);
         // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
         alert.setCtype(3);
-        alert.setCno(like.getTno());
+        alert.setCno(like.getAno()); // 좋아요가 달린 글 번호(댓글 번호 아님)
         alert.setRead(false);
         alert.setTime(LocalDateTime.now());
         alertService.addAlert(alert);
@@ -106,7 +106,7 @@ public class LikeController {
         alert.setAtype(1);
         // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
         alert.setCtype(4);
-        alert.setCno(like.getTno());
+        alert.setCno(like.getAno()); // 좋아요가 달린 글 번호(댓글 번호 아님)
         alert.setRead(false);
         alert.setTime(LocalDateTime.now());
         alertService.addAlert(alert);
@@ -144,7 +144,7 @@ public class LikeController {
             alert.setAtype(1);
             // 글 타입(1: 피드, 2: 피드댓글, 3: 프로그램댓글, 4: 에피소드댓글)
             alert.setCtype(2);
-            alert.setCno(like.getTno());
+            alert.setCno(like.getAno()); // 좋아요가 달린 글 번호(댓글 번호 아님)
             alert.setRead(false);
             alert.setTime(LocalDateTime.now());
             alertService.addAlert(alert);

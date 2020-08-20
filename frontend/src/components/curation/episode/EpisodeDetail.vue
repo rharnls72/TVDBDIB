@@ -5,7 +5,7 @@
       <div class="wrapB">
         <!-- <div class="myfeed"> -->
           <EpisodeItem :curation="article" :detail="true" class="myfeed"/>
-          <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)" :eno="article.eno"/>
+          <ReplyItem @addReply="addReplyCount" @delReReply="delReReply" @delReply="res=>delReply(res)"  :auno="0" :eno="article.eno"/>
         <!-- </div> -->
       </div>
       <Footer />

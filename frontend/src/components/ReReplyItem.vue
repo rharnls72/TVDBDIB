@@ -46,6 +46,7 @@ export default {
     eno: Number,
     fno: Number,
     pno: Number,
+    auno: Number,
     addfun: Function,
     delfun: Function,
     isStretch: Boolean,
@@ -62,9 +63,21 @@ export default {
     },
     touchLike(reply) {
       reply.press_like = !reply.press_like
+
+      let ano = 0;
+      if(!this.fno === false) {
+        ano = this.fno;
+      } else if(!this.eno === false) {
+        ano = this.eno;
+      } else {
+        ano = this.pno;
+      }
+
       if (reply.press_like) {
         this.addlike({
           tno: reply.no
+          , uno: reply.writer_uno
+          , ano: ano
         }
         , res => console.log(res)
         , err => console.log(err)
@@ -85,18 +98,21 @@ export default {
           no: this.eno,
           parent_reply: this.parentNo,
           content: this.content,
+          writer_uno: this.auno
         }
       } else if (!this.fno===false) {
         this.addData = {
           no: this.fno,
           parent_reply: this.parentNo,
           content: this.content,
+          writer_uno: this.auno
         }
       } else {
         this.addData = {
           no: this.pno,
           parent_reply: this.parentNo,
           content: this.content,
+          writer_uno: this.auno
         }
       }
       

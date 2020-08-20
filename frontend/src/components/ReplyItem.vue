@@ -24,7 +24,7 @@
         @delReReply="delReReply(idx)" 
         :isStretch="re.isStretch" 
         :parentNo="re.no" 
-        :fno="fno" :eno="eno" 
+        :fno="fno" :eno="eno" :pno="pno" :auno="re.writer_uno"
         :addfun="addfun" :delfun="delfun" :section="section"
         :addlike="addlike" :dellike="dellike"
         />
@@ -58,13 +58,26 @@ export default {
     fno: Number,
     eno: Number,
     pno: Number,
+    auno: Number
   },
   methods: {
     touchLike(reply) {
       reply.press_like = !reply.press_like
+
+      let ano = 0;
+      if(!this.fno === false) {
+        ano = this.fno;
+      } else if(!this.eno === false) {
+        ano = this.eno;
+      } else {
+        ano = this.pno;
+      }
+
       if (reply.press_like) {
         this.addlike({
           tno: reply.no
+          , uno: reply.writer_uno
+          , ano: ano
         }
         , res => console.log(res)
         , err => console.log(err)
@@ -90,20 +103,23 @@ export default {
     },
     pushReply() {
 
-      if (!this.eno===false) {
-        this.addData = {
-          no: this.eno,
-          content: this.content,
-        }
-      } else if (!this.fno===false) {
+      if (!this.fno===false) {
         this.addData = {
           no: this.fno,
           content: this.content,
+          writer_uno: this.auno
+        }
+      } else if (!this.eno===false) {
+        this.addData = {
+          no: this.eno,
+          content: this.content,
+          writer_uno: this.auno
         }
       } else {
         this.addData = {
           no: this.pno,
           content: this.content,
+          writer_uno: this.auno
         }
       }
 
