@@ -61,14 +61,13 @@
         float: left;
     }
     .user-info {
-        // width: calc(100% - 50px);
-        // float: right;
-        font-size: large;
+        width: calc(100% - 50px);
+        float: right;
     }
     .user-info {
         .user-name {
             float: left;
-            //font-weight: $f600;
+            font-weight: $f600;
             button {
                 font-weight: $f600;
             }
