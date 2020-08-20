@@ -127,6 +127,7 @@ public class EpisodeController {
             System.out.println(programInfo);
             program.setPname(programInfo.optString("name"));
             program.setThumbnail(programInfo.optString("poster_path"));
+            program.setBackdrop(programInfo.optString("backdrop_path"));
             season_map.put(program.getPno(), programInfo.optJSONArray("seasons"));
             //program.setSeason(programInfo.optInt("number_of_seasons"));
         }
@@ -334,6 +335,8 @@ public class EpisodeController {
 
         if (thumbnail != null && thumbnail.length() > 1)
             e.setThumbnail(IMAGE_BASE_URL + thumbnail);
+        else if(program.getBackdrop() != null)
+            e.setThumbnail(IMAGE_BASE_URL + program.getBackdrop());
         if (program.getThumbnail() != null)
             e.setPoster(IMAGE_BASE_URL + program.getThumbnail());
 
