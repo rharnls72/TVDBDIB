@@ -224,7 +224,7 @@ export default {
     color: lightgray;
   }
   .tag {
-    color: #F54952;
+    color: rgb(110, 144, 253);
     font-weight: bold;
   }
   .mythumbnail {
