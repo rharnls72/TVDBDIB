@@ -1,7 +1,7 @@
 <template>
-  <div class="feed-item pb-0 mb-5" style="border-bottom: none;">
+  <div class="feed-item pb-5" style="border-bottom: none;">
     <div class="d-flex justify-align-between align-items-center mt-2">
-      <b-form-input type="text" class="m-0 rounded-pill" v-model="content" placeholder="댓글 입력!!!"></b-form-input>
+      <b-form-input type="text" class="m-0 rounded-pill myreply" v-model="content" placeholder="댓글을 입력하세요 :D"></b-form-input>
       <!-- 댓글 내용이 없으면 -->
       <b-icon v-if="!content" icon="plus-circle" class="text-right ml-2 text-light" font-scale="1.4"></b-icon>
       <!-- 댓글 내용이 있으면 -->
@@ -9,14 +9,17 @@
     </div>
     <div class="mt-2 pl-2 pr-2">
       <div v-for="(re, idx) in replies" :key="re.no">
-        <div><strong @click="moveAccount(re)">{{re.writer_nick_name}} </strong> <span>{{re.content}} </span>
-          <span
-            @click="changeIsStretch(idx)"
-            v-if="!re.isStretch" 
-            class="moreView ml-1 mr-1">댓글 작성</span>
-          <span @click="touchLike(re)" v-if="!re.press_like" class="moreView">좋아요 </span> 
-          <span @click="touchLike(re)" v-else class="moreView">좋아요 취소 </span> 
-          <span class="moreView" v-if="re.writer_uno === $store.state.userInfo.uno" @click="delReply(re)">삭제</span>
+        <div class="d-flex justify-content-between">
+          <div>
+            <strong @click="moveAccount(re)" class="mr-2">{{re.writer_nick_name}}</strong>
+            <span>{{re.content}}</span>
+          </div>
+          <div>
+            <span @click="changeIsStretch(idx)" v-if="!re.isStretch"><b-icon-chat></b-icon-chat></span>
+            <span @click="touchLike(re)" v-if="!re.press_like" class="ml-2"><b-icon-heart></b-icon-heart> <small>{{re.like_num}}</small></span> 
+            <span @click="touchLike(re)" v-else class="ml-2 text-danger"><b-icon-heart-fill></b-icon-heart-fill> <small>{{re.like_num}}</small></span> 
+            <span class="ml-2" v-if="re.writer_uno === $store.state.userInfo.uno" @click="delReply(re)"><b-icon-trash></b-icon-trash></span>
+          </div>
         </div>
         <ReReplyItem 
         @addReply="addCount" 
@@ -24,7 +27,7 @@
         @delReReply="delReReply(idx)" 
         :isStretch="re.isStretch" 
         :parentNo="re.no" 
-        :fno="fno" :eno="eno" 
+        :fno="fno" :eno="eno" :pno="pno" :auno="re.writer_uno"
         :addfun="addfun" :delfun="delfun" :section="section"
         :addlike="addlike" :dellike="dellike"
         />
@@ -58,18 +61,33 @@ export default {
     fno: Number,
     eno: Number,
     pno: Number,
+    auno: Number
   },
   methods: {
     touchLike(reply) {
       reply.press_like = !reply.press_like
+
+      let ano = 0;
+      if(!this.fno === false) {
+        ano = this.fno;
+      } else if(!this.eno === false) {
+        ano = this.eno;
+      } else {
+        ano = this.pno;
+      }
+
       if (reply.press_like) {
+        reply.like_num++;
         this.addlike({
           tno: reply.no
+          , uno: reply.writer_uno
+          , ano: ano
         }
         , res => console.log(res)
         , err => console.log(err)
         )
       } else {
+        reply.like_num--;
         this.dellike({
           tno: reply.no
         }
@@ -90,20 +108,23 @@ export default {
     },
     pushReply() {
 
-      if (!this.eno===false) {
-        this.addData = {
-          no: this.eno,
-          content: this.content,
-        }
-      } else if (!this.fno===false) {
+      if (!this.fno===false) {
         this.addData = {
           no: this.fno,
           content: this.content,
+          writer_uno: this.auno
+        }
+      } else if (!this.eno===false) {
+        this.addData = {
+          no: this.eno,
+          content: this.content,
+          writer_uno: this.auno
         }
       } else {
         this.addData = {
           no: this.pno,
           content: this.content,
+          writer_uno: this.auno
         }
       }
 
@@ -253,11 +274,8 @@ export default {
 }
 </script>
 
-<style>
-.moreView {
-  color: darkgray; 
-}
-.nickname {
-  font-display: bold;
-}
+<style scoped>
+  .myreply {
+    font-size: 0.9rem;
+  }
 </style>

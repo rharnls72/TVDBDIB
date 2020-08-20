@@ -91,7 +91,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .introduce {
     line-height: 1.5em;
   }
