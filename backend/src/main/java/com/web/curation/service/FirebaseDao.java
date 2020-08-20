@@ -29,6 +29,7 @@ public class FirebaseDao {
     public boolean addAlert(Alert alert){
         try {
             Firestore db = FirestoreClient.getFirestore();
+            /*
             int result=0;
             switch(alert.getCtype()){
                 case 1:
@@ -44,6 +45,7 @@ public class FirebaseDao {
                 result = dao.getWriterUno("episode_reply", "erno", alert.getCno());
             }
             alert.setUno(result);
+            */
 
             DocumentReference addedDocRef = db.collection("alert").document();
             alert.setAno(addedDocRef.getId());
