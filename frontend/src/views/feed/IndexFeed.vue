@@ -1,29 +1,31 @@
 <template>
   <div>
-    <!-- <div v-if="show"> -->
-    <div>
+    <div v-if="show">
       <div class="feed newsfeed">
         <IndexCurationHeader />
         <div class="wrapB">
           <div class="myfeed">
             <FeedItem v-for="(feed, idx) in feeds" :key="idx" :article="feed" :fno="feed.fno" @deleteItem="removeFeed(feed.fno)"/>
             <infinite-loading v-if="!feedNull" @infinite="infiniteHandler"></infinite-loading>
-            <!-- <div v-if="noCuration" style="text-align: center; margin-top: 50px;"> 팔로우 중인 유저가 없습니다<br/>
-              소통할 유저를 찾으러 가볼까요?<br/>
-            <button type="button" class="shadow moveSearch" @click="moveSearch">찾으러 가자!</button>
-            </div> -->
+            <div v-if="feeds.length == 0" style="text-align: center; margin-top: 50px;"> 피드 글이 없습니다!<br/>
+              소통할 유저를 찾거나 피드를 작성해봐요!<br/>
+            <div class="mb-4">
+              <button type="button" class="shadow moveSearch" @click="moveSearch">♡찾으러 갈래♡</button>
+              <button type="button" class="shadow moveSearch" @click="moveWrite">☆피드 쓸래☆</button>
+            </div>
+            </div>
           </div>
         </div>
         <Footer />
       </div>
 
-      <div v-if="feedNull">
-        <h1>No more results...</h1>
-        <div style="height:50px;"></div>
+      <div v-if="feedNull && feeds.length > 0" style="text-align: center;">
+        <p>모든 피드를 봤어요 :D</p>
+        <div style="height:80px;"></div>
       </div>
 
     </div>
-    <!-- <LoadingItem v-else /> -->
+    <LoadingItem v-else />
   </div>
 </template>
 
@@ -46,7 +48,7 @@ import Footer from '@/components/common/custom/Footer.vue';
 import GetUserApi from "@/api/GetUserApi"
 
 import InfiniteLoading from 'vue-infinite-loading'
-// import LoadingItem from '@/components/common/custom/LoadingItem.vue'
+import LoadingItem from '@/components/common/custom/LoadingItem.vue'
 
 export default {
   data() {
@@ -54,6 +56,7 @@ export default {
       feeds: [],
       requestCount: 1,
       feedNull: false,
+      show: false
     }
   },
 
@@ -61,7 +64,7 @@ export default {
     FeedItem,
     IndexCurationHeader,
     Footer,
-    // LoadingItem,
+    LoadingItem,
   },
 
   methods: {
@@ -84,9 +87,13 @@ export default {
           } else {
             this.feedNull = !this.feedNull
           }
+
+          setTimeout(() => {this.show = true;}, 500);
         }
         , err => {
           console.log(err)
+
+          setTimeout(() => {this.show = true;}, 500);
         }
       )
     },
@@ -98,7 +105,14 @@ export default {
         $state.loaded();
       }, 300);
     },
-    removeFeed(fno) {this.feeds = this.feeds.filter(res => res.fno!==fno)}
+    removeFeed(fno) {this.feeds = this.feeds.filter(res => res.fno!==fno)},
+    moveSearch() {
+      this.$store.state.searchTab = 2;
+      this.$router.push({name:'IndexSearch'})
+    },
+    moveWrite() {
+      this.$router.push({name:'CreateFeed'})
+    }
   },
   created() {
     GetUserApi.getUser(res => {
@@ -114,6 +128,7 @@ export default {
     padding-top: 50px;
   }
   .moveSearch{
+    display: inline-block;
     margin-top: 30px;
     width: 150px;
     height: 40px;
