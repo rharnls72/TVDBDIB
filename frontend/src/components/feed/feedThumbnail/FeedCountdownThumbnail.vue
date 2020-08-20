@@ -60,6 +60,7 @@ export default {
           this.Value.min = "00";
           this.Value.hour = "00";
           this.Value.date = "00";
+          return;
         }
 
         this.Value.sec = this.changeString(countdown % 60)
