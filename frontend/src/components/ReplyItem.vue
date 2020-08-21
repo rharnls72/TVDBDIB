@@ -18,7 +18,7 @@
             <span @click="changeIsStretch(idx)" v-if="!re.isStretch"><b-icon-chat></b-icon-chat></span>
 
             <span @click="touchLike(re)" v-if="!re.press_like" class="ml-2"><b-icon-heart></b-icon-heart> <small>{{re.like_num}}</small></span> 
-            <span @click="touchLike(re)" v-else class="ml-2 text-danger"><b-icon-heart-fill></b-icon-heart-fill> <small>{{re.like_num}}</small></span> 
+            <span @click="touchLike(re)" v-else class="ml-2 text-danger"><b-icon-heart-fill></b-icon-heart-fill> <small class="myreplylike">{{re.like_num}}</small></span> 
 
             <span class="ml-2" v-if="re.writer_uno === $store.state.userInfo.uno" @click="delReply(re)"><b-icon-trash></b-icon-trash></span>
           </div>
