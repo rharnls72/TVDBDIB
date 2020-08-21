@@ -185,7 +185,7 @@ export default {
 .btnGroup {
   display: table;
   height: 50px;
-  width: 100px;
+  width: 120px;
   position: absolute;
   right: 20px;
 }
