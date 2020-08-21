@@ -192,7 +192,7 @@ export default {
 
             let currentPath = this.$router.currentRoute.path;
             if(currentPath.indexOf('/feed/main') == -1) {
-              this.$router.push({path: '/feed/main'})
+              this.$router.go(-1)
             } else {
               console.log('Current path: ' + currentPath);
               this.$emit('deleteItem');
