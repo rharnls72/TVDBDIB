@@ -48,6 +48,22 @@ TV 프로그램 큐레이션 서비스와 SNS를 결합한 신개념 플랫폼!
 * 이외에도 <취향저격 프로그램> 추천 기능을 로컬 환경에서 테스트하기 위해서는 Python, Flask 환경 세팅이 필요합니다.
     
 
+## 기술 스택
+
+![기술스택](/uploads/607a641c5452f1efdcaaed2ea896607d/기술스택.PNG)
+
+* Frontend - HTML/CSS/Javascript, Vue.js, Bootstrap-vue
+* Backend - Java & SpringBoot & Nginx, Python & Flask (Machine-Learning )
+* Database - MariaDB
+* Docker Container
+* GitLab & Jenkins
+* Cloud - AWS, Firebase
+* AI - Tensorflow & Keras
+
+## 시스템 구조도
+
+![시스템구조도](/uploads/3c458e7d110c649d8a0f2d58cff86b4e/시스템구조도.PNG)
+
 ## 이용 방법
 
 ![티비디비딥_사용법](/uploads/6f8d31efa877655e60cb665bbf4673e4/티비디비딥_사용법.PNG)
@@ -68,3 +84,24 @@ TV 프로그램 큐레이션 서비스와 SNS를 결합한 신개념 플랫폼!
 내 글에 대한 댓글, 좋아요 등 반응을 모아서 볼 수 있으며 팔로우 요청을 확인할 수 있습니다.   
 * 5. 내 정보 탭   
 내 프로필을 조회, 수정할 수 있으며 내가 쓴 글을 모아서 볼 수 있습니다.   
+
+## 추천 기능
+
+![readme_머신러닝](/uploads/da9f6db62d5a2a59fe3bf11723db49a2/readme_머신러닝.PNG)
+
+* 3가지 추천 방법: '취향 저격 프로그램', '요즘 뜨는 프로그램', '새로 나온 프로그램'
+   
+* 머신 러닝 기반의 협업 필터링 알고리즘이 메인이지만 협업 필터링의 단점을 보완하기 위해 자체 데이터와 TMDB API를 이용한 추천도 같이 제공
+   
+* '취향 저격' 추천: Model-based Collaborative Filtering - Matrix Factorization 알고리즘
+    * 유저별 팔로우, 좋아요 정보를 기반으로 User-Item Matrix 생성
+    * User-Item Matrix를 '잠재 요인' 벡터로 분해하여 유저의 숨은 취향을 알아내 선호도를 예측
+    * 반복 학습: Adam Optimizer (Gradient-Descent 알고리즘의 일종)
+    * Tensorflow & Keras 라이브러리 이용
+   
+* '요즘 뜨는' 추천: Time-sliding
+    * 티비디비딥 플랫폼 내에서 피드백 (댓글, 좋아요, 팔로우) 에 따른 점수를 계산
+    * 최근에 발생한 피드백일수록 높은 가중치를 부여하는 알고리즘
+
+* '새로 나온' 추천: TMDB API
+    * 최근에 새롭게 방영한 프로그램들 중 TMDB API에서 제공하는 인기순으로 정렬하여 추천
