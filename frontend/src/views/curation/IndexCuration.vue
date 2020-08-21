@@ -156,6 +156,7 @@ export default {
   .myexample {
     width: 70%;
     margin: 35px auto;
+    padding-bottom: 50px;
     border: 2px solid pink;
   }
   .myimg {
