@@ -4,8 +4,8 @@
       <li
         v-for="(alert) in alerts"
         v-bind:key="alert.ano"
-        style="border-radius: 10px; position: relative;"
-        class="shadow"
+        style="border-radius: 10px; position: relative; box-shadow: 2px 2px 2px 2px lightgray;"
+        class=""
         v-bind:class="{done: !alert.read}"
         type="button"
         @click="checkAlert(alert)"
