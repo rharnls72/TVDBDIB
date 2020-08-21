@@ -8,7 +8,7 @@
       <b-tab @click="tabClick(2)" :title="'팔로우 요청 (' + requests_size + ')'" title-link-class="text-secondary"></b-tab>
     </b-tabs>
     </div>
-      <div class="wrapB">
+      <div class="wrapB alertList">
         <AlertItem :alerts="alerts"/>
       </div>
     <Footer />
@@ -187,5 +187,8 @@ export default {
     z-index: 1;
     width: 100%;
     background-color: white;
+  }
+  .alertList{
+    padding-top: 120px;
   }
 </style>
