@@ -10,6 +10,9 @@
             <div v-if="noCuration" style="text-align: center; margin-top: 50px;"> 팔로우 중인 프로그램이 없습니다<br/>
               좋아하는 프로그램을 찾으러 가볼까요?<br/>
             <button type="button" class="shadow moveSearch" @click="moveSearch">찾으러 가자!</button>
+            <div class="myexample">
+              <img :src="CurationExample" alt="curation-example" class="myimg">
+            </div>
             </div>
           </div>
         </div>
@@ -29,6 +32,7 @@ import InfiniteLoading from 'vue-infinite-loading';
 import Footer from '../../components/common/custom/Footer.vue';
 import IndexCurationHeader from '../../components/curation/IndexCurationHeader.vue'
 import LoadingItem from '@/components/common/custom/LoadingItem.vue'
+import CurationExample from '@/assets/images/custom/curation-example.jpg'
 
 import GetUserApi from "@/api/GetUserApi"
 import CurationApi from "@/api/CurationApi"
@@ -47,6 +51,7 @@ export default {
       isEndPoint: false,
       show: false,
       isStretch: false,
+      CurationExample,
     }
   },
   props: ["keyword"],
@@ -147,5 +152,13 @@ export default {
     border-radius: 10px;
     background-color: #f8e8f2;
     color: rgb(84, 78, 88);
+  }
+  .myexample {
+    width: 70%;
+    margin: 35px auto;
+    border: 2px solid pink;
+  }
+  .myimg {
+    width: 100%;
   }
 </style>

@@ -13,6 +13,9 @@
               <button type="button" class="shadow moveSearch" @click="moveSearch">♡찾으러 갈래♡</button>
               <button type="button" class="shadow moveSearch" @click="moveWrite">☆피드 쓸래☆</button>
             </div>
+            <div class="myexample">
+              <img :src="FeedExample" alt="feed-example" class="myimg">
+            </div>
             </div>
           </div>
         </div>
@@ -49,6 +52,7 @@ import GetUserApi from "@/api/GetUserApi"
 
 import InfiniteLoading from 'vue-infinite-loading'
 import LoadingItem from '@/components/common/custom/LoadingItem.vue'
+import FeedExample from '@/assets/images/custom/feed-example.jpg'
 
 export default {
   data() {
@@ -56,7 +60,8 @@ export default {
       feeds: [],
       requestCount: 1,
       feedNull: false,
-      show: false
+      show: false,
+      FeedExample,
     }
   },
 
@@ -135,5 +140,13 @@ export default {
     border-radius: 10px;
     background-color: #f8e8f2;
     color: rgb(84, 78, 88);
+  }
+  .myexample {
+    width: 70%;
+    margin: 35px auto;
+    border: 2px solid pink;
+  }
+  .myimg {
+    width: 100%;
   }
 </style>
