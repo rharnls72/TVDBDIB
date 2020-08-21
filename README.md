@@ -43,9 +43,6 @@ TV 프로그램 큐레이션 서비스와 SNS를 결합한 신개념 플랫폼!
         <pre><code>docker run --name maria-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD={패스워드} -d mariadb   
         docker exec -it maria-db mysql -u root -p</code></pre>
     * DB 유저 생성 및 권한 설정
-        <pre><code>create database tvility;
-        create user 'ability'@'%' identified by 'ability!';
-        grant all privileges on tvility.* to ability;</code></pre>
     * DB 테이블 생성: backend/tvility_tables.sql 파일 내의 SQL 실행
 
 * 이외에도 <취향저격 프로그램> 추천 기능을 로컬 환경에서 테스트하기 위해서는 Python, Flask 환경 세팅이 필요합니다.
