@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     movePage(room){
-        this.$router.replace({path: '/message/chatroom/' + room.cno, query: {room: room}});
+        this.$router.push({path: '/message/chatroom/' + room.cno, query: {room: room}});
     },
     deleteChat(room, event){
       // event.stopPropagation();
