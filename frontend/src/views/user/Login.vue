@@ -124,7 +124,7 @@ export default {
             this.$router.push({path:"/curation/main"});
           }
           , error => {
-            this.$router.push({name:'Errors', query: {message: error.msg}});
+            this.makeToast("자동 로그인에 실패했습니다 다시 로그인 해주세요.", "danger");
           }
         );
       }
@@ -280,6 +280,15 @@ export default {
           });
         });
     }
+    , makeToast(message, variant){
+        this.$bvToast.toast(message, {
+          title: '알림',
+          toaster: "b-toaster-bottom-right",
+          variant: variant,
+          autoHideDelay: 3000,
+          appendToast: false
+        })
+     }
   },
   data: () => {
     return {

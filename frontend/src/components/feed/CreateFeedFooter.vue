@@ -1,18 +1,18 @@
 <template>
-  <div class="row">
-    <div @click="turnArticle" class="col-4 d-flex justify-content-center">
+  <div class="row myfeedfooter">
+    <div class="col-4 d-flex justify-content-center">
       <div class="link-btn d-flex justify-content-center align-items-center">
-        <b-icon icon="pencil-square" font-scale="1.4"></b-icon>
+        <b-icon-pencil-square @click="turnArticle" font-scale="1.4"></b-icon-pencil-square>
       </div>
     </div>
-    <div @click="turnCountdown" class="col-4 d-flex justify-content-center">
+    <div class="col-4 d-flex justify-content-center">
       <div class="link-btn d-flex justify-content-center align-items-center">
-        <b-icon icon="stopwatch" font-scale="1.4"></b-icon>
+        <b-icon-stopwatch @click="turnCountdown" font-scale="1.4"></b-icon-stopwatch>
       </div>  
     </div>
-    <div @click="turnVote" class="col-4 d-flex justify-content-center">
+    <div class="col-4 d-flex justify-content-center">
       <div class="link-btn d-flex justify-content-center align-items-center">
-        <b-icon icon="card-checklist" font-scale="1.4"></b-icon>
+        <b-icon-card-checklist @click="turnVote" font-scale="1.4"></b-icon-card-checklist>
       </div>
     </div>
   </div>
@@ -30,10 +30,14 @@ export default {
 </script>
 
 <style scoped>
-.link-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #D8BEFE;
-}
+  .link-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #D8BEFE;
+  }
+  .myfeedfooter {
+    position: fixed;
+    bottom: 20px;
+  }
 </style>
